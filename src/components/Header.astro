@@ -1,4 +1,5 @@
 ---
+// Header: dunne utility-balk (scrollt weg) + zwevende kaart die blijft staan (Breyta-patroon)
 import Logo from "./Logo.astro"
 import Icon from "./Icon.astro"
 import { site, nav } from "../data/site"
@@ -8,17 +9,18 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
 <div class="utility">
     <div class="wrap utility-inner">
         <a class="utility-pill" href="/brief-ontvangen">
-            Brief of e-mail van ons ontvangen?
-            <Icon name="arrow" size={15} />
+            <span class="hide-xs">Brief of e-mail van ons ontvangen?</span>
+            <span class="show-xs">Brief ontvangen?</span>
+            <Icon name="arrow" size={14} />
         </a>
         <ul role="list" class="utility-links">
-            <li>
+            <li class="desk">
                 <a href={site.phoneHref}>
                     <Icon name="phone" size={15} />
                     {site.phone}
                 </a>
             </li>
-            <li>
+            <li class="desk">
                 <a href={`mailto:${site.email}`}>
                     <Icon name="mail" size={15} />
                     {site.email}
@@ -27,7 +29,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
             <li>
                 <a href={site.portalLogin}>
                     <Icon name="user" size={15} />
-                    Inloggen opdrachtgever
+                    <span>
+                        Inloggen<span class="hide-xs"> opdrachtgever</span>
+                    </span>
                 </a>
             </li>
         </ul>
@@ -35,77 +39,93 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
 </div>
 
 <header class="header" data-header>
-    <div class="wrap header-inner">
-        <Logo height={28} />
+    <div class="wrap">
+        <div class="bar">
+            <Logo height={26} />
 
-        <nav class="nav" aria-label="Hoofdmenu">
-            <ul role="list">
-                {nav.map((item) => (
-                    <li>
-                        <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
-                            {item.label}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+            <nav class="nav" aria-label="Hoofdmenu">
+                <ul role="list">
+                    {nav.map((item) => (
+                        <li>
+                            <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
+                                {item.label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
 
-        <div class="header-actions">
-            <a class="btn header-cta" href="/vordering-indienen">
+            <div class="actions">
+                <a class="btn bar-cta" href="/vordering-indienen">
+                    Vordering indienen
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={16} />
+                    </span>
+                </a>
+                <a class="icon-btn bar-call" href={site.phoneHref} aria-label={`Bel ${site.phone}`}>
+                    <Icon name="phone" size={20} />
+                </a>
+                <button
+                    class="icon-btn bar-menu"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                    data-menu-toggle
+                >
+                    <span class="sr-only" data-menu-label>
+                        Menu openen
+                    </span>
+                    <Icon name="menu" class="i-open" />
+                    <Icon name="close" class="i-close" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="backdrop" hidden data-menu-backdrop></div>
+    <div class="mobile-menu" id="mobile-menu" hidden data-menu>
+        <ul role="list" class="mobile-nav">
+            {nav.map((item) => (
+                <li>
+                    <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
+                        {item.label}
+                        <Icon name="arrow" size={18} />
+                    </a>
+                </li>
+            ))}
+        </ul>
+        <div class="mobile-actions">
+            <a class="btn" href="/vordering-indienen">
                 Vordering indienen
                 <span class="btn-dot">
                     <Icon name="arrow" size={18} />
                 </span>
             </a>
-            <a class="icon-btn header-call" href={site.phoneHref} aria-label={`Bel ${site.phone}`}>
-                <Icon name="phone" />
+            <a class="btn btn-ghost" href={site.phoneHref}>
+                Bel{" "}
+                {site.phone}
             </a>
-            <button class="icon-btn header-menu" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
-                <span class="sr-only" data-menu-label>
-                    Menu openen
-                </span>
-                <Icon name="menu" class="i-open" />
-                <Icon name="close" class="i-close" />
-            </button>
         </div>
-    </div>
-
-    <div class="mobile-menu" id="mobile-menu" hidden data-menu>
-        <div class="wrap">
-            <ul role="list" class="mobile-nav">
-                {nav.map((item) => (
-                    <li>
-                        <a href={item.href}>
-                            {item.label}
-                            <Icon name="arrow" size={18} />
-                        </a>
-                    </li>
-                ))}
-            </ul>
-            <div class="mobile-actions">
-                <a class="btn" href="/vordering-indienen">
-                    Vordering indienen
-                    <span class="btn-dot">
-                        <Icon name="arrow" size={18} />
-                    </span>
+        <ul role="list" class="mobile-meta">
+            <li>
+                <a href={site.portalLogin}>
+                    <Icon name="user" size={16} />
+                    Inloggen opdrachtgever
                 </a>
-                <a class="btn btn-ghost" href={site.phoneHref}>
-                    Bel{" "}
-                    {site.phone}
+            </li>
+            <li>
+                <a href="/brief-ontvangen">
+                    <Icon name="doc" size={16} />
+                    Brief van ons ontvangen?
                 </a>
-            </div>
-            <ul role="list" class="mobile-meta">
-                <li>
-                    <a href={site.portalLogin}>Inloggen opdrachtgever</a>
-                </li>
-                <li>
-                    <a href="/brief-ontvangen">Brief van ons ontvangen?</a>
-                </li>
-                <li>
-                    <a href={`mailto:${site.email}`}>{site.email}</a>
-                </li>
-            </ul>
-        </div>
+            </li>
+            <li>
+                <a href={`mailto:${site.email}`}>
+                    <Icon name="mail" size={16} />
+                    {site.email}
+                </a>
+            </li>
+        </ul>
     </div>
 </header>
 
@@ -113,100 +133,133 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     const header = document.querySelector<HTMLElement>("[data-header]")
     const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]")
     const menu = document.querySelector<HTMLElement>("[data-menu]")
+    const backdrop = document.querySelector<HTMLElement>("[data-menu-backdrop]")
     const label = document.querySelector<HTMLElement>("[data-menu-label]")
     const setOpen = (open: boolean) => {
         if (!toggle || !menu) return
+        if (open) {
+            // menu precies onder de zwevende kaart, ook als de utility-balk nog in beeld is
+            const bottom = document.querySelector(".bar")?.getBoundingClientRect().bottom ?? 0
+            menu.style.top = `${Math.round(bottom + 8)}px`
+            menu.style.maxHeight = `calc(100dvh - ${Math.round(bottom + 20)}px)`
+        }
         toggle.setAttribute("aria-expanded", String(open))
         menu.hidden = !open
+        if (backdrop) backdrop.hidden = !open
         document.documentElement.classList.toggle("menu-open", open)
         if (label) label.textContent = open ? "Menu sluiten" : "Menu openen"
     }
     toggle?.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"))
+    backdrop?.addEventListener("click", () => setOpen(false))
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") setOpen(false)
+        if (e.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") {
+            setOpen(false)
+            toggle.focus()
+        }
     })
     window.matchMedia("(min-width: 1080px)").addEventListener("change", (e) => {
         if (e.matches) setOpen(false)
     })
-    // schaduw zodra er gescrold is
-    const onScroll = () => header?.classList.toggle("is-scrolled", window.scrollY > 8)
+    // kaart krijgt meer diepte zodra er gescrold is
+    const onScroll = () => header?.classList.toggle("is-scrolled", window.scrollY > 24)
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
 </script>
 
 <style>
-    /* utility-balk (desktop) */
+    /* ---------- utility-balk ---------- */
     .utility {
-        display: none;
-        background: var(--ink);
-        color: rgba(255, 255, 255, 0.8);
+        background: var(--surface);
         font-size: var(--fs-xs);
-    }
-    @media (min-width: 1080px) {
-        .utility {
-            display: block;
-        }
+        color: var(--muted);
     }
     .utility-inner {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 24px;
-        min-height: 44px;
+        gap: 12px;
+        min-height: 48px;
     }
     .utility-pill {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 6px 14px;
+        gap: 6px;
+        min-height: 32px;
+        padding: 0 12px;
         border-radius: var(--r-pill);
-        background: rgba(255, 255, 255, 0.08);
+        background: var(--ink);
         color: #fff;
         font-weight: 500;
+        white-space: nowrap;
         transition: background-color 0.2s ease;
     }
     .utility-pill:hover {
-        background: rgba(255, 255, 255, 0.16);
+        background: var(--ink-2);
     }
     .utility-links {
         display: flex;
-        gap: 28px;
+        align-items: center;
+        gap: 24px;
     }
     .utility-links a {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         min-height: 44px;
-        transition: color 0.15s ease;
+        color: var(--ink);
+        font-weight: 500;
+        white-space: nowrap;
     }
     .utility-links a:hover {
-        color: #fff;
+        color: var(--blue-ink);
+    }
+    .desk {
+        display: none;
+    }
+    .show-xs {
+        display: none;
+    }
+    @media (max-width: 559px) {
+        .hide-xs {
+            display: none;
+        }
+        .show-xs {
+            display: inline;
+        }
+    }
+    @media (min-width: 1080px) {
+        .desk {
+            display: list-item;
+        }
     }
 
-    /* header */
+    /* ---------- zwevende kaart ---------- */
     .header {
         position: sticky;
-        top: 0;
+        top: 10px;
         z-index: 50;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: saturate(1.6) blur(14px);
-        -webkit-backdrop-filter: saturate(1.6) blur(14px);
-        border-bottom: 1px solid transparent;
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+        margin-top: 10px;
     }
-    .header.is-scrolled,
-    :global(.menu-open) .header {
-        border-bottom-color: var(--line);
-        box-shadow: 0 8px 24px -16px rgba(6, 17, 38, 0.25);
-    }
-    .header-inner {
+    .bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 24px;
+        gap: 16px;
         height: var(--header-h);
+        padding: 0 8px 0 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: saturate(1.6) blur(14px);
+        -webkit-backdrop-filter: saturate(1.6) blur(14px);
+        box-shadow:
+            0 0 0 1px rgba(6, 17, 38, 0.06),
+            0 8px 24px -14px rgba(6, 17, 38, 0.22);
+        transition: box-shadow 0.25s ease;
+    }
+    .header.is-scrolled .bar {
+        box-shadow:
+            0 0 0 1px rgba(6, 17, 38, 0.06),
+            0 16px 36px -14px rgba(6, 17, 38, 0.32);
     }
 
     .nav {
@@ -219,7 +272,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     }
     .nav ul {
         display: flex;
-        gap: 4px;
+        gap: 2px;
     }
     .nav a {
         display: inline-flex;
@@ -240,24 +293,23 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         color: var(--blue-ink);
     }
 
-    .header-actions {
+    .actions {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
     }
-    .header-cta {
+    .bar-cta {
         display: none;
         min-height: 48px;
+        padding: 4px 4px 4px 20px;
         font-size: var(--fs-sm);
-        padding-left: 20px;
-        padding-block: 4px;
     }
-    .header-cta .btn-dot {
-        width: 36px;
-        height: 36px;
+    .bar-cta .btn-dot {
+        width: 40px;
+        height: 40px;
     }
     @media (min-width: 720px) {
-        .header-cta {
+        .bar-cta {
             display: inline-flex;
         }
     }
@@ -266,7 +318,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         place-items: center;
         width: 48px;
         height: 48px;
-        border-radius: 50%;
+        border-radius: 14px;
         border: 0;
         background: var(--surface);
         color: var(--ink);
@@ -276,59 +328,81 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     .icon-btn:hover {
         background: var(--surface-2);
     }
+    .bar-menu[aria-expanded="true"] {
+        background: var(--ink);
+        color: #fff;
+    }
     @media (min-width: 1080px) {
-        .header-call,
-        .header-menu {
+        .bar-call,
+        .bar-menu {
             display: none;
         }
     }
-    .header-menu :global(.i-close),
-    .header-menu[aria-expanded="true"] :global(.i-open) {
+    .bar-menu :global(.i-close),
+    .bar-menu[aria-expanded="true"] :global(.i-open) {
         display: none;
     }
-    .header-menu[aria-expanded="true"] :global(.i-close) {
+    .bar-menu[aria-expanded="true"] :global(.i-close) {
         display: block;
     }
 
-    /* mobiel menu */
+    /* ---------- mobiel menu: kaart onder de header ---------- */
+    .backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: rgba(6, 17, 38, 0.32);
+    }
     .mobile-menu {
         position: fixed;
-        inset: var(--header-h) 0 0 0;
+        top: calc(var(--header-h) + 20px);
+        left: 12px;
+        right: 12px;
+        max-height: calc(100dvh - var(--header-h) - 32px);
         overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 8px 20px 20px;
+        border-radius: 20px;
         background: #fff;
-        padding-block: 8px 40px;
+        box-shadow: 0 24px 48px -16px rgba(6, 17, 38, 0.4);
     }
     .mobile-nav a {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        min-height: 60px;
+        min-height: 56px;
         border-bottom: 1px solid var(--line);
         font-family: var(--font-display);
-        font-size: 1.375rem;
+        font-size: 1.25rem;
         font-weight: 500;
         letter-spacing: -0.02em;
         color: var(--ink);
+    }
+    .mobile-nav a[aria-current="page"] {
+        color: var(--blue-ink);
     }
     .mobile-nav a :global(svg) {
         color: var(--blue);
     }
     .mobile-actions {
         display: grid;
-        gap: 10px;
-        margin-top: 28px;
+        gap: 8px;
+        margin-top: 20px;
     }
     .mobile-meta {
         display: grid;
-        gap: 4px;
-        margin-top: 24px;
+        margin-top: 16px;
         font-size: var(--fs-sm);
-        color: var(--muted);
     }
     .mobile-meta a {
         display: inline-flex;
         align-items: center;
+        gap: 10px;
         min-height: 44px;
+        color: var(--ink);
+    }
+    .mobile-meta :global(svg) {
+        color: var(--blue);
     }
     :global(html.menu-open) {
         overflow: hidden;

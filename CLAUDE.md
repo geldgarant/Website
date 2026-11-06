@@ -61,3 +61,10 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Logo: `public/brand/` (gecropt, transparant). `<Logo variant="light|dark" height={..}/>`.
 - Scroll-onthulling via `data-reveal` (+ `style="--d:n"` voor vertraging); Playwright draait met `reducedMotion: "reduce"`.
 - Screenshots: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/shot.mjs` (preview moet op poort 4399 draaien).
+
+## Homepage v3 en header (6 nov 2026)
+- Homepage-secties met nummering (eyebrow `.idx`): 01 `components/home/Proces.astro` (voorbeelddossier, tabs + tijdlijn, `data-active`), 02 `Bento.astro` (mini-visuals, veegrij mobiel), 03 `Kosten.astro` (scenario-kiezer met radios + `:has`), 04 persoonlijk, 05 diensten/branches, 06 FAQ, 07 kennisbank.
+- Veegrijen krijgen `data-scroller`; de overlooptest negeert hun kinderen. Een veegrij zonder links krijgt `tabindex="0"` + `aria-label` (axe: scrollable-region-focusable).
+- Header: utility-balk (scrollt weg, korte teksten < 560px) + zwevende kaart `.bar` (sticky top 10px). Mobiel menu is een kaart onder `.bar`, positie berekend bij openen. `StickyCta.astro` = vaste actiebalk < 1080px.
+- Compliance-woordkeus: "Geregistreerd bij Justis", niet "Erkend". Geen verzonnen reviews/cijfers; voorbeelden altijd als voorbeeld labelen.
+- Controle op 10 schermbreedtes: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/resoluties.mjs` (preview op 4399).

@@ -88,11 +88,8 @@ const branchIcon = {
                 <a class="badge" href={site.incassoRegisterHref}>
                     <Icon name="shield" size={18} />
                     <span>
-                        Erkend incassobureau{" "}
-                        <span class="badge-sep" aria-hidden="true">
-                            ·
-                        </span>{" "}
-                        Incassoregister {site.incassoRegister}
+                        <span class="only-wide">Geregistreerd bij Justis · </span>Incassoregister
+                        <span class="only-narrow"> Justis ·</span> {site.incassoRegister}
                     </span>
                 </a>
                 <h1 class="display">
@@ -348,7 +345,7 @@ const branchIcon = {
 <style>
     /* ---------- HERO ---------- */
     .hero {
-        padding-block: clamp(32px, 5vw, 72px) clamp(48px, 6vw, 88px);
+        padding-block: clamp(28px, 4vw, 56px) clamp(48px, 6vw, 88px);
     }
     .hero-grid {
         display: grid;
