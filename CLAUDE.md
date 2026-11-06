@@ -50,3 +50,13 @@ In de cloudwerkomgeving van Claude: zet `CHROME_PATH=/usr/bin/google-chrome` voo
 
 Bron, commit en licentie per skill: `.claude/skills/THIRD_PARTY.md`. Hooks van de oorspronkelijke plugins zijn
 bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de wijzigingen nalezen.
+
+## Ontwerpsysteem v2 (vastgesteld 6 nov 2026)
+- Fonts (self-hosted via @fontsource, geïmporteerd in `src/layouts/Base.astro`): Poppins 500/600 voor koppen, Inter Variable voor body, Newsreader Variable cursief (opsz 72, gewicht 500) als accentfont.
+- Accentwoord in een kop: `<span class="accent">woord</span>`; één per kop. Breyta doet hetzelfde met een gestylede `<code>`.
+- Kleuren uit het logo: `--ink #061126`, `--blue #3069FE` (knoppen), `--blue-ink #1F4FD6` (blauw als tekst op licht), `--surface #F3F4F7` (kaarten). Tokens staan in `src/styles/global.css`.
+- Knoppen: `.btn` (blauw), `.btn-dark`, `.btn-light`, `.btn-ghost`; met pijlbol `<span class="btn-dot"><Icon name="arrow"/></span>` of zonder.
+- Type: `.display` (H1), `.h2`, `.h3`, `.lead`, `.eyebrow`. Secties: `.section`, `.bg-surface`, `.bg-ink`.
+- Logo: `public/brand/` (gecropt, transparant). `<Logo variant="light|dark" height={..}/>`.
+- Scroll-onthulling via `data-reveal` (+ `style="--d:n"` voor vertraging); Playwright draait met `reducedMotion: "reduce"`.
+- Screenshots: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/shot.mjs` (preview moet op poort 4399 draaien).
