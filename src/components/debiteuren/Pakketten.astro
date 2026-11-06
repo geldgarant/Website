@@ -4,6 +4,11 @@ import Icon from "../Icon.astro"
 import { PAKKETTEN, LOS_PER_DOSSIER, EXTRA_DOSSIER, pakketKosten, losKosten, besteKeuze } from "../../lib/pakketten"
 import { euro } from "../../lib/wik"
 
+interface Props {
+    idx?: string
+    label?: string
+}
+const { idx = "03", label = "Pakketten" } = Astro.props
 const startN = 30
 const start = besteKeuze(startN)
 const opties = [
@@ -18,7 +23,7 @@ const contact = (pakket: string) => `/contact-opnemen?onderwerp=debiteurenbeheer
         <div class="pak-head">
             <div>
                 <p class="eyebrow">
-                    <span class="idx">03</span> Pakketten
+                    <span class="idx">{idx}</span> {label}
                 </p>
                 <h2 class="h2" id="pakketten-title">
                     Een vast bedrag, <span class="accent">geen</span> verrassingen

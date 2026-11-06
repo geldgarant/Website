@@ -1,0 +1,636 @@
+---
+// A3 /tarieven. Hoofdvraag: "Wat kost het mij precies?"
+// Volgorde: drie prijzen in één oogopslag (hero) → wat houd ik over (01) → hoe worden de incassokosten berekend (02)
+// → wat kost debiteurenbeheer (03) → wat betaal ik nooit en wat soms (04) → vragen (05) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Rekenvoorbeeld from "../components/tarieven/Rekenvoorbeeld.astro"
+import Pakketten from "../components/debiteuren/Pakketten.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site } from "../data/site"
+import { tarievenFaq } from "../data/faq"
+import { WIK_STAFFEL, WIK_MIN, WIK_MAX, wikKosten, euro } from "../lib/wik"
+import { PAKKETTEN } from "../lib/pakketten"
+
+const title = "Tarieven incasso en debiteurenbeheer | GeldGarant"
+const description =
+    "Incasso zonder opstartkosten: bij volledige betaling betaalt u niets. Bekijk de wettelijke staffel, reken uw afrekening uit en vergelijk de pakketten."
+
+const url = "https://geldgarant.com/tarieven"
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Tarieven", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: tarievenFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+    },
+]
+
+const vanaf = Math.min(...PAKKETTEN.map((p) => p.prijs))
+
+const prijzen = [
+    {
+        id: "incasso",
+        naam: "Incasso",
+        tag: "Meest gekozen",
+        prijs: "€ 0",
+        eenheid: "bij volledige betaling",
+        tekst: "De debiteur betaalt de wettelijke incassokosten. U krijgt uw volledige factuurbedrag.",
+        punten: ["Geen opstartkosten", "Geen abonnement", "Binnen 1 uur in behandeling"],
+        knop: { label: "Vordering indienen", href: "/vordering-indienen" },
+        hoofd: true,
+    },
+    {
+        id: "beheer",
+        naam: "Debiteurenbeheer",
+        tag: null,
+        prijs: euro(vanaf, 0),
+        eenheid: "per maand, vanaf",
+        tekst: "Herinneringen, sms en een telefoontje in uw naam, voordat het een incassozaak wordt.",
+        punten: ["Maandelijks opzegbaar", "Koppeling met uw boekhoudpakket", "Kosteloos door naar incasso"],
+        knop: { label: "Bekijk de pakketten", href: "#pakketten" },
+        hoofd: false,
+    },
+    {
+        id: "juridisch",
+        naam: "Juridisch",
+        tag: null,
+        prijs: "Vooraf",
+        eenheid: "bekend, per zaak",
+        tekst: "Naar de rechter alleen met uw akkoord. U hoort de kosten voordat u beslist.",
+        punten: [
+            "Eerlijk advies over de kans op verhaal",
+            "Kosten waar mogelijk op de debiteur",
+            "Begeleiding tot en met de deurwaarder",
+        ],
+        knop: { label: "Vraag\u00a0advies", href: site.phoneHref },
+        hoofd: false,
+    },
+]
+
+// 02: staffel met voorbeeldbedrag aan het eind van elke schijf
+const staffel = (() => {
+    let vorige = 0
+    return WIK_STAFFEL.map((s) => {
+        const tot = s.tot === Infinity ? null : s.tot
+        const label =
+            tot === null
+                ? `Boven ${euro(vorige, 0)}`
+                : vorige === 0
+                  ? `Eerste ${euro(tot, 0)}`
+                  : `${euro(vorige, 0)} tot ${euro(tot, 0)}`
+        const voorbeeld = tot === null ? 300000 : tot
+        vorige = s.tot
+        return {
+            label,
+            pct: `${String(s.pct * 100).replace(".", ",")}%`,
+            vb: euro(voorbeeld, 0),
+            kosten: euro(wikKosten(voorbeeld), 0),
+        }
+    })
+})()
+
+const nooit = [
+    "Opstartkosten of dossierkosten",
+    "Een abonnement voor incasso",
+    "Een succesfee over uw factuurbedrag",
+    "Kosten als de debiteur volledig betaalt",
+    "Kosten als er niets te halen valt door faillissement, overlijden of schuldsanering",
+]
+const soms = [
+    { k: "Debiteur betaalt een deel", v: "Incassokosten verrekend met wat binnenkomt, minimaal € 45" },
+    { k: "Vordering bij de curator indienen", v: "€ 115 excl. btw, alleen als u dat wilt" },
+    { k: "Gerechtelijke procedure", v: "Griffierecht en deurwaarder, vooraf bekend, na uw akkoord" },
+    { k: "Opdracht intrekken na de start", v: "Berekende incassokosten, minimaal 10% van de hoofdsom en € 95" },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO + PRIJZEN -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Tarieven" }]} />
+            <div class="hero-copy">
+                <h1 class="display">
+                    Volledig betaald? Dan betaalt u ons <span class="accent">niets</span>.
+                </h1>
+                <p class="lead">
+                    Geen opstartkosten, geen abonnement en geen succesfee. Onze vergoeding is de wettelijke incassokosten, en die
+                    betaalt de debiteur.
+                </p>
+            </div>
+
+            <ul role="list" class="prijzen" data-scroller>
+                {prijzen.map((p) => (
+                    <li class:list={["prijs", { "prijs-hoofd": p.hoofd }]}>
+                        <div class="prijs-top">
+                            <h2 class="prijs-naam">{p.naam}</h2>
+                            {p.tag && <span class="prijs-tag">{p.tag}</span>}
+                        </div>
+                        <p class="prijs-bedrag num">
+                            <strong>{p.prijs}</strong> {p.eenheid}
+                        </p>
+                        <p class="prijs-tekst">{p.tekst}</p>
+                        <ul role="list" class="prijs-punten">
+                            {p.punten.map((t) => (
+                                <li>
+                                    <Icon name="check" size={16} />
+                                    {t}
+                                </li>
+                            ))}
+                        </ul>
+                        <a class:list={["btn", { "btn-light": p.hoofd, "btn-ghost": !p.hoofd }]} href={p.knop.href}>
+                            {p.knop.label}
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <Rekenvoorbeeld />
+
+    <!-- 02 STAFFEL -->
+    <section class="section" aria-labelledby="staffel-title">
+        <div class="wrap staffel">
+            <div class="staffel-copy">
+                <p class="eyebrow">
+                    <span class="idx">02</span> De wettelijke staffel
+                </p>
+                <h2 class="h2" id="staffel-title">
+                    Zo worden de incassokosten <span class="accent">berekend</span>
+                </h2>
+                <p class="lead">
+                    De wet bepaalt hoeveel incassokosten een debiteur mag betalen. Wij rekenen nooit meer. Het percentage geldt
+                    per schijf van de hoofdsom, net als bij de inkomstenbelasting.
+                </p>
+                <p class="staffel-grens num">
+                    <span>
+                        <strong>{euro(WIK_MIN, 0)}</strong> minimaal
+                    </span>
+                    <span>
+                        <strong>{euro(WIK_MAX, 0)}</strong> maximaal
+                    </span>
+                </p>
+            </div>
+            <div class="staffel-tabel-wrap">
+                <table class="staffel-tabel num">
+                    <caption class="sr-only">Wettelijke staffel buitengerechtelijke incassokosten met voorbeelden</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Over het deel van de hoofdsom</th>
+                            <th scope="col">Percentage</th>
+                            <th scope="col">Voorbeeld</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {staffel.map((r) => (
+                            <tr>
+                                <th scope="row">{r.label}</th>
+                                <td class="staffel-pct">{r.pct}</td>
+                                <td>
+                                    <span class="staffel-vb">
+                                        {r.vb} <Icon name="arrow" size={14} /> <strong>{r.kosten}</strong>
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <p class="staffel-noot">
+                    Voorbeeld: bij een factuur van € 4.000 is het {euro(2500 * 0.15, 0)} over de eerste € 2.500 plus{" "}
+                    {euro(1500 * 0.1, 0)} over de rest. Samen {euro(wikKosten(4000), 0)}. Exact uitrekenen, met rente?{" "}
+                    <a class="textlink" href="/incasso/incassokosten-berekenen">
+                        Incassokosten berekenen
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="pakketten-wrap">
+        <Pakketten idx="03" label="Debiteurenbeheer" />
+    </div>
+
+    <!-- 04 OVERIGE KOSTEN -->
+    <section class="section overig-sectie" aria-labelledby="overig-title">
+        <div class="wrap">
+            <div class="overig-head">
+                <p class="eyebrow">
+                    <span class="idx">04</span> Geen kleine lettertjes
+                </p>
+                <h2 class="h2" id="overig-title">
+                    Wat u <span class="accent">nooit</span> betaalt, en wat soms
+                </h2>
+            </div>
+            <div class="overig">
+                <div class="overig-nooit">
+                    <h3 class="overig-kop">Nooit</h3>
+                    <ul role="list">
+                        {nooit.map((n) => (
+                            <li>
+                                <span class="nooit-icon" aria-hidden="true">
+                                    <Icon name="close" size={14} />
+                                </span>
+                                {n}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div class="overig-soms">
+                    <h3 class="overig-kop">Alleen in deze gevallen</h3>
+                    <dl>
+                        {soms.map((s) => (
+                            <div>
+                                <dt>{s.k}</dt>
+                                <dd>{s.v}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                    <p class="overig-av">
+                        Alles staat in onze{" "}
+                        <a class="textlink" href="/juridisch/algemene-voorwaarden">
+                            algemene voorwaarden
+                        </a>
+                        .
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={tarievenFaq} idx="05" id="faq-title">
+        <Fragment slot="title">
+            Vragen over <span class="accent">kosten</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Dien uw vordering in ongeveer drie minuten in. Betaalt de debiteur volledig, dan kost het u niets.">
+        Probeer het met uw <span class="accent">oudste</span> factuur
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO + PRIJZEN ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-copy {
+        max-width: 52rem;
+        margin-top: clamp(24px, 3vw, 40px);
+    }
+    .hero h1 {
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 36em;
+    }
+    /* Mobiel en tablet: veegrij; desktop: drie kolommen */
+    .prijzen {
+        display: flex;
+        gap: 12px;
+        margin: clamp(36px, 5vw, 64px) calc(-1 * var(--gutter)) 0;
+        padding: 0 var(--gutter) 4px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--gutter);
+        scrollbar-width: none;
+    }
+    .prijzen::-webkit-scrollbar {
+        display: none;
+    }
+    .prijzen > li {
+        flex: 0 0 min(86%, 360px);
+        scroll-snap-align: start;
+    }
+    @media (min-width: 960px) {
+        .prijzen {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr 1fr;
+            align-items: stretch;
+            margin-inline: 0;
+            padding: 0;
+            overflow: visible;
+        }
+    }
+    .prijs {
+        display: flex;
+        flex-direction: column;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .prijs-hoofd {
+        background: var(--ink);
+        color: #fff;
+    }
+    .prijs-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        min-height: 28px;
+    }
+    .prijs-naam {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .prijs-hoofd .prijs-naam {
+        color: #fff;
+    }
+    .prijs-tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 10px;
+        border-radius: var(--r-pill);
+        background: var(--blue);
+        color: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .prijs-bedrag {
+        margin-top: 18px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .prijs-hoofd .prijs-bedrag {
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .prijs-bedrag strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 2rem + 1.6vw, 3.5rem);
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        line-height: 1.05;
+        color: var(--ink);
+    }
+    .prijs-hoofd .prijs-bedrag strong {
+        color: #7ee2a8;
+    }
+    .prijs-tekst {
+        margin-top: 14px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.55;
+    }
+    .prijs-hoofd .prijs-tekst {
+        color: rgba(255, 255, 255, 0.85);
+    }
+    .prijs-punten {
+        display: grid;
+        gap: 8px;
+        margin: 18px 0 26px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        color: var(--ink);
+    }
+    .prijs-hoofd .prijs-punten {
+        border-top-color: var(--line-dark);
+        color: #fff;
+    }
+    .prijs-punten li {
+        display: grid;
+        grid-template-columns: 16px minmax(0, 1fr);
+        gap: 10px;
+        line-height: 1.45;
+    }
+    .prijs-punten :global(svg) {
+        margin-top: 2px;
+        color: var(--green);
+    }
+    .prijs-hoofd .prijs-punten :global(svg) {
+        color: #7ee2a8;
+    }
+    .prijs .btn {
+        margin-top: auto;
+        justify-content: space-between;
+    }
+    .prijs:not(.prijs-hoofd) .btn-ghost {
+        background: #fff;
+        box-shadow: none;
+    }
+
+    /* ---------- 02 STAFFEL ---------- */
+    .staffel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .staffel {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .staffel-copy .h2 {
+        margin-top: 14px;
+    }
+    .staffel-copy .lead {
+        margin-top: 20px;
+    }
+    .staffel-grens {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+    }
+    .staffel-grens span {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .staffel-grens strong {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        color: var(--ink);
+    }
+    .staffel-tabel {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+    }
+    .staffel-tabel thead th {
+        padding: 0 12px 12px 0;
+        text-align: left;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .staffel-tabel tbody tr {
+        border-top: 1px solid var(--line);
+    }
+    .staffel-tabel tbody th,
+    .staffel-tabel td {
+        padding: 16px 12px 16px 0;
+        text-align: left;
+        vertical-align: middle;
+    }
+    .staffel-tabel tbody th {
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .staffel-pct {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: var(--blue-ink);
+    }
+    .staffel-vb {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        color: var(--muted);
+        white-space: nowrap;
+    }
+    .staffel-vb strong {
+        color: var(--ink);
+    }
+    .staffel-vb :global(svg) {
+        color: var(--muted);
+    }
+    @media (max-width: 559px) {
+        .staffel-tabel thead th:last-child,
+        .staffel-tabel td:last-child {
+            display: none;
+        }
+    }
+    .staffel-noot {
+        margin-top: 18px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.6;
+    }
+
+    /* ---------- 03 PAKKETTEN: scheiding van de witte staffelsectie ---------- */
+    .pakketten-wrap {
+        border-top: 1px solid var(--line);
+    }
+
+    /* ---------- 04 OVERIGE KOSTEN ---------- */
+    .overig-head {
+        max-width: 44rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .overig-head .h2 {
+        margin-top: 14px;
+    }
+    .overig {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .overig {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        }
+    }
+    .overig-sectie {
+        border-top: 1px solid var(--line);
+    }
+    .overig-nooit,
+    .overig-soms {
+        padding: clamp(22px, 3vw, 36px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .overig-nooit {
+        background: var(--ink);
+        color: #fff;
+    }
+    .overig-kop {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+        margin-bottom: 14px;
+    }
+    .overig-nooit .overig-kop {
+        color: #fff;
+    }
+    .overig-nooit ul {
+        display: grid;
+    }
+    .overig-nooit li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line-dark);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    .nooit-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        margin-top: 1px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ff9b9b;
+    }
+    .overig-soms dl {
+        display: grid;
+    }
+    .overig-soms dl > div {
+        display: grid;
+        gap: 2px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    @media (min-width: 560px) {
+        .overig-soms dl > div {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 16px;
+        }
+    }
+    .overig-soms dt {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .overig-soms dd {
+        color: var(--text);
+    }
+    .overig-av {
+        margin-top: 14px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+</style>

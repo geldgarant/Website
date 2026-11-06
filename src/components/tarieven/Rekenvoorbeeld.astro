@@ -1,0 +1,426 @@
+---
+// 01 "Wat houd ik over?" Interactieve afrekening: bedrag + scenario (+ deel) → wie krijgt wat.
+// Rekenregels in src/lib/wik.ts (afrekening), getest in tests/unit/wik.test.ts.
+import Icon from "../Icon.astro"
+import { afrekening, euro } from "../../lib/wik"
+
+const startBedrag = 1000
+const r = afrekening(startBedrag, 1)
+const scenarios = [
+    { id: "alles", label: "Betaalt alles" },
+    { id: "deel", label: "Betaalt een deel" },
+    { id: "niets", label: "Betaalt niets" },
+]
+---
+
+<section class="section bg-surface" aria-labelledby="reken-title" id="rekenvoorbeeld">
+    <div class="wrap rv" data-rv>
+        <div class="rv-copy">
+            <p class="eyebrow">
+                <span class="idx">01</span> Rekenvoorbeeld
+            </p>
+            <h2 class="h2" id="reken-title">
+                Reken uit wat u <span class="accent">overhoudt</span>
+            </h2>
+            <p class="lead">
+                Vul uw factuurbedrag in en kies wat de debiteur doet. U ziet direct wie wat betaalt en wat er op uw rekening komt.
+            </p>
+            <ul role="list" class="rv-regels">
+                <li>
+                    <Icon name="check" size={18} />
+                    <span>
+                        <strong>Alles betaald:</strong> u krijgt uw volledige factuurbedrag.
+                    </span>
+                </li>
+                <li>
+                    <Icon name="check" size={18} />
+                    <span>
+                        <strong>Een deel betaald:</strong> eerst de incassokosten, de rest is voor u.
+                    </span>
+                </li>
+                <li>
+                    <Icon name="check" size={18} />
+                    <span>
+                        <strong>Niets betaald:</strong> u betaalt ons niets.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="rv-kaart">
+            <label class="rv-label" for="rv-bedrag">
+                Uw factuurbedrag
+            </label>
+            <div class="rv-input">
+                <span aria-hidden="true">€</span>
+                <input
+                    id="rv-bedrag"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    enterkeyhint="done"
+                    value="1.000"
+                    data-rv-bedrag
+                />
+            </div>
+
+            <fieldset class="rv-seg">
+                <legend class="rv-label">Wat doet de debiteur?</legend>
+                <div class="rv-seg-opties">
+                    {scenarios.map((s, i) => (
+                        <label>
+                            <input type="radio" name="rv-scenario" value={s.id} checked={i === 0} data-rv-scenario />
+                            <span>{s.label}</span>
+                        </label>
+                    ))}
+                </div>
+            </fieldset>
+
+            <div class="rv-deel" data-rv-deelblok hidden>
+                <label class="rv-label" for="rv-deel">
+                    Deel dat binnenkomt:{" "}
+                    <strong class="num" data-rv-pct>
+                        65%
+                    </strong>
+                </label>
+                <input id="rv-deel" type="range" min="5" max="95" step="5" value="65" data-rv-deel />
+            </div>
+
+            <dl class="rv-rows num" aria-live="polite">
+                <div>
+                    <dt>Uw factuur</dt>
+                    <dd data-rv-out="hoofdsom">{euro(startBedrag)}</dd>
+                </div>
+                <div>
+                    <dt>
+                        Wettelijke incassokosten <span>voor de debiteur</span>
+                    </dt>
+                    <dd data-rv-out="kosten">{euro(r.kosten)}</dd>
+                </div>
+                <div class="rv-sub">
+                    <dt>Debiteur betaalt</dt>
+                    <dd data-rv-out="betaald">{euro(r.debiteurBetaalt)}</dd>
+                </div>
+                <div>
+                    <dt>
+                        Naar GeldGarant <span>uit de incassokosten</span>
+                    </dt>
+                    <dd data-rv-out="gg">{euro(r.naarGeldGarant)}</dd>
+                </div>
+                <div class="rv-zero">
+                    <dt>Uw kosten</dt>
+                    <dd>{euro(0)}</dd>
+                </div>
+                <div class="rv-totaal">
+                    <dt>U ontvangt</dt>
+                    <dd data-rv-out="u">{euro(r.naarU)}</dd>
+                </div>
+            </dl>
+            <p class="rv-noot" data-rv-noot>
+                De debiteur betaalt daarnaast de wettelijke rente. Die is, net als de incassokosten, voor GeldGarant.
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { afrekening, euro } from "../../lib/wik"
+
+    const noten: Record<string, string> = {
+        alles: "De debiteur betaalt daarnaast de wettelijke rente. Die is, net als de incassokosten, voor GeldGarant.",
+        deel: "Wat binnenkomt gaat eerst naar de incassokosten, met een minimum van € 45. De rest is voor u. Liever doorpakken via de rechter? Dat kan, alleen met uw akkoord.",
+        niets: "Geen betaling, geen kosten. Is er niets te halen door faillissement, overlijden of schuldsanering, dan sluiten we het dossier kosteloos.",
+    }
+
+    document.querySelectorAll<HTMLElement>("[data-rv]").forEach((root) => {
+        const bedrag = root.querySelector<HTMLInputElement>("[data-rv-bedrag]")
+        const deel = root.querySelector<HTMLInputElement>("[data-rv-deel]")
+        const deelBlok = root.querySelector<HTMLElement>("[data-rv-deelblok]")
+        const pctOut = root.querySelector<HTMLElement>("[data-rv-pct]")
+        const noot = root.querySelector<HTMLElement>("[data-rv-noot]")
+        const out = (k: string) => root.querySelector<HTMLElement>(`[data-rv-out="${k}"]`)
+        if (!bedrag || !deel) return
+
+        // "2.500,50", "2500,50", "2500.50" en "2.500" worden allemaal goed gelezen
+        const parse = (v: string) => {
+            let s = v.replace(/[^\d,.]/g, "")
+            if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".")
+            else if (/\.\d{3}(\.|$)/.test(s)) s = s.replace(/\./g, "")
+            const n = parseFloat(s)
+            return Number.isFinite(n) ? Math.min(n, 10_000_000) : 0
+        }
+        const update = () => {
+            const scenario = root.querySelector<HTMLInputElement>("[data-rv-scenario]:checked")?.value ?? "alles"
+            const h = parse(bedrag.value)
+            const pct = scenario === "alles" ? 1 : scenario === "niets" ? 0 : Number(deel.value) / 100
+            const r = afrekening(h, pct)
+            if (deelBlok) deelBlok.hidden = scenario !== "deel"
+            if (pctOut) pctOut.textContent = `${deel.value}%`
+            const set = (k: string, v: number) => {
+                const el = out(k)
+                if (el) el.textContent = euro(v)
+            }
+            set("hoofdsom", h)
+            set("kosten", r.kosten)
+            set("betaald", r.debiteurBetaalt)
+            set("gg", r.naarGeldGarant)
+            set("u", r.naarU)
+            if (noot) noot.textContent = noten[scenario]
+            root.dataset.scenario = scenario
+            deel.style.setProperty("--pos", `${((Number(deel.value) - 5) / 90) * 100}%`)
+        }
+        root.addEventListener("input", update)
+        root.addEventListener("change", update)
+        bedrag.addEventListener("blur", () => {
+            const n = parse(bedrag.value)
+            if (n > 0) bedrag.value = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 2 }).format(n)
+        })
+        update()
+    })
+</script>
+
+<style>
+    .rv {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .rv {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 80px;
+            align-items: center;
+        }
+    }
+    .rv-copy .h2 {
+        margin-top: 14px;
+    }
+    .rv-copy .lead {
+        margin-top: 20px;
+    }
+    .rv-regels {
+        display: grid;
+        gap: 12px;
+        margin-top: 28px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.5;
+    }
+    .rv-regels li {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr);
+        gap: 10px;
+    }
+    .rv-regels :global(svg) {
+        margin-top: 2px;
+        color: var(--green);
+    }
+    .rv-regels strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+
+    .rv-kaart {
+        padding: clamp(20px, 3vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        box-shadow: var(--shadow-card);
+    }
+    .rv-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--muted);
+    }
+    .rv-label strong {
+        color: var(--ink);
+    }
+    .rv-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 16px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-md);
+        background: var(--surface);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .rv-input:focus-within {
+        border-color: var(--blue);
+        background: #fff;
+    }
+    .rv-input span {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .rv-input input {
+        flex: 1;
+        min-width: 0;
+        height: 60px;
+        border: 0;
+        background: transparent;
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        outline: none;
+    }
+    .rv-seg {
+        min-width: 0;
+        margin: 20px 0 0;
+        padding: 0;
+        border: 0;
+    }
+    .rv-seg-opties {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+    }
+    .rv-seg label {
+        position: relative;
+    }
+    .rv-seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .rv-seg-opties span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 6px;
+        border-radius: var(--r-pill);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--text);
+        text-align: center;
+        line-height: 1.2;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+    .rv-seg input:checked + span {
+        background: var(--ink);
+        color: #fff;
+    }
+    .rv-seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .rv-deel {
+        margin-top: 18px;
+    }
+    .rv-deel input {
+        --pos: 66%;
+        width: 100%;
+        height: 44px;
+        margin: 0;
+        background: transparent;
+        font-size: 1rem;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    .rv-deel input::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--blue) var(--pos), var(--surface-2) var(--pos));
+    }
+    .rv-deel input::-moz-range-track {
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--blue) var(--pos), var(--surface-2) var(--pos));
+    }
+    .rv-deel input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        margin-top: -9px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid var(--blue);
+    }
+    .rv-deel input::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid var(--blue);
+    }
+    .rv-deel input:focus-visible {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 4px;
+        border-radius: 4px;
+    }
+
+    .rv-rows {
+        display: grid;
+        margin-top: 20px;
+    }
+    .rv-rows > div {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+    }
+    .rv-rows dt {
+        color: var(--text);
+    }
+    .rv-rows dt span {
+        display: block;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .rv-rows dd {
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+    .rv-rows > .rv-sub {
+        background: var(--surface);
+        margin-inline: -12px;
+        padding-inline: 12px;
+        border-radius: var(--r-sm);
+        border-bottom-color: transparent;
+    }
+    .rv-zero dt,
+    .rv-zero dd {
+        color: var(--green);
+        font-weight: 600;
+    }
+    .rv-rows > .rv-totaal {
+        border-bottom: 0;
+        padding-top: 16px;
+    }
+    .rv-totaal dt {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: var(--ink);
+    }
+    .rv-totaal dd {
+        font-family: var(--font-display);
+        font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+        letter-spacing: -0.03em;
+    }
+    .rv-noot {
+        margin-top: 8px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        line-height: 1.55;
+    }
+</style>

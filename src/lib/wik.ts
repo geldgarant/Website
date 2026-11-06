@@ -34,3 +34,26 @@ export const euro = (n: number, decimals = 2) =>
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
     }).format(n)
+
+// Afrekening volgens de AV: binnengekomen bedragen gaan eerst naar de incassokosten (art. 7.8),
+// bij een deelbetaling met een minimum van € 45 (art. 7.4). Rente laten we in het voorbeeld buiten beschouwing.
+export const DEEL_MIN = 45
+
+export interface Afrekening {
+    kosten: number
+    debiteurBetaalt: number
+    naarGeldGarant: number
+    naarU: number
+}
+
+/** pct = deel van het totaal (hoofdsom + incassokosten) dat de debiteur betaalt, 0 tot 1. */
+export function afrekening(hoofdsom: number, pct: number): Afrekening {
+    const kosten = wikKosten(hoofdsom)
+    if (!(hoofdsom > 0)) return { kosten: 0, debiteurBetaalt: 0, naarGeldGarant: 0, naarU: 0 }
+    const p = Math.min(Math.max(pct, 0), 1)
+    const rond = (n: number) => Math.round(n * 100) / 100
+    const betaald = rond((hoofdsom + kosten) * p)
+    if (p >= 1) return { kosten, debiteurBetaalt: betaald, naarGeldGarant: kosten, naarU: hoofdsom }
+    const naarGeldGarant = rond(Math.min(betaald, Math.max(kosten, DEEL_MIN)))
+    return { kosten, debiteurBetaalt: betaald, naarGeldGarant, naarU: rond(betaald - naarGeldGarant) }
+}

@@ -101,3 +101,32 @@ export const debiteurenFaq = [
         a: "Dan betaalt u voor elk extra dossier een vast bedrag. Gebeurt dat vaker, dan rekenen we samen uit of een groter pakket voordeliger is.",
     },
 ] as const
+
+// Vragen op /tarieven. Bron: AV (incassokosten 7.2, deelbetaling 7.4 en 7.8, faillissement 10.3, intrekking 7.9,
+// procedure 8.1 tot 8.4) en de besluiten van Anas (provisie = WIK-staffel, geen succesfee, geen opstartkosten).
+export const tarievenFaq = [
+    {
+        q: "Betaal ik opstartkosten of een abonnement voor incasso?",
+        a: "Nee. Een incassodossier starten kost u niets en u zit nergens aan vast. Een abonnement heeft u alleen nodig als u kiest voor debiteurenbeheer.",
+    },
+    {
+        q: "Hoe verdient GeldGarant dan aan mijn dossier?",
+        a: "Aan de wettelijke incassokosten en de rente die de debiteur betaalt. Onze provisie is precies de wettelijke staffel. Een succesfee bovenop uw factuurbedrag rekenen we niet.",
+    },
+    {
+        q: "Wat als de debiteur maar een deel betaalt?",
+        a: "Wat binnenkomt gaat eerst naar de incassokosten, met een minimum van €45. De rest maken we aan u over. U kunt het dossier dan sluiten of, met uw akkoord, doorpakken via de rechter.",
+    },
+    {
+        q: "Wat kost een gerechtelijke procedure?",
+        a: "Dat hangt af van het bedrag en de rechtbank. Griffierecht en deurwaarder zijn voor uw rekening en hoort u vooraf, zodat u kunt beslissen. We vragen daarvoor een voorschot en verhalen de kosten waar mogelijk op de debiteur.",
+    },
+    {
+        q: "Zijn de incassokosten voor een particulier anders dan voor een bedrijf?",
+        a: "Nee, beide volgen de wettelijke staffel met een minimum van €40. Bij een particulier mogen ze pas worden gerekend nadat de 14-dagenbrief is verstuurd en de termijn is verlopen.",
+    },
+    {
+        q: "Wat als ik de opdracht intrek?",
+        a: "Trekt u de opdracht in nadat we gestart zijn, dan bent u de berekende incassokosten verschuldigd, met een minimum van 10% van de hoofdsom en ten minste €95.",
+    },
+] as const
