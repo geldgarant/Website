@@ -146,9 +146,14 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 10. ~~**`/incasso/wik-brief`**~~ en ~~**`/incasso/incasso-in-het-buitenland`**~~ (fase B): gebouwd op 6 nov 2026.
     - /wik-brief: termijnrekenaar in de hero (`src/lib/termijn.ts` → `veertienDagen()`, post = ontvangst op de 2e bezorgdag di t/m za, e-mail = dezelfde dag; unit-test `tests/unit/termijn.test.ts`), geannoteerde voorbeeldbrief met de vijf eisen (bron HR 25-11-2016), "na de 14 dagen", `wikFaq`. Briefletter in Inter: Newsreader is alleen cursief geladen.
     - /incasso-in-het-buitenland: feitenkaart, "een ander vak" (4), aanpak in 5 stappen, landen (BE, DE, FR, VK, uit de huidige site) + EU-procedures (betalingsbevel, geringe vorderingen tot € 5.000, vonnis uitvoerbaar in de EU), `buitenlandFaq`. CTA's naar `/contact-opnemen?onderwerp=buitenland`. Geen tarieven genoemd: "vooraf bekend, per land".
-11. **Volgende (fase B):** `/branches` (overzicht) + 10 branchepagina's met één template; daarna fase C (kennisbank).
-12. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
-13. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+11. ~~**`/branches`** + 10 branchepagina's~~ (fase B): gebouwd op 6 nov 2026.
+    - Eén template `src/pages/branches/[slug].astro` (getStaticPaths), inhoud per branche in `src/data/branches.ts` (`brancheData`: title, description, h1, lead, feiten, 4 situaties, 3 regels, rekenvoorbeeld, 4 FAQ, 3 verwante branches). Juridische bronnen staan bovenin dat bestand. Elke pagina heeft eigen title (≤ 62 tekens), eigen description (≤ 162), ±700 woorden unieke tekst, JSON-LD Service + BreadcrumbList + FAQPage en ±10 interne links.
+    - Overzicht `src/pages/branches/index.astro` (CollectionPage + ItemList), `branchesFaq`.
+    - `tests/e2e/pages.ts` voegt de dynamische routes toe (bestanden met `[` worden anders overgeslagen).
+    - **URL-vorm (SEO):** canonicals en sitemap zijn nu zonder slash aan het eind, gelijk aan de Framer-URL's (`trailingSlash: "never"` in `astro.config.mjs`, canonical in `Base.astro` zonder `/`), en Workers stuurt `/pagina/` door naar `/pagina` (`html_handling: "drop-trailing-slash"` in `wrangler.jsonc`).
+12. **Volgende:** fase C: kennisbank (27 artikelen, Astro content collections, slugs behouden), daarna `/werken-bij` + vacatures, `/hulp-nodig-bij-geldproblemen`, en later `/brief-ontvangen`.
+13. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+14. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 

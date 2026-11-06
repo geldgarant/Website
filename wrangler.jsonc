@@ -7,5 +7,7 @@
     "assets": {
         "directory": "./dist",
         "not_found_handling": "404-page",
+        // /pagina/ → 307 naar /pagina; één URL per pagina, zoals op de huidige Framer-site
+        "html_handling": "drop-trailing-slash",
     },
 }

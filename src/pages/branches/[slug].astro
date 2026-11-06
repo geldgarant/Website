@@ -1,0 +1,647 @@
+---
+// B /branches/<slug>: één template, eigen inhoud per branche uit src/data/branches.ts.
+// Hoofdvraag: "Snappen jullie mijn branche, en wat doen jullie in mijn situatie?"
+// Volgorde: wie en wat (hero + feiten) → herkenbare situaties (01) → regels in uw branche (02)
+// → rekenvoorbeeld (03) → vragen (04) → verder (05: verwante branches + diensten) → CTA.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Feitenkaart from "../../components/Feitenkaart.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site, branches } from "../../data/site"
+import { brancheData, brancheBySlug, type Branche } from "../../data/branches"
+import { wikKosten, euro } from "../../lib/wik"
+import { huidigPercentage } from "../../lib/rente"
+
+export function getStaticPaths() {
+    return brancheData.map((b) => ({ params: { slug: b.slug }, props: { b } }))
+}
+interface Props {
+    b: Branche
+}
+const { b } = Astro.props
+const label = branches.find((x) => x.slug === b.slug)?.label ?? b.voor
+const url = `https://geldgarant.com/branches/${b.slug}`
+const [voor, accent, na = ""] = b.h1
+
+const kosten = wikKosten(b.voorbeeld.bedrag)
+const vandaag = new Date().toISOString().slice(0, 10)
+const rentePct = String(huidigPercentage(b.voorbeeld.soort, vandaag)).replace(".", ",")
+const consument = b.voorbeeld.soort === "consument"
+
+const verwant = b.verwant.map((s) => brancheBySlug[s]).filter(Boolean)
+const verder = [
+    { t: "Zo werkt incasso", d: "Van indienen tot uitbetaling, stap voor stap.", href: "/hoe-werkt-het" },
+    { t: "Tarieven", d: "Wat het kost, en wanneer het u niets kost.", href: "/tarieven" },
+    { t: "Debiteurenbeheer", d: "Facturen bewaken voordat het een incassozaak wordt.", href: "/debiteurenbeheer" },
+    ...(["incasso-transport", "incasso-groothandel"].includes(b.slug)
+        ? [
+              {
+                  t: "Incasso in het buitenland",
+                  d: "Klant over de grens? Zo pakken we het aan.",
+                  href: "/incasso/incasso-in-het-buitenland",
+              },
+          ]
+        : [{ t: "Incassokosten berekenen", d: "Reken uit wat u mag doorberekenen.", href: "/incasso/incassokosten-berekenen" }]),
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: `Incasso voor ${b.voor}`,
+        serviceType: "Incassodienstverlening",
+        description: b.description,
+        url,
+        areaServed: "NL",
+        audience: { "@type": "BusinessAudience", name: label },
+        provider: {
+            "@type": "ProfessionalService",
+            name: "GeldGarant",
+            url: "https://geldgarant.com",
+            telephone: "+31852127914",
+            address: {
+                "@type": "PostalAddress",
+                streetAddress: site.street,
+                postalCode: site.postcode,
+                addressLocality: site.city,
+                addressCountry: "NL",
+            },
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Branches", item: "https://geldgarant.com/branches" },
+            { "@type": "ListItem", position: 3, name: label, item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: b.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={b.title} description={b.description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Branches", href: "/branches" }, { label }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <p class="hero-tag">
+                        <Icon name={b.icon} size={16} />
+                        {label}
+                    </p>
+                    <h1 class="display">
+                        {voor}
+                        <span class="accent">{accent}</span>
+                        {na}
+                    </h1>
+                    <p class="lead">{b.lead}</p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={site.phoneHref}>
+                            <Icon name="phone" size={18} />
+                            Bel{" "}
+                            {site.phone}
+                        </a>
+                    </div>
+                    <ul role="list" class="hero-checks">
+                        <li>
+                            <Icon name="check" size={18} />
+                            Binnen 1 uur gestart
+                        </li>
+                        <li>
+                            <Icon name="check" size={18} />€ 0 bij volledige betaling
+                        </li>
+                        <li>
+                            <Icon name="check" size={18} />
+                            Geregistreerd bij Justis
+                        </li>
+                    </ul>
+                </div>
+                <Feitenkaart titel={`Incasso voor ${b.voor}`} id="feiten-title" items={b.feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 SITUATIES -->
+    <section class="section bg-surface" aria-labelledby="situaties-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Herkenbaar?
+                </p>
+                <h2 class="h2" id="situaties-title">
+                    Situaties die we {b.bij} vaak <span class="accent">zien</span>
+                </h2>
+                <p class="lead">En wat wij dan voor u doen.</p>
+            </div>
+            <ul role="list" class="situaties">
+                {b.situaties.map((s, i) => (
+                    <li data-reveal style={`--d:${i}`}>
+                        <h3 class="sit-t">{s.t}</h3>
+                        <p class="sit-d">
+                            <span class="sit-label">Wat wij doen</span>
+                            {s.d}
+                        </p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 02 REGELS -->
+    <section class="section" aria-labelledby="regels-title">
+        <div class="wrap regels-grid">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Goed om te weten
+                </p>
+                <h2 class="h2" id="regels-title">
+                    Belangrijk om te weten {b.bij}
+                </h2>
+                <p class="lead">Drie punten die in uw branche vaak het verschil maken tussen betaald worden en lang wachten.</p>
+            </div>
+            <ol role="list" class="regels">
+                {b.regels.map((r, i) => (
+                    <li>
+                        <span class="r-num num" aria-hidden="true">
+                            {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div>
+                            <h3 class="r-t">{r.t}</h3>
+                            <p>{r.d}</p>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 03 REKENVOORBEELD -->
+    <section class="section voorbeeld-sec" aria-labelledby="voorbeeld-title">
+        <div class="wrap">
+            <div class="voorbeeld bg-ink">
+                <div class="vb-copy">
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Rekenvoorbeeld
+                    </p>
+                    <h2 class="h2" id="voorbeeld-title">
+                        Wat het u <span class="accent">kost</span>
+                    </h2>
+                    <p class="lead">
+                        Voorbeeld: {b.voorbeeld.wat} van {euro(b.voorbeeld.bedrag)}. De wettelijke kosten zijn voor de debiteur.
+                        Betaalt die volledig, dan betaalt u ons niets.
+                    </p>
+                    <a class="textlink vb-link" href="/incasso/incassokosten-berekenen">
+                        Reken uw eigen factuur uit
+                    </a>
+                </div>
+                <div class="vb-kaart">
+                    <p class="vb-label">Voorbeeld</p>
+                    <dl>
+                        <div>
+                            <dt>Openstaand bedrag</dt>
+                            <dd class="num">{euro(b.voorbeeld.bedrag)}</dd>
+                        </div>
+                        <div>
+                            <dt>
+                                Incassokosten
+                                <small>{consument ? "betaalt de debiteur, na de 14-dagenbrief" : "betaalt de debiteur"}</small>
+                            </dt>
+                            <dd class="num">{euro(kosten)}</dd>
+                        </div>
+                        <div>
+                            <dt>
+                                {consument ? "Wettelijke rente" : "Wettelijke handelsrente"}
+                                <small>betaalt de debiteur, vanaf de vervaldatum</small>
+                            </dt>
+                            <dd class="num">{rentePct}% per jaar</dd>
+                        </div>
+                        <div class="vb-u">
+                            <dt>Uw kosten bij volledige betaling</dt>
+                            <dd class="num">€ 0,00</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={b.faq} idx="04">
+        <Fragment slot="title">Vragen over incasso {b.bij}</Fragment>
+    </Faq>
+
+    <!-- 05 VERDER -->
+    <section class="section" aria-labelledby="verder-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Verder kijken
+                </p>
+                <h2 class="h2" id="verder-title">
+                    Ook <span class="accent">interessant</span>
+                </h2>
+            </div>
+            <div class="verder">
+                <ul role="list" class="verwant" aria-label="Verwante branches">
+                    {verwant.map((v) => (
+                        <li>
+                            <a class="v-kaart" href={`/branches/${v.slug}`}>
+                                <span class="v-icon" aria-hidden="true">
+                                    <Icon name={v.icon} size={20} />
+                                </span>
+                                <span class="v-tekst">
+                                    <span class="v-t">Incasso voor {v.voor}</span>
+                                    <span class="v-d">{v.kort}</span>
+                                </span>
+                                <span class="v-go" aria-hidden="true">
+                                    <Icon name="arrow-up-right" size={18} />
+                                </span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <ul role="list" class="diensten" aria-label="Meer over onze dienstverlening">
+                    {verder.map((d) => (
+                        <li>
+                            <a href={d.href}>
+                                <span class="d-t">{d.t}</span>
+                                <span class="d-d">{d.d}</span>
+                            </a>
+                        </li>
+                    ))}
+                    <li>
+                        <a href="/branches">
+                            <span class="d-t">Alle branches</span>
+                            <span class="d-d">Bekijk het overzicht.</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <SlotCta lead="Dien uw vordering in ongeveer drie minuten in. Op werkdagen gaan we binnen het uur voor u aan de slag.">
+        Laat uw geld niet langer <span class="accent">liggen</span>
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px 6px 10px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .hero-tag :global(svg) {
+        color: var(--blue);
+    }
+    .hero h1 {
+        margin-top: 20px;
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 36px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+    .hero-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 22px;
+        margin-top: 28px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .hero-checks li {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .hero-checks :global(svg) {
+        color: var(--green);
+    }
+
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+
+    /* 01 */
+    .situaties {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 800px) {
+        .situaties {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .situaties li {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .sit-t {
+        font-family: var(--font-display);
+        font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .sit-d {
+        display: grid;
+        gap: 6px;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .sit-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--blue-ink);
+    }
+
+    /* 02 */
+    .regels-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+    }
+    @media (min-width: 1024px) {
+        .regels-grid {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .regels {
+        display: grid;
+        border-top: 1px solid var(--line);
+    }
+    .regels li {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 16px;
+        padding-block: 22px;
+        border-bottom: 1px solid var(--line);
+    }
+    .r-num {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--blue-ink);
+    }
+    .r-t {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .regels p {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+
+    /* 03 */
+    .voorbeeld-sec {
+        padding-top: 0;
+    }
+    .voorbeeld {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+        padding: clamp(28px, 5vw, 64px);
+        border-radius: var(--r-xl);
+    }
+    @media (min-width: 1024px) {
+        .voorbeeld {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 72px;
+            align-items: center;
+        }
+    }
+    .vb-copy .h2 {
+        margin-top: 14px;
+    }
+    .vb-copy .lead {
+        margin-top: 20px;
+    }
+    .vb-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: 12px;
+        font-weight: 600;
+    }
+    .vb-kaart {
+        padding: clamp(20px, 2.6vw, 28px);
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .vb-label {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .vb-kaart dl {
+        margin-top: 10px;
+    }
+    .vb-kaart dl div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+    }
+    .vb-kaart dt {
+        color: var(--text);
+    }
+    .vb-kaart dt small {
+        display: block;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .vb-kaart dd {
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+        text-align: right;
+    }
+    .vb-kaart .vb-u {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    .vb-u dt {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .vb-u dd {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        color: var(--green);
+    }
+
+    /* 05 */
+    .verder {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    @media (min-width: 1024px) {
+        .verder {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 32px;
+        }
+    }
+    .verwant {
+        display: grid;
+        gap: 10px;
+    }
+    .v-kaart {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 20px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+        transition:
+            background-color 0.2s ease,
+            box-shadow 0.25s var(--ease);
+    }
+    .v-kaart:hover {
+        background: #fff;
+        box-shadow: var(--shadow-card);
+    }
+    .v-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .v-tekst {
+        display: grid;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+    }
+    .v-t {
+        font-family: var(--font-display);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .v-d {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.45;
+    }
+    .v-go {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+    }
+    .diensten {
+        display: grid;
+        align-content: start;
+        border-top: 1px solid var(--line);
+    }
+    .diensten a {
+        display: grid;
+        gap: 2px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .d-t {
+        font-weight: 600;
+        color: var(--ink);
+        text-decoration: underline;
+        text-decoration-color: var(--blue);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+    }
+    .diensten a:hover .d-t {
+        text-decoration-color: var(--ink);
+    }
+    .d-d {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+</style>

@@ -1,0 +1,297 @@
+---
+// B /branches. Hoofdvraag: "Kennen jullie mijn branche?" Overzicht van de tien branchepagina's.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { brancheData } from "../../data/branches"
+import { branchesFaq } from "../../data/faq"
+
+const title = "Incasso per branche: bouw, transport, zorg en meer | GeldGarant"
+const description =
+    "Incasso afgestemd op uw branche: bouw, transport, verhuur, automotive, groothandel, dienstverlening, webshops, zorg, mkb en zzp. Bekijk de aanpak per sector."
+const url = "https://geldgarant.com/branches"
+
+const waarom = [
+    {
+        icon: "scale",
+        kop: "Eigen regels",
+        tekst: "Een vrachtfactuur verjaart na een jaar, een garage mag een auto vasthouden en een particuliere opdrachtgever in de bouw mag 5% inhouden. Wie dat weet, int sneller.",
+    },
+    {
+        icon: "chat",
+        kop: "Eigen discussies",
+        tekst: "Meerwerk in de bouw, uren in de dienstverlening, een pakket dat nooit aankwam bij een webshop. We kennen de argumenten, en weten welke stukken ze weerleggen.",
+    },
+    {
+        icon: "user",
+        kop: "Eigen toon",
+        tekst: "Een patiënt benader je anders dan een hoofdaannemer. We passen de toon aan op uw klant, zodat de relatie heel blijft waar dat kan.",
+    },
+] as const
+
+const jsonLd = [
+    { "@context": "https://schema.org", "@type": "CollectionPage", name: "Incasso per branche", url, description },
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        itemListElement: brancheData.map((b, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: `Incasso voor ${b.voor}`,
+            url: `https://geldgarant.com/branches/${b.slug}`,
+        })),
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Branches", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: branchesFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Branches" }]} />
+            <div class="hero-kop">
+                <h1 class="display">
+                    Incasso per <span class="accent">branche</span>
+                </h1>
+                <p class="lead">
+                    Elke branche heeft eigen facturen, eigen regels en eigen discussies. Kies uw branche en lees hoe wij daar te
+                    werk gaan. Staat de uwe er niet bij? Dan helpen we u net zo goed.
+                </p>
+            </div>
+            <ul role="list" class="raster">
+                {brancheData.map((b) => (
+                    <li>
+                        <a class="kaart" href={`/branches/${b.slug}`}>
+                            <span class="k-icon" aria-hidden="true">
+                                <Icon name={b.icon} size={22} />
+                            </span>
+                            <span class="k-t">Incasso voor {b.voor}</span>
+                            <span class="k-d">{b.kort}</span>
+                            <span class="k-go" aria-hidden="true">
+                                Bekijk de aanpak
+                                <Icon name="arrow" size={16} />
+                            </span>
+                        </a>
+                    </li>
+                ))}
+                <li>
+                    <a class="kaart kaart-anders bg-ink" href="/contact-opnemen">
+                        <span class="k-t">Uw branche er niet bij?</span>
+                        <span class="k-d">We werken voor ondernemers in elke branche waar op rekening wordt geleverd.</span>
+                        <span class="k-go" aria-hidden="true">
+                            Neem contact op
+                            <Icon name="arrow" size={16} />
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section waarom-sec" aria-labelledby="waarom-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Waarom het uitmaakt
+                </p>
+                <h2 class="h2" id="waarom-title">
+                    Branchekennis maakt het verschil tussen <span class="accent">wachten</span> en betaald worden
+                </h2>
+            </div>
+            <ul role="list" class="waarom">
+                {waarom.map((w) => (
+                    <li>
+                        <span class="w-icon" aria-hidden="true">
+                            <Icon name={w.icon} size={22} />
+                        </span>
+                        <h3 class="h3">{w.kop}</h3>
+                        <p>{w.tekst}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <Faq items={branchesFaq} idx="02">
+        <Fragment slot="title">
+            Vragen over <span class="accent">branches</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        lead={`Dien uw vordering in ongeveer drie minuten in, of bel ${site.phone.replace(/\u00a0/g, " ")}. Op werkdagen gaan we binnen het uur aan de slag.`}
+    >
+        Welke branche ook: wij <span class="accent">innen</span> het
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-kop {
+        max-width: 46rem;
+        margin: clamp(24px, 3vw, 40px) 0 clamp(32px, 4vw, 56px);
+    }
+    .hero h1 {
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+    }
+    .hero .lead {
+        margin-top: 24px;
+    }
+    .raster {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 640px) {
+        .raster {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (min-width: 1024px) {
+        .raster {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .raster > li {
+        display: flex;
+    }
+    .kaart {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        padding: clamp(22px, 2.6vw, 30px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+        transition:
+            background-color 0.2s ease,
+            box-shadow 0.25s var(--ease);
+    }
+    .kaart:hover {
+        background: #fff;
+        box-shadow: var(--shadow-card);
+    }
+    .k-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 8px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .kaart:hover .k-icon {
+        background: var(--blue-soft);
+    }
+    .k-t {
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .k-d {
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+    .k-go {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: auto;
+        padding-top: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--blue-ink);
+    }
+    .kaart:hover .k-go :global(svg) {
+        transform: translateX(3px);
+    }
+    .k-go :global(svg) {
+        transition: transform 0.25s var(--ease);
+    }
+    .kaart-anders {
+        background: var(--ink);
+    }
+    .kaart-anders:hover {
+        background: var(--ink-2);
+    }
+    .kaart-anders .k-t {
+        color: #fff;
+    }
+    .kaart-anders .k-d {
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .kaart-anders .k-go {
+        color: var(--blue-on-dark);
+    }
+
+    .kop {
+        max-width: 46rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .waarom {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .waarom {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .waarom li {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .waarom-sec {
+        padding-top: 0;
+    }
+    .w-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 6px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .waarom p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+</style>

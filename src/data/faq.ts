@@ -348,3 +348,19 @@ export const buitenlandFaq = [
         a: "Dan kan het ook, maar de EU-procedures gelden daar niet en een Nederlands vonnis werkt er niet altijd. We beoordelen eerst of het minnelijke traject kans heeft en wat een procedure ter plaatse zou kosten.",
     },
 ] as const
+
+// Vragen op /branches (overzicht).
+export const branchesFaq = [
+    {
+        q: "Staat mijn branche er niet tussen. Kunnen jullie mij toch helpen?",
+        a: "Vrijwel zeker. We werken voor ondernemers in elke branche waar op rekening wordt geleverd. De pagina’s hier laten zien waar we vaak mee te maken hebben, maar de aanpak werkt voor iedere onbetaalde factuur.",
+    },
+    {
+        q: "Verschillen de kosten per branche?",
+        a: "Nee. In elke branche volgen de incassokosten de wettelijke staffel en betaalt u niets als de debiteur volledig betaalt. Alleen bij debiteurenbeheer kiest u een pakket dat past bij het aantal facturen.",
+    },
+    {
+        q: "Is de aanpak anders als mijn klanten particulieren zijn?",
+        a: "Ja. Bij particulieren sturen we altijd eerst de wettelijke 14-dagenbrief en gelden strengere regels voor kosten en rente. Bij bedrijven gelden de wettelijke handelsrente en zakelijke termijnen. Wij passen de aanpak per debiteur aan.",
+    },
+] as const

@@ -1,5 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
+import { branches } from "../../src/data/site"
 
 // Alle statische routes uit src/pages. Nieuwe pagina's worden automatisch meegetest.
 const root = path.resolve("src/pages")
@@ -23,4 +24,5 @@ export const routes = walk(root)
     )
     .map((r) => (r === "/" ? r : r.replace(/\/$/, "")))
     .filter((r) => r !== "/404")
+    .concat(branches.map((b) => `/branches/${b.slug}`)) // dynamische routes uit [slug].astro
     .sort()

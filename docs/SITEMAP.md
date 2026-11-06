@@ -98,7 +98,7 @@ Elke pagina krijgt één hoofdvraag van de bezoeker. Elke sectie op die pagina b
 | **Nieuw (Breyta-gat):** `/incasso/gerechtelijke-procedure` | Wanneer, kosten vooraf, alleen met akkoord. Alleen als jullie dit aanbieden.   |
 | **Nieuw:** `/incasso/faillissement`                        | Vordering bij de curator, €115 excl. btw (uit de FAQ)                          |
 | `/wki` ✓, `/nowid` ✓ (6 nov)                               | Vertrouwenspagina's, gebouwd. Feiten met bronnen in `faq.ts`.                  |
-| `/branches` + 10 branches                                  | Eén template: branchespecifieke hero, typische situaties, FAQ                  |
+| `/branches` + 10 branches ✓ (6 nov)                        | Eén template, unieke inhoud per branche in `src/data/branches.ts`              |
 
 ### Fase C: content, SEO en debiteur
 

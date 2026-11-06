@@ -17,7 +17,7 @@ interface Props {
     stickyCta?: boolean
 }
 const { title, description, jsonLd = [], noindex = false, stickyCta = true } = Astro.props
-const canonical = new URL(Astro.url.pathname, Astro.site)
+const canonical = new URL(Astro.url.pathname.replace(/\/+$/, "") || "/", Astro.site)
 ---
 
 <!doctype html>
