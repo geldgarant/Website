@@ -93,14 +93,16 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 5. Verifieer: shot, resoluties, qa, lhci.
 6. Push, stuur screenshots en vraag om akkoord voor je de volgende pagina doet.
 
-7. **`/incasso`** (A1): de belangrijkste dienstpagina. Hergebruik `Proces.astro` en `Kosten.astro` waar het past, maar maak er een eigen, diepere pagina van, geen kopie van de homepage.
-8. **`/debiteurenbeheer`** (A2). Prijzen pas tonen na bevestiging.
-9. **`/tarieven`** (A3). Het AV-document met de provisiestaffel is nodig.
-10. **`/vordering-indienen`** (A4): het formulier op de intake-worker.
-11. `/over-ons`, `/contact-opnemen`, `/hoe-werkt-het` (A5–A7).
-12. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
-13. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
-14. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+**Volgorde van de pagina's:**
+
+1. **`/incasso`** (A1): de belangrijkste dienstpagina. Hergebruik `Proces.astro` en `Kosten.astro` waar het past, maar maak er een eigen, diepere pagina van, geen kopie van de homepage.
+2. **`/debiteurenbeheer`** (A2). Prijzen pas tonen na bevestiging.
+3. **`/tarieven`** (A3). Het AV-document met de provisiestaffel is nodig.
+4. **`/vordering-indienen`** (A4): het formulier op de intake-worker.
+5. `/over-ons`, `/contact-opnemen`, `/hoe-werkt-het` (A5–A7).
+6. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
+7. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+8. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 
