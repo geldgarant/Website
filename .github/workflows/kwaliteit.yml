@@ -1,0 +1,51 @@
+name: Kwaliteit
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    controle:
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+            - run: npm ci
+            - run: npx playwright install --with-deps chromium
+
+            - name: Types, lint en opmaak
+              run: npm run check && npm run lint && npm run format:check
+            - name: Unit-tests
+              run: npm run test:unit
+            - name: Build
+              run: npm run build
+            - name: HTML en SEO
+              run: npm run check:html && npm run check:seo
+            - name: Interne links
+              # Staat op "mag falen" tot alle pagina's van de revamp gebouwd zijn.
+              continue-on-error: true
+              run: npm run check:links
+            - name: Browsertests (mobiel, tablet, desktop, axe)
+              run: npm run test:e2e
+            - name: Lighthouse
+              run: npx lhci autorun
+            - name: Afhankelijkheden
+              run: npm run audit:deps
+
+            - uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: rapporten
+                  path: |
+                      playwright-report/
+                      .lighthouseci/
+                  retention-days: 14

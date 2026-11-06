@@ -1,0 +1,90 @@
+---
+import "@fontsource/poppins/500.css"
+import "@fontsource/poppins/600.css"
+import "@fontsource-variable/inter"
+import "@fontsource-variable/newsreader/opsz-italic.css"
+import "../styles/global.css"
+import Header from "../components/Header.astro"
+import Footer from "../components/Footer.astro"
+
+interface Props {
+    title: string
+    description: string
+    jsonLd?: object[]
+}
+const { title, description, jsonLd = [] } = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site)
+---
+
+<!doctype html>
+<html lang="nl">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="nl_NL" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={new URL("/brand/og-default.png", Astro.site)} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="theme-color" content="#061126" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <script is:inline>
+            document.documentElement.classList.add("js")
+        </script>
+        {jsonLd.map((data) => (
+            <script type="application/ld+json" set:html={JSON.stringify(data)} />
+        ))}
+    </head>
+    <body>
+        <a class="skip" href="#inhoud">
+            Naar de inhoud
+        </a>
+        <Header />
+        <main id="inhoud">
+            <slot />
+        </main>
+        <Footer />
+        <script>
+            // Subtiele onthulling bij scrollen; zonder JS of met reduced motion staat alles direct zichtbaar
+            const els = document.querySelectorAll<HTMLElement>("[data-reveal]")
+            if ("IntersectionObserver" in window) {
+                const io = new IntersectionObserver(
+                    (entries) =>
+                        entries.forEach((e) => {
+                            if (e.isIntersecting) {
+                                e.target.classList.add("is-in")
+                                io.unobserve(e.target)
+                            }
+                        }),
+                    { rootMargin: "0px 0px -8% 0px" },
+                )
+                els.forEach((el) => io.observe(el))
+            } else els.forEach((el) => el.classList.add("is-in"))
+        </script>
+    </body>
+</html>
+
+<style>
+    .skip {
+        position: absolute;
+        left: 12px;
+        top: -60px;
+        z-index: 100;
+        background: var(--ink);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: var(--r-pill);
+    }
+    .skip:focus {
+        top: 12px;
+    }
+</style>

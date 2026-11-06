@@ -1,0 +1,271 @@
+---
+import { wikKosten, euro } from "../lib/wik"
+const start = 2500
+const presets = [500, 2500, 10000]
+---
+
+<section class="afr" aria-labelledby="afr-title" data-afrekening>
+    <div class="afr-head">
+        <h2 id="afr-title" class="afr-title">
+            Uw afrekening
+        </h2>
+        <span class="afr-tag">Rekenvoorbeeld</span>
+    </div>
+
+    <label class="afr-label" for="afr-bedrag">
+        Openstaand factuurbedrag
+    </label>
+    <div class="afr-input">
+        <span aria-hidden="true">€</span>
+        <input
+            id="afr-bedrag"
+            name="bedrag"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            enterkeyhint="done"
+            value="2.500"
+            aria-describedby="afr-note"
+            data-bedrag
+        />
+    </div>
+    <div class="afr-presets" role="group" aria-label="Snel een bedrag kiezen">
+        {presets.map((p) => (
+            <button type="button" data-preset={p}>
+                {euro(p, 0)}
+            </button>
+        ))}
+    </div>
+
+    <dl class="afr-rows num">
+        <div>
+            <dt>Hoofdsom</dt>
+            <dd data-out="hoofdsom">{euro(start)}</dd>
+        </div>
+        <div>
+            <dt>
+                Incassokosten volgens de wet <span>betaalt de debiteur</span>
+            </dt>
+            <dd data-out="kosten">{euro(wikKosten(start))}</dd>
+        </div>
+        <div>
+            <dt>
+                Wettelijke rente <span>betaalt de debiteur</span>
+            </dt>
+            <dd class="afr-soft">loopt op per dag</dd>
+        </div>
+        <div class="afr-zero">
+            <dt>Uw kosten</dt>
+            <dd>{euro(0)}</dd>
+        </div>
+        <div class="afr-total">
+            <dt>U ontvangt</dt>
+            <dd data-out="ontvangt" aria-live="polite">
+                {euro(start)}
+            </dd>
+        </div>
+    </dl>
+
+    <p class="afr-note" id="afr-note">
+        Bij volledige betaling door de debiteur. Incassokosten en wettelijke rente zijn voor GeldGarant; uw hoofdsom krijgt u
+        volledig.{" "}
+        <a class="textlink" href="/tarieven">
+            Zo werkt het bij gedeeltelijke betaling
+        </a>
+    </p>
+</section>
+
+<script>
+    import { wikKosten, euro } from "../lib/wik"
+
+    const root = document.querySelector<HTMLElement>("[data-afrekening]")
+    const input = root?.querySelector<HTMLInputElement>("[data-bedrag]")
+    const out = (key: string) => root?.querySelector<HTMLElement>(`[data-out="${key}"]`)
+
+    // "2.500,50" (NL), "2500,50", "2500.50" en "2.500" worden allemaal goed gelezen
+    const parse = (v: string) => {
+        let s = v.replace(/[^\d,.]/g, "")
+        if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".")
+        else if (/\.\d{1,2}$/.test(s)) s = s.replace(/\.(?=.*\.)/g, "")
+        else s = s.replace(/\./g, "")
+        const n = Number(s)
+        return Number.isFinite(n) ? Math.min(n, 10_000_000) : 0
+    }
+    const fmtInput = (n: number) => new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 2 }).format(n)
+
+    const render = (n: number) => {
+        const h = out("hoofdsom"),
+            k = out("kosten"),
+            o = out("ontvangt")
+        if (h) h.textContent = euro(n)
+        if (k) k.textContent = n > 0 ? euro(wikKosten(n)) : euro(0)
+        if (o) o.textContent = euro(n)
+    }
+
+    input?.addEventListener("focus", () => input.select())
+    input?.addEventListener("input", () => render(parse(input.value)))
+    input?.addEventListener("blur", () => {
+        const n = parse(input.value)
+        input.value = n ? fmtInput(n) : ""
+    })
+    root?.querySelectorAll<HTMLButtonElement>("[data-preset]").forEach((b) =>
+        b.addEventListener("click", () => {
+            const n = Number(b.dataset.preset)
+            if (input) input.value = fmtInput(n)
+            render(n)
+        }),
+    )
+</script>
+
+<style>
+    .afr {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: clamp(20px, 3vw, 32px);
+        box-shadow: var(--shadow-card);
+    }
+    .afr-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .afr-title {
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .afr-tag {
+        font-size: 0.8125rem;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 2px 10px;
+    }
+    .afr-label {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--muted);
+        margin-bottom: 8px;
+    }
+    .afr-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-md);
+        padding: 0 16px;
+        background: var(--surface);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .afr-input:focus-within {
+        border-color: var(--blue);
+        background: #fff;
+    }
+    .afr-input span {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .afr-input input {
+        font-family: var(--font-display);
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+        padding: 12px 0;
+        font-size: 1.75rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        outline: none;
+    }
+    .afr-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .afr-presets button {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 999px;
+        padding: 6px 16px;
+        min-height: 44px;
+        font-size: 0.9375rem;
+        cursor: pointer;
+        color: var(--text);
+    }
+    .afr-presets button:hover {
+        border-color: var(--blue);
+        color: var(--blue-ink);
+    }
+
+    .afr-rows {
+        margin-top: 24px;
+        border-top: 1px solid var(--line);
+    }
+    .afr-rows > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .afr-rows dt {
+        color: var(--text);
+    }
+    .afr-rows dt span {
+        display: block;
+        font-size: 0.8125rem;
+        color: var(--muted);
+    }
+    .afr-rows dd {
+        white-space: nowrap;
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .afr-soft {
+        color: var(--muted) !important;
+        font-weight: 400 !important;
+        font-size: 0.9375rem;
+    }
+    .afr-zero dt,
+    .afr-zero dd {
+        color: var(--green) !important;
+        font-weight: 600 !important;
+    }
+    .afr-zero {
+        background: var(--green-bg);
+        margin-inline: -12px;
+        padding-inline: 12px !important;
+        border-radius: var(--r-sm);
+        border-bottom-color: transparent !important;
+    }
+    .afr-total {
+        border-bottom: 0 !important;
+        padding-top: 16px !important;
+    }
+    .afr-total dt {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .afr-total dd {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+    .afr-note {
+        margin-top: 12px;
+        font-size: 0.875rem;
+        line-height: 1.55;
+        color: var(--muted);
+    }
+</style>

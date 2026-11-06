@@ -1,0 +1,49 @@
+import { test, expect } from "@playwright/test"
+
+test.describe("homepage interacties", () => {
+    test("mobiel menu opent, sluit met knop en Escape", async ({ page, isMobile }) => {
+        test.skip(!isMobile, "alleen mobiel")
+        await page.goto("/")
+        const knop = page.locator("[data-menu-toggle]")
+        const menu = page.locator("[data-menu]")
+        await expect(menu).toBeHidden()
+        await knop.click()
+        await expect(menu).toBeVisible()
+        await expect(knop).toHaveAttribute("aria-expanded", "true")
+        await page.keyboard.press("Escape")
+        await expect(menu).toBeHidden()
+        await knop.click()
+        await knop.click()
+        await expect(menu).toBeHidden()
+    })
+
+    test("afrekening rekent volgens de WIK-staffel", async ({ page }) => {
+        await page.goto("/")
+        const veld = page.locator("[data-bedrag]")
+        const kosten = page.locator('[data-out="kosten"]')
+        await veld.fill("1234,50")
+        await expect(kosten).toHaveText("€ 185,18")
+        await veld.fill("10.000")
+        await expect(kosten).toHaveText("€ 875,00")
+        await veld.fill("100")
+        await expect(kosten).toHaveText("€ 40,00")
+        await page.locator('[data-preset="2500"]').click()
+        await expect(kosten).toHaveText("€ 375,00")
+        await expect(page.locator('[data-out="ontvangt"]')).toHaveText("€ 2.500,00")
+    })
+
+    test("FAQ is met het toetsenbord te openen en antwoorden staan in de HTML", async ({ page }) => {
+        await page.goto("/")
+        const eerste = page.locator(".faq-item").first()
+        await expect(eerste.locator("p")).toHaveCount(1)
+        await eerste.locator("summary").focus()
+        await page.keyboard.press("Enter")
+        await expect(eerste).toHaveAttribute("open", "")
+    })
+
+    test("telefoonlinks wijzen naar het juiste nummer", async ({ page }) => {
+        await page.goto("/")
+        const hrefs = await page.$$eval('a[href^="tel:"]', (as) => [...new Set(as.map((a) => a.getAttribute("href")))])
+        expect(hrefs).toEqual(["tel:+31852127914"])
+    })
+})

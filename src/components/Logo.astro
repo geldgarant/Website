@@ -1,0 +1,25 @@
+---
+// Officieel GeldGarant-logo (bron: aangeleverde SVG's, gecropt en transparant in /public/brand)
+interface Props {
+    variant?: "light" | "dark"
+    height?: number
+}
+const { variant = "light", height = 30 } = Astro.props
+const width = Math.round((1896 / 304) * height)
+---
+
+<a href="/" class="logo" aria-label="GeldGarant, naar de homepage">
+    <img src={`/brand/full-logo-${variant}.svg`} alt="" width={width} height={height} />
+</a>
+
+<style>
+    .logo {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        flex-shrink: 0;
+    }
+    .logo img {
+        height: auto;
+    }
+</style>

@@ -1,0 +1,238 @@
+---
+import Logo from "./Logo.astro"
+import Icon from "./Icon.astro"
+import { site, branches } from "../data/site"
+const year = new Date().getFullYear()
+
+const diensten = [
+    { label: "Incasso", href: "/incasso" },
+    { label: "Debiteurenbeheer", href: "/debiteurenbeheer" },
+    { label: "Buitenlandse vordering", href: "/incasso/incasso-in-het-buitenland" },
+    { label: "Tarieven", href: "/tarieven" },
+    { label: "Incassokosten berekenen", href: "/incasso/incassokosten-berekenen" },
+    { label: "Vordering indienen", href: "/vordering-indienen" },
+]
+const bedrijf = [
+    { label: "Over ons", href: "/over-ons" },
+    { label: "Kennisbank", href: "/kennisbank" },
+    { label: "Contact", href: "/contact-opnemen" },
+    { label: "Werken bij", href: "/werken-bij" },
+    { label: "Brief van ons ontvangen?", href: "/brief-ontvangen" },
+    { label: "Hulp bij geldzorgen", href: "/hulp-nodig-bij-geldproblemen" },
+]
+---
+
+<footer class="footer">
+    <div class="wrap">
+        <div class="footer-head">
+            <div class="footer-brand">
+                <Logo variant="dark" height={32} />
+                <p>Incassobureau voor ondernemers in heel Nederland. Persoonlijk, snel en volgens de wet.</p>
+            </div>
+            <a class="btn btn-light" href="/vordering-indienen">
+                Vordering indienen
+                <span class="btn-dot">
+                    <Icon name="arrow" size={18} />
+                </span>
+            </a>
+        </div>
+
+        <div class="footer-grid">
+            <div class="footer-contact">
+                <h2>Contact</h2>
+                <address>
+                    <a href={site.phoneHref}>
+                        <Icon name="phone" size={18} />
+                        {site.phone}
+                    </a>
+                    <a href={`mailto:${site.email}`}>
+                        <Icon name="mail" size={18} />
+                        {site.email}
+                    </a>
+                    <span>
+                        <Icon name="pin" size={18} />
+                        {site.street}, {site.postcode} {site.city}
+                    </span>
+                    <span>
+                        <Icon name="clock" size={18} />
+                        Bereikbaar {site.hours}
+                    </span>
+                </address>
+            </div>
+            <nav class="footer-cols" aria-label="Footer">
+                <div>
+                    <h2>Diensten</h2>
+                    <ul role="list">
+                        {diensten.map((l) => (
+                            <li>
+                                <a href={l.href}>{l.label}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h2>Branches</h2>
+                    <ul role="list">
+                        {branches.map((b) => (
+                            <li>
+                                <a href={`/branches/${b.slug}`}>{b.label}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h2>GeldGarant</h2>
+                    <ul role="list">
+                        {bedrijf.map((l) => (
+                            <li>
+                                <a href={l.href}>{l.label}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                Ingeschreven in het Incassoregister van Justis onder nummer{" "}
+                <a class="u" href={site.incassoRegisterHref}>
+                    {site.incassoRegister}
+                </a>
+                <span aria-hidden="true"> · </span>
+                <br class="br-m" />
+                KvK {site.kvk}
+            </p>
+            <ul role="list" class="footer-legal">
+                <li>
+                    <a href="/juridisch/algemene-voorwaarden">Algemene voorwaarden</a>
+                </li>
+                <li>
+                    <a href="/juridisch/privacy-beleid">Privacy</a>
+                </li>
+                <li>
+                    <a href="/juridisch/cookie-beleid">Cookies</a>
+                </li>
+                <li>
+                    <a href="/klachtenregelement">Klachtenregeling</a>
+                </li>
+                <li>© {year} GeldGarant</li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: var(--ink);
+        color: rgba(255, 255, 255, 0.68);
+        font-size: var(--fs-sm);
+        padding-block: clamp(64px, 7vw, 96px) 28px;
+    }
+    .footer a {
+        color: #fff;
+        transition: color 0.15s ease;
+    }
+    .footer a:hover {
+        color: var(--blue-on-dark);
+    }
+    .footer h2 {
+        font-family: var(--font-body);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 14px;
+    }
+    .footer-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 28px;
+        padding-bottom: clamp(40px, 5vw, 56px);
+        border-bottom: 1px solid var(--line-dark);
+    }
+    .footer-brand p {
+        margin-top: 18px;
+        max-width: 30em;
+        font-size: 1rem;
+    }
+    .footer-grid {
+        display: grid;
+        gap: 40px;
+        padding-block: clamp(40px, 5vw, 56px);
+    }
+    @media (min-width: 900px) {
+        .footer-grid {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            gap: 48px;
+        }
+    }
+    .footer-contact address {
+        display: grid;
+        gap: 4px;
+        font-style: normal;
+    }
+    .footer-contact address > * {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 40px;
+    }
+    .footer-contact :global(svg) {
+        flex-shrink: 0;
+        color: var(--blue-on-dark);
+    }
+    .footer-cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 32px;
+    }
+    .footer-cols a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 36px;
+        color: rgba(255, 255, 255, 0.86);
+    }
+    .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line-dark);
+        font-size: var(--fs-xs);
+        line-height: 1.7;
+    }
+    .footer-bottom .u {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+    .br-m {
+        display: inline;
+    }
+    @media (min-width: 720px) {
+        .br-m {
+            display: none;
+        }
+    }
+    .footer-legal {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 20px;
+    }
+    .footer-legal a {
+        display: inline-flex;
+        min-height: 32px;
+        align-items: center;
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.3);
+        text-underline-offset: 3px;
+    }
+    .footer-legal li {
+        display: inline-flex;
+        align-items: center;
+    }
+</style>

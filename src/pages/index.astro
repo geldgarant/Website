@@ -1,0 +1,1279 @@
+---
+import Base from "../layouts/Base.astro"
+import Afrekening from "../components/Afrekening.astro"
+import Icon from "../components/Icon.astro"
+import { site, branches, latestArticles } from "../data/site"
+import { homeFaq } from "../data/faq"
+import { WIK_STAFFEL, WIK_MIN, WIK_MAX, euro } from "../lib/wik"
+
+const title = "Incassobureau voor ondernemers | GeldGarant"
+const description =
+    "Klant betaalt niet? GeldGarant neemt uw vordering binnen 1 uur in behandeling. Betaalt de debiteur volledig, dan betaalt u niets."
+
+const stappen = [
+    {
+        t: "U dient de vordering in",
+        d: "Online in ongeveer drie minuten, met de factuur en eventuele afspraken. Bellen kan ook.",
+    },
+    { t: "Binnen 1 uur in behandeling", d: `Op ${site.hours}. We controleren uw vordering en openen het dossier.` },
+    {
+        t: "Wij benaderen de debiteur",
+        d: "Per brief, e-mail, sms en telefoon. Bij particulieren eerst de wettelijke 14-dagenbrief.",
+    },
+    { t: "Betaling of regeling", d: "De debiteur betaalt in één keer, of we spreken een betalingsregeling af." },
+    { t: "U ontvangt uw geld", d: "Via onze derdengeldenrekening, wekelijks afgedragen. U volgt alles in uw online dossier." },
+]
+
+const staffelRijen = (() => {
+    let vorige = 0
+    return WIK_STAFFEL.map((s) => {
+        const label =
+            s.tot === Infinity
+                ? `Boven ${euro(vorige, 0)}`
+                : vorige === 0
+                  ? `Eerste ${euro(s.tot, 0)}`
+                  : `${euro(vorige, 0)} tot ${euro(s.tot, 0)}`
+        vorige = s.tot
+        return { label, pct: `${String(s.pct * 100).replace(".", ",")}%` }
+    })
+})()
+
+const fmtDate = (d: string) =>
+    new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" }).format(new Date(d))
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        name: "GeldGarant",
+        url: "https://geldgarant.com",
+        telephone: "+31852127914",
+        email: site.email,
+        areaServed: "NL",
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: site.street,
+            postalCode: site.postcode,
+            addressLocality: site.city,
+            addressCountry: "NL",
+        },
+        openingHoursSpecification: [
+            {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                opens: "09:00",
+                closes: "17:00",
+            },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: homeFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+
+const waarom = [
+    {
+        icon: "euro",
+        t: "€0 bij volledige betaling",
+        d: "De wettelijke incassokosten zijn voor de debiteur. Geen abonnement en geen instapkosten.",
+    },
+    { icon: "bolt", t: "Binnen 1 uur aan de slag", d: `Op ${site.hours} nemen we elke vordering binnen een uur in behandeling.` },
+    {
+        icon: "eye",
+        t: "Alles online te volgen",
+        d: "In uw dossier ziet u elke brief, elk telefoontje en elke betaling op het moment dat het gebeurt.",
+    },
+    {
+        icon: "bank",
+        t: "Uw geld staat apart",
+        d: "Betalingen komen binnen op onze derdengeldenrekening en gaan wekelijks naar u.",
+    },
+    {
+        icon: "scale",
+        t: "Erkend en volgens de wet",
+        d: `Ingeschreven in het Incassoregister van Justis (${site.incassoRegister}) en werkend volgens de wettelijke staffel.`,
+    },
+    { icon: "chat", t: "Vaste aanspreekpunten", d: "Geen callcenter. U spreekt direct de mensen die uw dossier behandelen." },
+] as const
+
+const diensten = [
+    { t: "Incasso", d: "Eén onbetaalde factuur of tientallen: wij nemen het innen volledig van u over.", href: "/incasso" },
+    {
+        t: "Debiteurenbeheer",
+        d: "Wij bewaken uw openstaande posten en sturen herinneringen, nog vóór het een incassozaak wordt.",
+        href: "/debiteurenbeheer",
+    },
+    {
+        t: "Vordering in het buitenland",
+        d: "Klant over de grens? Ook dan zorgen we dat uw factuur wordt betaald.",
+        href: "/incasso/incasso-in-het-buitenland",
+    },
+    {
+        t: "Incassokosten berekenen",
+        d: "Reken uit welke wettelijke incassokosten en rente u mag doorberekenen.",
+        href: "/incasso/incassokosten-berekenen",
+    },
+]
+
+const branchIcon = {
+    "incasso-bouw": "building",
+    "incasso-transport": "truck",
+    "incasso-verhuur": "key",
+    "incasso-automotive": "car",
+    "incasso-groothandel": "box",
+    "incasso-dienstverlening": "briefcase",
+    "incasso-ecommerce": "cart",
+    "incasso-zorg": "heart",
+    "incasso-mkb": "store",
+    "incasso-zzp": "person",
+} as const
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap hero-grid">
+            <div class="hero-copy">
+                <a class="badge" href={site.incassoRegisterHref}>
+                    <Icon name="shield" size={18} />
+                    <span>
+                        Erkend incassobureau{" "}
+                        <span class="badge-sep" aria-hidden="true">
+                            ·
+                        </span>{" "}
+                        Incassoregister {site.incassoRegister}
+                    </span>
+                </a>
+                <h1 class="display">
+                    Klant betaalt niet? Wij halen uw geld <span class="accent">wél</span> op.
+                </h1>
+                <p class="lead">
+                    Betaalt de debiteur volledig, dan betaalt u ons niets: de wettelijke incassokosten zijn voor de debiteur. Wij
+                    starten binnen 1 uur en u volgt elke stap online.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn" href="/vordering-indienen">
+                        Vordering indienen
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                    <a class="btn btn-ghost" href={site.phoneHref}>
+                        <Icon name="phone" size={18} />
+                        Bel{" "}
+                        {site.phone}
+                    </a>
+                </div>
+                <ul role="list" class="hero-checks">
+                    <li>
+                        <Icon name="check" size={18} />
+                        Geen abonnement
+                    </li>
+                    <li>
+                        <Icon name="check" size={18} />
+                        Ook voor één factuur
+                    </li>
+                    <li>
+                        <Icon name="check" size={18} />
+                        Wekelijks uitbetaald
+                    </li>
+                </ul>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-panel" aria-hidden="true">
+                    <img class="hero-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                </div>
+                <p class="hero-chip">
+                    <span class="hero-chip-dot" aria-hidden="true"></span>
+                    Binnen 1 uur in behandeling op werkdagen
+                </p>
+                <div class="hero-card">
+                    <Afrekening />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEITEN -->
+    <section class="facts" aria-label="GeldGarant in het kort">
+        <div class="wrap">
+            <ul role="list" class="facts-list">
+                <li>
+                    <Icon name="shield" size={22} />
+                    <span>
+                        <strong>Erkend</strong> Ingeschreven bij Justis
+                    </span>
+                </li>
+                <li>
+                    <Icon name="map" size={22} />
+                    <span>
+                        <strong>Landelijk</strong> Voor heel Nederland
+                    </span>
+                </li>
+                <li>
+                    <Icon name="bank" size={22} />
+                    <span>
+                        <strong>Veilig</strong> Via derdengeldenrekening
+                    </span>
+                </li>
+                <li>
+                    <Icon name="calendar" size={22} />
+                    <span>
+                        <strong>Wekelijks</strong> Geld op uw rekening
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- WAAROM -->
+    <section class="section" aria-labelledby="waarom-title">
+        <div class="wrap split">
+            <div class="split-head">
+                <p class="eyebrow">Waarom GeldGarant</p>
+                <h2 class="h2" id="waarom-title">
+                    Incasso zoals het <span class="accent">hoort</span>
+                </h2>
+                <p class="lead">
+                    Snel, eerlijk en zonder verrassingen. U houdt de regie, wij doen het werk en houden het contact met uw klant
+                    zakelijk en correct.
+                </p>
+                <a class="btn btn-dark" href="/over-ons">
+                    Maak kennis met ons
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+            </div>
+            <ul role="list" class="cards">
+                {waarom.map((w, i) => (
+                    <li class="card" data-reveal style={`--d:${i % 2}`}>
+                        <span class="card-icon">
+                            <Icon name={w.icon} size={22} />
+                        </span>
+                        <h3 class="h3">{w.t}</h3>
+                        <p>{w.d}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- STAPPEN -->
+    <section class="section bg-ink steps-section" aria-labelledby="stappen-title">
+        <div class="wrap">
+            <div class="row-head">
+                <div>
+                    <p class="eyebrow">Zo werkt het</p>
+                    <h2 class="h2" id="stappen-title">
+                        Van factuur naar <span class="accent">betaling</span>
+                    </h2>
+                </div>
+                <p class="lead">
+                    U dient de vordering in, wij doen de rest. Een gerechtelijke procedure starten we alleen met uw akkoord.
+                </p>
+            </div>
+            <ol class="steps">
+                {stappen.map((s, i) => (
+                    <li class="step" data-reveal style={`--d:${i}`}>
+                        <span class="step-num" aria-hidden="true">
+                            {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <h3 class="h3">{s.t}</h3>
+                        <p>{s.d}</p>
+                    </li>
+                ))}
+            </ol>
+            <div class="steps-cta">
+                <a class="btn btn-light" href="/vordering-indienen">
+                    Start uw vordering
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+                <a class="textlink" href="/incasso">
+                    Lees hoe het incassotraject werkt
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TARIEF -->
+    <section class="section" aria-labelledby="tarief-title">
+        <div class="wrap tarief">
+            <div class="tarief-copy">
+                <p class="eyebrow">Tarieven</p>
+                <h2 class="h2" id="tarief-title">
+                    U betaalt alleen als het <span class="accent">lukt</span>
+                </h2>
+                <p class="lead">
+                    Geen uurtje-factuurtje en geen kleine lettertjes. De volledige staffel staat gewoon op onze tarievenpagina.
+                </p>
+                <dl class="scen">
+                    <div class="scen-row scen-good">
+                        <dt>Debiteur betaalt volledig</dt>
+                        <dd>
+                            <strong class="num">{euro(0, 0)}</strong> voor u. De incassokosten zijn voor de debiteur.
+                        </dd>
+                    </div>
+                    <div class="scen-row">
+                        <dt>Debiteur betaalt een deel</dt>
+                        <dd>
+                            De kosten worden verrekend met wat binnenkomt, met een minimum van <span class="num">€&nbsp;45</span>.
+                        </dd>
+                    </div>
+                    <div class="scen-row">
+                        <dt>Niets te halen</dt>
+                        <dd>Bij faillissement, overlijden of schuldsanering sluiten we het dossier zonder kosten.</dd>
+                    </div>
+                </dl>
+                <a class="btn btn-dark" href="/tarieven">
+                    Bekijk alle tarieven
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+            </div>
+
+            <div class="staffel" data-reveal>
+                <div class="staffel-head">
+                    <h3 class="h3">Wettelijke incassokosten</h3>
+                    <p>Staffel uit het Besluit vergoeding voor buitengerechtelijke incassokosten. Betaald door de debiteur.</p>
+                </div>
+                <table class="num">
+                    <caption class="sr-only">Staffel wettelijke incassokosten</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Over de hoofdsom</th>
+                            <th scope="col">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {staffelRijen.map((r) => (
+                            <tr>
+                                <td>{r.label}</td>
+                                <td>{r.pct}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <p class="staffel-foot">
+                    Minimaal <strong class="num">{euro(WIK_MIN, 0)}</strong>, maximaal{" "}
+                    <strong class="num">{euro(WIK_MAX, 0)}</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIENSTEN -->
+    <section class="section bg-surface" aria-labelledby="diensten-title">
+        <div class="wrap">
+            <div class="row-head">
+                <div>
+                    <p class="eyebrow">Diensten</p>
+                    <h2 class="h2" id="diensten-title">
+                        Waar we u mee <span class="accent">helpen</span>
+                    </h2>
+                </div>
+                <p class="lead">Van één losse factuur tot het complete beheer van uw debiteuren.</p>
+            </div>
+            <ul role="list" class="services">
+                {diensten.map((d, i) => (
+                    <li data-reveal style={`--d:${i}`}>
+                        <a class="service" href={d.href}>
+                            <h3 class="h3">{d.t}</h3>
+                            <p>{d.d}</p>
+                            <span class="service-go" aria-hidden="true">
+                                <Icon name="arrow-up-right" size={20} />
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- PERSOONLIJK -->
+    <section class="section" aria-labelledby="team-title">
+        <div class="wrap team">
+            <div class="photo-slot team-photo">
+                <span>Foto Anas en Ilyas volgt na de fotoshoot</span>
+            </div>
+            <div class="team-copy">
+                <p class="eyebrow">Persoonlijk contact</p>
+                <h2 class="h2" id="team-title">
+                    Geen callcenter, wél <span class="accent">vaste gezichten</span>
+                </h2>
+                <p class="lead">
+                    Bij GeldGarant heeft u direct contact met Anas en Ilyas. Zij kennen uw dossier, bellen u terug en denken mee
+                    als een klant een regeling wil.
+                </p>
+                <ul role="list" class="contact-list">
+                    <li>
+                        <a href={site.phoneHref}>
+                            <span class="contact-icon">
+                                <Icon name="phone" />
+                            </span>
+                            <span>
+                                <strong>Bel{"\u00a0"}ons</strong>
+                                {site.phone}
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href={site.whatsappHref}>
+                            <span class="contact-icon">
+                                <Icon name="whatsapp" />
+                            </span>
+                            <span>
+                                <strong>WhatsApp</strong>Stuur een bericht
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href={`mailto:${site.email}`}>
+                            <span class="contact-icon">
+                                <Icon name="mail" />
+                            </span>
+                            <span>
+                                <strong>E-mail</strong>
+                                {site.email}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- BRANCHES -->
+    <section class="section-tight branches-section" aria-labelledby="branches-title">
+        <div class="wrap">
+            <div class="row-head">
+                <h2 class="h2" id="branches-title">
+                    Thuis in uw <span class="accent">branche</span>
+                </h2>
+                <a class="textlink" href="/branches">
+                    Alle branches
+                </a>
+            </div>
+            <ul role="list" class="branches">
+                {branches.map((b) => (
+                    <li>
+                        <a href={`/branches/${b.slug}`}>
+                            <Icon name={branchIcon[b.slug as keyof typeof branchIcon]} size={20} />
+                            {b.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section bg-surface" aria-labelledby="faq-title">
+        <div class="wrap split">
+            <div class="split-head">
+                <p class="eyebrow">Veelgestelde vragen</p>
+                <h2 class="h2" id="faq-title">
+                    Goed om te <span class="accent">weten</span>
+                </h2>
+                <div class="ask">
+                    <p>
+                        <strong>Staat uw vraag er niet tussen?</strong> Bel ons, we helpen u direct verder.
+                    </p>
+                    <a class="btn btn-dark" href={site.phoneHref}>
+                        Bel{" "}
+                        {site.phone}
+                        <span class="btn-dot">
+                            <Icon name="phone" size={18} />
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="faq">
+                {homeFaq.map((f) => (
+                    <details class="faq-item">
+                        <summary>
+                            <span>{f.q}</span>
+                            <span class="faq-icon" aria-hidden="true">
+                                <Icon name="plus" size={18} />
+                            </span>
+                        </summary>
+                        <p>{f.a}</p>
+                    </details>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- KENNISBANK -->
+    <section class="section" aria-labelledby="kennis-title">
+        <div class="wrap">
+            <div class="row-head">
+                <div>
+                    <p class="eyebrow">Kennisbank</p>
+                    <h2 class="h2" id="kennis-title">
+                        Slimmer omgaan met <span class="accent">wanbetalers</span>
+                    </h2>
+                </div>
+                <a class="textlink" href="/kennisbank">
+                    Alle artikelen
+                </a>
+            </div>
+            <ul role="list" class="articles">
+                {latestArticles.map((a, i) => (
+                    <li data-reveal style={`--d:${i}`}>
+                        <a class="article" href={`/kennisbank/${a.slug}`}>
+                            <div class="photo-slot article-img" aria-hidden="true"></div>
+                            <p class="article-meta">
+                                <span>{a.cat}</span>
+                                <time datetime={a.date}>{fmtDate(a.date)}</time>
+                            </p>
+                            <h3 class="h3">{a.title}</h3>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- SLOT-CTA -->
+    <section class="cta-wrap" aria-labelledby="cta-title">
+        <div class="wrap">
+            <div class="cta bg-ink">
+                <img class="cta-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                <h2 class="h2" id="cta-title">
+                    Laat uw geld niet langer <span class="accent">liggen</span>
+                </h2>
+                <p class="lead">
+                    Dien uw vordering in ongeveer drie minuten in. Op werkdagen gaan we binnen het uur voor u aan de slag.
+                </p>
+                <div class="cta-actions">
+                    <a class="btn btn-light" href="/vordering-indienen">
+                        Vordering indienen
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                    <a class="btn btn-ghost" href={site.phoneHref}>
+                        Bel{" "}
+                        {site.phone}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(32px, 5vw, 72px) clamp(48px, 6vw, 88px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        }
+    }
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 40px;
+        padding: 6px 16px 6px 10px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        color: var(--ink);
+        font-size: var(--fs-xs);
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+    }
+    .badge:hover {
+        background: #dfe7ff;
+    }
+    .badge :global(svg) {
+        color: var(--blue);
+        flex-shrink: 0;
+    }
+    .badge-sep {
+        margin-inline: 4px;
+        color: var(--muted);
+    }
+    .hero h1 {
+        margin-top: 24px;
+        max-width: 12.5em;
+    }
+    .hero .lead {
+        margin-top: 24px;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 36px;
+    }
+    .hero-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 24px;
+        margin-top: 32px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .hero-checks li {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .hero-checks :global(svg) {
+        color: var(--green);
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    .hero-visual {
+        position: relative;
+        padding: 56px 0 0;
+    }
+    @media (min-width: 640px) {
+        .hero-visual {
+            padding: 64px 0 0 48px;
+        }
+    }
+    .hero-panel {
+        position: absolute;
+        inset: 0 0 64px 0;
+        overflow: hidden;
+        border-radius: var(--r-xl);
+        background: var(--ink);
+    }
+    .hero-mark {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 58%;
+        height: auto;
+        opacity: 0.06;
+    }
+    .hero-chip {
+        position: absolute;
+        top: 14px;
+        left: 20px;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 500;
+    }
+    @media (min-width: 640px) {
+        .hero-chip {
+            top: 20px;
+            left: 48px;
+        }
+    }
+    .hero-chip-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3ddc84;
+        box-shadow: 0 0 0 4px rgba(61, 220, 132, 0.2);
+    }
+    .hero-card {
+        position: relative;
+        z-index: 1;
+        margin-inline: 12px;
+    }
+    @media (min-width: 640px) {
+        .hero-card {
+            margin-inline: 0 24px;
+        }
+    }
+
+    /* ---------- FEITEN ---------- */
+    .facts-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-block: 1px solid var(--line);
+    }
+    @media (min-width: 900px) {
+        .facts-list {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .facts-list li {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 22px 8px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.35;
+    }
+    .facts-list li:nth-child(odd) {
+        padding-right: 16px;
+    }
+    @media (max-width: 899px) {
+        .facts-list li:nth-child(-n + 2) {
+            border-bottom: 1px solid var(--line);
+        }
+    }
+    @media (min-width: 900px) {
+        .facts-list li + li {
+            border-left: 1px solid var(--line);
+            padding-left: 28px;
+        }
+    }
+    .facts-list :global(svg) {
+        flex-shrink: 0;
+        color: var(--blue);
+    }
+    .facts-list strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+    }
+
+    /* ---------- gedeelde koppen ---------- */
+    .split {
+        display: grid;
+        gap: 48px;
+    }
+    @media (min-width: 1024px) {
+        .split {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 72px;
+            align-items: start;
+        }
+        .split-head {
+            position: sticky;
+            top: calc(var(--header-h) + 40px);
+        }
+    }
+    .split-head .h2,
+    .row-head .h2 {
+        margin-top: 14px;
+    }
+    .split-head .lead {
+        margin-top: 20px;
+    }
+    .split-head .btn {
+        margin-top: 32px;
+    }
+    .row-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px 48px;
+        margin-bottom: clamp(40px, 5vw, 64px);
+    }
+    .row-head .lead {
+        max-width: 30em;
+    }
+
+    /* ---------- WAAROM-kaarten ---------- */
+    .cards {
+        display: grid;
+        gap: 12px;
+    }
+    @media (min-width: 640px) {
+        .cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .card {
+        padding: clamp(24px, 2.6vw, 32px);
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    .card-icon {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+        margin-bottom: 28px;
+    }
+    .card p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+    }
+
+    /* ---------- STAPPEN ---------- */
+    .steps-section {
+        border-radius: var(--r-xl);
+        margin-inline: clamp(0px, 1vw, 16px);
+    }
+    .steps {
+        display: grid;
+        gap: 12px;
+        counter-reset: s;
+    }
+    @media (min-width: 720px) {
+        .steps {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (min-width: 1180px) {
+        .steps {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+    }
+    .step {
+        position: relative;
+        padding: 28px 24px 30px;
+        border-radius: var(--r-lg);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--line-dark);
+    }
+    .step-num {
+        display: block;
+        font-family: var(--font-accent);
+        font-style: italic;
+        font-size: 3rem;
+        line-height: 1;
+        color: var(--blue-on-dark);
+        margin-bottom: 36px;
+    }
+    .step p {
+        margin-top: 10px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+    }
+    .steps-cta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px 32px;
+        margin-top: 48px;
+    }
+
+    /* ---------- TARIEF ---------- */
+    .tarief {
+        display: grid;
+        gap: 48px;
+    }
+    @media (min-width: 1024px) {
+        .tarief {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+            gap: 80px;
+            align-items: center;
+        }
+    }
+    .tarief-copy .h2 {
+        margin-top: 14px;
+    }
+    .tarief-copy .lead {
+        margin-top: 20px;
+    }
+    .scen {
+        display: grid;
+        gap: 8px;
+        margin-block: 32px 36px;
+    }
+    .scen-row {
+        display: grid;
+        gap: 4px;
+        padding: 18px 20px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    @media (min-width: 640px) {
+        .scen-row {
+            grid-template-columns: 14em minmax(0, 1fr);
+            gap: 20px;
+        }
+    }
+    .scen-row dt {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .scen-row dd {
+        color: var(--muted);
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+    }
+    .scen-good {
+        background: var(--green-bg);
+    }
+    .scen-good dd strong {
+        color: var(--green);
+        font-size: 1.0625rem;
+    }
+
+    .staffel {
+        padding: clamp(24px, 3vw, 40px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .staffel-head p {
+        margin-top: 8px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .staffel table {
+        width: 100%;
+        margin-top: 24px;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+    }
+    .staffel th {
+        text-align: left;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0 0 10px;
+        border-bottom: 1px solid var(--line);
+    }
+    .staffel td {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+        color: var(--ink);
+    }
+    .staffel :is(th, td):last-child {
+        text-align: right;
+    }
+    .staffel td:last-child {
+        font-weight: 600;
+    }
+    .staffel-foot {
+        margin-top: 18px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .staffel-foot strong {
+        color: var(--ink);
+    }
+
+    /* ---------- DIENSTEN ---------- */
+    .services {
+        display: grid;
+        gap: 12px;
+    }
+    @media (min-width: 720px) {
+        .services {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    @media (min-width: 1180px) {
+        .services {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .services li {
+        display: flex;
+    }
+    .service {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 260px;
+        padding: 28px;
+        border-radius: var(--r-lg);
+        background: #fff;
+        transition:
+            box-shadow 0.25s var(--ease),
+            transform 0.25s var(--ease);
+    }
+    .service:hover {
+        box-shadow: var(--shadow-card);
+        transform: translateY(-3px);
+    }
+    .service p {
+        margin: 10px 0 28px;
+        color: var(--muted);
+        font-size: var(--fs-sm);
+    }
+    .service-go {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-top: auto;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        transition: transform 0.25s var(--ease);
+    }
+    .service:hover .service-go {
+        transform: rotate(45deg);
+    }
+
+    /* ---------- PERSOONLIJK ---------- */
+    .team {
+        display: grid;
+        gap: 40px;
+    }
+    @media (min-width: 1024px) {
+        .team {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 80px;
+            align-items: center;
+        }
+    }
+    .team-photo {
+        aspect-ratio: 5 / 4;
+    }
+    .team-copy .h2 {
+        margin-top: 14px;
+    }
+    .team-copy .lead {
+        margin-top: 20px;
+    }
+    .contact-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 32px;
+    }
+    .contact-list a {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 20px 12px 12px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--line);
+        transition:
+            border-color 0.2s ease,
+            background-color 0.2s ease;
+    }
+    .contact-list a:hover {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+    }
+    .contact-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .contact-list strong {
+        display: block;
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .contact-list a > span:last-child {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    /* ---------- BRANCHES ---------- */
+    .branches-section {
+        padding-top: 0;
+    }
+    .branches {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 10px;
+    }
+    .branches a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 60px;
+        padding: 0 20px;
+        border-radius: var(--r-md);
+        border: 1px solid var(--line);
+        font-weight: 500;
+        color: var(--ink);
+        transition:
+            border-color 0.2s ease,
+            background-color 0.2s ease;
+    }
+    .branches a:hover {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+    }
+    .branches :global(svg) {
+        color: var(--blue);
+        flex-shrink: 0;
+    }
+
+    /* ---------- FAQ ---------- */
+    .ask {
+        margin-top: 32px;
+        padding: 24px;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .ask p {
+        color: var(--muted);
+        font-size: var(--fs-sm);
+    }
+    .ask strong {
+        display: block;
+        color: var(--ink);
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    .ask .btn {
+        margin-top: 20px;
+    }
+    .faq {
+        display: grid;
+        gap: 8px;
+    }
+    .faq-item {
+        border-radius: var(--r-md);
+        background: #fff;
+        transition: box-shadow 0.2s ease;
+    }
+    .faq-item[open] {
+        box-shadow: var(--shadow-card);
+    }
+    .faq-item summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 64px;
+        padding: 16px 16px 16px 24px;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 1.0625rem;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        cursor: pointer;
+        list-style: none;
+    }
+    .faq-item summary::-webkit-details-marker {
+        display: none;
+    }
+    .faq-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--ink);
+        transition:
+            transform 0.25s var(--ease),
+            background-color 0.2s ease;
+    }
+    .faq-item[open] .faq-icon {
+        transform: rotate(45deg);
+        background: var(--blue);
+        color: #fff;
+    }
+    .faq-item p {
+        padding: 0 24px 24px;
+        color: var(--muted);
+        max-width: 44em;
+    }
+
+    /* ---------- KENNISBANK ---------- */
+    .articles {
+        display: grid;
+        gap: 32px 20px;
+    }
+    @media (min-width: 720px) {
+        .articles {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .article {
+        display: block;
+    }
+    .article-img {
+        aspect-ratio: 16 / 10;
+        border-radius: var(--r-lg);
+        transition: transform 0.4s var(--ease);
+    }
+    .article:hover .article-img {
+        transform: scale(0.985);
+    }
+    .article-meta {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .article-meta span {
+        color: var(--blue-ink);
+        font-weight: 600;
+    }
+    .article .h3 {
+        margin-top: 8px;
+        transition: color 0.2s ease;
+    }
+    .article:hover .h3 {
+        color: var(--blue-ink);
+    }
+
+    /* ---------- SLOT-CTA ---------- */
+    .cta-wrap {
+        padding-bottom: clamp(48px, 6vw, 96px);
+    }
+    .cta {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(48px, 7vw, 96px) clamp(24px, 6vw, 80px);
+        border-radius: var(--r-xl);
+        text-align: center;
+    }
+    .cta-mark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(60%, 520px);
+        height: auto;
+        transform: translate(-50%, -50%);
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    .cta > :not(img) {
+        position: relative;
+    }
+    .cta .h2 {
+        max-width: 14em;
+        margin-inline: auto;
+    }
+    .cta .lead {
+        margin: 20px auto 0;
+        max-width: 34em;
+    }
+    .cta-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 36px;
+    }
+</style>
