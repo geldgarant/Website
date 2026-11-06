@@ -12,7 +12,7 @@ import { PAKKETTEN } from "../lib/pakketten"
 
 const title = "Contact opnemen | Bel, app of mail GeldGarant"
 const description =
-    "Vraag over incasso, debiteurenbeheer of een lopend dossier? Bel 085 212 79 14, stuur een WhatsApp of mail. Op werkdagen direct een mens aan de lijn."
+    "Vraag over incasso, debiteurenbeheer of een lopend dossier? Bel 085 212 79 14, stuur een WhatsApp of mail. Op werkdagen direct een specialist aan de lijn."
 
 const kanalen = [
     { icon: "phone", titel: "Bellen", waarde: site.phone, sub: "Werkdagen\u00a09.00\u00a0tot\u00a017.00", href: site.phoneHref },
@@ -68,7 +68,7 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
                 <h1 class="display">
                     Bel, app of <span class="accent">mail</span>
                 </h1>
-                <p class="lead">U spreekt direct Anas of Ilyas. Geen keuzemenu, geen callcenter.</p>
+                <p class="lead">Op werkdagen spreekt u direct een incassospecialist. Kies het kanaal dat u het beste uitkomt.</p>
             </div>
 
             <ul role="list" class="kanalen">
@@ -654,6 +654,7 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
     /* ---------- zijkant ---------- */
     .zij {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: 12px;
     }
     @media (min-width: 1024px) {
@@ -728,5 +729,7 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
         margin-top: 16px;
         width: 100%;
         justify-content: space-between;
+        white-space: normal;
+        text-align: left;
     }
 </style>

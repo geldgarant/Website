@@ -1,3 +1,5 @@
+import { site } from "./site"
+
 export const homeFaq = [
     {
         q: "Wat kost incasso bij GeldGarant?",
@@ -128,5 +130,61 @@ export const tarievenFaq = [
     {
         q: "Wat als ik de opdracht intrek?",
         a: "Trekt u de opdracht in nadat we gestart zijn, dan bent u de berekende incassokosten verschuldigd, met een minimum van 10% van de hoofdsom en ten minste €95.",
+    },
+] as const
+
+// Vragen op /over-ons. Registratie en NowID: zie geldgarant.com/wki en /nowid (Framer). Gegevens uit site.ts.
+export const overOnsFaq = [
+    {
+        q: "Is GeldGarant geregistreerd als incassobureau?",
+        a: `Ja. GeldGarant staat ingeschreven in het incassoregister van Dienst Justis onder nummer ${site.incassoRegister}. Sinds 1 april 2024 is die registratie verplicht onder de Wet kwaliteit incassodienstverlening (Wki). Het register is openbaar, dus u kunt onze inschrijving zelf controleren.`,
+    },
+    {
+        q: "Waar is GeldGarant gevestigd?",
+        a: `Ons kantoor staat aan de ${site.street} in ${site.city}. We werken voor opdrachtgevers in heel Nederland, en vorderingen op buitenlandse debiteuren behandelen we samen met lokale partners.`,
+    },
+    {
+        q: "Hoe gaat GeldGarant om met mijn klanten?",
+        a: "Zakelijk, correct en volgens de wet. We zijn duidelijk over wat er openstaat en wat de gevolgen zijn, maar we zoeken eerst naar een oplossing die werkt. Zo blijft er ruimte om de relatie met uw klant te behouden als u dat wilt.",
+    },
+    {
+        q: "Wat gebeurt er met het geld dat binnenkomt?",
+        a: "De debiteur betaalt op onze derdengeldenrekening. Dat geld staat apart van ons eigen geld en dragen we wekelijks aan u af, met een specificatie per dossier.",
+    },
+    {
+        q: "Wat als ik niet tevreden ben?",
+        a: "Laat het ons eerst weten: we lossen het liefst samen op. Komen we er niet uit, dan volgt u onze klachtenregeling. Via NowID heeft u daarnaast toegang tot een onafhankelijke, erkende geschillencommissie.",
+    },
+    {
+        q: "Kan ik langskomen op kantoor?",
+        a: "Ja, op afspraak. De meeste opdrachtgevers regelen alles online en telefonisch, maar een kennismaking op kantoor plannen we graag.",
+    },
+] as const
+
+// Vragen op /hoe-werkt-het. Bron: AV (rechtstreekse betaling 9.5, regeling buiten ons om 7.10, intrekking 7.9) en homeFaq.
+export const hoeWerktFaq = [
+    {
+        q: "Hoe lang duurt een incassotraject?",
+        a: "Dat hangt vooral af van de debiteur. Wie kan betalen, reageert meestal op een van de eerste brieven of telefoontjes. Bij een particulier loopt eerst de wettelijke termijn van 14 dagen. Spreken we een regeling af, dan loopt het dossier tot de laatste termijn binnen is.",
+    },
+    {
+        q: "Kan ik ook buiten kantoortijd indienen?",
+        a: `Ja, het formulier staat altijd open. Op ${site.hours} nemen we uw vordering binnen 1 uur in behandeling. Komt hij daarbuiten binnen, dan pakken we hem het eerste uur van de volgende werkdag op.`,
+    },
+    {
+        q: "Heb ik veel facturen. Moet ik ze allemaal los indienen?",
+        a: "Een paar facturen dient u gewoon een voor een in. Heeft u er structureel veel, neem dan contact op. Dan spreken we een vaste manier van aanleveren af, bijvoorbeeld via een koppeling met uw boekhoudpakket.",
+    },
+    {
+        q: "Moet ik zelf nog contact houden met de debiteur?",
+        a: "Nee, dat nemen wij over. Maak zolang het dossier loopt liever geen eigen afspraken met de debiteur: een regeling buiten ons om geldt als intrekking van de opdracht. Betaalt de debiteur toch rechtstreeks aan u, meld dat dan binnen een week.",
+    },
+    {
+        q: "Wanneer hoor ik iets van jullie?",
+        a: "U krijgt direct een bevestiging per e-mail en daarna toegang tot uw online dossier, waarin u elke stap ziet. We bellen of mailen u zelf als er een beslissing van u nodig is, bijvoorbeeld bij een betwisting of als een gang naar de rechter aan de orde is.",
+    },
+    {
+        q: "Kan ik tussentijds stoppen?",
+        a: "Ja. Trekt u de opdracht in nadat we gestart zijn, dan bent u de berekende incassokosten verschuldigd, met een minimum van 10% van de hoofdsom en ten minste €95.",
     },
 ] as const

@@ -11,6 +11,7 @@ staging: website.geldgarant.workers.dev) naast de intake-worker (api.geldgarant.
 - Copy: Nederlands, altijd `u`, geen em-dashes, geen uitroeptekens in koppen, geen emoji, woordenlijst uit het werkplan.
 - Geen verzonnen reviews, logo's, cijfers, percentages of certificaten. Voorbeelden (zoals het voorbeelddossier) altijd zichtbaar als voorbeeld labelen.
 - Rechtsvorm niet noemen; nooit "B.V.". Btw-id niet in de footer.
+- Geen persoonsnamen (Anas, Ilyas) en geen "geen callcenter"/"geen keuzemenu": GeldGarant presenteert zich als gevestigd bureau. "Direct contact" en "vaste dossierbehandelaar" mogen wel.
 - Kosten exact volgens de AV: WIK-staffel in `src/lib/wik.ts`; volledig betaald = €0, deels = verrekening (min. €45).
 - Officieel GeldGarant-logo staat gecropt en transparant in `public/brand/` (aangeleverd door de gebruiker).
 - Formuliervelden altijd ≥16px, tikdoelen ≥44px, geen vaste breedtes die op 360px overlopen.

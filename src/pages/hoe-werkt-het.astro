@@ -1,0 +1,956 @@
+---
+// A5 /hoe-werkt-het. Hoofdvraag: "Wat gebeurt er na het indienen?"
+// /incasso legt de fasen uit (aanmaning, minnelijk, rechter); deze pagina volgt de opdrachtgever:
+// overzicht (hero) → elke stap met wat wij doen, wat u doet en wat u ziet (01) → wat als de debiteur... (02)
+// → wat moet ik aanleveren (03) → vragen (04) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site } from "../data/site"
+import { hoeWerktFaq } from "../data/faq"
+
+const title = "Hoe werkt incasso bij GeldGarant? | Van indienen tot uitbetaling"
+const description =
+    "Zo verloopt uw incassodossier bij GeldGarant: binnen 1 uur in behandeling, elke stap zichtbaar in uw online dossier en wekelijks uitbetaald."
+const url = "https://geldgarant.com/hoe-werkt-het"
+
+type IconNaam = "doc" | "check" | "mail" | "phone" | "bank" | "scale" | "clock" | "euro" | "user"
+
+const stappen: {
+    moment: string
+    titel: string
+    tekst: string
+    u: string
+    dossier: { icon: IconNaam; t: string; tijd: string }
+}[] = [
+    {
+        moment: "Ongeveer 3 minuten",
+        titel: "U dient de vordering in",
+        tekst: "Via het online formulier: de factuur, het bedrag en de gegevens van de debiteur. U geeft aan of uw klant een bedrijf of een particulier is. Liever bellen of de factuur mailen kan ook.",
+        u: "Factuur en gegevens van de debiteur aanleveren",
+        dossier: { icon: "mail", t: "Bevestiging met uw dossiernummer", tijd: "direct" },
+    },
+    {
+        moment: "Binnen 1 uur",
+        titel: "We controleren en openen het dossier",
+        tekst: `Op ${site.hours} controleren we binnen een uur of de vordering compleet en opeisbaar is. We kijken naar de verjaring en naar het soort debiteur. Ontbreekt er iets, dan bellen we u.`,
+        u: "Niets, tenzij we u bellen met een vraag",
+        dossier: { icon: "check", t: "Dossier in behandeling, inloggegevens verstuurd", tijd: "35 min" },
+    },
+    {
+        moment: "Direct daarna",
+        titel: "De debiteur krijgt de eerste brief",
+        tekst: "Een bedrijf krijgt een aanmaning met een korte betaaltermijn. Een particulier krijgt eerst de wettelijke 14-dagenbrief, zodat de incassokosten later ook verhaalbaar zijn. Per post en per e-mail.",
+        u: "Niets",
+        dossier: { icon: "doc", t: "Eerste brief verstuurd, kopie in uw dossier", tijd: "dag 1" },
+    },
+    {
+        moment: "Tijdens de betaaltermijn",
+        titel: "We volgen op tot er betaald wordt",
+        tekst: "Herinneringen per e-mail en sms, en we bellen de debiteur. Wil hij in termijnen betalen, dan leggen we een regeling vast. Betwist hij de factuur, dan hoort u dat direct, met zijn verweer.",
+        u: "Alleen meebeslissen als de debiteur de factuur betwist",
+        dossier: { icon: "phone", t: "Debiteur gesproken: wil in termijnen betalen", tijd: "dag 3" },
+    },
+    {
+        moment: "Elke week",
+        titel: "Uw geld komt naar u toe",
+        tekst: "De debiteur betaalt op onze derdengeldenrekening, apart van ons eigen geld. Elke week maken we de ontvangen bedragen aan u over, met een specificatie per dossier.",
+        u: "Niets",
+        dossier: { icon: "bank", t: "Afgedragen aan u, met specificatie", tijd: "vrijdag" },
+    },
+    {
+        moment: "Aan het einde",
+        titel: "Afgerond, of u kiest het vervolg",
+        tekst: "Volledig betaald? Dan sluiten we het dossier en betaalt u niets. Blijft betaling uit, dan adviseren we over de vervolgstap: een gerechtelijke procedure, alleen met uw akkoord en met de kosten vooraf, of het dossier sluiten.",
+        u: "Akkoord geven als u verder wilt via de rechter",
+        dossier: { icon: "scale", t: "Advies over het vervolg klaargezet", tijd: "na de termijn" },
+    },
+]
+
+// 02: wat er gebeurt in elke situatie. Bron: homeFaq, incassoFaq, tarievenFaq en de AV (9.5, 7.10, 10.3).
+const situaties = [
+    {
+        id: "betaalt",
+        label: "Betaalt",
+        kop: "Dossier gesloten, u betaalt € 0",
+        good: true,
+        regels: [
+            ["Wat wij doen", "De betaling verwerken, uw hoofdsom afdragen en het dossier sluiten"],
+            ["Wat u doet", "Niets"],
+            ["Wat het u kost", "€ 0. De incassokosten en de rente betaalt de debiteur"],
+        ],
+    },
+    {
+        id: "regeling",
+        label: "Wil een regeling",
+        kop: "We leggen een haalbare regeling vast",
+        good: false,
+        regels: [
+            ["Wat wij doen", "Termijnen vastleggen, elke termijn bewaken en direct opvolgen als er een wordt gemist"],
+            ["Wat u doet", "Niets. Wilt u grenzen, zoals een maximaal aantal termijnen, dan spreken we die vooraf af"],
+            ["Wat het u kost", "€ 0 als de regeling volledig wordt betaald"],
+        ],
+    },
+    {
+        id: "betwist",
+        label: "Betwist de factuur",
+        kop: "U hoort het direct, met het verweer",
+        good: false,
+        regels: [
+            ["Wat wij doen", "Het verweer beoordelen en u adviseren over de beste vervolgstap"],
+            ["Wat u doet", "Stukken aanleveren die uw vordering onderbouwen, en beslissen over het vervolg"],
+            [
+                "Wat het u kost",
+                "In het minnelijke traject niets extra. Een procedure alleen met uw akkoord, kosten vooraf bekend",
+            ],
+        ],
+    },
+    {
+        id: "stil",
+        label: "Reageert niet",
+        kop: "We blijven opvolgen, daarna kiest u",
+        good: false,
+        regels: [
+            ["Wat wij doen", "Doorgaan met brieven, e-mail, sms en bellen, en een laatste sommatie sturen"],
+            ["Wat u doet", "Na ons advies kiezen: via de rechter verder of het dossier sluiten"],
+            ["Wat het u kost", "Rechtbank en deurwaarder zijn voor u, en die hoort u vooraf"],
+        ],
+    },
+    {
+        id: "failliet",
+        label: "Is failliet",
+        kop: "Dossier kosteloos gesloten",
+        good: true,
+        regels: [
+            ["Wat wij doen", "Bij faillissement, schuldsanering of overlijden sluiten we het dossier"],
+            ["Wat u doet", "Kiezen of we uw vordering bij de curator indienen"],
+            ["Wat het u kost", "€ 0. Indienen bij de curator: € 115 excl. btw, alleen als u dat wilt"],
+        ],
+    },
+    {
+        id: "rechtstreeks",
+        label: "Betaalt aan u",
+        kop: "Meld het ons binnen een week",
+        good: false,
+        regels: [
+            ["Wat wij doen", "Het dossier bijwerken en de afrekening opmaken"],
+            ["Wat u doet", "De betaling binnen een week doorgeven, en geen eigen afspraken maken zolang het dossier loopt"],
+            ["Wat het u kost", "Volgens onze algemene voorwaarden; we lichten het toe in de afrekening"],
+        ],
+    },
+] as const
+
+// 03: aanleveren
+const nodig = [
+    "De factuur, of het factuurnummer en het bedrag",
+    "Naam en adres van de debiteur",
+    "Of uw klant een bedrijf of een particulier is",
+]
+const handig = [
+    "Offerte, opdrachtbevestiging of contract",
+    "Leverbon of bewijs van uitgevoerd werk",
+    "Uw herinneringen en correspondentie",
+    "E-mailadres en telefoonnummer van de debiteur",
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: "Zo verloopt een incassodossier bij GeldGarant",
+        description,
+        step: stappen.map((s, i) => ({
+            "@type": "HowToStep",
+            position: i + 1,
+            name: s.titel,
+            text: s.tekst,
+            url: `${url}#stap-${i + 1}`,
+        })),
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Hoe werkt het", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: hoeWerktFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Hoe werkt het" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Van indienen tot <span class="accent">uitbetaling</span>
+                    </h1>
+                    <p class="lead">
+                        Zo verloopt uw incassodossier bij GeldGarant. U levert één keer de factuur aan, wij doen de rest, en in uw
+                        online dossier ziet u elke stap gebeuren.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#situaties">
+                            Wat als de debiteur…
+                        </a>
+                    </div>
+                </div>
+
+                <nav class="overzicht" aria-labelledby="overzicht-title">
+                    <h2 class="overzicht-title" id="overzicht-title">
+                        In zes stappen
+                    </h2>
+                    <ol role="list">
+                        {stappen.map((s, i) => (
+                            <li>
+                                <a href={`#stap-${i + 1}`}>
+                                    <span class="ov-num num">{i + 1}</span>
+                                    <span class="ov-titel">{s.titel}</span>
+                                    <span class="ov-moment">{s.moment}</span>
+                                </a>
+                            </li>
+                        ))}
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 STAP VOOR STAP -->
+    <section class="section bg-surface" aria-labelledby="stappen-title">
+        <div class="wrap stappen-grid">
+            <div class="stappen-kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Stap voor stap
+                </p>
+                <h2 class="h2" id="stappen-title">
+                    Wat wij doen, wat u <span class="accent">ziet</span>
+                </h2>
+                <p class="lead">
+                    Per stap: wat er gebeurt, wat er van u nodig is, en wat u op dat moment terugziet in uw online dossier.
+                </p>
+                <p class="stappen-label">
+                    <span>Voorbeelddossier</span> De tijden zijn een voorbeeld.
+                </p>
+            </div>
+
+            <ol role="list" class="stappen">
+                {stappen.map((s, i) => (
+                    <li class="stap" id={`stap-${i + 1}`}>
+                        <span class="stap-num num" aria-hidden="true">
+                            {i + 1}
+                        </span>
+                        <article class="stap-kaart">
+                            <p class="stap-moment">
+                                <Icon name="clock" size={14} />
+                                {s.moment}
+                            </p>
+                            <h3 class="h3">
+                                <span class="sr-only">Stap {i + 1}: </span>
+                                {s.titel}
+                            </h3>
+                            <p class="stap-tekst">{s.tekst}</p>
+                            <div class="stap-voet">
+                                <p class="stap-u">
+                                    <span class="stap-u-label">U doet</span>
+                                    {s.u}
+                                </p>
+                                <p class="stap-dossier">
+                                    <span class="sd-icon" aria-hidden="true">
+                                        <Icon name={s.dossier.icon} size={16} />
+                                    </span>
+                                    <span class="sd-t">
+                                        <span class="sr-only">In uw dossier: </span>
+                                        {s.dossier.t}
+                                    </span>
+                                    <span class="sd-tijd">{s.dossier.tijd}</span>
+                                </p>
+                            </div>
+                        </article>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 02 SITUATIES -->
+    <section class="section" id="situaties" aria-labelledby="situaties-title">
+        <div class="wrap situaties">
+            <div class="sit-kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Uw situatie
+                </p>
+                <h2 class="h2" id="situaties-title">
+                    En als de debiteur <span class="accent">anders</span> reageert?
+                </h2>
+                <p class="lead">
+                    Niet elk dossier loopt hetzelfde. Kies wat uw debiteur doet en zie wat wij doen, wat u doet en wat het u kost.
+                </p>
+                <a class="btn btn-dark sit-btn" href="/tarieven">
+                    Alle tarieven
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+            </div>
+
+            <div class="switch">
+                <fieldset>
+                    <legend class="sr-only">Wat doet de debiteur?</legend>
+                    <div class="seg" data-scroller>
+                        {situaties.map((s, i) => (
+                            <label>
+                                <input type="radio" name="situatie" value={s.id} checked={i === 0} />
+                                <span>{s.label}</span>
+                            </label>
+                        ))}
+                    </div>
+                </fieldset>
+                {situaties.map((s) => (
+                    <div class="outcome" data-situatie={s.id}>
+                        <p class:list={["outcome-kop", { good: s.good }]}>{s.kop}</p>
+                        <dl>
+                            {s.regels.map(([k, v]) => (
+                                <div>
+                                    <dt>{k}</dt>
+                                    <dd>{v}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- 03 AANLEVEREN -->
+    <section class="section" aria-labelledby="aanleveren-title">
+        <div class="wrap">
+            <div class="aan-kop">
+                <p class="eyebrow">
+                    <span class="idx">03</span> Aanleveren
+                </p>
+                <h2 class="h2" id="aanleveren-title">
+                    Dit hebben we van u <span class="accent">nodig</span>
+                </h2>
+            </div>
+            <div class="aan-grid">
+                <div class="aan-kaart">
+                    <h3 class="aan-titel">
+                        <span class="aan-icon" aria-hidden="true">
+                            <Icon name="check" size={18} />
+                        </span>
+                        Genoeg om te starten
+                    </h3>
+                    <ul role="list">
+                        {nodig.map((n) => (
+                            <li>{n}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div class="aan-kaart">
+                    <h3 class="aan-titel">
+                        <span class="aan-icon aan-plus" aria-hidden="true">
+                            <Icon name="plus" size={18} />
+                        </span>
+                        Maakt uw vordering sterker
+                    </h3>
+                    <ul role="list">
+                        {handig.map((n) => (
+                            <li>{n}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div class="aan-kaart aan-cta bg-ink">
+                    <h3 class="aan-titel">Alles bij de hand?</h3>
+                    <p>Indienen duurt ongeveer drie minuten. Bijlagen kunt u direct uploaden, of later nasturen.</p>
+                    <a class="btn btn-light" href="/vordering-indienen">
+                        Vordering indienen
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                    <p class="aan-noot">
+                        Twijfelt u of uw factuur klaar is voor incasso?{" "}
+                        <a class="textlink" href="/incasso#klaar-title">
+                            Doe de check
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={hoeWerktFaq} idx="04">
+        <Fragment slot="title">
+            Vragen over de <span class="accent">werkwijze</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Dien uw vordering in ongeveer drie minuten in. Op werkdagen gaan we binnen het uur voor u aan de slag.">
+        Klaar voor stap <span class="accent">één</span>?
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        }
+    }
+    .hero h1 {
+        max-width: 10em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 32em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    .overzicht {
+        padding: clamp(20px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .overzicht-title {
+        margin-bottom: 8px;
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .overzicht ol {
+        position: relative;
+        display: grid;
+    }
+    .overzicht ol::before {
+        content: "";
+        position: absolute;
+        left: 15px;
+        top: 26px;
+        bottom: 26px;
+        width: 2px;
+        background: var(--line);
+    }
+    .overzicht a {
+        position: relative;
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        min-height: 52px;
+        padding: 6px 0;
+        color: var(--ink);
+        border-radius: var(--r-sm);
+    }
+    .ov-num {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-size: var(--fs-xs);
+        font-weight: 700;
+        box-shadow: 0 0 0 4px #fff;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+    .overzicht a:hover .ov-num {
+        background: var(--blue);
+        color: #fff;
+    }
+    .ov-titel {
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    .overzicht a:hover .ov-titel {
+        text-decoration: underline;
+        text-decoration-color: var(--blue);
+        text-underline-offset: 3px;
+    }
+    .ov-moment {
+        padding: 3px 10px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #586280;
+        white-space: nowrap;
+    }
+    @media (max-width: 479px) {
+        .overzicht a {
+            grid-template-columns: 32px minmax(0, 1fr);
+            min-height: 44px;
+        }
+        .ov-moment {
+            display: none;
+        }
+    }
+    .overzicht li:last-child .ov-num {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+
+    /* ---------- 01 STAPPEN ---------- */
+    .stappen-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .stappen-grid {
+            grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+            gap: 72px;
+            align-items: start;
+        }
+        .stappen-kop {
+            position: sticky;
+            top: calc(var(--header-h) + 40px);
+        }
+    }
+    .stappen-kop .h2 {
+        margin-top: 14px;
+    }
+    .stappen-kop .lead {
+        margin-top: 20px;
+    }
+    .stappen-label {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .stappen-label span {
+        padding: 3px 10px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .stappen {
+        position: relative;
+        display: grid;
+        gap: 14px;
+    }
+    .stappen::before {
+        content: "";
+        position: absolute;
+        left: 19px;
+        top: 24px;
+        bottom: 24px;
+        width: 2px;
+        background: #d9dde7;
+    }
+    .stap {
+        position: relative;
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 14px;
+        scroll-margin-top: calc(var(--header-h) + 32px);
+    }
+    @media (min-width: 640px) {
+        .stap {
+            gap: 20px;
+        }
+    }
+    .stap-num {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        margin-top: 18px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+        box-shadow: 0 0 0 6px var(--surface);
+    }
+    .stap:last-child .stap-num {
+        background: var(--green);
+    }
+    .stap-kaart {
+        min-width: 0;
+        padding: clamp(18px, 2.4vw, 28px);
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .stap-moment {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--blue-ink);
+    }
+    .stap-kaart .h3 {
+        margin-top: 8px;
+    }
+    .stap-tekst {
+        margin-top: 8px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .stap-voet {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+    }
+    @media (min-width: 760px) {
+        .stap-voet {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            align-items: center;
+            gap: 16px;
+        }
+    }
+    .stap-u {
+        display: grid;
+        gap: 2px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.4;
+    }
+    .stap-u-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .stap-dossier {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        color: var(--ink);
+        line-height: 1.4;
+    }
+    .sd-icon {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .sd-t {
+        font-weight: 600;
+    }
+    @media (max-width: 479px) {
+        .stap-dossier {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+        .sd-tijd {
+            display: none;
+        }
+    }
+    .sd-tijd {
+        color: #586280;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* ---------- 02 SITUATIES ---------- */
+    .situaties {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .situaties {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .sit-kop .h2 {
+        margin-top: 14px;
+    }
+    .sit-kop .lead {
+        margin-top: 20px;
+    }
+    .sit-btn {
+        margin-top: 32px;
+    }
+    @media (max-width: 1023px) {
+        .sit-btn {
+            display: none;
+        }
+    }
+    .switch {
+        padding: clamp(16px, 2.4vw, 28px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+    }
+    fieldset {
+        border: 0;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+    }
+    .seg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    @media (max-width: 639px) {
+        .seg {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .seg::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    .seg label {
+        position: relative;
+        flex-shrink: 0;
+    }
+    .seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .seg span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.85);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        white-space: nowrap;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+    .seg input:checked + span {
+        background: #fff;
+        color: var(--ink);
+    }
+    .seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue-on-dark);
+        outline-offset: 2px;
+    }
+    .outcome {
+        display: none;
+        margin-top: 14px;
+        padding: clamp(20px, 2.6vw, 32px);
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .switch:has(input[value="betaalt"]:checked) [data-situatie="betaalt"],
+    .switch:has(input[value="regeling"]:checked) [data-situatie="regeling"],
+    .switch:has(input[value="betwist"]:checked) [data-situatie="betwist"],
+    .switch:has(input[value="stil"]:checked) [data-situatie="stil"],
+    .switch:has(input[value="failliet"]:checked) [data-situatie="failliet"],
+    .switch:has(input[value="rechtstreeks"]:checked) [data-situatie="rechtstreeks"] {
+        display: block;
+    }
+    .outcome-kop {
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.15rem + 1vw, 1.875rem);
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+    }
+    .outcome-kop.good {
+        color: var(--green);
+    }
+    .outcome dl {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+    }
+    .outcome dl div {
+        display: grid;
+        gap: 4px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    @media (min-width: 560px) {
+        .outcome dl div {
+            grid-template-columns: 9.5rem minmax(0, 1fr);
+            gap: 16px;
+        }
+    }
+    .outcome dt {
+        color: var(--muted);
+    }
+    .outcome dd {
+        color: var(--ink);
+        font-weight: 600;
+    }
+
+    /* ---------- 03 AANLEVEREN ---------- */
+    .aan-kop {
+        max-width: 40rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .aan-kop .h2 {
+        margin-top: 14px;
+    }
+    .aan-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 760px) {
+        .aan-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .aan-cta {
+            grid-column: 1 / -1;
+        }
+    }
+    @media (min-width: 1100px) {
+        .aan-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .aan-cta {
+            grid-column: auto;
+        }
+    }
+    .aan-kaart {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .aan-titel {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .aan-cta .aan-titel {
+        color: #fff;
+    }
+    .aan-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .aan-plus {
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .aan-kaart ul {
+        display: grid;
+    }
+    .aan-kaart li {
+        padding: 11px 0 11px 22px;
+        border-top: 1px solid #dfe2ea;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.45;
+        position: relative;
+    }
+    .aan-kaart li::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 19px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--blue);
+    }
+    .aan-cta {
+        background: var(--ink);
+    }
+    .aan-cta > p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .aan-cta .btn {
+        align-self: flex-start;
+        margin-top: 4px;
+    }
+    .aan-noot {
+        margin-top: auto;
+        padding-top: 8px;
+        font-size: var(--fs-xs) !important;
+    }
+</style>

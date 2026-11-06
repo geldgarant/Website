@@ -67,3 +67,31 @@ test.describe("homepage interacties", () => {
         await expect(page.locator('[data-scenario="volledig"]')).toBeHidden()
     })
 })
+
+test.describe("hoe werkt het", () => {
+    test("situatie-kiezer toont per keuze één uitkomst", async ({ page }) => {
+        await page.goto("/hoe-werkt-het")
+        await expect(page.locator('[data-situatie="betaalt"]')).toBeVisible()
+        await page.locator('input[name="situatie"][value="failliet"]').check({ force: true })
+        await expect(page.locator('[data-situatie="failliet"]')).toBeVisible()
+        await expect(page.locator('[data-situatie="betaalt"]')).toBeHidden()
+        await expect(page.locator(".outcome:visible")).toHaveCount(1)
+    })
+
+    test("overzicht in de hero springt naar de stap", async ({ page }) => {
+        await page.goto("/hoe-werkt-het")
+        await page.locator('.overzicht a[href="#stap-5"]').click()
+        await expect(page).toHaveURL(/#stap-5$/)
+        await expect(page.locator("#stap-5")).toBeInViewport()
+    })
+})
+
+test.describe("geen persoonsnamen op de site", () => {
+    for (const route of ["/", "/over-ons", "/contact-opnemen", "/hoe-werkt-het"]) {
+        test(`${route} noemt geen namen en geen callcenter`, async ({ page }) => {
+            await page.goto(route)
+            const tekst = (await page.locator("main, body").first().innerText()).toLowerCase()
+            for (const woord of ["anas", "ilyas", "callcenter", "keuzemenu"]) expect(tekst).not.toContain(woord)
+        })
+    }
+})

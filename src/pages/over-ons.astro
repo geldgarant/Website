@@ -1,0 +1,1350 @@
+---
+// A6 /over-ons. Hoofdvraag: "Wie zijn jullie, en kan ik jullie vertrouwen?"
+// Besluit gebruiker (6 nov 2026): geen namen van personen, professioneel als gevestigd Nederlands bureau.
+// Volgorde: wie (hero + feiten) → waarom (01) → hoe met mijn klant (02) → is mijn geld veilig (03)
+// → wie doet het werk (04) → voor wie, waar (05) → vragen (06) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site, branches } from "../data/site"
+import { overOnsFaq } from "../data/faq"
+
+const title = "Over GeldGarant | Incassobureau voor ondernemers"
+const description =
+    "GeldGarant is een Nederlands incassobureau voor ondernemers, geregistreerd bij Justis. Snel gestart, correct richting uw klant en met heldere kosten."
+const url = "https://geldgarant.com/over-ons"
+
+const uren = site.hours.charAt(0).toUpperCase() + site.hours.slice(1)
+
+const feiten = [
+    { icon: "pin", k: "Kantoor", v: site.city },
+    { icon: "map", k: "Werkgebied", v: "Heel Nederland, buitenland via partners" },
+    { icon: "shield", k: "Incassoregister Justis", v: `nr. ${site.incassoRegister}`, href: site.incassoRegisterHref },
+    ...(site.kvk ? [{ icon: "doc", k: "KvK", v: site.kvk }] : []),
+    { icon: "scale", k: "Aangesloten bij", v: "NowID, met erkende geschillenregeling", href: "/nowid" },
+    { icon: "clock", k: "Bereikbaar", v: uren },
+] as { icon: "pin" | "map" | "shield" | "doc" | "scale" | "clock"; k: string; v: string; href?: string }[]
+
+// 01: wat ondernemers vaak tegenkomen, en wat wij anders doen
+const vergelijk = [
+    { k: "Starten", vaak: "Eerst opstartkosten, dan dagen wachten", gg: "Geen opstartkosten, binnen 1 uur in behandeling" },
+    { k: "Kosten", vaak: "Een succesfee bovenop uw factuur", gg: "€ 0 bij volledige betaling, geen succesfee" },
+    { k: "Op de hoogte blijven", vaak: "Zelf bellen voor een update", gg: "Elke stap live in uw online dossier" },
+    { k: "Uitbetaling", vaak: "Pas als het dossier is afgerond", gg: "Wekelijks afgedragen" },
+    { k: "Contact", vaak: "Een algemeen nummer", gg: "Een vaste dossierbehandelaar" },
+]
+
+// 02: drie principes, elk met het bewijs erbij
+const principes = [
+    {
+        woord: "Correct",
+        kop: "Volgens de wet, en netjes richting uw klant",
+        tekst: "Incassokosten rekenen we volgens de wettelijke staffel, bij een particulier altijd pas na de 14-dagenbrief. Onze toon is zakelijk en duidelijk, zodat er ruimte blijft voor de relatie met uw klant.",
+        bewijs: ["Wettelijke staffel", "14-dagenbrief bij particulieren"],
+    },
+    {
+        woord: "Snel",
+        kop: "Hoe eerder de debiteur van ons hoort, hoe beter",
+        tekst: `De kans op betaling is het grootst in de eerste weken. Daarom nemen we elke vordering op ${site.hours} binnen een uur in behandeling.`,
+        bewijs: ["Binnen 1 uur in behandeling", "Wekelijks uitbetaald"],
+    },
+    {
+        woord: "Open",
+        kop: "U weet vooraf wat het kost en ziet wat we doen",
+        tekst: "Geen kleine lettertjes en geen verrassingen achteraf. Lukt iets niet, dan zeggen we dat eerlijk, met een advies over wat wel verstandig is.",
+        bewijs: ["€ 0 bij volledige betaling", "Live online dossier"],
+    },
+]
+
+// 03: waarom uw geld en uw dossier veilig zijn
+const veilig = [
+    {
+        icon: "shield",
+        kop: "Geregistreerd bij Justis",
+        tekst: `Ingeschreven in het incassoregister onder nummer ${site.incassoRegister}, zoals de Wet kwaliteit incassodienstverlening verplicht.`,
+        link: { href: site.incassoRegisterHref, label: "Controleer het register" },
+    },
+    {
+        icon: "bank",
+        kop: "Gescheiden derdengeldenrekening",
+        tekst: "Betalingen van debiteuren staan apart van ons eigen geld. We dragen ze wekelijks aan u af, met een specificatie per dossier.",
+    },
+    {
+        icon: "scale",
+        kop: "Aangesloten bij NowID",
+        tekst: "We werken volgens de eisen van de Wki en vallen onder een onafhankelijke, erkende klachten- en geschillenregeling.",
+        link: { href: "/nowid", label: "Wat is NowID?" },
+    },
+    {
+        icon: "user",
+        kop: "Vakbekwaam en gescreend",
+        tekst: "Wie bij ons incassowerk doet, is daarvoor opgeleid en heeft een Verklaring Omtrent het Gedrag, zoals de Wki voorschrijft.",
+        link: { href: "/wki", label: "Meer over de Wki" },
+    },
+] as const
+
+const branchIcon = {
+    "incasso-bouw": "building",
+    "incasso-transport": "truck",
+    "incasso-verhuur": "key",
+    "incasso-automotive": "car",
+    "incasso-groothandel": "box",
+    "incasso-dienstverlening": "briefcase",
+    "incasso-ecommerce": "cart",
+    "incasso-zorg": "heart",
+    "incasso-mkb": "store",
+    "incasso-zzp": "person",
+} as const
+
+const route = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.street}, ${site.postcode} ${site.city}`)}`
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        name: "Over GeldGarant",
+        url,
+        description,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        name: "GeldGarant",
+        url: "https://geldgarant.com",
+        telephone: "+31852127914",
+        email: site.email,
+        areaServed: "NL",
+        ...(site.kvk ? { identifier: { "@type": "PropertyValue", propertyID: "KvK", value: site.kvk } } : {}),
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: site.street,
+            postalCode: site.postcode,
+            addressLocality: site.city,
+            addressCountry: "NL",
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Over ons", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: overOnsFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Over ons" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Wij zorgen dat ondernemers worden <span class="accent">betaald</span>
+                    </h1>
+                    <p class="lead">
+                        GeldGarant is een Nederlands incassobureau voor ondernemers. Vanuit ons kantoor in {site.city} nemen we
+                        onbetaalde facturen over voor bedrijven in heel Nederland: snel gestart, correct richting uw klant en met
+                        heldere afspraken over de kosten.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="/contact-opnemen">
+                            Kennismaken
+                        </a>
+                    </div>
+                </div>
+
+                <aside class="feiten bg-ink" aria-labelledby="feiten-title">
+                    <img class="feiten-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                    <h2 class="feiten-title" id="feiten-title">
+                        GeldGarant in het kort
+                    </h2>
+                    <dl>
+                        {feiten.map((f) => (
+                            <div>
+                                <dt>
+                                    <span class="feit-icon" aria-hidden="true">
+                                        <Icon name={f.icon} size={18} />
+                                    </span>
+                                    {f.k}
+                                </dt>
+                                <dd>
+                                    {f.href ? (
+                                        <a class="feit-link" href={f.href}>
+                                            {f.v}
+                                        </a>
+                                    ) : (
+                                        f.v
+                                    )}
+                                </dd>
+                            </div>
+                        ))}
+                    </dl>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 ONS VERHAAL -->
+    <section class="section verhaal" aria-labelledby="verhaal-title">
+        <div class="wrap">
+            <p class="eyebrow">
+                <span class="idx">01</span> Ons verhaal
+            </p>
+            <h2 class="statement" id="verhaal-title">
+                Ondernemers verdienen hun geld met hun vak. Niet met <span class="accent">achter facturen aan</span> bellen.
+            </h2>
+
+            <div class="verhaal-grid">
+                <div class="verhaal-tekst">
+                    <h3 class="h3">Opgericht uit frustratie, gebouwd op structuur</h3>
+                    <p>
+                        GeldGarant is ontstaan uit een herkenbare ergernis. Wie een incassobureau inschakelde, betaalde vaak eerst
+                        opstartkosten, wachtte dagen op de eerste brief en moest zelf bellen om te horen hoe het ervoor stond.
+                    </p>
+                    <p>
+                        Dat kan beter. Daarom hebben we GeldGarant vanaf de basis anders ingericht: met eigen werkprocessen die
+                        elk dossier op het juiste moment naar de volgende stap brengen, een online dossier waarin u alles ziet, en
+                        kosten die u vooraf kent.
+                    </p>
+                    <p>
+                        Het resultaat is een incassobureau dat werkt zoals u het zelf zou doen als u er de tijd voor had: snel,
+                        consequent en zonder gedoe. Elk dossier behandelen we alsof het om ons eigen geld gaat.
+                    </p>
+                </div>
+
+                <div class="vergelijk-wrap">
+                    <table class="vergelijk">
+                        <caption class="sr-only">Wat ondernemers vaak tegenkomen, en wat GeldGarant anders doet</caption>
+                        <thead>
+                            <tr>
+                                <td></td>
+                                <th scope="col">Wat u vaak tegenkomt</th>
+                                <th scope="col" class="gg-kol">
+                                    <img src="/brand/short-logo-dark.svg" alt="" width="18" height="21" />
+                                    Bij GeldGarant
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {vergelijk.map((r) => (
+                                <tr>
+                                    <th scope="row">{r.k}</th>
+                                    <td data-label="Wat u vaak tegenkomt">{r.vaak}</td>
+                                    <td data-label="Bij GeldGarant" class="gg-kol">
+                                        <Icon name="check" size={18} />
+                                        <span>{r.gg}</span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 WAAR WE VOOR STAAN -->
+    <section class="section bg-surface" aria-labelledby="principes-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Waar we voor staan
+                </p>
+                <h2 class="h2" id="principes-title">
+                    Drie afspraken die we bij elk dossier <span class="accent">nakomen</span>
+                </h2>
+            </div>
+            <ol role="list" class="principes">
+                {principes.map((p, i) => (
+                    <li data-reveal style={`--d:${i}`}>
+                        <p class="pr-woord" aria-hidden="true">
+                            <span class="accent">{p.woord}</span>
+                        </p>
+                        <div class="pr-body">
+                            <h3 class="h3">
+                                <span class="sr-only">{p.woord}: </span>
+                                {p.kop}
+                            </h3>
+                            <p>{p.tekst}</p>
+                            <ul role="list" class="pr-bewijs">
+                                {p.bewijs.map((b) => (
+                                    <li>
+                                        <Icon name="check" size={16} />
+                                        {b}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 03 VEILIG -->
+    <section class="section" aria-labelledby="veilig-title">
+        <div class="wrap">
+            <div class="veilig bg-ink">
+                <img class="veilig-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                <div class="veilig-kop">
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Zekerheid
+                    </p>
+                    <h2 class="h2" id="veilig-title">
+                        Uw geld en uw dossier in <span class="accent">veilige</span> handen
+                    </h2>
+                    <p class="lead">
+                        Sinds 2024 gelden er strenge wettelijke eisen voor incassobureaus. Wij voldoen daaraan, en u kunt dat zelf
+                        controleren.
+                    </p>
+                </div>
+                <ul role="list" class="veilig-grid">
+                    {veilig.map((v) => (
+                        <li>
+                            <span class="veilig-icon" aria-hidden="true">
+                                <Icon name={v.icon} size={22} />
+                            </span>
+                            <h3 class="veilig-titel">{v.kop}</h3>
+                            <p>{v.tekst}</p>
+                            {"link" in v && (
+                                <a class="textlink veilig-link" href={v.link.href}>
+                                    {v.link.label}
+                                </a>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 04 ORGANISATIE -->
+    <section class="section organisatie" aria-labelledby="org-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">04</span> Zo zijn we georganiseerd
+                </p>
+                <h2 class="h2" id="org-title">
+                    Eén vast aanspreekpunt, een heel <span class="accent">team</span> erachter
+                </h2>
+                <p class="lead">
+                    Uw dossierbehandelaar is uw vaste contact. Daarachter staan onze eigen werkprocessen, het online dossier en
+                    een netwerk van juridische partners.
+                </p>
+            </div>
+
+            <ul role="list" class="org" data-scroller tabindex="0" aria-label="Hoe GeldGarant is georganiseerd, veeg voor meer">
+                <li class="tegel">
+                    <div class="viz viz-contact" aria-hidden="true">
+                        <div class="contact-kaart">
+                            <span class="contact-av">
+                                <Icon name="user" size={22} />
+                            </span>
+                            <span class="contact-naam">
+                                Dossierbehandelaar<small>GG-2026-01234</small>
+                            </span>
+                            <span class="contact-status">
+                                <i></i>
+                                Bereikbaar
+                            </span>
+                        </div>
+                        <div class="contact-acties">
+                            <span>
+                                <Icon name="phone" size={16} /> Bellen
+                            </span>
+                            <span>
+                                <Icon name="whatsapp" size={16} /> WhatsApp
+                            </span>
+                            <span>
+                                <Icon name="mail" size={16} /> Mail
+                            </span>
+                        </div>
+                    </div>
+                    <h3 class="h3">Een vaste dossierbehandelaar</h3>
+                    <p>Die kent uw zaak, belt u terug en overlegt met u over elke beslissing die ertoe doet.</p>
+                </li>
+
+                <li class="tegel">
+                    <div class="viz viz-flow" aria-hidden="true">
+                        <ol class="flow">
+                            <li class="klaar">
+                                <Icon name="check" size={14} /> Aanmaning verstuurd
+                            </li>
+                            <li class="klaar">
+                                <Icon name="check" size={14} /> Herinnering per sms
+                            </li>
+                            <li class="nu">
+                                <i></i> Telefonisch contact
+                            </li>
+                            <li>Sommatie</li>
+                        </ol>
+                    </div>
+                    <h3 class="h3">Eigen werkprocessen</h3>
+                    <p>
+                        Elk dossier volgt vaste stappen en gaat op het juiste moment door naar de volgende. Er blijft niets
+                        liggen.
+                    </p>
+                </li>
+
+                <li class="tegel">
+                    <div class="viz viz-volume" aria-hidden="true">
+                        <div class="volume">
+                            <span class="vol-a">1 factuur</span>
+                            <span class="vol-is">zelfde aanpak</span>
+                            <span class="vol-b">honderden per maand</span>
+                        </div>
+                        <div class="koppel">
+                            <span>Exact Online</span>
+                            <span>Twinfield</span>
+                            <span>SnelStart</span>
+                        </div>
+                    </div>
+                    <h3 class="h3">Eén factuur of honderden</h3>
+                    <p>
+                        Elk volume krijgt dezelfde aanpak. Met een koppeling met uw boekhoudpakket komen vervallen facturen
+                        vanzelf bij ons binnen.
+                    </p>
+                </li>
+
+                <li class="tegel">
+                    <div class="viz viz-netwerk" aria-hidden="true">
+                        <div class="netwerk">
+                            <span class="nw-kern">
+                                <img src="/brand/short-logo-dark.svg" alt="" width="20" height="23" />
+                            </span>
+                            <span class="nw n1">Gerechtsdeurwaarder</span>
+                            <span class="nw n2">Advocaat</span>
+                            <span class="nw n3">Partners buitenland</span>
+                        </div>
+                    </div>
+                    <h3 class="h3">Juridische partners</h3>
+                    <p>
+                        Is de rechter of een deurwaarder nodig, dan schakelen we vaste partners in. Alleen met uw akkoord en met
+                        de kosten vooraf.
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 05 VOOR WIE EN WAAR -->
+    <section class="section bg-surface" aria-labelledby="wie-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Voor wie we werken
+                </p>
+                <h2 class="h2" id="wie-title">
+                    Van zzp’er tot <span class="accent">mkb</span>, door heel Nederland
+                </h2>
+                <p class="lead">
+                    Onze opdrachtgevers zitten in vrijwel elke branche waar op rekening wordt geleverd. Van één onbetaalde factuur
+                    tot een volle debiteurenadministratie.
+                </p>
+            </div>
+            <ul role="list" class="branches" data-scroller>
+                {branches.map((b) => (
+                    <li>
+                        <a href={`/branches/${b.slug}`}>
+                            <Icon name={branchIcon[b.slug as keyof typeof branchIcon]} size={18} />
+                            {b.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+
+            <div class="plekken">
+                <article class="plek">
+                    <div class="photo-slot plek-foto">
+                        <span>Foto kantoor {site.city} volgt</span>
+                    </div>
+                    <div class="plek-body">
+                        <h3 class="h3">Kantoor {site.city}</h3>
+                        <p class="plek-adres">
+                            {site.street}
+                            <br />
+                            {`${site.postcode} ${site.city}`}
+                        </p>
+                        <p>Langskomen kan op afspraak. De meeste opdrachtgevers regelen alles online en telefonisch.</p>
+                        <div class="plek-acties">
+                            <a class="btn btn-dark" href="/contact-opnemen">
+                                Afspraak maken
+                                <span class="btn-dot">
+                                    <Icon name="arrow" size={18} />
+                                </span>
+                            </a>
+                            <a class="textlink plek-link" href={route} rel="noopener" target="_blank">
+                                Route plannen
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="plek plek-werk bg-ink">
+                    <img class="plek-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                    <div class="plek-body">
+                        <p class="eyebrow">Werken bij</p>
+                        <h3 class="h3">Bouw mee aan een incassobureau dat het anders doet</h3>
+                        <p>
+                            We groeien en zoeken mensen die zorgvuldig en vasthoudend zijn. Voor incassowerk, klantcontact en
+                            stages.
+                        </p>
+                        <div class="plek-acties">
+                            <a class="btn btn-light" href="/werken-bij">
+                                Bekijk de vacatures
+                                <span class="btn-dot">
+                                    <Icon name="arrow" size={18} />
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={overOnsFaq} idx="06">
+        <Fragment slot="title">
+            Vragen over <span class="accent">GeldGarant</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Dien uw eerste vordering in, of bel ons voor een vrijblijvend gesprek over uw openstaande facturen.">
+        Klaar om <span class="accent">kennis</span> te maken?
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11.5em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    .feiten {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(24px, 3vw, 36px);
+        border-radius: var(--r-xl);
+    }
+    .feiten > :not(img) {
+        position: relative;
+    }
+    .feiten-mark {
+        position: absolute;
+        right: 0;
+        bottom: -12%;
+        width: 52%;
+        height: auto;
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    .feiten-title {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: #fff;
+    }
+    .feiten dl {
+        display: grid;
+        margin-top: 12px;
+    }
+    .feiten dl > div {
+        display: grid;
+        gap: 4px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line-dark);
+    }
+    .feiten dl > div:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    @media (min-width: 520px) {
+        .feiten dl > div {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            align-items: center;
+            gap: 16px;
+        }
+    }
+    .feiten dt {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .feit-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--blue-on-dark);
+    }
+    .feiten dd {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 1.0625rem;
+        letter-spacing: -0.01em;
+        color: #fff;
+        line-height: 1.35;
+    }
+    @media (max-width: 519px) {
+        .feiten dd {
+            padding-left: 42px;
+        }
+    }
+    .feit-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-block: -10px;
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(169, 192, 255, 0.55);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 4px;
+    }
+    .feit-link:hover {
+        text-decoration-color: #fff;
+    }
+
+    /* ---------- gedeelde sectiekop ---------- */
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+
+    /* ---------- 01 VERHAAL ---------- */
+    .statement {
+        margin-top: 20px;
+        max-width: 19em;
+        font-size: clamp(2rem, 1.2rem + 3.4vw, 4rem);
+        line-height: 1.06;
+        letter-spacing: -0.035em;
+        text-wrap: balance;
+    }
+    .verhaal-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 48px;
+        margin-top: clamp(40px, 5vw, 80px);
+        padding-top: clamp(32px, 4vw, 56px);
+        border-top: 1px solid var(--line);
+    }
+    @media (min-width: 1024px) {
+        .verhaal-grid {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 80px;
+            align-items: start;
+        }
+    }
+    .verhaal-tekst {
+        max-width: 34em;
+    }
+    .verhaal-tekst p {
+        margin-top: 16px;
+        color: var(--text);
+        line-height: 1.65;
+    }
+
+    .vergelijk {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    .vergelijk thead th {
+        padding: 16px 16px 14px;
+        text-align: left;
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--muted);
+        vertical-align: bottom;
+    }
+    .vergelijk thead th.gg-kol {
+        display: table-cell;
+        color: #fff;
+        background: var(--ink);
+        border-radius: var(--r-md) var(--r-md) 0 0;
+    }
+    .vergelijk thead th.gg-kol img {
+        display: block;
+        margin-bottom: 8px;
+    }
+    .vergelijk tbody th {
+        padding: 16px 16px 16px 0;
+        text-align: left;
+        font-weight: 600;
+        color: var(--ink);
+        vertical-align: top;
+        white-space: nowrap;
+    }
+    .vergelijk tbody td {
+        padding: 16px;
+        color: var(--muted);
+        vertical-align: top;
+    }
+    .vergelijk tbody tr {
+        border-top: 1px solid var(--line);
+    }
+    .vergelijk tbody td.gg-kol {
+        background: var(--ink);
+        color: #fff;
+        font-weight: 500;
+    }
+    .vergelijk td.gg-kol :global(svg) {
+        float: left;
+        margin: 1px 10px 0 0;
+        color: #7ee2a8;
+    }
+    .vergelijk tbody tr:last-child td.gg-kol {
+        border-radius: 0 0 var(--r-md) var(--r-md);
+    }
+    /* Smal scherm: per onderwerp één regel, het gangbare doorgestreept erboven */
+    @media (max-width: 639px) {
+        .vergelijk thead,
+        .vergelijk thead tr,
+        .vergelijk thead th,
+        .vergelijk thead td {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+        .vergelijk tbody tr {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 6px;
+            padding: 14px 0;
+        }
+        .vergelijk tbody th {
+            padding: 0;
+            white-space: normal;
+            font-size: var(--fs-xs);
+            color: var(--muted);
+        }
+        .vergelijk tbody td:not(.gg-kol) {
+            padding: 0;
+            font-size: var(--fs-xs);
+            color: #6b7390;
+            text-decoration: line-through;
+            text-decoration-color: rgba(107, 115, 144, 0.6);
+        }
+        .vergelijk tbody td:not(.gg-kol)::before {
+            content: "Vaak: ";
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .vergelijk tbody td.gg-kol,
+        .vergelijk tbody tr:last-child td.gg-kol {
+            padding: 12px 14px;
+            border-radius: var(--r-md);
+        }
+    }
+
+    /* ---------- 02 PRINCIPES ---------- */
+    .principes {
+        display: grid;
+        border-top: 1px solid #d9dde7;
+    }
+    .principes > li {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        padding-block: clamp(28px, 3.5vw, 44px);
+        border-bottom: 1px solid #d9dde7;
+    }
+    @media (min-width: 900px) {
+        .principes > li {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 48px;
+            align-items: start;
+        }
+    }
+    .pr-woord {
+        font-size: clamp(2.75rem, 1.8rem + 3.6vw, 5rem);
+        line-height: 1;
+    }
+    .pr-woord .accent {
+        line-height: 1;
+    }
+    .pr-body p {
+        margin-top: 10px;
+        max-width: 36em;
+        color: var(--text);
+        line-height: 1.6;
+    }
+    .pr-bewijs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+    }
+    .pr-bewijs li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px 6px 10px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .pr-bewijs :global(svg) {
+        color: var(--green);
+    }
+
+    /* ---------- 03 VEILIG ---------- */
+    .veilig {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(28px, 5vw, 72px);
+        border-radius: var(--r-xl);
+    }
+    .veilig > :not(img) {
+        position: relative;
+    }
+    .veilig-mark {
+        position: absolute;
+        right: 0;
+        top: -10%;
+        width: 30%;
+        height: auto;
+        opacity: 0.04;
+        pointer-events: none;
+    }
+    .veilig-kop {
+        max-width: 40rem;
+    }
+    .veilig-kop .h2 {
+        margin-top: 14px;
+    }
+    .veilig-kop .lead {
+        margin-top: 20px;
+    }
+    .veilig-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1px;
+        margin-top: clamp(32px, 4vw, 56px);
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        background: var(--line-dark);
+    }
+    @media (min-width: 640px) {
+        .veilig-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (min-width: 1100px) {
+        .veilig-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .veilig-grid li {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 24px;
+        background: var(--ink);
+    }
+    .veilig-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 6px;
+        border-radius: 50%;
+        background: rgba(48, 105, 254, 0.22);
+        color: var(--blue-on-dark);
+    }
+    .veilig-titel {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        line-height: 1.3;
+    }
+    .veilig-grid p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .veilig-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: auto;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        align-self: flex-start;
+    }
+
+    /* ---------- 04 ORGANISATIE ---------- */
+    .org {
+        display: flex;
+        gap: 12px;
+        margin-inline: calc(-1 * var(--gutter));
+        padding: 0 var(--gutter) 4px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--gutter);
+        scrollbar-width: none;
+    }
+    .org::-webkit-scrollbar {
+        display: none;
+    }
+    .tegel {
+        flex: 0 0 min(84%, 340px);
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        padding: 12px 12px 24px;
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    @media (min-width: 760px) {
+        .org {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-inline: 0;
+            padding: 0;
+            overflow: visible;
+        }
+    }
+    .tegel .h3 {
+        margin: 22px 12px 0;
+    }
+    @media (min-width: 1100px) {
+        .tegel {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-rows: 1fr auto auto 1fr;
+            column-gap: 12px;
+            padding: 12px;
+        }
+        .tegel .viz {
+            grid-row: 1 / -1;
+        }
+        .tegel .h3 {
+            grid-row: 2;
+            grid-column: 2;
+            margin: 0 16px;
+        }
+        .tegel > p {
+            grid-row: 3;
+            grid-column: 2;
+            margin: 10px 16px 0;
+        }
+    }
+    .tegel > p {
+        margin: 8px 12px 0;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .viz {
+        display: grid;
+        place-items: center;
+        height: 220px;
+        padding: 20px;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+
+    /* contactkaart */
+    .viz-contact {
+        gap: 12px;
+        align-content: center;
+    }
+    .contact-kaart {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 4px 12px;
+        width: 100%;
+        max-width: 250px;
+        padding: 14px;
+        border-radius: var(--r-md);
+        box-shadow: 0 6px 18px rgba(6, 17, 38, 0.08);
+    }
+    .contact-av {
+        grid-row: span 2;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+    }
+    .contact-naam {
+        display: grid;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.3;
+    }
+    .contact-naam small {
+        font-size: var(--fs-xs);
+        font-weight: 400;
+        color: var(--muted);
+    }
+    .contact-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        justify-self: start;
+        padding: 2px 8px;
+        border-radius: var(--r-pill);
+        background: var(--green-bg);
+        color: var(--green);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .contact-status i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+    .contact-acties {
+        display: flex;
+        gap: 6px;
+    }
+    .contact-acties span {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 10px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .contact-acties :global(svg) {
+        flex-shrink: 0;
+        color: var(--blue);
+    }
+
+    /* werkstroom */
+    .flow {
+        display: grid;
+        gap: 8px;
+        width: 100%;
+        max-width: 240px;
+    }
+    .flow li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1px dashed #c9cfdc;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: #586280;
+    }
+    .flow li.klaar {
+        border: 1px solid var(--line);
+        color: var(--ink);
+    }
+    .flow li.klaar :global(svg) {
+        color: var(--green);
+    }
+    .flow li.nu {
+        border: 1px solid var(--blue);
+        background: var(--blue-soft);
+        color: var(--ink);
+    }
+    .flow li.nu i {
+        width: 8px;
+        height: 8px;
+        margin-inline: 3px;
+        border-radius: 50%;
+        background: var(--blue);
+        box-shadow: 0 0 0 4px rgba(48, 105, 254, 0.18);
+    }
+
+    /* volume */
+    .viz-volume {
+        gap: 18px;
+        align-content: center;
+    }
+    .volume {
+        display: grid;
+        justify-items: center;
+        gap: 6px;
+    }
+    .vol-a,
+    .vol-b {
+        padding: 8px 14px;
+        border-radius: var(--r-pill);
+        font-family: var(--font-display);
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--surface);
+    }
+    .vol-b {
+        background: var(--ink);
+        color: #fff;
+    }
+    .vol-is {
+        font-family: var(--font-accent);
+        font-style: italic;
+        font-size: 1rem;
+        color: var(--blue-ink);
+    }
+    .koppel {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    .koppel span {
+        padding: 4px 10px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--line);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #586280;
+    }
+
+    /* netwerk */
+    .netwerk {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        grid-template-areas:
+            "n1 n2"
+            "kern kern"
+            "n3 n3";
+        justify-items: center;
+        align-items: center;
+        gap: 14px 10px;
+    }
+    .nw-kern {
+        grid-area: kern;
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--ink);
+        box-shadow:
+            0 0 0 8px var(--blue-soft),
+            0 0 0 9px #d6e0ff;
+    }
+    .nw {
+        padding: 6px 12px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+    .n1 {
+        grid-area: n1;
+    }
+    .n2 {
+        grid-area: n2;
+    }
+    .n3 {
+        grid-area: n3;
+    }
+
+    /* ---------- 05 VOOR WIE ---------- */
+    .branches {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    @media (max-width: 759px) {
+        .branches {
+            flex-wrap: nowrap;
+            margin-inline: calc(-1 * var(--gutter));
+            padding: 0 var(--gutter) 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .branches::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    .branches a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 16px 0 14px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+        white-space: nowrap;
+        transition: box-shadow 0.2s ease;
+    }
+    .branches a:hover {
+        box-shadow: inset 0 0 0 1.5px var(--blue);
+    }
+    .branches :global(svg) {
+        color: var(--blue);
+    }
+    .plekken {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        margin-top: clamp(32px, 4vw, 56px);
+    }
+    @media (min-width: 900px) {
+        .plekken {
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+        }
+    }
+    .plek {
+        position: relative;
+        display: grid;
+        overflow: hidden;
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    @media (min-width: 640px) {
+        .plek:not(.plek-werk) {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        }
+    }
+    .plek-foto {
+        min-height: 220px;
+        border-radius: 0;
+    }
+    @media (max-width: 639px) {
+        .plek-foto {
+            display: none;
+        }
+        .veilig-grid li {
+            padding: 20px 4px;
+        }
+        .veilig-grid {
+            background: transparent;
+            gap: 0;
+        }
+        .veilig-grid li + li {
+            border-top: 1px solid var(--line-dark);
+        }
+    }
+    .plek-body {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: clamp(22px, 3vw, 36px);
+    }
+    .plek-body > p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .plek-werk .plek-body > p {
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .plek-adres {
+        font-weight: 600;
+        color: var(--ink) !important;
+    }
+    .plek-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 18px;
+        margin-top: auto;
+        padding-top: 14px;
+    }
+    .plek-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+    .plek-werk {
+        background: var(--ink);
+    }
+    .plek-mark {
+        position: absolute;
+        right: 0;
+        bottom: -18%;
+        width: 46%;
+        height: auto;
+        opacity: 0.05;
+        pointer-events: none;
+    }
+</style>

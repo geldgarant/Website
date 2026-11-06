@@ -14,12 +14,16 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 | `/debiteurenbeheer` (A2)   | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
 | `/tarieven` (A3)           | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
 | `/vordering-indienen` (A4) | Gebouwd 6 nov 2026, intake-worker gekoppeld (API in tests nagebootst)                                          |
-| `/contact-opnemen` (A7)    | Gebouwd 6 nov 2026 (commit 9ba8425), qa (110 e2e) + lhci groen, Workers Build success                          |
-| Overige pagina's           | Nog niet gebouwd (zie §6): eerst A6 `/over-ons`, dan A5 `/hoe-werkt-het`                                       |
+| `/contact-opnemen` (A7)    | Gebouwd 6 nov 2026 (commit 9ba8425). Feedback verwerkt: geen namen, geen "callcenter/keuzemenu"                |
+| `/over-ons` (A6)           | Gebouwd 6 nov 2026, qa (152 e2e) + lhci 100 groen. Wacht op akkoord                                            |
+| `/hoe-werkt-het` (A5)      | Gebouwd 6 nov 2026, qa + lhci 100 groen. Wacht op akkoord                                                      |
+| Overige pagina's           | Fase B (zie §6)                                                                                                |
 
 **Tarieven (bevestigd door Anas, 6 nov 2026):** de provisie is gelijk aan de WIK-staffel (`src/lib/wik.ts`); er is **geen succesfee**. De AV (art. 7.5, 10% succesfee) past Anas zelf nog aan. Debiteurenbeheer: € 99 / € 199 / € 349 per maand. AV-PDF: `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`.
 
 **Werkwijze (Anas, 6 nov 2026):** niet te voorzichtig zijn. Goede commerciële toevoegingen gewoon doen ("Meest gekozen" bij Groei, koppeling met het boekhoudpakket: Exact Online, Twinfield, SnelStart). Anas meldt het zelf als iets te ver gaat. Geen verzonnen reviews, logo's of cijfers blijft wel staan.
+
+**Besluit (Anas, 6 nov 2026): geen persoonsnamen op de site.** GeldGarant moet overkomen als een professioneel, gevestigd Nederlands bureau, niet als "twee jongens". Dus nergens Anas of Ilyas, geen "geen callcenter" en geen "geen keuzemenu". "Direct contact" en "een vast aanspreekpunt / vaste dossierbehandelaar" mogen wel. Het persoonlijke oprichtersverhaal regelen ze later zelf. Een e2e-test (`interacties.spec.ts`, "geen persoonsnamen op de site") bewaakt dit op /, /over-ons, /contact-opnemen en /hoe-werkt-het.
 
 **Akkoord van de gebruiker (Anas):**
 
@@ -107,6 +111,8 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - Formulierpagina's zetten `stickyCta={false}` op `Base`: de zwevende CTA viel op mobiel over het formulier.
 - Veldstijlen (`:global(.veld)` e.d.) staan nu dubbel: in `vordering-indienen.astro` en `contact-opnemen.astro`. Bij een derde formulier verhuizen naar `src/styles/form.css`.
 - Adres in JSX: schrijf `{`${site.postcode} ${site.city}`}`; twee losse expressies op aparte regels verliezen de spatie ("7418 ETDeventer").
+- De overlooptest van `resoluties.mjs` meet ook visueel verborgen tabelkoppen: bij een `<thead>` die op mobiel wordt weggeclipt, moeten ook `tr`, `th` en `td` daarin `position:absolute; width:1px; padding:0` krijgen (zie /over-ons).
+- `/contact-opnemen` liep op 320px over door de knop "Naar het debiteurenportaal" (nowrap). Opgelost met `grid-template-columns: minmax(0,1fr)` op `.zij` en `white-space: normal` op die knop.
 - Dev-scripts `shot.mjs` en `resoluties.mjs` nemen nu een route: `node scripts/dev/shot.mjs /incasso` → `/tmp/incasso-*.png`.
 
 ## 6. Volgende stappen (op volgorde, bijgewerkt na besluit gebruiker)
@@ -129,10 +135,12 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 3. ~~**`/tarieven`** (A3)~~: gebouwd op 6 nov 2026. Provisie = WIK-staffel (`src/lib/wik.ts`), geen succesfee; debiteurenbeheer uit `src/lib/pakketten.ts`. Hergebruik `Kosten.astro`, `Afrekening.astro` en `Pakketten.astro` (eventueel met props).
 4. ~~**`/vordering-indienen`** (A4)~~: gebouwd op 6 nov 2026. **Om live te kunnen versturen vanaf staging** moet Anas in Cloudflare (1) `https://website.geldgarant.workers.dev` toevoegen aan `ALLOWED_ORIGINS` (of `INTAKE_ALLOWED_ORIGINS`) van de worker geldgarant-intake-api, en (2) de hostname `website.geldgarant.workers.dev` toevoegen aan de Turnstile-widget. Bij livegang op geldgarant.com is dat al in orde. Het oude wachtwoordveld is vervallen; de worker sloeg het toch niet op. Het soort debiteur (bedrijf of particulier) gaat mee als eerste regel van `omschrijving`.
 5. ~~**`/contact-opnemen`** (A7)~~: gebouwd op 6 nov 2026. Pagina `src/pages/contact-opnemen.astro` (kanalen r. 18–22, formulier, zijkaart kantoor + debiteurenportaal, `stickyCta={false}`), logica `src/scripts/contact.ts` (voorvullen uit `?onderwerp=`/`?pakket=` r. 37–44, extra velden per onderwerp via `data-alleen` r. 55–68, Turnstile lui bij eerste focus r. 80 en r. 100–127, verzenden r. 138–176, `klaar()` r. 178), contract in `src/lib/intake.ts` r. 316–426 (`ONDERWERPEN`, `valideerContact`, `bouwContactPayload`, `verstuurContact`), e2e `tests/e2e/contact.spec.ts` (4 tests, API + Turnstile nagebootst). Turnstile is bij `/api/contact` optioneel: komt er binnen 5 s geen token, dan gaat het bericht zonder token. `accepted:false` met `requestId` toont de referentie plus een belnoot. Dezelfde twee Cloudflare-instellingen als bij A4 gelden hier.
-6. **Volgende:** `/over-ons` (A6), daarna `/hoe-werkt-het` (A5).
-7. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
-8. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
-9. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+6. ~~**`/over-ons`** (A6)~~: gebouwd op 6 nov 2026. Research: Breyta, Mollie, Vesting Finance, huidige GG-pagina's /over-ons, /wki, /nowid. Geen namen; feiten alleen uit `site.ts`. Foto-slot "Foto kantoor Deventer volgt" wacht op de fotoshoot. Linkt naar `/wki`, `/nowid` en `/werken-bij` (nog te migreren, fase B/C).
+7. ~~**`/hoe-werkt-het`** (A5)~~: gebouwd op 6 nov 2026 als eigen pagina (geen 301): de reis van de opdrachtgever, aanvullend op de fasen op `/incasso`. De tijden in de dossiermeldingen zijn als voorbeeld gelabeld. Situatie "Betaalt aan u" verwijst voor de kosten naar de AV (art. 9.5); laat Anas die tekst controleren.
+8. **Volgende:** fase B, te beginnen met `/wki` en `/nowid` (worden al gelinkt vanaf /over-ons), dan de incasso-subpagina's.
+9. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
+10. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+11. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 
@@ -151,4 +159,4 @@ Laad een skill met de Skill-tool voordat je de bijbehorende stap doet. Het overz
 | Livegang                                           | `ci-cd-and-automation`, `shipping-and-launch` (domein, redirects, checklist)                                                                                                                                                                                                   |
 | Afronden                                           | `verification-before-completion`: pas "klaar" melden met bewijs                                                                                                                                                                                                                |
 
-**Open punten bij de gebruiker:** btw-id in de footer (wettelijk verplicht, is gemeld), echte foto's van Anas en Ilyas (fotoshoot), echte reviews en cijfers, bevestiging van de debiteurenbeheer-prijzen, en het AV-document met de provisiestaffel.
+**Open punten bij de gebruiker:** btw-id in de footer (wettelijk verplicht, is gemeld), kantoor- en teamfoto's zonder namen (fotoshoot; slots op home 04 en /over-ons 05), het eigen oprichtersverhaal (regelen ze zelf), controle van de claim "VOG voor medewerkers" op /over-ons 03, echte reviews en cijfers, bevestiging van de debiteurenbeheer-prijzen, en het AV-document met de provisiestaffel.
