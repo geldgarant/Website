@@ -106,9 +106,28 @@
         position: sticky;
         top: calc(var(--header-h) + 34px);
         align-self: start;
-        max-height: calc(100vh - var(--header-h) - 50px);
-        overflow-y: auto;
-        scrollbar-width: thin;
+    }
+    /* weinig schermhoogte: CTA eerst compact, dan weg (zie script in [slug].astro) */
+    .art-aside.is-krap .aside-cta {
+        margin-top: 20px;
+        padding: 0;
+        background: none;
+    }
+    .art-aside.is-krap :is(.aside-cta-t, .aside-cta p, .aside-tel) {
+        display: none;
+    }
+    .art-aside.is-krap .aside-cta .btn {
+        margin-top: 0;
+    }
+    .art-aside.is-zeer-krap .aside-cta {
+        display: none;
+    }
+    .art-aside.is-zeer-krap .toc-lijst a {
+        padding-block: 5px;
+    }
+    .art-aside.is-los {
+        position: relative;
+        top: 0;
     }
     .toc-mob {
         display: none;
@@ -145,7 +164,7 @@
     display: grid;
     grid-template-columns: 22px minmax(0, 1fr);
     gap: 8px;
-    padding: 8px 10px;
+    padding: 7px 10px;
     border-radius: var(--r-sm);
     font-size: var(--fs-sm);
     line-height: 1.4;
@@ -242,6 +261,13 @@
     color: #fff;
 }
 
+/* Ankerdoel "Veelgestelde vragen" is de hele sectie; de negatieve marge compenseert de bovenpadding,
+   zodat de eyebrow net onder de vaste header uitkomt. De ruimte voor de header zelf komt van
+   scroll-padding-top op html (global.css); kopjes in de tekst hebben daarom geen eigen scroll-margin. */
+#vragen {
+    scroll-margin-top: calc(10px - var(--section));
+}
+
 /* ---------- artikeltekst ---------- */
 .prose {
     min-width: 0;
@@ -258,14 +284,12 @@
     line-height: 1.15;
     letter-spacing: -0.022em;
     text-wrap: balance;
-    scroll-margin-top: calc(var(--header-h) + 34px);
 }
 .prose h3 {
     margin: 1.9em 0 0.5em;
     font-size: clamp(1.125rem, 1.06rem + 0.3vw, 1.3125rem);
     line-height: 1.3;
     letter-spacing: -0.012em;
-    scroll-margin-top: calc(var(--header-h) + 34px);
 }
 .prose :is(h2, h3) {
     color: var(--ink);
@@ -420,12 +444,6 @@
     padding-left: 1.1em;
     font-size: var(--fs-sm);
 }
-.bronnen-noot {
-    font-size: var(--fs-xs);
-    line-height: 1.6;
-    color: var(--muted);
-}
-
 /* ---------- kaartjes (verder lezen en overzicht) ---------- */
 .verder-kop {
     display: flex;

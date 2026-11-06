@@ -7,11 +7,13 @@ interface Props {
     items: readonly { q: string; a: string }[]
     idx?: string
     id?: string
+    // optioneel id op de sectie zelf, als ankerdoel (bijv. vanuit een inhoudsopgave)
+    sectionId?: string
 }
-const { items, idx, id = "faq-title" } = Astro.props
+const { items, idx, id = "faq-title", sectionId } = Astro.props
 ---
 
-<section class="section bg-surface" aria-labelledby={id}>
+<section class="section bg-surface" aria-labelledby={id} id={sectionId}>
     <div class="wrap split">
         <div class="split-head">
             <p class="eyebrow">{idx && <span class="idx">{idx}</span>} Veelgestelde vragen</p>

@@ -168,4 +168,41 @@ test.describe("kennisbank", () => {
         await expect(page.locator(`[id="${id}"]`)).toBeInViewport()
         if (!isMobile) await expect(links.nth(2)).toHaveAttribute("aria-current", "true")
     })
+
+    test("veelgestelde vragen komt net onder de header uit", async ({ page, isMobile }) => {
+        await page.goto("/kennisbank/betalingsregeling-treffen")
+        if (isMobile) await page.locator(".toc-mob summary").click()
+        await page.locator(`${isMobile ? ".toc-mob" : ".toc"} a[href="#vragen"]`).click()
+        const eyebrow = page.locator("#vragen .eyebrow")
+        await expect(eyebrow).toBeInViewport()
+        const kop = await page.locator(".bar").boundingBox()
+        const box = await eyebrow.boundingBox()
+        expect(box!.y).toBeGreaterThanOrEqual(kop!.y + kop!.height)
+        expect(box!.y).toBeLessThan(kop!.y + kop!.height + 80)
+    })
+
+    test("zijbalk past altijd in het scherm en scrollt nooit zelf", async ({ page, isMobile }) => {
+        test.skip(isMobile, "zijbalk alleen op desktop")
+        for (const [w, h] of [
+            [1440, 900],
+            [1280, 720],
+            [1080, 650],
+        ]) {
+            await page.setViewportSize({ width: w, height: h })
+            await page.goto("/kennisbank/openstaande-factuur-stappenplan")
+            await page.evaluate(() => document.fonts.ready)
+            const r = await page.evaluate(() => {
+                const a = document.querySelector<HTMLElement>("[data-aside]")!
+                const s = getComputedStyle(a)
+                return {
+                    los: a.classList.contains("is-los"),
+                    h: a.scrollHeight,
+                    ruimte: innerHeight - parseFloat(s.top),
+                    overflow: s.overflowY,
+                }
+            })
+            expect(r.overflow).toBe("visible")
+            if (!r.los) expect(r.h).toBeLessThanOrEqual(r.ruimte)
+        }
+    })
 })

@@ -9,7 +9,7 @@ import Crumbs from "../../components/Crumbs.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
 import { site } from "../../data/site"
-import { onderwerpById, leestijd, datumNl } from "../../data/kennisbank"
+import { onderwerpById, leestijd } from "../../data/kennisbank"
 import { bewerkArtikelHtml, platteTekst, koppenVan } from "../../lib/artikel"
 import "../../styles/artikel.css"
 
@@ -28,7 +28,7 @@ const url = `https://geldgarant.com/kennisbank/${a.id}`
 
 const html = bewerkArtikelHtml(a.rendered?.html ?? "")
 const koppen = koppenVan(a).filter((h) => h.depth === 2)
-const toc = [...koppen.map((h) => ({ slug: h.slug, text: h.text })), { slug: "faq-title", text: "Veelgestelde vragen" }]
+const toc = [...koppen.map((h) => ({ slug: h.slug, text: h.text })), { slug: "vragen", text: "Veelgestelde vragen" }]
 const minuten = leestijd(platteTekst(html))
 
 // Een verkeerde slug in `verwant` laat de build falen, zodat er nooit een dode link ontstaat
@@ -98,10 +98,6 @@ const jsonLd = [
                 <h1>{d.title}</h1>
                 <p class="lead">{d.lead}</p>
                 <ul role="list" class="art-meta">
-                    <li>
-                        <Icon name="calendar" size={16} />
-                        Bijgewerkt op <time datetime={iso(d.bijgewerkt)}>{datumNl(d.bijgewerkt)}</time>
-                    </li>
                     <li>
                         <Icon name="clock" size={16} />
                         {minuten} min lezen
@@ -175,14 +171,10 @@ const jsonLd = [
                         </li>
                     ))}
                 </ul>
-                <p class="bronnen-noot">
-                    Dit artikel geeft algemene informatie en is geen juridisch advies voor uw situatie. Bedragen en termijnen zijn
-                    gecontroleerd op {datumNl(d.bijgewerkt)}. Twijfelt u? Bel ons op <a href={site.phoneHref}>{site.phone}</a>.
-                </p>
             </section>
         </article>
 
-        <aside class="art-aside" aria-label="Inhoudsopgave en contact">
+        <aside class="art-aside" aria-label="Inhoudsopgave en contact" data-aside>
             <nav class="toc" aria-labelledby="toc-title">
                 <p class="toc-title" id="toc-title">
                     In dit artikel
@@ -218,7 +210,7 @@ const jsonLd = [
         </aside>
     </div>
 
-    <Faq items={d.faq} id="faq-title">
+    <Faq items={d.faq} id="faq-title" sectionId="vragen">
         <Fragment slot="title">
             Vragen over dit <span class="accent">onderwerp</span>
         </Fragment>
@@ -304,9 +296,37 @@ const jsonLd = [
         addEventListener("resize", plan)
         update()
 
-        // Op mobiel klapt de inhoudsopgave dicht nadat u een onderdeel kiest
+        // De zijbalk scrollt nooit zelf. Past hij niet in het scherm, dan wordt eerst de CTA compact
+        // (alleen de knop) en daarna verdwijnt de CTA, zodat de inhoudsopgave altijd heel in beeld blijft.
+        const aside = document.querySelector<HTMLElement>("[data-aside]")
+        const pas = () => {
+            if (!aside) return
+            aside.classList.remove("is-krap", "is-zeer-krap", "is-los")
+            const ruimte = () => window.innerHeight - parseFloat(getComputedStyle(aside).top || "0") - 24
+            if (aside.scrollHeight > ruimte()) aside.classList.add("is-krap")
+            if (aside.scrollHeight > ruimte()) aside.classList.add("is-zeer-krap")
+            // laatste redmiddel op een laag scherm: niet meer vastzetten, gewoon meescrollen met de pagina
+            aside.classList.toggle("is-los", aside.scrollHeight > ruimte())
+        }
+        pas()
+        addEventListener("resize", pas)
+        document.fonts?.ready.then(pas)
+
+        // Op mobiel klapt de inhoudsopgave dicht nadat u een onderdeel kiest. Eerst dichtklappen, dan pas
+        // scrollen: anders verschuift de pagina tijdens het scrollen en komt het kopje te laag uit.
         mob?.addEventListener("click", (e) => {
-            if ((e.target as HTMLElement).closest("a")) mob.open = false
+            const a = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[data-toc]")
+            const doel = a && document.getElementById(a.dataset.toc!)
+            if (!a || !doel) return
+            e.preventDefault()
+            mob.open = false
+            const rustig = matchMedia("(prefers-reduced-motion: reduce)").matches
+            requestAnimationFrame(() => {
+                doel.scrollIntoView({ behavior: rustig ? "auto" : "smooth" })
+                history.pushState(null, "", `#${doel.id}`)
+                if (!doel.hasAttribute("tabindex")) doel.setAttribute("tabindex", "-1")
+                doel.focus({ preventScroll: true })
+            })
         })
     }
 </script>
