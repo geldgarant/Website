@@ -4,15 +4,18 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 ## 1. Stand van zaken
 
-| Onderdeel                | Status                                                                                                         |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Repo                     | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
-| Hosting (staging)        | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
-| Productie                | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
-| Homepage                 | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
-| `/incasso` (A1)          | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
-| `/debiteurenbeheer` (A2) | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
-| Overige pagina's         | Nog niet gebouwd (zie §6). Alle links op de homepage wijzen al naar de juiste URL's                            |
+| Onderdeel                  | Status                                                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Repo                       | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
+| Hosting (staging)          | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
+| Productie                  | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
+| Homepage                   | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
+| `/incasso` (A1)            | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
+| `/debiteurenbeheer` (A2)   | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
+| `/tarieven` (A3)           | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
+| `/vordering-indienen` (A4) | Gebouwd 6 nov 2026, intake-worker gekoppeld (API in tests nagebootst)                                          |
+| `/contact-opnemen` (A7)    | Gebouwd 6 nov 2026 (commit 9ba8425), qa (110 e2e) + lhci groen, Workers Build success                          |
+| Overige pagina's           | Nog niet gebouwd (zie §6): eerst A6 `/over-ons`, dan A5 `/hoe-werkt-het`                                       |
 
 **Tarieven (bevestigd door Anas, 6 nov 2026):** de provisie is gelijk aan de WIK-staffel (`src/lib/wik.ts`); er is **geen succesfee**. De AV (art. 7.5, 10% succesfee) past Anas zelf nog aan. Debiteurenbeheer: € 99 / € 199 / € 349 per maand. AV-PDF: `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`.
 
@@ -101,6 +104,9 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - `lighthouserc.cjs`: `maxAutodiscoverUrls: 0`. Standaard meet lhci maar 5 pagina's.
 - html-validate `tel-non-breaking` geldt voor **elke** tekst in een `tel:`-link, ook "Vraag advies": gebruik `\u00a0`.
 - Footer: `.footer a` maakte ook de knop wit-op-wit. Opgelost met `:not(.btn)`; let hierop bij scoped `a`-regels.
+- Formulierpagina's zetten `stickyCta={false}` op `Base`: de zwevende CTA viel op mobiel over het formulier.
+- Veldstijlen (`:global(.veld)` e.d.) staan nu dubbel: in `vordering-indienen.astro` en `contact-opnemen.astro`. Bij een derde formulier verhuizen naar `src/styles/form.css`.
+- Adres in JSX: schrijf `{`${site.postcode} ${site.city}`}`; twee losse expressies op aparte regels verliezen de spatie ("7418 ETDeventer").
 - Dev-scripts `shot.mjs` en `resoluties.mjs` nemen nu een route: `node scripts/dev/shot.mjs /incasso` → `/tmp/incasso-*.png`.
 
 ## 6. Volgende stappen (op volgorde, bijgewerkt na besluit gebruiker)
@@ -122,10 +128,11 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 2. ~~**`/debiteurenbeheer`** (A2)~~: gebouwd op 6 nov 2026. De knoppen wijzen naar `/contact-opnemen?onderwerp=debiteurenbeheer&pakket=…`; dat formulier (A7) moet de parameters `onderwerp` en `pakket` vooraf invullen.
 3. ~~**`/tarieven`** (A3)~~: gebouwd op 6 nov 2026. Provisie = WIK-staffel (`src/lib/wik.ts`), geen succesfee; debiteurenbeheer uit `src/lib/pakketten.ts`. Hergebruik `Kosten.astro`, `Afrekening.astro` en `Pakketten.astro` (eventueel met props).
 4. ~~**`/vordering-indienen`** (A4)~~: gebouwd op 6 nov 2026. **Om live te kunnen versturen vanaf staging** moet Anas in Cloudflare (1) `https://website.geldgarant.workers.dev` toevoegen aan `ALLOWED_ORIGINS` (of `INTAKE_ALLOWED_ORIGINS`) van de worker geldgarant-intake-api, en (2) de hostname `website.geldgarant.workers.dev` toevoegen aan de Turnstile-widget. Bij livegang op geldgarant.com is dat al in orde. Het oude wachtwoordveld is vervallen; de worker sloeg het toch niet op. Het soort debiteur (bedrijf of particulier) gaat mee als eerste regel van `omschrijving`.
-5. `/over-ons`, `/contact-opnemen`, `/hoe-werkt-het` (A5–A7).
-6. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
-7. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
-8. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+5. ~~**`/contact-opnemen`** (A7)~~: gebouwd op 6 nov 2026. Pagina `src/pages/contact-opnemen.astro` (kanalen r. 18–22, formulier, zijkaart kantoor + debiteurenportaal, `stickyCta={false}`), logica `src/scripts/contact.ts` (voorvullen uit `?onderwerp=`/`?pakket=` r. 37–44, extra velden per onderwerp via `data-alleen` r. 55–68, Turnstile lui bij eerste focus r. 80 en r. 100–127, verzenden r. 138–176, `klaar()` r. 178), contract in `src/lib/intake.ts` r. 316–426 (`ONDERWERPEN`, `valideerContact`, `bouwContactPayload`, `verstuurContact`), e2e `tests/e2e/contact.spec.ts` (4 tests, API + Turnstile nagebootst). Turnstile is bij `/api/contact` optioneel: komt er binnen 5 s geen token, dan gaat het bericht zonder token. `accepted:false` met `requestId` toont de referentie plus een belnoot. Dezelfde twee Cloudflare-instellingen als bij A4 gelden hier.
+6. **Volgende:** `/over-ons` (A6), daarna `/hoe-werkt-het` (A5).
+7. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
+8. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+9. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 
