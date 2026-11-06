@@ -4,16 +4,19 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 ## 1. Stand van zaken
 
-| Onderdeel         | Status                                                                                                         |
-| ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| Repo              | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
-| Hosting (staging) | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
-| Productie         | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
-| Homepage          | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
-| `/incasso` (A1)   | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
-| Overige pagina's  | Nog niet gebouwd (zie §6). Alle links op de homepage wijzen al naar de juiste URL's                            |
+| Onderdeel                | Status                                                                                                         |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Repo                     | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
+| Hosting (staging)        | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
+| Productie                | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
+| Homepage                 | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
+| `/incasso` (A1)          | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
+| `/debiteurenbeheer` (A2) | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
+| Overige pagina's         | Nog niet gebouwd (zie §6). Alle links op de homepage wijzen al naar de juiste URL's                            |
 
 **Tarieven (bevestigd door Anas, 6 nov 2026):** de provisie is gelijk aan de WIK-staffel (`src/lib/wik.ts`); er is **geen succesfee**. De AV (art. 7.5, 10% succesfee) past Anas zelf nog aan. Debiteurenbeheer: € 99 / € 199 / € 349 per maand. AV-PDF: `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`.
+
+**Werkwijze (Anas, 6 nov 2026):** niet te voorzichtig zijn. Goede commerciële toevoegingen gewoon doen ("Meest gekozen" bij Groei, koppeling met het boekhoudpakket: Exact Online, Twinfield, SnelStart). Anas meldt het zelf als iets te ver gaat. Geen verzonnen reviews, logo's of cijfers blijft wel staan.
 
 **Akkoord van de gebruiker (Anas):**
 
@@ -110,8 +113,8 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 **Volgorde van de pagina's:**
 
 1. ~~**`/incasso`** (A1)~~: gebouwd op 6 nov 2026, wacht op akkoord. Eerst door de gebruiker te controleren: de `incassoFaq`-teksten (intrekken, rechtstreekse betaling, betwisting), "€ 0" bij een particulier die binnen de 14 dagen betaalt, en de vergelijkingstabel (handelsrente en verjaring van 2 of 5 jaar).
-2. **`/debiteurenbeheer`** (A2). Prijzen pas tonen na bevestiging.
-3. **`/tarieven`** (A3). Het AV-document met de provisiestaffel is nodig.
+2. ~~**`/debiteurenbeheer`** (A2)~~: gebouwd op 6 nov 2026. De knoppen wijzen naar `/contact-opnemen?onderwerp=debiteurenbeheer&pakket=…`; dat formulier (A7) moet de parameters `onderwerp` en `pakket` vooraf invullen.
+3. **`/tarieven`** (A3), de volgende pagina. Provisie = WIK-staffel (`src/lib/wik.ts`), geen succesfee; debiteurenbeheer uit `src/lib/pakketten.ts`. Hergebruik `Kosten.astro`, `Afrekening.astro` en `Pakketten.astro` (eventueel met props).
 4. **`/vordering-indienen`** (A4): het formulier op de intake-worker.
 5. `/over-ons`, `/contact-opnemen`, `/hoe-werkt-het` (A5–A7).
 6. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.

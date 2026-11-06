@@ -1,0 +1,48 @@
+---
+// Kruimelpad boven de hero van subpagina's. De laatste stap is de huidige pagina (zonder link).
+interface Props {
+    items: readonly { label: string; href?: string }[]
+}
+const { items } = Astro.props
+---
+
+<nav class="crumbs" aria-label="Kruimelpad">
+    <ol role="list">
+        {items.map((it) => (
+            <li aria-current={it.href ? undefined : "page"}>{it.href ? <a href={it.href}>{it.label}</a> : it.label}</li>
+        ))}
+    </ol>
+</nav>
+
+<style>
+    .crumbs ol {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .crumbs li + li::before {
+        content: "/";
+        margin-right: 6px;
+        color: var(--line);
+    }
+    .crumbs a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        color: var(--muted);
+        text-decoration: underline;
+        text-decoration-color: var(--line);
+        text-underline-offset: 3px;
+    }
+    .crumbs a:hover {
+        color: var(--ink);
+        text-decoration-color: var(--blue);
+    }
+    .crumbs [aria-current] {
+        color: var(--ink);
+        font-weight: 500;
+    }
+</style>

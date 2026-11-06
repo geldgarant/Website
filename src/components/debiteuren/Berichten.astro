@@ -1,0 +1,460 @@
+---
+// 02 "Wat doen jullie precies, en hoe klinkt dat naar mijn klant?" Per stap een voorbeeldbericht.
+// Keuze via radio's + :has(), zonder JavaScript. Alle namen en bedragen zijn voorbeelden.
+import Icon from "../Icon.astro"
+
+const stappen = [
+    {
+        id: "herinnering",
+        icon: "mail",
+        titel: "Vriendelijke herinnering",
+        tekst: "Per e-mail, kort na de vervaldatum. In uw naam en uw toon.",
+    },
+    {
+        id: "sms",
+        icon: "chat",
+        titel: "Sms erachteraan",
+        tekst: "Een sms wordt vaker gelezen dan een tweede e-mail.",
+    },
+    {
+        id: "bellen",
+        icon: "phone",
+        titel: "Persoonlijk telefoontje",
+        tekst: "We vragen waarom er niet betaald is en maken een afspraak.",
+    },
+    {
+        id: "laatste",
+        icon: "doc",
+        titel: "Laatste herinnering",
+        tekst: "Met een duidelijke termijn. Bij particulieren de wettelijke 14-dagenbrief.",
+    },
+] as const
+---
+
+<section class="section bg-surface" aria-labelledby="berichten-title" id="wat-we-doen">
+    <div class="wrap berichten">
+        <div class="ber-head">
+            <p class="eyebrow">
+                <span class="idx">02</span> Wat we overnemen
+            </p>
+            <h2 class="h2" id="berichten-title">
+                Opvolging in <span class="accent">uw</span> naam
+            </h2>
+            <p class="lead">
+                Uw klant krijgt berichten van uw bedrijf, niet van een incassobureau. Kies een stap en zie hoe dat eruitziet.
+            </p>
+        </div>
+
+        <fieldset class="ber-kies">
+            <legend class="sr-only">Kies een stap</legend>
+            {stappen.map((s, i) => (
+                <label class="ber-optie">
+                    <input type="radio" name="bericht" value={s.id} checked={i === 0} />
+                    <span class="ber-nr num">{i + 1}</span>
+                    <span class="ber-tekst">
+                        <span class="ber-titel">{s.titel}</span>
+                        <span class="ber-uitleg">{s.tekst}</span>
+                    </span>
+                    <span class="ber-icon" aria-hidden="true">
+                        <Icon name={s.icon} size={18} />
+                    </span>
+                </label>
+            ))}
+        </fieldset>
+
+        <div class="ber-stage" aria-hidden="true">
+            <p class="ber-label">Voorbeeld</p>
+
+            <!-- e-mail -->
+            <div class="vb vb-mail" data-vb="herinnering">
+                <div class="mail-head">
+                    <p>
+                        <span>Van</span> Bouwbedrijf Jansen
+                    </p>
+                    <p>
+                        <span>Aan</span> M. de Boer
+                    </p>
+                    <p class="mail-onderwerp">Herinnering: factuur 2026-204</p>
+                </div>
+                <div class="mail-body">
+                    <p>Beste meneer De Boer,</p>
+                    <p>
+                        Volgens onze administratie staat factuur 2026-204 van <strong>€ 1.240,00</strong> nog open. Misschien is
+                        hij aan uw aandacht ontsnapt.
+                    </p>
+                    <p>Wilt u het bedrag binnen 7 dagen overmaken? Heeft u al betaald, dan kunt u dit bericht negeren.</p>
+                    <p>
+                        Met vriendelijke groet,
+                        <br />
+                        Bouwbedrijf Jansen
+                    </p>
+                </div>
+            </div>
+
+            <!-- sms -->
+            <div class="vb vb-sms" data-vb="sms">
+                <div class="tel">
+                    <p class="tel-van">Bouwbedrijf Jansen</p>
+                    <p class="bubbel">
+                        Goedemiddag, factuur 2026-204 (€ 1.240,00) staat nog open. Wilt u deze week betalen? Vragen? Laat het ons
+                        gerust weten.
+                    </p>
+                    <p class="tel-tijd">di 14:05</p>
+                </div>
+            </div>
+
+            <!-- belnotitie -->
+            <div class="vb vb-bel" data-vb="bellen">
+                <div class="notitie">
+                    <div class="notitie-head">
+                        <span class="notitie-icon">
+                            <Icon name="phone" size={16} />
+                        </span>
+                        <span>
+                            <strong>Belnotitie</strong>
+                            <span class="num">wo 10:42 · 4 min</span>
+                        </span>
+                    </div>
+                    <p>
+                        Gesproken met de heer De Boer. De factuur was niet doorgezet naar zijn boekhouding. Hij betaalt vrijdag
+                        het volledige bedrag.
+                    </p>
+                    <p class="notitie-status">
+                        <Icon name="calendar" size={16} /> Betaalafspraak vastgelegd: vrijdag
+                    </p>
+                </div>
+            </div>
+
+            <!-- laatste herinnering -->
+            <div class="vb vb-brief" data-vb="laatste">
+                <div class="brief">
+                    <p class="brief-kop">Laatste herinnering</p>
+                    <p class="brief-ref num">Factuur 2026-204 · € 1.240,00</p>
+                    <p>
+                        Ondanks eerdere herinneringen hebben wij uw betaling nog niet ontvangen. Wij verzoeken u het bedrag binnen
+                        14 dagen na dagtekening te voldoen.
+                    </p>
+                    <p>
+                        Blijft betaling uit, dan dragen wij de vordering over aan een incassobureau. De incassokosten komen dan
+                        voor uw rekening.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <p class="ber-noot">
+            De volgorde en het tempo stemmen we af op uw betaaltermijnen. Via de koppeling met uw boekhoudpakket, zoals Exact
+            Online, Twinfield of SnelStart, zien we direct wie al betaald heeft. Liever dat wij namens GeldGarant schrijven? Ook
+            dat kan.
+        </p>
+    </div>
+</section>
+
+<style>
+    /* Mobiel: kop, keuzes, voorbeeld, noot. Desktop: links kop/keuzes/noot, rechts het voorbeeld */
+    .berichten {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "head" "kies" "stage" "noot";
+        column-gap: 72px;
+    }
+    @media (min-width: 1024px) {
+        .berichten {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-areas: "head stage" "kies stage" "noot stage";
+            grid-template-rows: auto auto 1fr;
+        }
+    }
+    .ber-head {
+        grid-area: head;
+    }
+    .ber-head .h2 {
+        margin-top: 14px;
+    }
+    .ber-head .lead {
+        margin-top: 20px;
+    }
+
+    /* ---------- keuzelijst ---------- */
+    .ber-kies {
+        grid-area: kies;
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+        margin: 28px 0 0;
+        padding: 0;
+        border: 0;
+    }
+    .ber-optie {
+        position: relative;
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border-radius: var(--r-md);
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease;
+    }
+    .ber-optie:hover {
+        background: rgba(255, 255, 255, 0.6);
+    }
+    .ber-optie input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .ber-optie:has(input:checked) {
+        background: #fff;
+        border-color: var(--blue);
+        box-shadow: var(--shadow-card);
+    }
+    .ber-optie:has(input:focus-visible) {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .ber-nr {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+    }
+    .ber-optie:has(input:checked) .ber-nr {
+        background: var(--ink);
+        color: #fff;
+    }
+    .ber-tekst {
+        display: grid;
+        gap: 2px;
+    }
+    .ber-titel {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.0625rem;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+    }
+    .ber-uitleg {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.45;
+    }
+    .ber-icon {
+        color: var(--muted);
+    }
+    .ber-optie:has(input:checked) .ber-icon {
+        color: var(--blue);
+    }
+    .ber-noot {
+        grid-area: noot;
+        margin-top: 18px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.55;
+        max-width: 34em;
+    }
+
+    /* ---------- voorbeeldpodium ---------- */
+    .ber-stage {
+        grid-area: stage;
+        position: relative;
+        display: grid;
+        place-items: center;
+        align-self: center;
+        min-height: 400px;
+        margin-top: 16px;
+        padding: 56px clamp(16px, 4vw, 48px) clamp(24px, 4vw, 48px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+        overflow: hidden;
+    }
+    @media (min-width: 1024px) {
+        .ber-stage {
+            margin-top: 0;
+        }
+    }
+    .ber-label {
+        position: absolute;
+        top: 20px;
+        left: 24px;
+        font-size: var(--fs-xs);
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .vb {
+        display: none;
+        width: 100%;
+        max-width: 420px;
+    }
+    .berichten:has(input[value="herinnering"]:checked) [data-vb="herinnering"],
+    .berichten:has(input[value="sms"]:checked) [data-vb="sms"],
+    .berichten:has(input[value="bellen"]:checked) [data-vb="bellen"],
+    .berichten:has(input[value="laatste"]:checked) [data-vb="laatste"] {
+        display: block;
+        animation: vb-in 0.35s var(--ease) both;
+    }
+    @supports not selector(:has(*)) {
+        [data-vb="herinnering"] {
+            display: block;
+        }
+    }
+    @keyframes vb-in {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .vb {
+            animation: none !important;
+        }
+    }
+
+    /* e-mail */
+    .vb-mail {
+        border-radius: var(--r-lg);
+        background: #fff;
+        overflow: hidden;
+        font-size: var(--fs-sm);
+        box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.5);
+    }
+    .mail-head {
+        display: grid;
+        gap: 2px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+    }
+    .mail-head span {
+        display: inline-block;
+        width: 36px;
+        color: var(--muted);
+    }
+    .mail-onderwerp {
+        margin-top: 6px;
+        font-weight: 600;
+    }
+    .mail-body {
+        display: grid;
+        gap: 10px;
+        padding: 18px 20px 22px;
+        color: var(--text);
+        line-height: 1.55;
+    }
+    .mail-body strong {
+        color: var(--ink);
+    }
+
+    /* sms */
+    .tel {
+        max-width: 300px;
+        margin-inline: auto;
+        padding: 22px 18px;
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.5);
+    }
+    .tel-van {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+        text-align: center;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+    }
+    .bubbel {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 18px 18px 18px 6px;
+        background: var(--surface);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        color: var(--ink);
+    }
+    .tel-tijd {
+        margin-top: 6px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+
+    /* belnotitie */
+    .notitie {
+        display: grid;
+        gap: 12px;
+        padding: 20px;
+        border-radius: var(--r-lg);
+        background: #fff;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+        box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.5);
+    }
+    .notitie-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .notitie-head > span:last-child {
+        display: grid;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .notitie-head strong {
+        font-size: var(--fs-sm);
+        color: var(--ink);
+    }
+    .notitie-icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .notitie-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: var(--r-sm);
+        background: var(--green-bg);
+        color: var(--green);
+        font-weight: 600;
+    }
+
+    /* brief */
+    .brief {
+        display: grid;
+        gap: 12px;
+        padding: 28px 26px;
+        border-radius: 6px;
+        background: #fff;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+        box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.5);
+    }
+    .brief-kop {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: var(--ink);
+    }
+    .brief-ref {
+        margin-top: -8px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+</style>

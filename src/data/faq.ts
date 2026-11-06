@@ -65,3 +65,39 @@ export const incassoFaq = [
         a: "De factuur en de gegevens van de debiteur zijn genoeg om te starten. Heeft u een offerte, opdrachtbevestiging, leverbon of correspondentie, stuur die dan mee: dat maakt uw vordering sterker als de debiteur gaat twisten.",
     },
 ] as const
+
+// Vragen op /debiteurenbeheer. Pakketbedragen staan in src/lib/pakketten.ts; houd de teksten daarmee gelijk.
+export const debiteurenFaq = [
+    {
+        q: "Wat is het verschil tussen debiteurenbeheer en incasso?",
+        a: "Debiteurenbeheer begint op de vervaldatum: vriendelijke herinneringen, een sms en een telefoontje, meestal in uw naam. Uw klant betaalt geen extra kosten. Incasso komt pas daarna, als uw klant niet reageert: dan schrijven we namens GeldGarant en betaalt de debiteur de wettelijke incassokosten.",
+    },
+    {
+        q: "Wat telt als een dossier?",
+        a: "Eén vervallen factuur die u bij ons aanmeldt voor opvolging. Heeft een klant drie openstaande facturen, dan zijn dat drie dossiers.",
+    },
+    {
+        q: "Ziet mijn klant dat ik het heb uitbesteed?",
+        a: "Niet als u dat niet wilt. Standaard sturen we de herinneringen in uw bedrijfsnaam en uw toon. Wilt u juist dat uw klant ziet dat er een professionele partij meekijkt, dan schrijven we namens GeldGarant.",
+    },
+    {
+        q: "Koppelen jullie met mijn boekhoudpakket?",
+        a: "Ja. We koppelen met onder meer Exact Online, Twinfield en SnelStart. Uw vervallen facturen komen dan automatisch bij ons binnen en betalingen worden direct verwerkt, zodat niemand een klant herinnert die al betaald heeft.",
+    },
+    {
+        q: "Mogen jullie een betalingsregeling afspreken?",
+        a: "Ja, binnen de grenzen die we vooraf met u afspreken, bijvoorbeeld een maximaal aantal termijnen. Wil een klant iets daarbuiten, dan overleggen we eerst met u.",
+    },
+    {
+        q: "Wat gebeurt er als een klant toch niet betaalt?",
+        a: "Na de laatste herinnering zetten we het dossier door naar incasso. Voor u kost die overstap niets extra: de wettelijke incassokosten zijn voor de debiteur. U hoeft niets opnieuw aan te leveren.",
+    },
+    {
+        q: "Zit ik ergens aan vast?",
+        a: "Nee. Elk pakket is maandelijks opzegbaar en er zijn geen opstartkosten. Groeit of krimpt uw aantal facturen, dan stapt u over naar een ander pakket.",
+    },
+    {
+        q: "Wat als ik in een maand meer facturen heb dan mijn pakket?",
+        a: "Dan betaalt u voor elk extra dossier een vast bedrag. Gebeurt dat vaker, dan rekenen we samen uit of een groter pakket voordeliger is.",
+    },
+] as const

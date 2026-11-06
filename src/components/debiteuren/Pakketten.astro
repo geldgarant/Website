@@ -1,0 +1,455 @@
+---
+// 03 "Wat kost het mij, en welk pakket past?" Rekenhulp + pakketten. Alle bedragen uit src/lib/pakketten.ts.
+import Icon from "../Icon.astro"
+import { PAKKETTEN, LOS_PER_DOSSIER, EXTRA_DOSSIER, pakketKosten, losKosten, besteKeuze } from "../../lib/pakketten"
+import { euro } from "../../lib/wik"
+
+const startN = 30
+const start = besteKeuze(startN)
+const opties = [
+    { id: "los", naam: "Los", kosten: losKosten(startN) },
+    ...PAKKETTEN.map((p) => ({ id: p.id, naam: p.naam, kosten: pakketKosten(p, startN) })),
+]
+const contact = (pakket: string) => `/contact-opnemen?onderwerp=debiteurenbeheer&pakket=${pakket}`
+---
+
+<section class="section" aria-labelledby="pakketten-title" id="pakketten" data-pakketten>
+    <div class="wrap">
+        <div class="pak-head">
+            <div>
+                <p class="eyebrow">
+                    <span class="idx">03</span> Pakketten
+                </p>
+                <h2 class="h2" id="pakketten-title">
+                    Een vast bedrag, <span class="accent">geen</span> verrassingen
+                </h2>
+            </div>
+            <p class="lead">
+                Vul in hoeveel facturen we per maand voor u opvolgen. We rekenen uit wat voor u het voordeligst is.
+            </p>
+        </div>
+
+        <!-- Rekenhulp -->
+        <div class="reken">
+            <div class="reken-invoer">
+                <label class="reken-label" for="pak-aantal">
+                    Vervallen facturen per maand
+                </label>
+                <div class="reken-rij">
+                    <input id="pak-aantal" type="range" min="1" max="150" step="1" value={startN} data-aantal />
+                    <output class="reken-out num" for="pak-aantal" data-out-aantal>
+                        {startN}
+                    </output>
+                </div>
+                <div class="reken-schaal num" aria-hidden="true">
+                    <span>1</span>
+                    <span>50</span>
+                    <span>100</span>
+                    <span>150</span>
+                </div>
+            </div>
+            <ul class="reken-opties" role="list" aria-live="polite">
+                {opties.map((o) => (
+                    <li class:list={["reken-optie", { best: o.id === start.id }]} data-optie={o.id}>
+                        <span class="reken-naam">{o.naam}</span>
+                        <span class="reken-bedrag num" data-kosten>
+                            {euro(o.kosten)}
+                        </span>
+                        <span class="reken-tag">Voordeligst</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+
+        <!-- Pakketten: veegrij op mobiel -->
+        <ul class="pakket-rij" role="list" data-scroller tabindex="0" aria-label="Pakketten debiteurenbeheer">
+            {PAKKETTEN.map((p) => (
+                <li class:list={["pakket", { best: p.id === start.id }]} data-pakket={p.id}>
+                    {p.populair && <p class="pakket-populair">Meest gekozen</p>}
+                    <div class="pakket-top">
+                        <h3 class="pakket-naam">{p.naam}</h3>
+                        <span class="pakket-tag">Voordeligst voor u</span>
+                    </div>
+                    <p class="pakket-voor">{p.voor}</p>
+                    <p class="pakket-prijs num">
+                        <strong>{euro(p.prijs, 0)}</strong> per maand
+                    </p>
+                    <p class="pakket-limiet">Tot {p.dossiers} dossiers per maand</p>
+                    <ul role="list" class="pakket-lijst">
+                        {p.kenmerken.map((k) => (
+                            <li>
+                                <Icon name="check" size={16} />
+                                {k}
+                            </li>
+                        ))}
+                    </ul>
+                    <a class="btn btn-dark pakket-btn" href={contact(p.id)}>
+                        Kies {p.naam}
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+
+        <div class="pak-voet">
+            <p>
+                <strong>In elk pakket:</strong> geen opstartkosten, maandelijks opzegbaar en een kosteloze overstap naar incasso.
+            </p>
+            <p class="num">
+                Liever zonder pakket? {euro(LOS_PER_DOSSIER)} per dossier. Meer dossiers dan uw pakket? {euro(EXTRA_DOSSIER)} per
+                extra dossier. Alle prijzen exclusief btw.
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { PAKKETTEN, pakketKosten, losKosten, besteKeuze } from "../../lib/pakketten"
+    import { euro } from "../../lib/wik"
+
+    document.querySelectorAll<HTMLElement>("[data-pakketten]").forEach((root) => {
+        const input = root.querySelector<HTMLInputElement>("[data-aantal]")
+        const out = root.querySelector<HTMLOutputElement>("[data-out-aantal]")
+        if (!input || !out) return
+        const update = () => {
+            const n = Number(input.value)
+            out.value = String(n)
+            out.textContent = n >= 150 ? "150+" : String(n)
+            const kosten: Record<string, number> = { los: losKosten(n) }
+            PAKKETTEN.forEach((p) => (kosten[p.id] = pakketKosten(p, n)))
+            const best = besteKeuze(n).id
+            root.querySelectorAll<HTMLElement>("[data-optie]").forEach((el) => {
+                const id = el.dataset.optie ?? ""
+                const bedrag = el.querySelector<HTMLElement>("[data-kosten]")
+                if (bedrag) bedrag.textContent = euro(kosten[id])
+                el.classList.toggle("best", id === best)
+            })
+            root.querySelectorAll<HTMLElement>("[data-pakket]").forEach((el) => {
+                el.classList.toggle("best", el.dataset.pakket === best)
+            })
+            input.style.setProperty("--pos", `${((n - 1) / 149) * 100}%`)
+        }
+        input.addEventListener("input", update)
+        update()
+    })
+</script>
+
+<style>
+    .pak-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px 48px;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .pak-head .h2 {
+        margin-top: 14px;
+        max-width: 13em;
+    }
+    .pak-head .lead {
+        max-width: 28em;
+    }
+
+    /* ---------- rekenhulp ---------- */
+    .reken {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        padding: clamp(20px, 3vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+        color: #fff;
+    }
+    @media (min-width: 1024px) {
+        .reken {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 48px;
+            align-items: center;
+        }
+    }
+    .reken-label {
+        display: block;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .reken-rij {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-top: 12px;
+    }
+    .reken-rij input {
+        --pos: 20%;
+        flex: 1;
+        min-width: 0;
+        height: 44px;
+        margin: 0;
+        background: transparent;
+        font-size: 1rem;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    .reken-rij input::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--blue) var(--pos), rgba(255, 255, 255, 0.16) var(--pos));
+    }
+    .reken-rij input::-moz-range-track {
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--blue) var(--pos), rgba(255, 255, 255, 0.16) var(--pos));
+    }
+    .reken-rij input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 26px;
+        height: 26px;
+        margin-top: -10px;
+        border-radius: 50%;
+        background: #fff;
+        border: 0;
+        box-shadow: 0 0 0 6px rgba(48, 105, 254, 0.35);
+    }
+    .reken-rij input::-moz-range-thumb {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff;
+        border: 0;
+        box-shadow: 0 0 0 6px rgba(48, 105, 254, 0.35);
+    }
+    .reken-rij input:focus-visible {
+        outline: 2.5px solid var(--blue-on-dark);
+        outline-offset: 4px;
+        border-radius: 4px;
+    }
+    .reken-out {
+        min-width: 3.2ch;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 2.25rem;
+        letter-spacing: -0.03em;
+        text-align: right;
+        color: #fff;
+    }
+    .reken-schaal {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2px;
+        padding-right: calc(3.2ch * 2.25 + 18px);
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .reken-opties {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+    @media (min-width: 640px) {
+        .reken-opties {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .reken-optie {
+        position: relative;
+        display: grid;
+        gap: 2px;
+        padding: 14px 16px 30px;
+        border-radius: var(--r-md);
+        background: rgba(255, 255, 255, 0.06);
+        transition: background-color 0.2s ease;
+    }
+    .reken-naam {
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .reken-bedrag {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #fff;
+    }
+    .reken-tag {
+        position: absolute;
+        left: 16px;
+        bottom: 10px;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+        opacity: 0;
+    }
+    .reken-optie.best {
+        background: #fff;
+    }
+    .reken-optie.best .reken-naam {
+        color: var(--muted);
+    }
+    .reken-optie.best .reken-bedrag {
+        color: var(--ink);
+    }
+    .reken-optie.best .reken-tag {
+        opacity: 1;
+        color: var(--green);
+    }
+
+    /* ---------- pakketten ---------- */
+    .pakket-rij {
+        display: flex;
+        gap: 12px;
+        margin: 16px calc(-1 * var(--gutter)) 0;
+        padding: 14px var(--gutter) 4px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--gutter);
+        scrollbar-width: none;
+    }
+    .pakket-rij::-webkit-scrollbar {
+        display: none;
+    }
+    .pakket-rij:focus-visible {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    @media (min-width: 900px) {
+        .pakket-rij {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-inline: 0;
+            padding: 14px 0 0;
+            overflow: visible;
+        }
+    }
+    .pakket {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 min(84%, 320px);
+        scroll-snap-align: start;
+        padding: clamp(22px, 2.6vw, 30px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+        border: 1.5px solid transparent;
+        transition:
+            border-color 0.25s ease,
+            background-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+    .pakket {
+        position: relative;
+    }
+    .pakket-populair {
+        position: absolute;
+        top: -13px;
+        left: clamp(22px, 2.6vw, 30px);
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 12px;
+        border-radius: var(--r-pill);
+        background: var(--ink);
+        color: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .pakket.best {
+        background: #fff;
+        border-color: var(--blue);
+        box-shadow: var(--shadow-card);
+    }
+    .pakket-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 28px;
+    }
+    .pakket-naam {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .pakket-tag {
+        display: none;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 10px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .pakket.best .pakket-tag {
+        display: inline-flex;
+    }
+    .pakket-voor {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .pakket-prijs {
+        margin-top: 22px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .pakket-prijs strong {
+        font-family: var(--font-display);
+        font-size: 2.75rem;
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        color: var(--ink);
+        margin-right: 4px;
+    }
+    .pakket-limiet {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .pakket-lijst {
+        display: grid;
+        gap: 9px;
+        margin: 22px 0 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        color: var(--text);
+    }
+    .pakket-lijst li {
+        display: grid;
+        grid-template-columns: 16px minmax(0, 1fr);
+        gap: 10px;
+        line-height: 1.45;
+    }
+    .pakket-lijst :global(svg) {
+        margin-top: 2px;
+        color: var(--green);
+    }
+    .pakket-btn {
+        margin-top: auto;
+        justify-content: space-between;
+    }
+    .pakket.best .pakket-btn {
+        --btn-bg: var(--blue);
+        --btn-fg: #fff;
+    }
+
+    .pak-voet {
+        display: grid;
+        gap: 6px;
+        margin-top: 20px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.55;
+    }
+    .pak-voet strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+</style>

@@ -1,0 +1,227 @@
+---
+// Hero-visual: voorbeeld van het debiteurenoverzicht. Vier facturen, elk in een andere fase.
+// Alle namen en bedragen zijn verzonnen en als voorbeeld gelabeld.
+const rijen = [
+    {
+        naam: "Installatiebedrijf Vos",
+        nr: "F-2026-311",
+        bedrag: "€ 1.240",
+        status: "Betaald",
+        toon: "ok",
+        stap: 2,
+        noot: "Na de eerste herinnering",
+    },
+    {
+        naam: "Kapsalon Mila",
+        nr: "F-2026-318",
+        bedrag: "€ 385",
+        status: "Betaalt vrijdag",
+        toon: "blauw",
+        stap: 3,
+        noot: "Afspraak na telefoontje",
+    },
+    {
+        naam: "Groothandel Noord",
+        nr: "F-2026-322",
+        bedrag: "€ 4.950",
+        status: "2e herinnering",
+        toon: "neutraal",
+        stap: 2,
+        noot: "E-mail en sms verstuurd",
+    },
+    {
+        naam: "Studio Bakker",
+        nr: "F-2026-296",
+        bedrag: "€ 1.855",
+        status: "Naar incasso",
+        toon: "let-op",
+        stap: 4,
+        noot: "Geen reactie, kosteloos door",
+    },
+] as const
+const stappen = ["Herinnering", "Sms", "Gebeld", "Laatste brief"]
+---
+
+<div class="ovz" aria-hidden="true">
+    <div class="ovz-head">
+        <div>
+            <p class="ovz-kicker">Voorbeeld</p>
+            <p class="ovz-title">Uw debiteuren deze maand</p>
+        </div>
+        <p class="ovz-sum num">
+            <strong>4</strong> facturen in opvolging
+        </p>
+    </div>
+    <ul class="ovz-list" role="list">
+        {rijen.map((r, i) => (
+            <li class="ovz-row" style={`--d:${i}`}>
+                <div class="ovz-who">
+                    <span class="ovz-naam">{r.naam}</span>
+                    <span class="ovz-meta num">
+                        {r.nr} · {r.bedrag}
+                    </span>
+                </div>
+                <span class:list={["ovz-pill", r.toon]}>{r.status}</span>
+                <div class="ovz-steps" title={stappen.join(", ")}>
+                    {stappen.map((_, j) => (
+                        <span class:list={["ovz-step", { on: j < r.stap }]} />
+                    ))}
+                </div>
+                <span class="ovz-noot">{r.noot}</span>
+            </li>
+        ))}
+    </ul>
+</div>
+
+<style>
+    .ovz {
+        position: relative;
+        border-radius: var(--r-lg);
+        background: #fff;
+        padding: clamp(16px, 2.2vw, 24px);
+        box-shadow: var(--shadow-card);
+    }
+    .ovz-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+    }
+    .ovz-kicker {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .ovz-title {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .ovz-sum {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        text-align: right;
+    }
+    .ovz-sum strong {
+        color: var(--ink);
+    }
+    .ovz-list {
+        display: grid;
+    }
+    .ovz-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .ovz-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 2px;
+    }
+    .ovz-who {
+        display: grid;
+        min-width: 0;
+    }
+    .ovz-naam {
+        font-weight: 600;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .ovz-meta {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .ovz-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 10px;
+        border-radius: var(--r-pill);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .ovz-pill.ok {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .ovz-pill.blauw {
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+    }
+    .ovz-pill.neutraal {
+        background: var(--surface);
+        color: var(--text);
+    }
+    .ovz-pill.let-op {
+        background: #fff4e0;
+        color: var(--amber);
+    }
+    .ovz-steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+    }
+    .ovz-step {
+        height: 4px;
+        border-radius: 2px;
+        background: var(--surface-2);
+    }
+    .ovz-step.on {
+        background: var(--blue);
+    }
+    .ovz-row:first-child .ovz-step.on {
+        background: var(--green);
+    }
+    .ovz-meta {
+        white-space: nowrap;
+    }
+    .ovz-noot {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        text-align: right;
+        white-space: nowrap;
+    }
+    /* Smal: stappenbalk over de volle breedte, toelichting en samenvatting weg */
+    @media (max-width: 479px) {
+        .ovz-sum,
+        .ovz-noot {
+            display: none;
+        }
+        .ovz-steps {
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* Eén moment: de rijen verschijnen na elkaar bij het laden */
+    @media (prefers-reduced-motion: no-preference) {
+        .ovz-row {
+            animation: ovz-in 0.6s var(--ease) both;
+            animation-delay: calc(0.25s + var(--d) * 0.12s);
+        }
+        .ovz-step.on {
+            transform-origin: left;
+            animation: ovz-bar 0.5s var(--ease) both;
+            animation-delay: calc(0.55s + var(--d) * 0.12s);
+        }
+    }
+    @keyframes ovz-in {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+    }
+    @keyframes ovz-bar {
+        from {
+            transform: scaleX(0);
+        }
+    }
+</style>

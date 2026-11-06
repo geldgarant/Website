@@ -4,6 +4,7 @@
 // → wat kost het precies (03) → is het nu het moment (04) → verder lezen (05) → vragen (06) → CTA.
 import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
 import Afrekening from "../../components/Afrekening.astro"
 import Kosten from "../../components/home/Kosten.astro"
 import Fasen from "../../components/incasso/Fasen.astro"
@@ -109,14 +110,7 @@ const verder = [
     <!-- HERO -->
     <section class="hero">
         <div class="wrap">
-            <nav class="crumbs" aria-label="Kruimelpad">
-                <ol role="list">
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-                    <li aria-current="page">Incasso</li>
-                </ol>
-            </nav>
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Incasso" }]} />
             <div class="hero-grid">
                 <div class="hero-copy">
                     <h1 class="display">
@@ -272,36 +266,6 @@ const verder = [
     /* ---------- HERO ---------- */
     .hero {
         padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
-    }
-    .crumbs ol {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 6px;
-        font-size: var(--fs-xs);
-        color: var(--muted);
-    }
-    .crumbs li + li::before {
-        content: "/";
-        margin-right: 6px;
-        color: var(--line);
-    }
-    .crumbs a {
-        display: inline-flex;
-        align-items: center;
-        min-height: 24px;
-        color: var(--muted);
-        text-decoration: underline;
-        text-decoration-color: var(--line);
-        text-underline-offset: 3px;
-    }
-    .crumbs a:hover {
-        color: var(--ink);
-        text-decoration-color: var(--blue);
-    }
-    .crumbs [aria-current] {
-        color: var(--ink);
-        font-weight: 500;
     }
     .hero-grid {
         display: grid;

@@ -1,0 +1,207 @@
+---
+// A2 /debiteurenbeheer. Hoofdvraag: "Kunnen jullie voorkomen dat mijn facturen een incassozaak worden?"
+// Volgorde: wat is het en wat kost het ongeveer (hero) → verschil met incasso (01) → wat doen jullie, hoe klinkt
+// dat naar mijn klant (02) → welk pakket en wat kost het precies (03) → vragen (04) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Overzicht from "../components/debiteuren/Overzicht.astro"
+import Zones from "../components/debiteuren/Zones.astro"
+import Berichten from "../components/debiteuren/Berichten.astro"
+import Pakketten from "../components/debiteuren/Pakketten.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site } from "../data/site"
+import { debiteurenFaq } from "../data/faq"
+import { PAKKETTEN } from "../lib/pakketten"
+
+const title = "Debiteurenbeheer uitbesteden vanaf € 99 per maand | GeldGarant"
+const description =
+    "Wij volgen uw openstaande facturen op met herinneringen, sms en een telefoontje, in uw eigen naam. Vaste prijs per maand, maandelijks opzegbaar."
+
+const url = "https://geldgarant.com/debiteurenbeheer"
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Debiteurenbeheer",
+        serviceType: "Debiteurenbeheer",
+        url,
+        areaServed: "NL",
+        provider: {
+            "@type": "ProfessionalService",
+            name: "GeldGarant",
+            url: "https://geldgarant.com",
+            telephone: "+31852127914",
+        },
+        offers: PAKKETTEN.map((p) => ({
+            "@type": "Offer",
+            name: `Debiteurenbeheer ${p.naam}`,
+            price: p.prijs,
+            priceCurrency: "EUR",
+            description: `Tot ${p.dossiers} dossiers per maand, prijs per maand exclusief btw`,
+        })),
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Debiteurenbeheer", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: debiteurenFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Debiteurenbeheer" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Debiteurenbeheer, zodat het geen <span class="accent">incasso</span> wordt
+                    </h1>
+                    <p class="lead">
+                        Wij volgen uw openstaande facturen op met een herinnering, een sms en een persoonlijk telefoontje. In uw
+                        eigen naam, voor een vast bedrag per maand.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#pakketten">
+                            Bekijk de pakketten
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={site.phoneHref}>
+                            <Icon name="phone" size={18} />
+                            Bel{" "}
+                            {site.phone}
+                        </a>
+                    </div>
+                    <ul role="list" class="hero-checks">
+                        <li>
+                            <Icon name="check" size={18} />
+                            Vanaf € 99 per maand
+                        </li>
+                        <li>
+                            <Icon name="check" size={18} />
+                            Maandelijks opzegbaar
+                        </li>
+                        <li>
+                            <Icon name="check" size={18} />
+                            Koppeling met uw boekhoudpakket
+                        </li>
+                        <li>
+                            <Icon name="check" size={18} />
+                            Kosteloos door naar incasso
+                        </li>
+                    </ul>
+                </div>
+                <div class="hero-visual">
+                    <img class="hero-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                    <Overzicht />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Zones />
+    <Berichten />
+    <Pakketten />
+
+    <Faq items={debiteurenFaq} idx="04" id="faq-title">
+        <Fragment slot="title">
+            Vragen over <span class="accent">debiteurenbeheer</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        href="/contact-opnemen?onderwerp=debiteurenbeheer"
+        label="Debiteurenbeheer aanvragen"
+        lead="Vertel ons hoeveel facturen u per maand verstuurt. We adviseren eerlijk welk pakket past, of dat u het beter zelf kunt doen."
+    >
+        Minder achter uw geld <span class="accent">aan</span>
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(48px, 6vw, 88px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 32em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+    .hero-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 24px;
+        margin-top: 32px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .hero-checks li {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .hero-checks :global(svg) {
+        color: var(--green);
+    }
+    .hero-visual {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(16px, 3vw, 40px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+    }
+    .hero-mark {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 50%;
+        height: auto;
+        opacity: 0.06;
+        pointer-events: none;
+    }
+</style>

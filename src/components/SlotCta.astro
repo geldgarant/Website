@@ -6,8 +6,10 @@ import { site } from "../data/site"
 interface Props {
     lead: string
     id?: string
+    href?: string
+    label?: string
 }
-const { lead, id = "cta-title" } = Astro.props
+const { lead, id = "cta-title", href = "/vordering-indienen", label = "Vordering indienen" } = Astro.props
 ---
 
 <section class="cta-wrap" aria-labelledby={id}>
@@ -19,8 +21,8 @@ const { lead, id = "cta-title" } = Astro.props
             </h2>
             <p class="lead">{lead}</p>
             <div class="cta-actions">
-                <a class="btn btn-light" href="/vordering-indienen">
-                    Vordering indienen
+                <a class="btn btn-light" href={href}>
+                    {label}
                     <span class="btn-dot">
                         <Icon name="arrow" size={18} />
                     </span>

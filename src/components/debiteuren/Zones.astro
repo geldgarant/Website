@@ -1,0 +1,204 @@
+---
+// 01 "Debiteurenbeheer of incasso?" Eén factuur, één lijn: na de vervaldatum eerst debiteurenbeheer,
+// pas als dat niet werkt incasso. Per zone: afzender, toon, kosten voor de klant en voor u.
+import Icon from "../Icon.astro"
+
+const zones = [
+    {
+        id: "beheer",
+        titel: "Debiteurenbeheer",
+        sub: "Vanaf de vervaldatum",
+        rijen: [
+            ["Afzender", "Uw bedrijfsnaam, of GeldGarant als u dat liever heeft"],
+            ["Toon", "Vriendelijk en servicegericht"],
+            ["Kosten voor uw klant", "Geen"],
+            ["Kosten voor u", "Een vast pakket per maand"],
+            ["Doel", "Betaald, en uw klant blijft klant"],
+        ],
+    },
+    {
+        id: "incasso",
+        titel: "Incasso",
+        sub: "Na de laatste herinnering",
+        rijen: [
+            ["Afzender", "GeldGarant, geregistreerd incassobureau"],
+            ["Toon", "Zakelijk en dwingend"],
+            ["Kosten voor uw klant", "Wettelijke incassokosten en rente"],
+            ["Kosten voor u", "€ 0 bij volledige betaling"],
+            ["Doel", "Alsnog betaald, ook als uw klant niet meewerkt"],
+        ],
+    },
+]
+---
+
+<section class="section" aria-labelledby="zones-title">
+    <div class="wrap">
+        <div class="zones-head">
+            <p class="eyebrow">
+                <span class="idx">01</span> Het verschil
+            </p>
+            <h2 class="h2" id="zones-title">
+                Eerst <span class="accent">herinneren</span>, pas daarna incasso
+            </h2>
+            <p class="lead">
+                Debiteurenbeheer begint op de dag dat een factuur vervalt. De meeste klanten zijn geen wanbetalers maar
+                vergeetachtig of druk. Een herinnering en een belletje zijn dan genoeg.
+            </p>
+        </div>
+
+        <div class="zones">
+            {zones.map((z, i) => (
+                <article class:list={["zone", `zone-${z.id}`]} aria-labelledby={`zone-${z.id}`}>
+                    <div class="zone-top">
+                        <h3 class="zone-titel" id={`zone-${z.id}`}>
+                            {z.titel}
+                        </h3>
+                        <p class="zone-sub">{z.sub}</p>
+                    </div>
+                    <dl>
+                        {z.rijen.map(([k, v]) => (
+                            <div>
+                                <dt>{k}</dt>
+                                <dd>{v}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                    {i === 0 && (
+                        <p class="overstap">
+                            <span class="overstap-icon" aria-hidden="true">
+                                <Icon name="arrow" size={16} />
+                            </span>
+                            Geen reactie na de laatste herinnering? Dan gaat het dossier door naar incasso, voor u zonder extra
+                            kosten.
+                        </p>
+                    )}
+                </article>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .zones-head {
+        max-width: 46rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .zones-head .h2 {
+        margin-top: 14px;
+    }
+    .zones-head .lead {
+        margin-top: 20px;
+    }
+
+    .zones {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .zones {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+    }
+    .zones {
+        position: relative;
+    }
+    .zone {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: clamp(22px, 3vw, 36px);
+        border-radius: var(--r-xl);
+    }
+    .zone-beheer {
+        background: var(--blue-soft);
+    }
+    .zone-incasso {
+        background: var(--ink);
+        color: #fff;
+    }
+    .zone-titel {
+        font-family: var(--font-display);
+        font-size: var(--fs-h3);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .zone-incasso .zone-titel {
+        color: #fff;
+    }
+    .zone-sub {
+        margin-top: 2px;
+        font-size: var(--fs-sm);
+        color: var(--blue-ink);
+        font-weight: 500;
+    }
+    .zone-incasso .zone-sub {
+        color: var(--blue-on-dark);
+    }
+    .zone dl {
+        display: grid;
+        margin-top: 20px;
+    }
+    .zone dl > div {
+        display: grid;
+        gap: 2px;
+        padding: 14px 0;
+        border-top: 1px solid rgba(6, 17, 38, 0.08);
+    }
+    .zone-incasso dl > div {
+        border-top-color: var(--line-dark);
+    }
+    @media (min-width: 560px) {
+        .zone dl > div {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 16px;
+        }
+    }
+    .zone dt {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .zone-incasso dt {
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .zone dd {
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+        line-height: 1.5;
+    }
+    .zone-incasso dd {
+        color: #fff;
+    }
+    .overstap {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: auto;
+        padding: 16px 18px;
+        border-radius: var(--r-md);
+        background: #fff;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.5;
+    }
+    .zone dl + .overstap {
+        margin-top: 12px;
+    }
+    .overstap-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+    }
+    @media (max-width: 899px) {
+        .overstap-icon {
+            transform: rotate(90deg);
+        }
+    }
+</style>
