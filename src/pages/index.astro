@@ -183,9 +183,7 @@ const branchIcon = {
             </div>
 
             <div class="hero-visual">
-                <div class="hero-panel" aria-hidden="true">
-                    <img class="hero-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
-                </div>
+                <img class="hero-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
                 <p class="hero-chip">
                     <span class="hero-chip-dot" aria-hidden="true"></span>
                     Binnen 1 uur in behandeling op werkdagen
@@ -610,23 +608,23 @@ const branchIcon = {
         color: var(--muted);
     }
     .hero h1 {
-        margin-top: 24px;
+        margin-top: 28px;
         max-width: 12.5em;
     }
     .hero .lead {
-        margin-top: 24px;
+        margin-top: 28px;
     }
     .hero-actions {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        margin-top: 36px;
+        margin-top: 40px;
     }
     .hero-checks {
         display: flex;
         flex-wrap: wrap;
         gap: 10px 24px;
-        margin-top: 32px;
+        margin-top: 36px;
         font-size: var(--fs-sm);
         font-weight: 500;
         color: var(--ink);
@@ -645,21 +643,18 @@ const branchIcon = {
         }
     }
 
+    /* Navy vlak is de container van de kaart: gelijke marges links, rechts en onder */
     .hero-visual {
         position: relative;
-        padding: 56px 0 0;
+        overflow: hidden;
+        padding: 52px 12px 12px;
+        border-radius: var(--r-xl);
+        background: var(--ink);
     }
     @media (min-width: 640px) {
         .hero-visual {
-            padding: 64px 0 0 48px;
+            padding: 60px 24px 24px;
         }
-    }
-    .hero-panel {
-        position: absolute;
-        inset: 0 0 64px 0;
-        overflow: hidden;
-        border-radius: var(--r-xl);
-        background: var(--ink);
     }
     .hero-mark {
         position: absolute;
@@ -668,15 +663,16 @@ const branchIcon = {
         width: 58%;
         height: auto;
         opacity: 0.06;
+        pointer-events: none;
     }
     .hero-chip {
         position: absolute;
-        top: 14px;
-        left: 20px;
-        z-index: 2;
+        top: 16px;
+        left: 24px;
         display: inline-flex;
         align-items: center;
         gap: 10px;
+        min-height: 24px;
         color: #fff;
         font-size: var(--fs-xs);
         font-weight: 500;
@@ -684,7 +680,7 @@ const branchIcon = {
     @media (min-width: 640px) {
         .hero-chip {
             top: 20px;
-            left: 48px;
+            left: 32px;
         }
     }
     .hero-chip-dot {
@@ -696,13 +692,6 @@ const branchIcon = {
     }
     .hero-card {
         position: relative;
-        z-index: 1;
-        margin-inline: 12px;
-    }
-    @media (min-width: 640px) {
-        .hero-card {
-            margin-inline: 0 24px;
-        }
     }
 
     /* ---------- FEITEN ---------- */

@@ -48,12 +48,6 @@ const presets = [500, 2500, 10000]
             </dt>
             <dd data-out="kosten">{euro(wikKosten(start))}</dd>
         </div>
-        <div>
-            <dt>
-                Wettelijke rente <span>betaalt de debiteur</span>
-            </dt>
-            <dd class="afr-soft">loopt op per dag</dd>
-        </div>
         <div class="afr-zero">
             <dt>Uw kosten</dt>
             <dd>{euro(0)}</dd>
@@ -67,10 +61,9 @@ const presets = [500, 2500, 10000]
     </dl>
 
     <p class="afr-note" id="afr-note">
-        Bij volledige betaling door de debiteur. Incassokosten en wettelijke rente zijn voor GeldGarant; uw hoofdsom krijgt u
-        volledig.{" "}
-        <a class="textlink" href="/tarieven">
-            Zo werkt het bij gedeeltelijke betaling
+        Bij volledige betaling. De debiteur betaalt daarnaast de wettelijke rente; rente en incassokosten zijn voor GeldGarant.{" "}
+        <a class="textlink nowrap" href="/tarieven">
+            Bij gedeeltelijke betaling
         </a>
     </p>
 </section>
@@ -122,7 +115,7 @@ const presets = [500, 2500, 10000]
         background: #fff;
         border: 1px solid var(--line);
         border-radius: var(--r-lg);
-        padding: clamp(20px, 3vw, 32px);
+        padding: clamp(20px, 2.4vw, 28px);
         box-shadow: var(--shadow-card);
     }
     .afr-head {
@@ -130,7 +123,7 @@ const presets = [500, 2500, 10000]
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
     .afr-title {
         font-size: 1.25rem;
@@ -179,8 +172,8 @@ const presets = [500, 2500, 10000]
         min-width: 0;
         border: 0;
         background: transparent;
-        padding: 12px 0;
-        font-size: 1.75rem;
+        padding: 6px 0;
+        font-size: 1.625rem;
         font-weight: 600;
         letter-spacing: -0.02em;
         outline: none;
@@ -189,7 +182,7 @@ const presets = [500, 2500, 10000]
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        margin-top: 10px;
+        margin-top: 8px;
     }
     .afr-presets button {
         border: 1px solid var(--line);
@@ -207,7 +200,7 @@ const presets = [500, 2500, 10000]
     }
 
     .afr-rows {
-        margin-top: 24px;
+        margin-top: 18px;
         border-top: 1px solid var(--line);
     }
     .afr-rows > div {
@@ -215,7 +208,7 @@ const presets = [500, 2500, 10000]
         justify-content: space-between;
         align-items: baseline;
         gap: 16px;
-        padding: 12px 0;
+        padding: 8px 0;
         border-bottom: 1px solid var(--line);
     }
     .afr-rows dt {
@@ -231,11 +224,6 @@ const presets = [500, 2500, 10000]
         font-weight: 500;
         color: var(--ink);
     }
-    .afr-soft {
-        color: var(--muted) !important;
-        font-weight: 400 !important;
-        font-size: 0.9375rem;
-    }
     .afr-zero dt,
     .afr-zero dd {
         color: var(--green) !important;
@@ -250,7 +238,7 @@ const presets = [500, 2500, 10000]
     }
     .afr-total {
         border-bottom: 0 !important;
-        padding-top: 16px !important;
+        padding-top: 12px !important;
     }
     .afr-total dt {
         font-weight: 600;
@@ -258,13 +246,13 @@ const presets = [500, 2500, 10000]
     }
     .afr-total dd {
         font-family: var(--font-display);
-        font-size: 1.75rem;
+        font-size: 1.625rem;
         font-weight: 700;
         letter-spacing: -0.02em;
     }
     .afr-note {
-        margin-top: 12px;
-        font-size: 0.875rem;
+        margin-top: 8px;
+        font-size: 0.8125rem;
         line-height: 1.55;
         color: var(--muted);
     }

@@ -52,6 +52,7 @@ Bron, commit en licentie per skill: `.claude/skills/THIRD_PARTY.md`. Hooks van d
 bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de wijzigingen nalezen.
 
 ## Ontwerpsysteem v2 (vastgesteld 6 nov 2026)
+
 - Fonts (self-hosted via @fontsource, geïmporteerd in `src/layouts/Base.astro`): Poppins 500/600 voor koppen, Inter Variable voor body, Newsreader Variable cursief (opsz 72, gewicht 500) als accentfont.
 - Accentwoord in een kop: `<span class="accent">woord</span>`; één per kop. Breyta doet hetzelfde met een gestylede `<code>`.
 - Kleuren uit het logo: `--ink #061126`, `--blue #3069FE` (knoppen), `--blue-ink #1F4FD6` (blauw als tekst op licht), `--surface #F3F4F7` (kaarten). Tokens staan in `src/styles/global.css`.

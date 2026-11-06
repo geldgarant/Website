@@ -5,7 +5,13 @@ import { join, extname } from "node:path"
 
 const dist = new URL("../../dist/", import.meta.url).pathname
 const out = process.argv[2] ?? "/tmp/preview.html"
-const mime = { ".woff2": "font/woff2", ".woff": "font/woff", ".svg": "image/svg+xml", ".png": "image/png", ".ico": "image/x-icon" }
+const mime = {
+    ".woff2": "font/woff2",
+    ".woff": "font/woff",
+    ".svg": "image/svg+xml",
+    ".png": "image/png",
+    ".ico": "image/x-icon",
+}
 const dataUri = (p) => {
     const f = join(dist, p.replace(/^\//, ""))
     if (!existsSync(f)) return p
@@ -26,7 +32,10 @@ html = html.replace(/<script type="module" src="(\/_astro\/[^"]+\.js)"><\/script
     return `<script type="module">${readFileSync(join(dist, src), "utf8")}</script>`
 })
 // afbeeldingen en iconen
-html = html.replace(/(src|href)="(\/(?:brand\/[^"]+|favicon\.[a-z]+|apple-touch-icon\.png))"/g, (_, attr, p) => `${attr}="${dataUri(p)}"`)
+html = html.replace(
+    /(src|href)="(\/(?:brand\/[^"]+|favicon\.[a-z]+|apple-touch-icon\.png))"/g,
+    (_, attr, p) => `${attr}="${dataUri(p)}"`,
+)
 // interne links werken niet in de preview: markeren zodat ze niet wegnavigeren
 html = html.replace("</head>", `<base target="_blank"></head>`)
 

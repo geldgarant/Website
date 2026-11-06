@@ -49,7 +49,7 @@
     --font-accent: "Newsreader Variable", Georgia, "Times New Roman", serif;
 
     /* fluïde schaal 390px → 1440px */
-    --fs-display: clamp(2.5rem, 1.46rem + 4.27vw, 4.75rem);
+    --fs-display: clamp(2.5rem, 1.32rem + 4.85vw, 5.25rem);
     --fs-h2: clamp(2rem, 1.44rem + 2.29vw, 3.25rem);
     --fs-h3: clamp(1.25rem, 1.13rem + 0.48vw, 1.5rem);
     --fs-lead: clamp(1.0625rem, 0.99rem + 0.3vw, 1.25rem);
