@@ -63,6 +63,7 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Screenshots: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/shot.mjs` (preview moet op poort 4399 draaien).
 
 ## Homepage v3 en header (6 nov 2026)
+
 - Homepage-secties met nummering (eyebrow `.idx`): 01 `components/home/Proces.astro` (voorbeelddossier, tabs + tijdlijn, `data-active`), 02 `Bento.astro` (mini-visuals, veegrij mobiel), 03 `Kosten.astro` (scenario-kiezer met radios + `:has`), 04 persoonlijk, 05 diensten/branches, 06 FAQ, 07 kennisbank.
 - Veegrijen krijgen `data-scroller`; de overlooptest negeert hun kinderen. Een veegrij zonder links krijgt `tabindex="0"` + `aria-label` (axe: scrollable-region-focusable).
 - Header: utility-balk (scrollt weg, korte teksten < 560px) + zwevende kaart `.bar` (sticky top 10px). Mobiel menu is een kaart onder `.bar`, positie berekend bij openen. `StickyCta.astro` = vaste actiebalk < 1080px.
