@@ -94,6 +94,8 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - Een `<label>` die zijn input omvat, mag geen `for` hebben (html-validate `no-redundant-for`).
 - Decoratieve absolute elementen (logo-watermerk) niet buiten hun kaart laten uitsteken: de overlooptest meet `getBoundingClientRect`, ook als de ouder `overflow: hidden` heeft.
 - `fieldset` heeft een standaardrand. Zet `border: 0; padding: 0; margin: 0; min-width: 0` in de component.
+- **Na elke push controleren of Cloudflare echt gedeployd heeft.** Een groene GitHub-check zegt niets over Workers Builds. Controleer met `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`: "Workers Builds: website" moet `success` zijn. Op 6 nov faalde één build direct, zonder fout in de code; een nieuwe push loste het op. De buildlog staat alleen in het Cloudflare-dashboard. Vanuit de werkomgeving is staging niet bereikbaar; via Framer-MCP `fetch()` of `api.screenshot()` lukt het wel.
+- `src/pages/404.astro` bestaat (noindex). Zonder 404.html gaf een onbekende URL op Workers geen antwoord. In `lighthouserc.cjs` is 404.html uitgesloten van de assertions.
 - html-validate `tel-non-breaking` geldt voor **elke** tekst in een `tel:`-link, ook "Vraag advies": gebruik `\u00a0`.
 - Footer: `.footer a` maakte ook de knop wit-op-wit. Opgelost met `:not(.btn)`; let hierop bij scoped `a`-regels.
 - Dev-scripts `shot.mjs` en `resoluties.mjs` nemen nu een route: `node scripts/dev/shot.mjs /incasso` → `/tmp/incasso-*.png`.
