@@ -1,0 +1,610 @@
+---
+// B /wki. Hoofdvraag: "Wat betekent de Wet kwaliteit incassodienstverlening voor mij, en voldoen jullie eraan?"
+// Bronnen (nov 2026): rijksoverheid.nl, ondernemersplein.overheid.nl ("Regels voor incassodienstverleners"), Justis,
+// Besluit kwaliteit incassodienstverlening. Volgorde: wat is het (hero) → wat betekent het voor u (01)
+// → de eisen en hoe wij eraan voldoen (02) → controleer het zelf (03) → vragen (04) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Feitenkaart from "../components/Feitenkaart.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site } from "../data/site"
+import { wkiFaq } from "../data/faq"
+
+const title = "Wet kwaliteit incassodienstverlening (Wki) | GeldGarant"
+const description = `Wat de Wki van incassobureaus eist, wat het voor u als opdrachtgever betekent en hoe GeldGarant eraan voldoet. Geregistreerd bij Justis onder nummer ${site.incassoRegister}.`
+const url = "https://geldgarant.com/wki"
+
+const feiten = [
+    { icon: "calendar", k: "In werking", v: "1 april 2024" },
+    { icon: "shield", k: "Register", v: "Dienst Justis, openbaar, elk jaar vernieuwd" },
+    { icon: "eye", k: "Toezicht", v: "Inspectie Justitie en Veiligheid" },
+    { icon: "user", k: "Beschermt", v: "Particulieren, zzp’ers en eenmanszaken" },
+    { icon: "check", k: "GeldGarant", v: `Geregistreerd, nr. ${site.incassoRegister}`, href: site.incassoRegisterHref },
+] as const
+
+const gevolgen = [
+    {
+        icon: "euro",
+        kop: "Alleen een geregistreerd bureau kan kosten verhalen",
+        tekst: "Sinds 1 oktober 2026 hoeft een debiteur geen incassokosten en rente te betalen aan een bureau dat niet in het register staat. Met een geregistreerd bureau blijven die kosten voor de debiteur.",
+    },
+    {
+        icon: "building",
+        kop: "Ook veel zakelijke facturen vallen eronder",
+        tekst: "De wet beschermt natuurlijke personen. Dat zijn particulieren, maar vaak ook zzp’ers en eenmanszaken. Wij werken voor elke debiteur volgens de Wki, zodat u het onderscheid niet hoeft te maken.",
+    },
+    {
+        icon: "chat",
+        kop: "Uw klant wordt correct benaderd",
+        tekst: "De wet stelt eisen aan toon, bereikbaarheid en duidelijkheid. Dat beschermt uw debiteur, en ook uw naam bij die klant.",
+    },
+] as const
+
+const eisen = [
+    {
+        eis: "Registratie",
+        wet: "Inschrijving in het openbare register van Justis, na screening. Elk jaar opnieuw.",
+        gg: `Ingeschreven onder nummer ${site.incassoRegister}.`,
+        link: { href: site.incassoRegisterHref, label: "Bekijk het register" },
+    },
+    {
+        eis: "Vakbekwaamheid",
+        wet: "Medewerkers hebben minimaal opleidingsniveau 3, leidinggevenden niveau 4, en scholen elk jaar bij.",
+        gg: "Ons team voldoet aan de opleidingseisen en volgt de verplichte bijscholing.",
+    },
+    {
+        eis: "Betrouwbaarheid",
+        wet: "Wie incassowerk doet, heeft een Verklaring Omtrent het Gedrag, bij de start niet ouder dan drie maanden.",
+        gg: "Elke medewerker heeft een VOG.",
+    },
+    {
+        eis: "Omgang en bereikbaarheid",
+        wet: "Debiteuren worden correct benaderd en kunnen het bureau goed bereiken.",
+        gg: "Een zakelijke, duidelijke toon. Bereikbaar op werkdagen per telefoon, e-mail en WhatsApp.",
+    },
+    {
+        eis: "Inzichtelijke vordering",
+        wet: "De debiteur kan zien waaruit de vordering bestaat: hoofdsom, rente en kosten.",
+        gg: "Elke brief bevat een volledige specificatie van de vordering.",
+    },
+    {
+        eis: "Deugdelijke administratie",
+        wet: "Elk contactmoment en elk verweer wordt vastgelegd en minstens twee jaar bewaard.",
+        gg: "Alles staat in het dossier, dat u zelf online kunt inzien.",
+    },
+    {
+        eis: "Klachten en geschillen",
+        wet: "Een klachtenregeling en aansluiting bij een onafhankelijke geschillencommissie.",
+        gg: "Een eigen klachtenregeling en de geschillencommissie via NowID.",
+        link: { href: "/nowid", label: "Meer over NowID" },
+    },
+]
+
+const controle = [
+    "Open het register incassodienstverlening op de website van Justis.",
+    `Zoek op “GeldGarant” of op registratienummer ${site.incassoRegister}.`,
+    "Controleer of de inschrijving actief is en of naam en plaats kloppen.",
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Wet kwaliteit incassodienstverlening (Wki)",
+        url,
+        description,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Over ons", item: "https://geldgarant.com/over-ons" },
+            { "@type": "ListItem", position: 3, name: "Wki", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: wkiFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Over ons", href: "/over-ons" }, { label: "Wki" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        De Wki: wat de wet eist, en hoe wij eraan <span class="accent">voldoen</span>
+                    </h1>
+                    <p class="lead">
+                        Sinds 1 april 2024 is incasso in Nederland voor het eerst wettelijk geregeld, met de Wet kwaliteit
+                        incassodienstverlening (Wki). Hier leest u wat de wet vraagt en wat dat voor u als opdrachtgever betekent.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#controleer">
+                            Controleer ons zelf
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="De Wki in het kort" id="feiten-title" items={feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 WAT BETEKENT HET VOOR U -->
+    <section class="section bg-surface" aria-labelledby="gevolgen-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Voor u als opdrachtgever
+                </p>
+                <h2 class="h2" id="gevolgen-title">
+                    Wat de Wki voor u <span class="accent">verandert</span>
+                </h2>
+            </div>
+            <ul role="list" class="gevolgen">
+                {gevolgen.map((g, i) => (
+                    <li class:list={["gevolg", { "bg-ink": i === 0 }]} data-reveal style={`--d:${i}`}>
+                        <span class="gevolg-icon" aria-hidden="true">
+                            <Icon name={g.icon} size={22} />
+                        </span>
+                        <h3 class="h3">{g.kop}</h3>
+                        <p>{g.tekst}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 02 EISEN -->
+    <section class="section" aria-labelledby="eisen-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> De eisen
+                </p>
+                <h2 class="h2" id="eisen-title">
+                    Wat de wet vraagt, en wat wij <span class="accent">doen</span>
+                </h2>
+                <p class="lead">
+                    De Wki stelt eisen aan wie incassowerk doet, hoe dat gebeurt en hoe het wordt vastgelegd. Per eis ziet u hoe
+                    GeldGarant daaraan voldoet.
+                </p>
+            </div>
+
+            <div class="eis eis-kop" aria-hidden="true">
+                <span>Eis</span>
+                <span>Wat de wet vraagt</span>
+                <span>Bij GeldGarant</span>
+            </div>
+            <ol role="list" class="eisen">
+                {eisen.map((e, i) => (
+                    <li class="eis">
+                        <h3 class="eis-naam">
+                            <span class="eis-num num" aria-hidden="true">
+                                {String(i + 1).padStart(2, "0")}
+                            </span>
+                            {e.eis}
+                        </h3>
+                        <p class="eis-wet">
+                            <span class="eis-label">Wat de wet vraagt</span>
+                            {e.wet}
+                        </p>
+                        <div class="eis-gg">
+                            <Icon name="check" size={18} />
+                            <p>
+                                <span class="sr-only">Bij GeldGarant: </span>
+                                {e.gg}
+                                {e.link && (
+                                    <>
+                                        {" "}
+                                        <a class="textlink" href={e.link.href}>
+                                            {e.link.label}
+                                        </a>
+                                    </>
+                                )}
+                            </p>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 03 CONTROLEER HET ZELF -->
+    <section class="section controleer-sec" id="controleer" aria-labelledby="controleer-title">
+        <div class="wrap">
+            <div class="controleer bg-ink">
+                <div class="ctrl-copy">
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Controleer het zelf
+                    </p>
+                    <h2 class="h2" id="controleer-title">
+                        Neem het niet van ons aan: <span class="accent">kijk</span> het na
+                    </h2>
+                    <ol role="list" class="ctrl-stappen">
+                        {controle.map((c, i) => (
+                            <li>
+                                <span class="num">{i + 1}</span>
+                                {c}
+                            </li>
+                        ))}
+                    </ol>
+                    <a class="btn btn-light" href={site.incassoRegisterHref} rel="noopener" target="_blank">
+                        Open het register van Justis
+                        <span class="btn-dot">
+                            <Icon name="arrow-up-right" size={18} />
+                        </span>
+                    </a>
+                </div>
+                <figure class="ctrl-voorbeeld" aria-label="Voorbeeld van een zoekresultaat in het register">
+                    <div class="reg">
+                        <p class="reg-kop">
+                            <Icon name="shield" size={16} />
+                            Register incassodienstverlening
+                        </p>
+                        <p class="reg-naam">{site.name}</p>
+                        <dl>
+                            <div>
+                                <dt>Registratienummer</dt>
+                                <dd class="num">{site.incassoRegister}</dd>
+                            </div>
+                            <div>
+                                <dt>Vestigingsplaats</dt>
+                                <dd>{site.city}</dd>
+                            </div>
+                            {site.kvk && (
+                                <div>
+                                    <dt>KvK-nummer</dt>
+                                    <dd class="num">{site.kvk}</dd>
+                                </div>
+                            )}
+                        </dl>
+                        <p class="reg-status">
+                            <i></i>
+                            Ingeschreven
+                        </p>
+                    </div>
+                    <figcaption>Voorbeeld. Het register zelf is leidend.</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={wkiFaq} idx="04">
+        <Fragment slot="title">
+            Vragen over de <span class="accent">Wki</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Uw vordering, geïnd volgens de regels. Op werkdagen binnen het uur in behandeling.">
+        Incasso volgens de <span class="accent">wet</span>
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 12em;
+        font-size: clamp(2.25rem, 1.25rem + 3.8vw, 4.125rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+
+    /* ---------- 01 GEVOLGEN ---------- */
+    .gevolgen {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .gevolgen {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .gevolg {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .gevolg p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .gevolg.bg-ink {
+        background: var(--ink);
+    }
+    .gevolg.bg-ink p {
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .gevolg-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 8px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .gevolg.bg-ink .gevolg-icon {
+        background: rgba(48, 105, 254, 0.22);
+        color: var(--blue-on-dark);
+    }
+
+    /* ---------- 02 EISEN ---------- */
+    .eisen {
+        display: grid;
+    }
+    .eisen {
+        border-top: 1px solid var(--line);
+    }
+    @media (min-width: 900px) {
+        .eisen {
+            border-top: 0;
+        }
+    }
+    .eis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        padding-block: 22px;
+        border-bottom: 1px solid var(--line);
+    }
+    .eis-kop {
+        display: none;
+    }
+    @media (min-width: 900px) {
+        .eis {
+            grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.1fr) minmax(0, 1.1fr);
+            gap: 32px;
+            align-items: start;
+        }
+        .eis-kop {
+            display: grid;
+            padding-block: 0 14px;
+            font-size: var(--fs-xs);
+            font-weight: 600;
+            color: var(--muted);
+        }
+        .eis-label {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+    }
+    .eis-naam {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .eis-num {
+        font-family: var(--font-body);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--blue-ink);
+    }
+    .eis-wet {
+        display: grid;
+        gap: 2px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .eis-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .eis-gg {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        background: var(--green-bg);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        line-height: 1.55;
+        color: var(--ink);
+    }
+    .eis-gg :global(svg) {
+        flex-shrink: 0;
+        margin-top: 2px;
+        color: var(--green);
+    }
+
+    /* ---------- 03 CONTROLEER ---------- */
+    .controleer-sec {
+        padding-top: 0;
+    }
+    .controleer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        padding: clamp(28px, 5vw, 72px);
+        border-radius: var(--r-xl);
+    }
+    @media (min-width: 1024px) {
+        .controleer {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 72px;
+            align-items: center;
+        }
+    }
+    .ctrl-copy .h2 {
+        margin-top: 14px;
+    }
+    .ctrl-stappen {
+        display: grid;
+        gap: 12px;
+        margin: 28px 0 32px;
+    }
+    .ctrl-stappen li {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        align-items: start;
+        gap: 14px;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.82);
+    }
+    .ctrl-stappen .num {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-weight: 600;
+        font-size: var(--fs-xs);
+        margin-top: -5px;
+    }
+    @media (max-width: 519px) {
+        .ctrl-copy .btn {
+            width: 100%;
+            justify-content: space-between;
+            white-space: normal;
+            text-align: left;
+        }
+    }
+    .ctrl-voorbeeld {
+        margin: 0;
+    }
+    .reg {
+        padding: 24px;
+        border-radius: var(--r-lg);
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.5);
+    }
+    .reg-kop {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .reg-kop :global(svg) {
+        color: var(--blue);
+    }
+    .reg-naam {
+        margin-top: 16px;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+    .reg dl {
+        display: grid;
+        margin-top: 12px;
+    }
+    .reg dl div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+    }
+    .reg dt {
+        color: var(--muted);
+    }
+    .reg dd {
+        font-weight: 600;
+    }
+    .reg-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 6px 12px;
+        border-radius: var(--r-pill);
+        background: var(--green-bg);
+        color: var(--green);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .reg-status i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+    .ctrl-voorbeeld figcaption {
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.65);
+        text-align: center;
+    }
+</style>

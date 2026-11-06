@@ -1,0 +1,135 @@
+---
+// Navy feitenkaart naast een hero: een kop en rijen "label → waarde" (optioneel met link).
+// Gebruikt op /over-ons, /wki en /nowid. (/incasso heeft nog een eigen variant met de registerlink eronder.)
+import Icon from "./Icon.astro"
+
+type IconNaam = "pin" | "map" | "shield" | "doc" | "scale" | "clock" | "calendar" | "eye" | "user" | "building" | "check"
+interface Props {
+    titel: string
+    id: string
+    items: readonly { icon: IconNaam; k: string; v: string; href?: string }[]
+}
+const { titel, id, items } = Astro.props
+---
+
+<aside class="feiten bg-ink" aria-labelledby={id}>
+    <img class="feiten-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+    <h2 class="feiten-title" id={id}>
+        {titel}
+    </h2>
+    <dl>
+        {items.map((f) => (
+            <div>
+                <dt>
+                    <span class="feit-icon" aria-hidden="true">
+                        <Icon name={f.icon} size={18} />
+                    </span>
+                    {f.k}
+                </dt>
+                <dd>
+                    {f.href ? (
+                        <a class="feit-link" href={f.href}>
+                            {f.v}
+                        </a>
+                    ) : (
+                        f.v
+                    )}
+                </dd>
+            </div>
+        ))}
+    </dl>
+    <slot />
+</aside>
+
+<style>
+    .feiten {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(24px, 3vw, 36px);
+        border-radius: var(--r-xl);
+    }
+    .feiten > :not(img) {
+        position: relative;
+    }
+    .feiten-mark {
+        position: absolute;
+        right: 0;
+        bottom: -12%;
+        width: 52%;
+        height: auto;
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    .feiten-title {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: #fff;
+    }
+    dl {
+        display: grid;
+        margin-top: 12px;
+    }
+    dl > div {
+        display: grid;
+        gap: 4px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line-dark);
+    }
+    dl > div:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    @media (min-width: 520px) {
+        dl > div {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            align-items: center;
+            gap: 16px;
+        }
+    }
+    dt {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .feit-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--blue-on-dark);
+    }
+    dd {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 1.0625rem;
+        letter-spacing: -0.01em;
+        color: #fff;
+        line-height: 1.35;
+    }
+    @media (max-width: 519px) {
+        dd {
+            padding-left: 42px;
+        }
+    }
+    .feit-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-block: -10px;
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(169, 192, 255, 0.55);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 4px;
+    }
+    .feit-link:hover {
+        text-decoration-color: #fff;
+    }
+</style>

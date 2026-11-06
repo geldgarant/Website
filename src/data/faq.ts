@@ -188,3 +188,52 @@ export const hoeWerktFaq = [
         a: "Ja. Trekt u de opdracht in nadat we gestart zijn, dan bent u de berekende incassokosten verschuldigd, met een minimum van 10% van de hoofdsom en ten minste €95.",
     },
 ] as const
+
+// Vragen op /wki. Bronnen (nov 2026): rijksoverheid.nl (nieuws 9 feb 2024), ondernemersplein.overheid.nl
+// "Regels voor incassodienstverleners", Justis, en de definitie van schuldenaar in het Besluit kwaliteit incassodienstverlening.
+export const wkiFaq = [
+    {
+        q: "Geldt de Wki ook als mijn klant een bedrijf is?",
+        a: "De Wki beschermt schuldenaren die natuurlijke personen zijn en in Nederland wonen. Dat zijn particulieren, maar vaak ook zzp’ers, eenmanszaken en vennoten van een vof, omdat zij met hun privévermogen aansprakelijk zijn. Wij werken voor al onze debiteuren volgens de Wki, dus u hoeft het onderscheid niet zelf te maken.",
+    },
+    {
+        q: "Wat als een incassobureau niet geregistreerd is?",
+        a: "Dan handelt het in strijd met de wet. Sinds 1 oktober 2026 hoeft een debiteur bovendien geen incassokosten en rente te betalen aan een incassodienstverlener die niet geregistreerd is; alleen de oorspronkelijke vordering blijft staan. Controleer daarom altijd het openbare register van Justis.",
+    },
+    {
+        q: "Wat is de cumulatieregel van € 140?",
+        a: "Betaalt een particuliere debiteur in termijnen en is de maandelijkse vordering of termijn lager dan € 266,67, dan mogen er per zes maanden maximaal € 140 aan incassokosten worden gerekend. Zo stapelen kosten bij kleine, terugkerende bedragen niet op. Wij houden daar in de berekening rekening mee.",
+    },
+    {
+        q: "Wie houdt toezicht op incassobureaus?",
+        a: "Dienst Justis beheert het register en screent een bureau voordat het wordt ingeschreven. De registratie moet elk jaar worden vernieuwd. De Inspectie Justitie en Veiligheid houdt toezicht op de kwaliteitseisen en kan handhaven.",
+    },
+    {
+        q: "Wat kan mijn debiteur doen als hij het niet eens is met onze aanpak?",
+        a: "Hij kan een klacht indienen volgens onze klachtenregeling. Komen we er samen niet uit, dan kan hij naar een onafhankelijke geschillencommissie. Wij zijn daarvoor aangesloten bij NowID.",
+    },
+    {
+        q: "Moet ik als opdrachtgever zelf iets regelen voor de Wki?",
+        a: "Niet veel. Zorg dat uw vordering klopt en dat u haar kunt onderbouwen met een factuur, opdrachtbevestiging of afspraken. De wettelijke verplichtingen in het incassotraject nemen wij voor onze rekening.",
+    },
+] as const
+
+// Vragen op /nowid. Bronnen (nov 2026): nowid.org en incassoklacht.nl.
+export const nowidFaq = [
+    {
+        q: "Is NowID een overheidsinstantie?",
+        a: "Nee. NowID, de Nederlandse Orde voor Wettelijke Incassodienstverleners, is een branchevereniging. Het toezicht ligt bij Dienst Justis en de Inspectie Justitie en Veiligheid. NowID helpt aangesloten bureaus om aantoonbaar aan de wet te voldoen.",
+    },
+    {
+        q: "Wat doet de geschillencommissie precies?",
+        a: "IncassoKlacht, de geschillencommissie van NowID, behandelt klachten die niet samen met het incassobureau zijn opgelost. De commissie bestaat uit onafhankelijke leden en beoordeelt de klacht aan de hand van de Wki. Haar uitspraak is een bindend advies.",
+    },
+    {
+        q: "Kost een klacht indienen geld?",
+        a: "Voor een klacht bij IncassoKlacht geldt een vergoeding voor de behandeling. Wordt de klacht gegrond verklaard, dan moet het incassobureau dat bedrag vaak terugbetalen. De actuele bedragen staan op incassoklacht.nl.",
+    },
+    {
+        q: "Kan ik als opdrachtgever ook een klacht indienen?",
+        a: "Ja. Neem eerst contact met ons op, dan zoeken we samen naar een oplossing. Lukt dat niet, dan staat de route via IncassoKlacht ook voor opdrachtgevers open.",
+    },
+] as const

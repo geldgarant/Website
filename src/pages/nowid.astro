@@ -1,0 +1,437 @@
+---
+// B /nowid. Hoofdvraag: "Wat is NowID, en wat heb ik eraan dat jullie zijn aangesloten?"
+// Bronnen (nov 2026): nowid.org en incassoklacht.nl. Volgorde: wat (hero) → wat NowID doet (01)
+// → de klachtenroute (02) → wat het u oplevert (03) → vragen (04) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Feitenkaart from "../components/Feitenkaart.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { nowidFaq } from "../data/faq"
+
+const title = "Aangesloten bij NowID | GeldGarant"
+const description =
+    "GeldGarant is aangesloten bij NowID, de branchevereniging voor incassodienstverleners. Wat dat betekent, en hoe de onafhankelijke klachtenroute werkt."
+const url = "https://geldgarant.com/nowid"
+const nowidHref = "https://www.nowid.org"
+const klachtHref = "https://www.incassoklacht.nl"
+
+const feiten = [
+    { icon: "building", k: "Wat", v: "Branchevereniging, geen overheid" },
+    { icon: "check", k: "Doet", v: "Opleiding, kennis en modelregelingen rond de Wki" },
+    { icon: "scale", k: "Geschillen", v: "IncassoKlacht, met onafhankelijke leden" },
+    { icon: "doc", k: "Uitspraak", v: "Bindend advies" },
+    { icon: "shield", k: "GeldGarant", v: "Aangesloten" },
+] as const
+
+const doet = [
+    {
+        icon: "user",
+        kop: "Opleiding en bijscholing",
+        tekst: "Trainingen voor incassomedewerkers en leidinggevenden, afgestemd op de eisen van de Wki.",
+    },
+    {
+        icon: "eye",
+        kop: "Kennis en actualiteit",
+        tekst: "Uitleg over nieuwe regels en uitspraken, zodat aangesloten bureaus bij blijven.",
+    },
+    {
+        icon: "scale",
+        kop: "Klachten en geschillen",
+        tekst: "Een modelklachtenregeling en toegang tot IncassoKlacht, een onafhankelijke geschillencommissie.",
+    },
+] as const
+
+const route = [
+    {
+        kop: "Klacht bij GeldGarant",
+        tekst: "Meld uw klacht bij ons. We behandelen hem volgens onze klachtenregeling en zoeken eerst samen naar een oplossing.",
+        link: { href: "/klachtenregelement", label: "Onze klachtenregeling" },
+    },
+    {
+        kop: "Naar IncassoKlacht",
+        tekst: "Komen we er samen niet uit, dan kunt u de klacht voorleggen aan IncassoKlacht, de geschillencommissie van NowID.",
+        link: { href: klachtHref, label: "incassoklacht.nl", extern: true },
+    },
+    {
+        kop: "Bindend advies",
+        tekst: "De commissie toetst de klacht aan de Wki en geeft een bindend advies. Daar houden beide partijen zich aan.",
+    },
+]
+
+const oplevert = [
+    "Een incassopartner die aantoonbaar volgens de Wki werkt",
+    "Een vaste, onafhankelijke route als er ooit iets misgaat",
+    "Medewerkers die bijblijven met opleiding en bijscholing",
+    "Een correcte behandeling van uw klant, ook als die het niet eens is",
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "GeldGarant is aangesloten bij NowID",
+        url,
+        description,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Over ons", item: "https://geldgarant.com/over-ons" },
+            { "@type": "ListItem", position: 3, name: "NowID", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: nowidFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Over ons", href: "/over-ons" }, { label: "NowID" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Aangesloten bij <span class="accent">NowID</span>
+                    </h1>
+                    <p class="lead">
+                        NowID, de Nederlandse Orde voor Wettelijke Incassodienstverleners, helpt incassobureaus om aantoonbaar
+                        volgens de Wki te werken. GeldGarant is aangesloten. Voor u betekent dat: een vaste, onafhankelijke route
+                        als er ooit een klacht is.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={nowidHref} rel="noopener" target="_blank">
+                            Bekijk NowID
+                            <Icon name="arrow-up-right" size={18} />
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="NowID in het kort" id="feiten-title" items={feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 WAT NOWID DOET -->
+    <section class="section bg-surface" aria-labelledby="doet-title">
+        <div class="wrap split">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Wat NowID doet
+                </p>
+                <h2 class="h2" id="doet-title">
+                    De brug tussen de wet en de <span class="accent">praktijk</span>
+                </h2>
+                <p class="lead">
+                    NowID is geen toezichthouder: dat zijn Dienst Justis en de Inspectie Justitie en Veiligheid. NowID zorgt
+                    ervoor dat aangesloten bureaus de regels kennen, toepassen en aantoonbaar naleven.
+                </p>
+                <a class="textlink kop-link" href="/wki">
+                    Wat eist de Wki precies?
+                </a>
+            </div>
+            <ul role="list" class="doet">
+                {doet.map((d) => (
+                    <li>
+                        <span class="doet-icon" aria-hidden="true">
+                            <Icon name={d.icon} size={22} />
+                        </span>
+                        <div>
+                            <h3 class="h3">{d.kop}</h3>
+                            <p>{d.tekst}</p>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 02 KLACHTENROUTE -->
+    <section class="section" aria-labelledby="route-title">
+        <div class="wrap">
+            <div class="kop kop-smal">
+                <p class="eyebrow">
+                    <span class="idx">02</span> De klachtenroute
+                </p>
+                <h2 class="h2" id="route-title">
+                    Niet tevreden? Zo is het <span class="accent">geregeld</span>
+                </h2>
+                <p class="lead">Voor debiteuren en opdrachtgevers geldt dezelfde route, in drie stappen.</p>
+            </div>
+            <ol role="list" class="route">
+                {route.map((r, i) => (
+                    <li class="route-stap" data-reveal style={`--d:${i}`}>
+                        <span class="route-num num" aria-hidden="true">
+                            {i + 1}
+                        </span>
+                        <h3 class="h3">
+                            <span class="sr-only">Stap {i + 1}: </span>
+                            {r.kop}
+                        </h3>
+                        <p>{r.tekst}</p>
+                        {r.link && (
+                            <a
+                                class="textlink route-link"
+                                href={r.link.href}
+                                {...("extern" in r.link ? { rel: "noopener", target: "_blank" } : {})}
+                            >
+                                {r.link.label}
+                            </a>
+                        )}
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 03 WAT HET U OPLEVERT -->
+    <section class="section oplevert-sec" aria-labelledby="oplevert-title">
+        <div class="wrap">
+            <div class="oplevert">
+                <div>
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Voor u als opdrachtgever
+                    </p>
+                    <h2 class="h2" id="oplevert-title">
+                        Wat de aansluiting u <span class="accent">oplevert</span>
+                    </h2>
+                </div>
+                <ul role="list" class="checks">
+                    {oplevert.map((o) => (
+                        <li>
+                            <Icon name="check" size={18} />
+                            {o}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={nowidFaq} idx="04">
+        <Fragment slot="title">
+            Vragen over <span class="accent">NowID</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Een incassopartner die de regels kent en naleeft. Op werkdagen binnen het uur in behandeling.">
+        Incasso met een <span class="accent">vangnet</span>
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+    .kop-smal {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: 12px;
+        font-weight: 600;
+    }
+
+    /* ---------- 01 ---------- */
+    .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .split {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .doet {
+        display: grid;
+        gap: 12px;
+    }
+    .doet li {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 18px;
+        padding: clamp(20px, 2.4vw, 28px);
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .doet-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .doet p {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+
+    /* ---------- 02 ROUTE ---------- */
+    .route {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        counter-reset: stap;
+    }
+    @media (min-width: 900px) {
+        .route {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .route-stap {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .route-stap:last-child {
+        background: var(--ink);
+    }
+    .route-stap:last-child .h3 {
+        color: #fff;
+    }
+    .route-stap:last-child p {
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .route-num {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 6px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .route-stap:last-child .route-num {
+        background: #fff;
+        color: var(--ink);
+    }
+    .route-stap p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .route-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: auto;
+        align-self: flex-start;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+
+    /* ---------- 03 ---------- */
+    .oplevert-sec {
+        padding-top: 0;
+    }
+    .oplevert {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+        padding: clamp(28px, 5vw, 64px);
+        border-radius: var(--r-xl);
+        background: var(--blue-soft);
+    }
+    @media (min-width: 1024px) {
+        .oplevert {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 72px;
+            align-items: center;
+        }
+    }
+    .oplevert .h2 {
+        margin-top: 14px;
+    }
+    .checks {
+        display: grid;
+    }
+    .checks li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 0;
+        border-bottom: 1px solid #d3ddfb;
+        color: var(--ink);
+        font-weight: 500;
+        line-height: 1.5;
+    }
+    .checks li:first-child {
+        padding-top: 0;
+    }
+    .checks :global(svg) {
+        flex-shrink: 0;
+        margin-top: 2px;
+        color: var(--green);
+    }
+</style>
