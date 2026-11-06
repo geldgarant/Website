@@ -93,8 +93,8 @@ Elke pagina krijgt één hoofdvraag van de bezoeker. Elke sectie op die pagina b
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | `/incasso/incassobureau-inschakelen` ✓ (6 nov)             | Wanneer en hoe: signalen, check, vergelijking, drie stappen                    |
 | `/incasso/incassokosten-berekenen` ✓ (6 nov)               | Rekenmodule: WIK, btw en wettelijke (handels)rente per periode, rente op rente |
-| `/incasso/incasso-in-het-buitenland`                       | Proces en landen, alleen wat jullie echt doen                                  |
-| `/incasso/wik-brief`                                       | Uitleg plus voorbeeldbrief, en de 14-dagenregel                                |
+| `/incasso/incasso-in-het-buitenland` ✓ (6 nov)             | Aanpak, landen en EU-procedures; alleen wat jullie echt doen                   |
+| `/incasso/wik-brief` ✓ (6 nov)                             | Termijnrekenaar, geannoteerde voorbeeldbrief, de vijf eisen                    |
 | **Nieuw (Breyta-gat):** `/incasso/gerechtelijke-procedure` | Wanneer, kosten vooraf, alleen met akkoord. Alleen als jullie dit aanbieden.   |
 | **Nieuw:** `/incasso/faillissement`                        | Vordering bij de curator, €115 excl. btw (uit de FAQ)                          |
 | `/wki` ✓, `/nowid` ✓ (6 nov)                               | Vertrouwenspagina's, gebouwd. Feiten met bronnen in `faq.ts`.                  |

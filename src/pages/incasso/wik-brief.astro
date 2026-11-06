@@ -1,0 +1,612 @@
+---
+// B /incasso/wik-brief. Hoofdvraag: "Hoe stuur ik een 14-dagenbrief die klopt, en wanneer mag ik kosten rekenen?"
+// Bron: art. 6:96 lid 6 BW, HR 25-11-2016 (ECLI:NL:HR:2016:2704), Aanbeveling 14-dagenbrief (rechtspraak.nl).
+// Volgorde: wat en wanneer (hero + termijnrekenaar) → wat moet erin (01, voorbeeldbrief) → wat daarna (02) → vragen (03) → CTA.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Veld from "../../components/form/Veld.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { wikKosten, euro } from "../../lib/wik"
+import { wikFaq } from "../../data/faq"
+
+const title = "14-dagenbrief (WIK-brief): eisen en voorbeeld | GeldGarant"
+const description =
+    "Wat moet er in een 14-dagenbrief staan, wanneer begint de termijn en vanaf wanneer mag u incassokosten rekenen? Met voorbeeldbrief en termijnrekenaar."
+const url = "https://geldgarant.com/incasso/wik-brief"
+
+const voorbeeld = { factuur: "2026-118", datum: "2 oktober 2026", bedrag: 1250 }
+const kosten = wikKosten(voorbeeld.bedrag)
+
+const eisen = [
+    {
+        kop: "Verstuurd na de vervaldatum",
+        tekst: "De debiteur moet al in verzuim zijn. Een brief vóór de vervaldatum telt niet.",
+    },
+    {
+        kop: "De juiste termijn",
+        tekst: "Veertien dagen, ingaand op de dag ná ontvangst. Of een vaste einddatum die daar ruim na ligt.",
+    },
+    {
+        kop: "Het exacte bedrag aan kosten",
+        tekst: "Geen percentage of ‘maximaal’, maar het bedrag volgens de staffel. Plus btw als u die niet kunt verrekenen.",
+    },
+    { kop: "De gevolgen, duidelijk", tekst: "Wat er gebeurt als de debiteur niet betaalt, zonder te dreigen of te misleiden." },
+    { kop: "Kosteloos", tekst: "Aan de brief zelf mogen voor de debiteur geen kosten verbonden zijn." },
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "14-dagenbrief (WIK-brief): eisen en voorbeeld",
+        url,
+        description,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Incasso", item: "https://geldgarant.com/incasso" },
+            { "@type": "ListItem", position: 3, name: "14-dagenbrief", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: wikFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO + TERMIJNREKENAAR -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Incasso", href: "/incasso" }, { label: "14-dagenbrief" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        De 14-dagenbrief: zo doet u het <span class="accent">goed</span>
+                    </h1>
+                    <p class="lead">
+                        Bij een particuliere klant mag u pas incassokosten rekenen na een correcte 14-dagenbrief, ook wel
+                        WIK-brief genoemd. Eén fout en de kosten vervallen. Wij sturen hem voor u, als eerste stap van elk
+                        incassotraject.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Laat ons de brief sturen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#eisen-title">
+                            Wat moet erin?
+                        </a>
+                    </div>
+                </div>
+
+                <div class="termijn" data-termijn>
+                    <h2 class="termijn-kop">Wanneer mag u kosten rekenen?</h2>
+                    <Veld id="t-datum" name="verzonden" label="Brief verstuurd op" type="date" />
+                    <fieldset class="via">
+                        <legend class="veld-label">Verstuurd per</legend>
+                        <div class="seg2">
+                            <label>
+                                <input type="radio" name="via" value="post" checked />
+                                <span>Post</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="via" value="email" />
+                                <span>E-mail</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                    <ol role="list" class="termijn-uit" aria-live="polite">
+                        <li>
+                            <span>Ontvangen, aangenomen</span>
+                            <strong data-t="ontvangen">kies een datum</strong>
+                        </li>
+                        <li>
+                            <span>Betaaltermijn</span>
+                            <strong data-t="termijn">kies een datum</strong>
+                        </li>
+                        <li class="kosten">
+                            <span>Incassokosten vanaf</span>
+                            <strong data-t="kosten">kies een datum</strong>
+                        </li>
+                    </ol>
+                    <p class="termijn-noot">
+                        Indicatie. Bij post rekenen we voorzichtig met ontvangst op de tweede bezorgdag (dinsdag tot en met
+                        zaterdag).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 VOORBEELDBRIEF -->
+    <section class="section bg-surface" aria-labelledby="eisen-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> De eisen
+                </p>
+                <h2 class="h2" id="eisen-title">
+                    Vijf dingen die erin <span class="accent">moeten</span>
+                </h2>
+                <p class="lead">
+                    De rechter toetst de brief zelf, ook als uw klant niet komt opdagen. Zo ziet een brief eruit die aan alle
+                    eisen voldoet.
+                </p>
+            </div>
+
+            <div class="brief-grid">
+                <figure class="brief" aria-labelledby="brief-label">
+                    <p class="brief-label" id="brief-label">
+                        Voorbeeldbrief
+                    </p>
+                    <div class="brief-papier">
+                        <p class="brief-meta">
+                            Betreft: factuur {voorbeeld.factuur} van {voorbeeld.datum}
+                        </p>
+                        <p>Geachte heer De Vries,</p>
+                        <p>
+                            Op {voorbeeld.datum} stuurden wij u factuur {voorbeeld.factuur} van {euro(voorbeeld.bedrag)}. De
+                            betaaltermijn is verlopen
+                            <sup class="m">
+                                <span class="sr-only">eis </span>1
+                            </sup>{" "}
+                            en wij hebben nog geen betaling ontvangen.
+                        </p>
+                        <p>
+                            Wij verzoeken u het bedrag van {euro(voorbeeld.bedrag)} te betalen{" "}
+                            <mark>binnen 14 dagen, te rekenen vanaf de dag nadat u deze brief heeft ontvangen</mark>
+                            <sup class="m">
+                                <span class="sr-only">eis </span>2
+                            </sup>
+                            .
+                        </p>
+                        <p>
+                            Betaalt u niet binnen deze termijn, dan brengen wij <mark>{euro(kosten)} aan incassokosten</mark>
+                            <sup class="m">
+                                <span class="sr-only">eis </span>3
+                            </sup>{" "}
+                            in rekening, en bent u daarnaast wettelijke rente verschuldigd
+                            <sup class="m">
+                                <span class="sr-only">eis </span>4
+                            </sup>
+                            .
+                        </p>
+                        <p>
+                            Aan deze brief zijn voor u geen kosten verbonden
+                            <sup class="m">
+                                <span class="sr-only">eis </span>5
+                            </sup>
+                            .
+                        </p>
+                        <p class="brief-groet">Met vriendelijke groet,</p>
+                    </div>
+                    <figcaption>
+                        Voorbeeld, geen juridisch advies. Bedragen volgens de staffel bij {euro(voorbeeld.bedrag)}.
+                    </figcaption>
+                </figure>
+
+                <ol role="list" class="eisen">
+                    {eisen.map((e, i) => (
+                        <li>
+                            <span class="m m-groot" aria-hidden="true">
+                                {i + 1}
+                            </span>
+                            <div>
+                                <h3 class="eis-kop">{e.kop}</h3>
+                                <p>{e.tekst}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 DAARNA -->
+    <section class="section" aria-labelledby="daarna-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Na de 14 dagen
+                </p>
+                <h2 class="h2" id="daarna-title">
+                    Betaald, of de <span class="accent">volgende</span> stap
+                </h2>
+            </div>
+            <div class="daarna">
+                <div class="uitkomst">
+                    <span class="uit-icon goed" aria-hidden="true">
+                        <Icon name="check" size={20} />
+                    </span>
+                    <h3 class="h3">De debiteur betaalt binnen de termijn</h3>
+                    <p>Dan is het klaar, zonder incassokosten. Bij GeldGarant betaalt u in dat geval ook niets.</p>
+                </div>
+                <div class="uitkomst">
+                    <span class="uit-icon" aria-hidden="true">
+                        <Icon name="euro" size={20} />
+                    </span>
+                    <h3 class="h3">De termijn verloopt zonder betaling</h3>
+                    <p>
+                        Dan zijn de incassokosten en de rente verschuldigd, en volgen wij op met herinneringen, telefoon en waar
+                        mogelijk een regeling.
+                    </p>
+                    <a class="textlink uit-link" href="/incasso/incassokosten-berekenen">
+                        Reken de kosten en rente uit
+                    </a>
+                </div>
+                <div class="uitkomst uitkomst-cta bg-ink">
+                    <h3 class="h3">Niet zelf op de termijn letten?</h3>
+                    <p>
+                        Wij sturen de brief, houden de termijn bij en gaan op het juiste moment verder. U hoeft er niet meer naar
+                        om te kijken.
+                    </p>
+                    <a class="btn btn-light" href="/vordering-indienen">
+                        Vordering indienen
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={wikFaq} idx="03">
+        <Fragment slot="title">
+            Vragen over de <span class="accent">14-dagenbrief</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="De juiste brief, op het juiste moment. Op werkdagen binnen het uur gestart.">
+        Wij sturen de brief <span class="accent">voor u</span>
+    </SlotCta>
+</Base>
+
+<script>
+    import { veertienDagen, type Verzending } from "../../lib/termijn"
+
+    const root = document.querySelector<HTMLElement>("[data-termijn]")
+    if (root) {
+        const datum = root.querySelector<HTMLInputElement>("#t-datum")!
+        const out = (k: string) => root.querySelector<HTMLElement>(`[data-t="${k}"]`)!
+        datum.value = new Date().toISOString().slice(0, 10)
+        const nl = (iso: string) =>
+            new Intl.DateTimeFormat("nl-NL", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(
+                new Date(`${iso}T00:00:00Z`),
+            )
+        const render = () => {
+            const via = (root.querySelector<HTMLInputElement>('input[name="via"]:checked')?.value as Verzending) || "post"
+            const t = veertienDagen(datum.value, via)
+            out("ontvangen").textContent = t ? nl(t.ontvangen) : "kies een datum"
+            out("termijn").textContent = t ? `${nl(t.eersteDag)} t/m ${nl(t.laatsteDag)}` : "kies een datum"
+            out("kosten").textContent = t ? nl(t.kostenVanaf) : "kies een datum"
+        }
+        root.addEventListener("input", render)
+        root.addEventListener("change", render)
+        render()
+    }
+</script>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    /* termijnrekenaar */
+    .termijn {
+        padding: clamp(20px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .termijn-kop {
+        margin-bottom: 16px;
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .via {
+        min-width: 0;
+        margin: 0 0 16px;
+        padding: 0;
+        border: 0;
+    }
+    .via legend {
+        margin-bottom: 8px;
+    }
+    .seg2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .seg2 label {
+        position: relative;
+    }
+    .seg2 input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .seg2 span {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .seg2 input:checked + span {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.12);
+    }
+    .seg2 input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .termijn-uit {
+        display: grid;
+        border-top: 1px solid var(--line);
+    }
+    .termijn-uit li {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+    }
+    .termijn-uit span {
+        color: var(--muted);
+    }
+    .termijn-uit strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .termijn-uit li.kosten {
+        margin-top: 8px;
+        padding: 14px;
+        border: 0;
+        border-radius: var(--r-md);
+        background: var(--ink);
+    }
+    .termijn-uit li.kosten span {
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .termijn-uit li.kosten strong {
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+    }
+    .termijn-noot {
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+
+    /* 01 voorbeeldbrief */
+    .brief-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+    @media (min-width: 1024px) {
+        .brief-grid {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 56px;
+            align-items: start;
+        }
+    }
+    .brief {
+        margin: 0;
+    }
+    .brief-label {
+        display: inline-block;
+        margin-bottom: 10px;
+        padding: 4px 12px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .brief-papier {
+        display: grid;
+        gap: 14px;
+        padding: clamp(22px, 3.4vw, 44px);
+        border-radius: var(--r-md);
+        background: #fff;
+        box-shadow:
+            0 1px 2px rgba(6, 17, 38, 0.06),
+            0 24px 48px -28px rgba(6, 17, 38, 0.35);
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--ink);
+    }
+    .brief-meta {
+        font-family: var(--font-body);
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+    .brief-groet {
+        margin-top: 6px;
+    }
+    .brief mark {
+        background: linear-gradient(transparent 55%, #dfe7ff 55%);
+        color: inherit;
+    }
+    .m {
+        display: inline-grid;
+        place-items: center;
+        min-width: 20px;
+        height: 20px;
+        margin-left: 3px;
+        padding: 0 5px;
+        border-radius: var(--r-pill);
+        background: var(--blue);
+        color: #fff;
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        line-height: 1;
+        vertical-align: super;
+    }
+    .brief figcaption {
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .eisen {
+        display: grid;
+        gap: 10px;
+    }
+    .eisen li {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .m-groot {
+        min-width: 32px;
+        height: 32px;
+        margin: 0;
+        font-size: var(--fs-xs);
+        vertical-align: baseline;
+    }
+    .eis-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .eisen p {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+
+    /* 02 */
+    .daarna {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .daarna {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .uitkomst {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .uitkomst p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .uit-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .uit-icon.goed {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .uit-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: auto;
+        align-self: flex-start;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+    .uitkomst-cta {
+        background: var(--ink);
+    }
+    .uitkomst-cta p {
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .uitkomst-cta .btn {
+        align-self: flex-start;
+        margin-top: auto;
+    }
+</style>

@@ -117,3 +117,15 @@ test.describe("incassokosten berekenen", () => {
         await expect(uit("btw")).toHaveText("€ 78,75")
     })
 })
+
+test.describe("14-dagenbrief", () => {
+    test("termijnrekenaar telt vanaf de dag na ontvangst", async ({ page }) => {
+        await page.goto("/incasso/wik-brief")
+        await page.fill("#t-datum", "2026-11-02")
+        await page.locator('input[name="via"][value="email"]').check({ force: true })
+        await expect(page.locator('[data-t="kosten"]')).toContainText("17 nov")
+        await page.locator('input[name="via"][value="post"]').check({ force: true })
+        await expect(page.locator('[data-t="ontvangen"]')).toContainText("4 nov")
+        await expect(page.locator('[data-t="kosten"]')).toContainText("19 nov")
+    })
+})

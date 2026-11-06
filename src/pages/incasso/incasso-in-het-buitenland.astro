@@ -1,0 +1,487 @@
+---
+// B /incasso/incasso-in-het-buitenland. Hoofdvraag: "Mijn klant zit in het buitenland: kunnen jullie dit innen, en hoe?"
+// Alleen wat GeldGarant echt doet: één aanspreekpunt in Nederland, uitvoering met lokale partners (homeFaq),
+// landen die de huidige site noemt (BE, DE, FR, VK). EU-instrumenten: verordeningen 1896/2006, 861/2007, 1215/2012.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Feitenkaart from "../../components/Feitenkaart.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { buitenlandFaq } from "../../data/faq"
+
+const title = "Incasso in het buitenland | Buitenlandse vordering innen | GeldGarant"
+const description =
+    "Klant in het buitenland die niet betaalt? GeldGarant int uw vordering met lokale partners, met één aanspreekpunt in Nederland en de kosten vooraf bekend."
+const url = "https://geldgarant.com/incasso/incasso-in-het-buitenland"
+const contactHref = "/contact-opnemen?onderwerp=buitenland"
+
+const feiten = [
+    { icon: "user", k: "Aanspreekpunt", v: `GeldGarant in ${site.city}` },
+    { icon: "map", k: "Uitvoering", v: "Met lokale partners in het land van uw klant" },
+    { icon: "doc", k: "Communicatie", v: "In de taal en volgens de regels van dat land" },
+    { icon: "eye", k: "Kosten", v: "Vooraf bekend, per land" },
+    { icon: "scale", k: "Rechter", v: "Alleen met uw akkoord" },
+] as const
+
+const anders = [
+    {
+        icon: "scale",
+        kop: "Ander recht",
+        tekst: "Rente, incassokosten en verjaring verschillen per land en hangen af van uw afspraken.",
+    },
+    { icon: "chat", kop: "Andere taal", tekst: "Een brief in de eigen taal, van een partij ter plaatse, krijgt meer aandacht." },
+    { icon: "building", kop: "Andere procedures", tekst: "Rechtbanken, deurwaarders en termijnen werken overal net anders." },
+    {
+        icon: "euro",
+        kop: "Andere kosten",
+        tekst: "Wat u op de debiteur kunt verhalen, verschilt. Daarom rekenen we per land vooraf.",
+    },
+] as const
+
+const stappen = [
+    { kop: "U meldt de vordering", tekst: "Factuur, afspraken en het land van uw klant. Telefonisch of via het formulier." },
+    { kop: "Wij beoordelen", tekst: "Haalbaarheid, toepasselijk recht en de kosten. U beslist pas als u alles weet." },
+    { kop: "Minnelijk ter plaatse", tekst: "Onze lokale partner benadert uw klant in de eigen taal, met brieven en telefoon." },
+    { kop: "Zo nodig naar de rechter", tekst: "Via de rechter in dat land of een Europese procedure, alleen met uw akkoord." },
+    { kop: "Uw geld naar u", tekst: "Betalingen komen via onze derdengeldenrekening bij u, met een specificatie." },
+]
+
+const landen = ["België", "Duitsland", "Frankrijk", "Verenigd Koninkrijk"]
+
+const instrumenten = [
+    {
+        kop: "Europees betalingsbevel",
+        tekst: "Voor geldvorderingen die de debiteur niet betwist. Een snelle, schriftelijke procedure die in de hele EU geldt, behalve in Denemarken.",
+    },
+    {
+        kop: "Europese procedure voor geringe vorderingen",
+        tekst: "Voor vorderingen tot € 5.000. Grotendeels schriftelijk, met standaardformulieren en lagere kosten.",
+    },
+    {
+        kop: "Nederlands vonnis in de EU",
+        tekst: "Een vonnis van een Nederlandse rechter is in andere EU-landen uitvoerbaar, zonder extra procedure om het te laten erkennen.",
+    },
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Incasso in het buitenland",
+        serviceType: "Internationale incasso",
+        url,
+        areaServed: ["NL", "BE", "DE", "FR", "GB"],
+        provider: {
+            "@type": "ProfessionalService",
+            name: "GeldGarant",
+            url: "https://geldgarant.com",
+            telephone: "+31852127914",
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Incasso", item: "https://geldgarant.com/incasso" },
+            { "@type": "ListItem", position: 3, name: "Incasso in het buitenland", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: buitenlandFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Incasso", href: "/incasso" }, { label: "Buitenland" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Klant in het <span class="accent">buitenland</span>? Wij innen het.
+                    </h1>
+                    <p class="lead">
+                        Een buitenlandse klant die niet betaalt, vraagt om kennis van ander recht, een andere taal en andere
+                        procedures. Wij regelen het met lokale partners, en u houdt één aanspreekpunt in Nederland.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href={contactHref}>
+                            Buitenlandse vordering bespreken
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={site.phoneHref}>
+                            <Icon name="phone" size={18} />
+                            Bel{" "}
+                            {site.phone}
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="Incasso over de grens" id="feiten-title" items={feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 WAAROM ANDERS -->
+    <section class="section bg-surface" aria-labelledby="anders-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Over de grens
+                </p>
+                <h2 class="h2" id="anders-title">
+                    Incasseren in het buitenland is een ander <span class="accent">vak</span>
+                </h2>
+            </div>
+            <ul role="list" class="anders">
+                {anders.map((a) => (
+                    <li>
+                        <span class="a-icon" aria-hidden="true">
+                            <Icon name={a.icon} size={20} />
+                        </span>
+                        <h3 class="a-kop">{a.kop}</h3>
+                        <p>{a.tekst}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 02 AANPAK -->
+    <section class="section" aria-labelledby="aanpak-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Onze aanpak
+                </p>
+                <h2 class="h2" id="aanpak-title">
+                    Van melding tot <span class="accent">betaling</span>, in vijf stappen
+                </h2>
+            </div>
+            <ol role="list" class="stappen">
+                {stappen.map((s, i) => (
+                    <li>
+                        <span class="s-num num" aria-hidden="true">
+                            {i + 1}
+                        </span>
+                        <h3 class="s-kop">
+                            <span class="sr-only">Stap {i + 1}: </span>
+                            {s.kop}
+                        </h3>
+                        <p>{s.tekst}</p>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 03 LANDEN EN EU -->
+    <section class="section bg-surface" aria-labelledby="landen-title">
+        <div class="wrap landen-grid">
+            <div class="landen-kop">
+                <p class="eyebrow">
+                    <span class="idx">03</span> Landen en procedures
+                </p>
+                <h2 class="h2" id="landen-title">
+                    Waar we regelmatig <span class="accent">innen</span>
+                </h2>
+                <ul role="list" class="landen">
+                    {landen.map((l) => (
+                        <li>
+                            <Icon name="pin" size={16} />
+                            {l}
+                        </li>
+                    ))}
+                </ul>
+                <p class="landen-noot">
+                    Andere landen kunnen ook, via onze partners. We zeggen u vooraf eerlijk of het haalbaar is.
+                </p>
+                <a class="btn btn-dark" href={contactHref}>
+                    Vraag het ons
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+            </div>
+            <div class="instr">
+                <h3 class="instr-kop">Binnen de EU helpen Europese procedures</h3>
+                <ul role="list">
+                    {instrumenten.map((i) => (
+                        <li>
+                            <h4 class="i-kop">{i.kop}</h4>
+                            <p>{i.tekst}</p>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={buitenlandFaq} idx="04">
+        <Fragment slot="title">
+            Vragen over <span class="accent">buitenland</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        lead="Vertel ons waar uw klant zit en om welk bedrag het gaat. U hoort snel of het haalbaar is en wat het kost."
+        href={contactHref}
+        label="Vordering bespreken"
+    >
+        Uw geld, ook over de <span class="accent">grens</span>
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+            white-space: normal;
+        }
+    }
+
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2,
+    .landen-kop .h2 {
+        margin-top: 14px;
+    }
+
+    /* 01 */
+    .anders {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 640px) {
+        .anders {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (min-width: 1100px) {
+        .anders {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .anders li {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: clamp(20px, 2.4vw, 28px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .a-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 6px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .a-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .anders p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+
+    /* 02 */
+    .stappen {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 1024px) {
+        .stappen {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .stappen::before {
+            content: "";
+            position: absolute;
+            left: 22px;
+            right: 22px;
+            top: 22px;
+            height: 2px;
+            background: var(--line);
+        }
+    }
+    .stappen li {
+        position: relative;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        column-gap: 16px;
+        align-items: start;
+    }
+    @media (min-width: 1024px) {
+        .stappen li {
+            grid-template-columns: minmax(0, 1fr);
+            row-gap: 12px;
+        }
+    }
+    .s-num {
+        grid-row: span 2;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+        box-shadow: 0 0 0 6px #fff;
+    }
+    .stappen li:last-child .s-num {
+        background: var(--green);
+    }
+    .s-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+        padding-top: 10px;
+    }
+    @media (min-width: 1024px) {
+        .s-num {
+            grid-row: auto;
+        }
+        .s-kop {
+            padding-top: 4px;
+        }
+    }
+    .stappen p {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+
+    /* 03 */
+    .landen-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+    @media (min-width: 1024px) {
+        .landen-grid {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .landen {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+    }
+    .landen li {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 16px 0 14px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .landen :global(svg) {
+        color: var(--blue);
+    }
+    .landen-noot {
+        margin: 16px 0 24px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.55;
+    }
+    .instr {
+        padding: clamp(22px, 3vw, 36px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+    }
+    .instr-kop {
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .instr ul {
+        display: grid;
+        margin-top: 8px;
+    }
+    .instr li {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line-dark);
+    }
+    .instr li:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    .i-kop {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .instr p {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.72);
+    }
+</style>

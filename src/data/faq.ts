@@ -294,3 +294,57 @@ export const inschakelenFaq = [
         a: "Meestal wel. Een vordering verjaart doorgaans na vijf jaar, bij een koop door een consument na twee jaar. Twijfelt u, dien de factuur dan in: we controleren de verjaring als eerste.",
     },
 ] as const
+
+// Vragen op /incasso/wik-brief. Bron: art. 6:96 lid 6 BW, HR 25 november 2016 (ECLI:NL:HR:2016:2704),
+// Aanbeveling 14-dagenbrief (rechtspraak.nl, BIK-overleg 2017).
+export const wikFaq = [
+    {
+        q: "Moet ik ook een 14-dagenbrief sturen als mijn klant een bedrijf is?",
+        a: "Nee. De 14-dagenbrief is alleen verplicht bij een consument, een particulier die niet handelt in beroep of bedrijf. Bij een bedrijf mag u incassokosten rekenen zodra het in verzuim is. Wij sturen een bedrijf wel altijd eerst een duidelijke aanmaning.",
+    },
+    {
+        q: "Mag de 14-dagenbrief per e-mail?",
+        a: "Ja, een aanmaning per e-mail kan, als u kunt aantonen dat de debiteur hem heeft ontvangen. Bij een e-mail is de ontvangstdag meestal de dag van verzending. Wij versturen de brief per post en per e-mail, zodat de debiteur hem zeker ziet.",
+    },
+    {
+        q: "Wanneer begint de termijn van 14 dagen?",
+        a: "Op de dag ná ontvangst van de brief, niet op de dagtekening en niet op de dag van verzending. Een brief die de termijn verkeerd vermeldt, ook al is het één dag te kort, geeft geen recht op incassokosten.",
+    },
+    {
+        q: "Mag ik de 14-dagenbrief al vóór de vervaldatum sturen?",
+        a: "Nee. De brief moet worden verstuurd nadat de debiteur in verzuim is, dus na het verstrijken van de betaaltermijn van de factuur. Een gewone herinnering vooraf mag altijd, maar telt niet als 14-dagenbrief.",
+    },
+    {
+        q: "Wat als mijn 14-dagenbrief niet klopt?",
+        a: "Dan zijn de incassokosten niet verschuldigd. De rechter toetst dat zelf, ook als de debiteur niet verschijnt. De hoofdsom en de rente blijven wel verschuldigd. U kunt een nieuwe, juiste brief sturen; vanaf dan loopt een nieuwe termijn.",
+    },
+    {
+        q: "Kost het versturen van de 14-dagenbrief iets?",
+        a: "De brief zelf moet voor de debiteur kosteloos zijn. Voor u als opdrachtgever kost het bij GeldGarant niets: het is de eerste stap van het incassotraject, en betaalt de debiteur volledig, dan betaalt u niets.",
+    },
+] as const
+
+// Vragen op /incasso/incasso-in-het-buitenland. Basis: homeFaq (lokale partners) en EU-verordeningen
+// (Europees betalingsbevel 1896/2006, Europese procedure geringe vorderingen 861/2007 tot € 5.000, Brussel I bis 1215/2012).
+export const buitenlandFaq = [
+    {
+        q: "Wat kost incasso in het buitenland?",
+        a: "Dat hangt af van het land en de vordering. U hoort vooraf wat het kost, voordat we iets doen. Waar het recht van dat land het toelaat, verhalen we de kosten op de debiteur.",
+    },
+    {
+        q: "In welke landen kunnen jullie innen?",
+        a: "Wij innen regelmatig in onze buurlanden, zoals België, Duitsland, Frankrijk en het Verenigd Koninkrijk, en werken daarnaast met partners in andere landen. Zit uw klant ergens anders, neem dan contact op; we zeggen u eerlijk of het haalbaar is.",
+    },
+    {
+        q: "Moet ik zelf stukken laten vertalen?",
+        a: "Meestal niet. Stuur de factuur, de afspraken en de correspondentie zoals u ze heeft. Wij en onze partner bekijken wat er nodig is, en een eventuele vertaling hoort u vooraf.",
+    },
+    {
+        q: "Welk recht geldt er voor mijn vordering?",
+        a: "Meestal het recht dat u in uw contract of algemene voorwaarden heeft afgesproken. Zonder afspraak bepalen Europese regels welk recht geldt. Dat bepaalt onder meer de rente en welke incassokosten u mag rekenen; wij nemen dat mee in de aanpak.",
+    },
+    {
+        q: "Wat als mijn klant buiten de Europese Unie zit?",
+        a: "Dan kan het ook, maar de EU-procedures gelden daar niet en een Nederlands vonnis werkt er niet altijd. We beoordelen eerst of het minnelijke traject kans heeft en wat een procedure ter plaatse zou kosten.",
+    },
+] as const
