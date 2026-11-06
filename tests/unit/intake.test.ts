@@ -10,6 +10,9 @@ import {
     bouwPayload,
     leegFormulier,
     MAX_FILE_BYTES,
+    leegContact,
+    valideerContact,
+    bouwContactPayload,
 } from "../../src/lib/intake"
 
 describe("bedrag lezen", () => {
@@ -112,5 +115,51 @@ describe("payload", () => {
         expect(p.toestemmingen).toEqual({ akkoord_av: true, akkoord_avg: true })
         expect(p.metadata.formulier_duur_sec).toBe(90)
         expect(JSON.stringify(p).length).toBeLessThan(50_000)
+    })
+})
+
+describe("contactformulier", () => {
+    it("vraagt onderwerp, naam, bedrijf, e-mail en toelichting; telefoon bij bellen of WhatsApp", () => {
+        const s = leegContact()
+        expect(Object.keys(valideerContact(s))).toEqual(
+            expect.arrayContaining(["onderwerp", "naam", "bedrijfsnaam", "email", "toelichting"]),
+        )
+        Object.assign(s, {
+            onderwerp: "algemene_vraag",
+            naam: "Piet",
+            bedrijfsnaam: "Jansen",
+            email: "p@j.nl",
+            toelichting: "Een vraag over de werkwijze.",
+        })
+        expect(valideerContact(s)).toEqual({})
+        s.voorkeur = "whatsapp"
+        expect(valideerContact(s).telefoon).toBeTruthy()
+    })
+    it("payload volgens het contract van /api/contact, met pakket in de toelichting", () => {
+        const s = leegContact()
+        Object.assign(s, {
+            onderwerp: "debiteurenbeheer",
+            pakket: "groei",
+            aantal_facturen: "40",
+            naam: "Piet",
+            bedrijfsnaam: "Jansen",
+            email: "P@J.NL",
+            toelichting: "Graag meer info.",
+        })
+        const p = bouwContactPayload(s, {
+            nonce: "ab".repeat(16),
+            turnstileToken: "t",
+            pagina: "/contact-opnemen",
+            referrer: "",
+            utm: new URLSearchParams("utm_source=google"),
+        })
+        expect(p.onderwerp).toEqual({ key: "debiteurenbeheer", label: "Debiteurenbeheer" })
+        expect(p.contact.email).toBe("p@j.nl")
+        expect(p.contact.voorkeur_contact).toBe("email")
+        expect(p.details.toelichting).toBe("Pakket: Groei\nGraag meer info.")
+        expect(p.details.aantal_facturen).toBe("40")
+        expect(p.details.dossiernummer).toBe("")
+        expect(p.metadata).toMatchObject({ cta: "pakket-groei", utm_source: "google" })
+        expect(p.turnstile_token).toBe("t")
     })
 })

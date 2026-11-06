@@ -310,3 +310,117 @@ export async function zoekAdres(base: string, q: string, signal?: AbortSignal): 
     const d = await res.json().catch(() => [])
     return Array.isArray(d) ? (d as AdresSuggestie[]) : []
 }
+
+// ---------- contactformulier (/api/contact) ----------
+
+export const CONTACT_ACTION = "contact_submit"
+
+export const ONDERWERPEN = [
+    { key: "debiteurenbeheer", label: "Debiteurenbeheer" },
+    { key: "incasso", label: "Incasso starten" },
+    { key: "bestaand_dossier", label: "Bestaand dossier" },
+    { key: "terugbelverzoek", label: "Terugbelverzoek" },
+    { key: "buitenland", label: "Buitenlandse vordering" },
+    { key: "klacht_geschil", label: "Klacht of geschil" },
+    { key: "privacy_avg", label: "Privacy" },
+    { key: "algemene_vraag", label: "Algemene vraag" },
+] as const
+export type OnderwerpKey = (typeof ONDERWERPEN)[number]["key"]
+
+export interface ContactState {
+    onderwerp: OnderwerpKey | ""
+    naam: string
+    bedrijfsnaam: string
+    email: string
+    telefoon: string
+    voorkeur: "email" | "telefoon" | "whatsapp"
+    toelichting: string
+    pakket: string
+    aantal_facturen: string
+    dossiernummer: string
+    terugbel_moment: string
+    land: string
+    bedrag: string
+}
+
+export const leegContact = (): ContactState => ({
+    onderwerp: "",
+    naam: "",
+    bedrijfsnaam: "",
+    email: "",
+    telefoon: "",
+    voorkeur: "email",
+    toelichting: "",
+    pakket: "",
+    aantal_facturen: "",
+    dossiernummer: "",
+    terugbel_moment: "",
+    land: "",
+    bedrag: "",
+})
+
+export function valideerContact(s: ContactState): Fouten {
+    const f: Fouten = {}
+    if (!s.onderwerp) f.onderwerp = "Kies waar uw vraag over gaat."
+    if (!schoon(s.naam)) f.naam = "Vul uw naam in."
+    if (!schoon(s.bedrijfsnaam)) f.bedrijfsnaam = "Vul uw bedrijfsnaam in, of uw achternaam."
+    if (!isEmail(s.email)) f.email = "Vul een geldig e-mailadres in."
+    if ((s.voorkeur === "telefoon" || s.voorkeur === "whatsapp" || s.onderwerp === "terugbelverzoek") && !isTelefoon(s.telefoon))
+        f.telefoon = "Vul uw telefoonnummer in, dan kunnen we u bereiken."
+    else if (s.telefoon && !isTelefoon(s.telefoon)) f.telefoon = "Dit telefoonnummer is te kort."
+    if (schoon(s.toelichting, 2000).length < 10) f.toelichting = "Vertel in een paar woorden waar het om gaat."
+    return f
+}
+
+const PAKKET_NAMEN: Record<string, string> = { start: "Start", groei: "Groei", zakelijk: "Zakelijk", advies: "Weet ik nog niet" }
+
+export function bouwContactPayload(
+    s: ContactState,
+    ctx: { nonce: string; turnstileToken: string; pagina: string; referrer: string; utm: URLSearchParams },
+) {
+    const onderwerp = ONDERWERPEN.find((o) => o.key === s.onderwerp) ?? ONDERWERPEN[ONDERWERPEN.length - 1]
+    const pakket = s.onderwerp === "debiteurenbeheer" && PAKKET_NAMEN[s.pakket] ? PAKKET_NAMEN[s.pakket] : ""
+    const toelichting = [pakket ? `Pakket: ${pakket}` : "", schoon(s.toelichting, 1900)].filter(Boolean).join("\n")
+    const bedrag = parseBedrag(s.bedrag)
+    return {
+        nonce: ctx.nonce,
+        ...(ctx.turnstileToken ? { turnstile_token: ctx.turnstileToken } : {}),
+        onderwerp: { key: onderwerp.key, label: onderwerp.label },
+        contact: {
+            naam: schoon(s.naam, 120),
+            bedrijfsnaam: schoon(s.bedrijfsnaam, 200),
+            email: schoon(s.email, 200).toLowerCase(),
+            telefoon: normTelefoon(s.telefoon),
+            voorkeur_contact: s.voorkeur,
+        },
+        details: {
+            toelichting: toelichting.slice(0, 2000),
+            dossiernummer: s.onderwerp === "bestaand_dossier" ? schoon(s.dossiernummer, 80) : "",
+            land: s.onderwerp === "buitenland" ? schoon(s.land, 120) : "",
+            openstaand_bedrag: s.onderwerp === "buitenland" && bedrag > 0 ? bedrag : null,
+            aantal_facturen: s.onderwerp === "debiteurenbeheer" ? schoon(s.aantal_facturen, 80) : "",
+            terugbel_moment: s.onderwerp === "terugbelverzoek" ? schoon(s.terugbel_moment, 160) : "",
+        },
+        metadata: {
+            bron_pagina: ctx.pagina.slice(0, 255),
+            referrer: ctx.referrer.slice(0, 255),
+            utm_source: ctx.utm.get("utm_source") ?? "",
+            utm_medium: ctx.utm.get("utm_medium") ?? "",
+            utm_campaign: ctx.utm.get("utm_campaign") ?? "",
+            cta: pakket ? `pakket-${s.pakket}` : "",
+        },
+    }
+}
+
+export async function verstuurContact(base: string, payload: ReturnType<typeof bouwContactPayload>) {
+    const res = await fetch(`${base}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Request-Nonce": payload.nonce },
+        body: JSON.stringify(payload),
+    })
+    const d = await lees(res)
+    if (res.ok && d.ok && d.accepted !== false) return { requestId: String(d.requestId || "") }
+    if (d.accepted === false && d.requestId)
+        throw new ApiFout(String(d.error || "ontvangen-niet-gemeld"), res.status, String(d.requestId))
+    throw new ApiFout(String(d.error || "Versturen is mislukt."), res.status)
+}

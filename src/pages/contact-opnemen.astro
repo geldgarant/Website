@@ -1,0 +1,732 @@
+---
+// A7 /contact-opnemen. Hoofdvraag: "Hoe bereik ik jullie het snelst?"
+// Kanalen eerst (bellen, WhatsApp, mail), dan het formulier met velden per onderwerp, rechts kantoor en debiteurenroute.
+// Logica: src/scripts/contact.ts; contract en validatie: src/lib/intake.ts (contactdeel, getest).
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Veld from "../components/form/Veld.astro"
+import { site } from "../data/site"
+import { ONDERWERPEN } from "../lib/intake"
+import { PAKKETTEN } from "../lib/pakketten"
+
+const title = "Contact opnemen | Bel, app of mail GeldGarant"
+const description =
+    "Vraag over incasso, debiteurenbeheer of een lopend dossier? Bel 085 212 79 14, stuur een WhatsApp of mail. Op werkdagen direct een mens aan de lijn."
+
+const kanalen = [
+    { icon: "phone", titel: "Bellen", waarde: site.phone, sub: "Werkdagen\u00a09.00\u00a0tot\u00a017.00", href: site.phoneHref },
+    {
+        icon: "whatsapp",
+        titel: "WhatsApp",
+        waarde: "Stuur een bericht",
+        sub: "Handig voor een foto van uw factuur",
+        href: site.whatsappHref,
+    },
+    { icon: "mail", titel: "E-mail", waarde: site.email, sub: "Reactie meestal binnen 1 werkdag", href: `mailto:${site.email}` },
+] as const
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        name: "Contact opnemen met GeldGarant",
+        url: "https://geldgarant.com/contact-opnemen",
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: "GeldGarant",
+        url: "https://geldgarant.com",
+        telephone: "+31852127914",
+        email: site.email,
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: site.street,
+            postalCode: site.postcode,
+            addressLocality: site.city,
+            addressCountry: "NL",
+        },
+        openingHoursSpecification: [
+            {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                opens: "09:00",
+                closes: "17:00",
+            },
+        ],
+    },
+]
+const route = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.street}, ${site.postcode} ${site.city}`)}`
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} stickyCta={false}>
+    <section class="contact">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
+            <div class="contact-kop">
+                <h1 class="display">
+                    Bel, app of <span class="accent">mail</span>
+                </h1>
+                <p class="lead">U spreekt direct Anas of Ilyas. Geen keuzemenu, geen callcenter.</p>
+            </div>
+
+            <ul role="list" class="kanalen">
+                {kanalen.map((k) => (
+                    <li>
+                        <a class="kanaal" href={k.href}>
+                            <span class="kanaal-icon" aria-hidden="true">
+                                <Icon name={k.icon} size={22} />
+                            </span>
+                            <span class="kanaal-tekst">
+                                <span class="kanaal-titel">{k.titel}</span>
+                                <span class="kanaal-waarde">{k.waarde}</span>
+                                <span class="kanaal-sub">{k.sub}</span>
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+
+            <div class="contact-grid">
+                <form class="kaart" novalidate data-contact aria-labelledby="form-kop">
+                    <h2 class="form-kop" id="form-kop" tabindex="-1">
+                        Of stuur ons een bericht
+                    </h2>
+
+                    <fieldset class="onderwerpen">
+                        <legend class="veld-label">Waar gaat uw vraag over?</legend>
+                        <div class="chips">
+                            {ONDERWERPEN.map((o) => (
+                                <label>
+                                    <input type="radio" name="onderwerp" value={o.key} data-bind="onderwerp" />
+                                    <span>{o.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                        <p class="veld-fout" data-fout="onderwerp"></p>
+                    </fieldset>
+
+                    <!-- extra velden per onderwerp -->
+                    <div class="extra" data-alleen="incasso" hidden>
+                        <p class="tip">
+                            <Icon name="bolt" size={18} />
+                            <span>
+                                Sneller:{" "}
+                                <a class="textlink" href="/vordering-indienen">
+                                    dien uw vordering direct in
+                                </a>
+                                . Op werkdagen binnen 1 uur in behandeling.
+                            </span>
+                        </p>
+                    </div>
+                    <div class="extra velden" data-alleen="debiteurenbeheer" hidden>
+                        <div class="veld" data-veld="pakket">
+                            <label for="c-pakket">
+                                Pakket <span class="veld-opt">optioneel</span>
+                            </label>
+                            <select id="c-pakket" name="pakket" data-bind="pakket">
+                                <option value="">Kies een pakket</option>
+                                {PAKKETTEN.map((p) => (
+                                    <option value={p.id}>{`${p.naam}, € ${p.prijs} per maand`}</option>
+                                ))}
+                                <option value="advies">Weet ik nog niet, adviseer mij</option>
+                            </select>
+                        </div>
+                        <Veld
+                            id="c-aantal"
+                            name="aantal_facturen"
+                            label="Facturen per maand"
+                            optioneel
+                            inputmode="numeric"
+                            maxlength={20}
+                        />
+                    </div>
+                    <div class="extra" data-alleen="bestaand_dossier" hidden>
+                        <Veld
+                            id="c-dossier"
+                            name="dossiernummer"
+                            label="Dossiernummer"
+                            optioneel
+                            placeholder="GG-2026-01234"
+                            maxlength={40}
+                        />
+                    </div>
+                    <div class="extra" data-alleen="terugbelverzoek" hidden>
+                        <Veld
+                            id="c-moment"
+                            name="terugbel_moment"
+                            label="Wanneer kunnen we u bellen?"
+                            optioneel
+                            placeholder="Bijvoorbeeld: morgen na 14.00"
+                            maxlength={160}
+                        />
+                    </div>
+                    <div class="extra velden" data-alleen="buitenland" hidden>
+                        <Veld id="c-land" name="land" label="Land van uw klant" optioneel maxlength={80} />
+                        <Veld
+                            id="c-bedrag"
+                            name="bedrag"
+                            label="Openstaand bedrag"
+                            optioneel
+                            inputmode="decimal"
+                            maxlength={16}
+                        />
+                    </div>
+
+                    <div class="velden">
+                        <Veld id="c-naam" name="naam" label="Naam" autocomplete="name" maxlength={120} />
+                        <Veld id="c-bedrijf" name="bedrijfsnaam" label="Bedrijfsnaam" autocomplete="organization" />
+                        <Veld id="c-email" name="email" label="E-mail" type="email" autocomplete="email" />
+                        <Veld id="c-telefoon" name="telefoon" label="Telefoon" type="tel" autocomplete="tel" />
+                    </div>
+
+                    <fieldset class="voorkeur">
+                        <legend class="veld-label">Hoe wilt u antwoord?</legend>
+                        <div class="mini-seg">
+                            <label>
+                                <input type="radio" name="voorkeur" value="email" data-bind="voorkeur" checked />
+                                <span>E-mail</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="voorkeur" value="telefoon" data-bind="voorkeur" />
+                                <span>Bellen</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="voorkeur" value="whatsapp" data-bind="voorkeur" />
+                                <span>WhatsApp</span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <div class="veld" data-veld="toelichting">
+                        <label for="c-toelichting">Uw vraag</label>
+                        <textarea
+                            id="c-toelichting"
+                            name="toelichting"
+                            rows="4"
+                            maxlength="1900"
+                            aria-describedby="c-toelichting-fout"
+                            placeholder="Vertel kort waar het om gaat."
+                            data-bind="toelichting"
+                        ></textarea>
+                        <p class="veld-fout" id="c-toelichting-fout" data-fout="toelichting"></p>
+                    </div>
+
+                    <div class="turnstile" data-turnstile></div>
+                    <p class="melding" role="alert" data-melding hidden></p>
+
+                    <div class="form-voet">
+                        <button type="submit" class="btn" data-verstuur>
+                            <span data-verstuur-tekst>Bericht versturen</span>
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </button>
+                        <p class="form-noot">
+                            We gebruiken uw gegevens alleen om uw vraag te beantwoorden. Lees ons{" "}
+                            <a class="textlink" href="/juridisch/privacy-beleid">
+                                privacybeleid
+                            </a>
+                            .
+                        </p>
+                    </div>
+                </form>
+
+                <div class="kaart verzonden" data-verzonden hidden>
+                    <span class="verzonden-icon" aria-hidden="true">
+                        <Icon name="check" size={28} />
+                    </span>
+                    <h2 class="h2 verzonden-kop" tabindex="-1" data-verzonden-kop>
+                        Bericht <span class="accent">ontvangen</span>
+                    </h2>
+                    <p class="lead">
+                        U krijgt een bevestiging per e-mail onder referentie <strong class="num" data-verzonden-ref></strong>. We
+                        nemen zo snel mogelijk contact met u op, meestal binnen 1 werkdag.
+                    </p>
+                    <p class="verzonden-noot" data-verzonden-noot hidden></p>
+                </div>
+
+                <aside class="zij" aria-label="Kantoor en bereikbaarheid">
+                    <div class="zij-kaart bg-ink">
+                        <h2 class="zij-kop">Kantoor Deventer</h2>
+                        <p class="zij-adres">
+                            {site.street}
+                            <br />
+                            {`${site.postcode} ${site.city}`}
+                        </p>
+                        <a class="textlink zij-route" href={route} rel="noopener" target="_blank">
+                            Route plannen
+                        </a>
+                        <dl class="zij-rows">
+                            <div>
+                                <dt>Bereikbaar</dt>
+                                <dd>Werkdagen 9.00 tot 17.00</dd>
+                            </div>
+                            <div>
+                                <dt>Incassoregister</dt>
+                                <dd>
+                                    <a class="textlink" href={site.incassoRegisterHref}>
+                                        Justis {site.incassoRegister}
+                                    </a>
+                                </dd>
+                            </div>
+                            {site.kvk && (
+                                <div>
+                                    <dt>KvK</dt>
+                                    <dd class="num">{site.kvk}</dd>
+                                </div>
+                            )}
+                        </dl>
+                        <p class="zij-noot">We werken door heel Nederland. Langskomen kan op afspraak.</p>
+                    </div>
+                    <div class="zij-deb">
+                        <h2 class="zij-deb-kop">Brief van ons ontvangen?</h2>
+                        <p>Betalen of een regeling aanvragen regelt u het snelst in het debiteurenportaal.</p>
+                        <a class="btn btn-dark" href={site.debtorPortal} rel="noopener">
+                            Naar het debiteurenportaal
+                            <span class="btn-dot">
+                                <Icon name="arrow-up-right" size={18} />
+                            </span>
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+</Base>
+
+<script>
+    import "../scripts/contact"
+</script>
+
+<style>
+    .contact {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .contact-kop {
+        margin-top: clamp(20px, 3vw, 36px);
+    }
+    .contact-kop h1 {
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+    }
+    .contact-kop .lead {
+        margin-top: 16px;
+    }
+
+    /* ---------- kanalen ---------- */
+    .kanalen {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        margin-top: clamp(28px, 4vw, 48px);
+    }
+    @media (min-width: 820px) {
+        .kanalen {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+    }
+    .kanaal {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        height: 100%;
+        padding: 18px 20px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+        transition:
+            background-color 0.2s ease,
+            box-shadow 0.25s var(--ease);
+    }
+    .kanaal:hover {
+        background: #fff;
+        box-shadow: var(--shadow-card);
+    }
+    .kanaal-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+    }
+    .kanaal-tekst {
+        display: grid;
+        min-width: 0;
+    }
+    .kanaal-titel {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .kanaal-waarde {
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+        overflow-wrap: anywhere;
+    }
+    .kanaal-sub {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+
+    /* ---------- grid ---------- */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        margin-top: clamp(28px, 4vw, 48px);
+    }
+    @media (min-width: 1024px) {
+        .contact-grid {
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 40px;
+            align-items: start;
+        }
+        .zij {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+        }
+    }
+    .kaart {
+        padding: clamp(20px, 3.4vw, 40px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .form-kop {
+        margin-bottom: 22px;
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        outline: none;
+    }
+
+    /* ---------- velden (gelijk aan /vordering-indienen) ---------- */
+    .velden {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0 16px;
+    }
+    @media (min-width: 640px) {
+        .velden {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+    }
+    :global(.veld) {
+        display: grid;
+        align-content: start;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+    :global(.veld label),
+    .veld-label {
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    :global(.veld-opt) {
+        margin-left: 6px;
+        font-weight: 400;
+        color: var(--muted);
+    }
+    :global(.veld input),
+    :global(.veld select),
+    :global(.veld textarea) {
+        width: 100%;
+        min-height: 52px;
+        padding: 12px 14px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-md);
+        background: #fff;
+        font-size: 1rem;
+        color: var(--ink);
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+    :global(.veld textarea) {
+        resize: vertical;
+        min-height: 120px;
+        line-height: 1.5;
+    }
+    :global(.veld input:focus),
+    :global(.veld select:focus),
+    :global(.veld textarea:focus) {
+        outline: none;
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(48, 105, 254, 0.14);
+    }
+    :global(.veld [aria-invalid="true"]) {
+        border-color: #c4291c;
+    }
+    :global(.veld input::placeholder),
+    :global(.veld textarea::placeholder) {
+        color: #6b7390;
+    }
+    :global(.veld-fout) {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: #b42318;
+    }
+    :global(.veld-fout:empty) {
+        display: none;
+    }
+
+    /* onderwerp-chips */
+    .onderwerpen,
+    .voorkeur {
+        min-width: 0;
+        margin: 0 0 18px;
+        padding: 0;
+        border: 0;
+    }
+    .onderwerpen legend,
+    .voorkeur legend {
+        margin-bottom: 10px;
+    }
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .chips label,
+    .mini-seg label {
+        position: relative;
+    }
+    .chips input,
+    .mini-seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .chips span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-pill);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease,
+            color 0.15s ease;
+    }
+    .chips label:hover span {
+        border-color: #b9c0d0;
+    }
+    .chips input:checked + span {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: #fff;
+    }
+    .chips input:focus-visible + span,
+    .mini-seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .mini-seg {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .mini-seg span {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .mini-seg input:checked + span {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.12);
+    }
+    .extra {
+        margin-bottom: 4px;
+    }
+    .tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        background: var(--blue-soft);
+        font-size: var(--fs-sm);
+        color: var(--ink);
+        line-height: 1.5;
+    }
+    .tip :global(svg) {
+        flex-shrink: 0;
+        margin-top: 1px;
+        color: var(--blue);
+    }
+    .turnstile:empty {
+        display: none;
+    }
+    .turnstile {
+        margin-bottom: 12px;
+    }
+    :global(.melding) {
+        margin: 0 0 16px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        background: #fdecea;
+        color: #8a1c12;
+    }
+    :global(.melding[data-soort="let-op"]) {
+        background: #fff4e0;
+        color: #6b4500;
+    }
+    .form-voet {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+    }
+    .form-voet .btn[aria-busy="true"] {
+        opacity: 0.7;
+        cursor: progress;
+    }
+    .form-noot {
+        flex: 1;
+        min-width: 220px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    @media (max-width: 519px) {
+        .form-voet .btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    /* verzonden */
+    .verzonden-icon {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .verzonden-kop {
+        margin-top: 20px;
+        outline: none;
+    }
+    .verzonden .lead {
+        margin-top: 14px;
+    }
+    .verzonden-noot {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        background: #fff4e0;
+        color: #6b4500;
+        font-size: var(--fs-sm);
+    }
+
+    /* ---------- zijkant ---------- */
+    .zij {
+        display: grid;
+        gap: 12px;
+    }
+    @media (min-width: 1024px) {
+        .zij {
+            position: sticky;
+            top: calc(var(--header-h) + 32px);
+        }
+    }
+    .zij-kaart {
+        padding: 26px;
+        border-radius: var(--r-xl);
+    }
+    .zij-kop {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .zij-adres {
+        margin-top: 8px;
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+    }
+    .zij-route {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+    }
+    .zij-rows {
+        display: grid;
+        margin-top: 4px;
+    }
+    .zij-rows > div {
+        display: grid;
+        gap: 2px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line-dark);
+        font-size: var(--fs-sm);
+    }
+    .zij-rows dt {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: var(--fs-xs);
+    }
+    .zij-rows dd {
+        color: #fff;
+    }
+    .zij-noot {
+        margin-top: 8px;
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.65);
+    }
+    .zij-deb {
+        padding: 22px 24px;
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .zij-deb-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .zij-deb p {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    .zij-deb .btn {
+        margin-top: 16px;
+        width: 100%;
+        justify-content: space-between;
+    }
+</style>
