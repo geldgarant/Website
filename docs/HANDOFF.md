@@ -109,7 +109,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - html-validate `tel-non-breaking` geldt voor **elke** tekst in een `tel:`-link, ook "Vraag advies": gebruik `\u00a0`.
 - Footer: `.footer a` maakte ook de knop wit-op-wit. Opgelost met `:not(.btn)`; let hierop bij scoped `a`-regels.
 - Formulierpagina's zetten `stickyCta={false}` op `Base`: de zwevende CTA viel op mobiel over het formulier.
-- Veldstijlen (`:global(.veld)` e.d.) staan nu dubbel: in `vordering-indienen.astro` en `contact-opnemen.astro`. Bij een derde formulier verhuizen naar `src/styles/form.css`.
+- Veldstijlen staan in `src/styles/form.css` (globaal via Base). Alleen `vordering-indienen.astro` heeft nog een eigen kopie; bij een volgende wijziging daar opruimen.
 - Adres in JSX: schrijf `{`${site.postcode} ${site.city}`}`; twee losse expressies op aparte regels verliezen de spatie ("7418 ETDeventer").
 - De overlooptest van `resoluties.mjs` meet ook visueel verborgen tabelkoppen: bij een `<thead>` die op mobiel wordt weggeclipt, moeten ook `tr`, `th` en `td` daarin `position:absolute; width:1px; padding:0` krijgen (zie /over-ons).
 - `/contact-opnemen` liep op 320px over door de knop "Naar het debiteurenportaal" (nowrap). Opgelost met `grid-template-columns: minmax(0,1fr)` op `.zij` en `white-space: normal` op die knop.
@@ -138,9 +138,14 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 6. ~~**`/over-ons`** (A6)~~: gebouwd op 6 nov 2026. Research: Breyta, Mollie, Vesting Finance, huidige GG-pagina's /over-ons, /wki, /nowid. Geen namen; feiten alleen uit `site.ts`. Foto-slot "Foto kantoor Deventer volgt" wacht op de fotoshoot. Linkt naar `/wki`, `/nowid` en `/werken-bij` (nog te migreren, fase B/C).
 7. ~~**`/hoe-werkt-het`** (A5)~~: gebouwd op 6 nov 2026 als eigen pagina (geen 301): de reis van de opdrachtgever, aanvullend op de fasen op `/incasso`. De tijden in de dossiermeldingen zijn als voorbeeld gelabeld. Situatie "Betaalt aan u" verwijst voor de kosten naar de AV (art. 9.5); laat Anas die tekst controleren.
 8. ~~**`/wki`** en **`/nowid`** (fase B)~~: gebouwd op 6 nov 2026. Feiten nagelopen bij rijksoverheid.nl, ondernemersplein.overheid.nl (regels voor incassodienstverleners), Justis, nowid.org en incassoklacht.nl (bronnen in het commentaar van `faq.ts`). /wki: feitenkaart, 01 "wat verandert voor u" (o.a. sinds 1 okt 2026 geen incassokosten/rente voor een niet-geregistreerd bureau), 02 zeven eisen met "Bij GeldGarant" (semantische `<ol>`, geen ARIA-tabel: html-validate `prefer-native-element`), 03 "controleer het zelf" met een gelabeld voorbeeld van het register, FAQ `wkiFaq` (incl. cumulatieregel € 140 / € 266,67). /nowid: feitenkaart, 01 wat NowID doet, 02 klachtenroute in 3 stappen (GeldGarant → IncassoKlacht → bindend advies), 03 wat het u oplevert, FAQ `nowidFaq`. Footer: "Hoe werkt het", "Wki en registratie" en "Aangesloten bij NowID" toegevoegd. Nieuwe component `src/components/Feitenkaart.astro` (props `titel`, `id`, `items`), gebruikt op /over-ons, /wki en /nowid.
-9. **Volgende (fase B):** incasso-subpagina's: `/incasso/incassobureau-inschakelen`, `/incasso/incassokosten-berekenen`, `/incasso/wik-brief`, `/incasso/incasso-in-het-buitenland`; daarna `/branches` + 10 branches.
-10. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
-11. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+9. ~~**`/incasso/incassokosten-berekenen`**~~ en ~~**`/incasso/incassobureau-inschakelen`**~~ (fase B): gebouwd op 6 nov 2026.
+    - Rekenmodule `src/components/incasso/Rekenmodule.astro`: hoofdsom, bedrijf/particulier, vervaldatum, einddatum, 14-dagenbrief (alleen particulier), btw niet verrekenbaar (21% over de kosten). Uitkomst live in `[data-uit=…]`, uitklapbare berekening per trede en per renteperiode. Geen `<form>` (html-validate `wcag/h32` wil dan een submitknop), maar een `div role="group"`.
+    - Rente: `src/lib/rente.ts` (`RENTE`, `wettelijkeRente()`, `huidigPercentage()`), unit-test `tests/unit/rente.test.ts`, e2e in `interacties.spec.ts` ("incassokosten berekenen"). **Elk half jaar (1 januari en 1 juli) de percentages controleren** op rijksoverheid.nl en een regel toevoegen + `RENTE_BIJGEWERKT` aanpassen.
+    - /incassobureau-inschakelen: voorbeeldtijdlijn (gelabeld), signalen, `<Klaar idx="02" />` (Klaar heeft nu props `idx` en `surface`), vergelijking zelf / GeldGarant / advocaat-deurwaarder, drie stappen, `inschakelenFaq`.
+    - Veldstijlen staan nu in `src/styles/form.css` (geïmporteerd in `Base.astro`). /contact-opnemen gebruikt die; /vordering-indienen heeft nog eigen gelijke regels plus de adres-zoekhulp.
+10. **Volgende (fase B):** `/incasso/wik-brief` (uitleg + voorbeeldbrief, 14-dagenregel) en `/incasso/incasso-in-het-buitenland`; daarna `/branches` + 10 branches.
+11. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+12. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 

@@ -1,0 +1,570 @@
+---
+// B /incasso/incassobureau-inschakelen. Hoofdvraag: "Wanneer schakel ik een incassobureau in, en hoe?"
+// Volgorde: wanneer (hero + voorbeeldtijdlijn) → signalen (01) → is mijn factuur klaar (02, Klaar.astro)
+// → zelf, wij of de rechter (03) → hoe schakel ik in (04) → vragen (05) → CTA.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Klaar from "../../components/incasso/Klaar.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { inschakelenFaq } from "../../data/faq"
+
+const title = "Incassobureau inschakelen: wanneer en hoe | GeldGarant"
+const description =
+    "Wanneer schakelt u een incassobureau in? De signalen, wat u zelf al kunt doen en hoe u in drie minuten start. Volledig betaald? Dan betaalt u niets."
+const url = "https://geldgarant.com/incasso/incassobureau-inschakelen"
+
+const tijdlijn = [
+    { dag: "dag 0", t: "Factuur verstuurd", status: "klaar" },
+    { dag: "dag 30", t: "Vervaldatum verstreken", status: "klaar" },
+    { dag: "dag 37", t: "Herinnering, geen reactie", status: "klaar" },
+    { dag: "nu", t: "GeldGarant inschakelen", status: "nu" },
+    { dag: "later", t: "Rechter of deurwaarder, alleen met uw akkoord", status: "later" },
+] as const
+
+const signalen = [
+    { icon: "clock", t: "De vervaldatum is verstreken en uw herinnering bleef onbeantwoord" },
+    { icon: "chat", t: "Uw klant belooft te betalen, maar het geld komt niet" },
+    { icon: "phone", t: "Uw klant neemt niet meer op of reageert niet op e-mail" },
+    { icon: "doc", t: "Er komt steeds een nieuwe reden om nog niet te betalen" },
+    { icon: "user", t: "U wilt er zelf geen tijd en energie meer in steken" },
+] as const
+
+const vergelijk = [
+    {
+        k: "Kosten voor u",
+        zelf: "Alleen uw eigen tijd",
+        gg: "€ 0 als de debiteur volledig betaalt",
+        jur: "Uurtarief of vaste kosten, vaak vooraf",
+    },
+    { k: "Uw tijd", zelf: "Veel: bellen, brieven, bijhouden", gg: "Eén keer aanleveren", jur: "Overleg en stukken aanleveren" },
+    {
+        k: "Effect op de debiteur",
+        zelf: "Uw factuur blijft vaak onderaan de stapel",
+        gg: "Een onafhankelijke partij met vaste opvolging",
+        jur: "Het zwaarste middel, met beslag na een vonnis",
+    },
+    {
+        k: "Geschikt voor",
+        zelf: "Een eerste herinnering",
+        gg: "Onbetaalde facturen zonder inhoudelijk geschil",
+        jur: "Betwiste vorderingen en beslag",
+    },
+]
+
+const stappen = [
+    { t: "Dien in", d: "Factuur en gegevens van de debiteur, in ongeveer drie minuten." },
+    { t: "Wij starten", d: "Op werkdagen binnen 1 uur in behandeling, eerste brief direct daarna." },
+    { t: "U volgt het online", d: "Elke stap in uw dossier; ontvangen bedragen dragen we wekelijks af." },
+]
+
+const jsonLd = [
+    { "@context": "https://schema.org", "@type": "WebPage", name: "Incassobureau inschakelen: wanneer en hoe", url, description },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Incasso", item: "https://geldgarant.com/incasso" },
+            { "@type": "ListItem", position: 3, name: "Incassobureau inschakelen", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: inschakelenFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs
+                items={[
+                    { label: "Home", href: "/" },
+                    { label: "Incasso", href: "/incasso" },
+                    { label: "Incassobureau inschakelen" },
+                ]}
+            />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Wanneer schakelt u een <span class="accent">incassobureau</span> in?
+                    </h1>
+                    <p class="lead">
+                        Zodra de betaaltermijn voorbij is en een herinnering niets oplevert. Hoe eerder u dat doet, hoe groter de
+                        kans dat uw klant nog kan en wil betalen.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#klaar-title">
+                            Is mijn factuur klaar?
+                        </a>
+                    </div>
+                </div>
+
+                <figure class="tijd" aria-labelledby="tijd-title">
+                    <figcaption class="tijd-kop">
+                        <span id="tijd-title">Een onbetaalde factuur</span>
+                        <span class="tijd-label">Voorbeeld, betaaltermijn 30 dagen</span>
+                    </figcaption>
+                    <ol role="list">
+                        {tijdlijn.map((s) => (
+                            <li class={s.status}>
+                                <span class="tijd-dot" aria-hidden="true">
+                                    {s.status === "klaar" && <Icon name="check" size={14} />}
+                                    {s.status === "nu" && <Icon name="bolt" size={14} />}
+                                </span>
+                                <span class="tijd-t">{s.t}</span>
+                                <span class="tijd-dag num">{s.dag}</span>
+                            </li>
+                        ))}
+                    </ol>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 SIGNALEN -->
+    <section class="section bg-surface" aria-labelledby="signalen-title">
+        <div class="wrap signalen-grid">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> De signalen
+                </p>
+                <h2 class="h2" id="signalen-title">
+                    Herkent u een van deze <span class="accent">signalen</span>?
+                </h2>
+                <p class="lead">Dan is het tijd om het innen uit handen te geven. Wachten maakt een vordering zelden beter.</p>
+            </div>
+            <ul role="list" class="signalen">
+                {signalen.map((s) => (
+                    <li>
+                        <span class="sig-icon" aria-hidden="true">
+                            <Icon name={s.icon} size={20} />
+                        </span>
+                        {s.t}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <Klaar idx="02" />
+
+    <!-- 03 VERGELIJKING -->
+    <section class="section bg-surface" aria-labelledby="keuze-title">
+        <div class="wrap">
+            <div class="kop kop-smal">
+                <p class="eyebrow">
+                    <span class="idx">03</span> De keuze
+                </p>
+                <h2 class="h2" id="keuze-title">
+                    Zelf doen, ons inschakelen of naar de <span class="accent">rechter</span>?
+                </h2>
+            </div>
+            <div class="vergelijk-wrap">
+                <table class="vergelijk">
+                    <caption class="sr-only">Zelf innen, GeldGarant of een advocaat of deurwaarder vergeleken</caption>
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <th scope="col">Zelf doen</th>
+                            <th scope="col" class="gg">
+                                GeldGarant
+                            </th>
+                            <th scope="col">Advocaat of deurwaarder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {vergelijk.map((r) => (
+                            <tr>
+                                <th scope="row">{r.k}</th>
+                                <td data-label="Zelf doen">{r.zelf}</td>
+                                <td data-label="GeldGarant" class="gg">
+                                    {r.gg}
+                                </td>
+                                <td data-label="Advocaat of deurwaarder">{r.jur}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <p class="keuze-noot">
+                Is een procedure nodig, dan regelen wij die met vaste partners. Alleen met uw akkoord, en de kosten hoort u
+                vooraf.
+            </p>
+        </div>
+    </section>
+
+    <!-- 04 ZO SCHAKELT U ONS IN -->
+    <section class="section" aria-labelledby="start-title">
+        <div class="wrap start">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">04</span> Zo start u
+                </p>
+                <h2 class="h2" id="start-title">
+                    In drie minuten <span class="accent">uit handen</span>
+                </h2>
+                <a class="textlink start-link" href="/hoe-werkt-het">
+                    Bekijk alle stappen
+                </a>
+            </div>
+            <ol role="list" class="start-stappen">
+                {stappen.map((s, i) => (
+                    <li>
+                        <span class="num">{i + 1}</span>
+                        <div>
+                            <h3 class="h3">{s.t}</h3>
+                            <p>{s.d}</p>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <Faq items={inschakelenFaq} idx="05">
+        <Fragment slot="title">
+            Vragen over <span class="accent">inschakelen</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Dien uw vordering in ongeveer drie minuten in. Op werkdagen gaan we binnen het uur voor u aan de slag.">
+        Geef het innen <span class="accent">uit handen</span>
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    /* tijdlijn */
+    .tijd {
+        margin: 0;
+        padding: clamp(20px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .tijd-kop {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 4px 12px;
+        margin-bottom: 14px;
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .tijd-label {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #586280;
+    }
+    .tijd ol {
+        position: relative;
+        display: grid;
+    }
+    .tijd ol::before {
+        content: "";
+        position: absolute;
+        left: 13px;
+        top: 20px;
+        bottom: 20px;
+        width: 2px;
+        background: var(--line);
+    }
+    .tijd li {
+        position: relative;
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 0;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+    }
+    .tijd-dot {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+        box-shadow: 0 0 0 4px #fff;
+    }
+    .tijd li.nu {
+        margin-inline: -12px;
+        padding: 12px;
+        border-radius: var(--r-md);
+        background: var(--blue-soft);
+        font-weight: 600;
+    }
+    .tijd li.nu .tijd-dot {
+        background: var(--blue);
+        color: #fff;
+        box-shadow: 0 0 0 4px var(--blue-soft);
+    }
+    .tijd li.later {
+        color: #586280;
+    }
+    .tijd li.later .tijd-dot {
+        background: #fff;
+        border: 2px dashed #c9cfdc;
+    }
+    .tijd-dag {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #586280;
+        white-space: nowrap;
+    }
+    .tijd li.nu .tijd-dag {
+        color: var(--blue-ink);
+    }
+
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+    .kop-smal {
+        max-width: 44rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+
+    /* 01 */
+    .signalen-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+    @media (min-width: 1024px) {
+        .signalen-grid {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .signalen {
+        display: grid;
+        gap: 10px;
+    }
+    .signalen li {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        border-radius: var(--r-lg);
+        background: #fff;
+        font-weight: 500;
+        color: var(--ink);
+        line-height: 1.45;
+    }
+    .sig-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+
+    /* 03 */
+    .vergelijk {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    .vergelijk thead th {
+        padding: 16px 16px 14px;
+        text-align: left;
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ink);
+        vertical-align: bottom;
+    }
+    .vergelijk thead th.gg {
+        background: var(--ink);
+        color: #fff;
+        border-radius: var(--r-md) var(--r-md) 0 0;
+    }
+    .vergelijk tbody th {
+        padding: 16px 16px 16px 0;
+        text-align: left;
+        font-weight: 600;
+        color: var(--ink);
+        vertical-align: top;
+    }
+    .vergelijk tbody td {
+        padding: 16px;
+        color: var(--text);
+        vertical-align: top;
+    }
+    .vergelijk tbody tr {
+        border-top: 1px solid #d9dde7;
+    }
+    .vergelijk tbody td.gg {
+        background: var(--ink);
+        color: #fff;
+        font-weight: 500;
+    }
+    .vergelijk tbody tr:last-child td.gg {
+        border-radius: 0 0 var(--r-md) var(--r-md);
+    }
+    @media (max-width: 759px) {
+        .vergelijk thead,
+        .vergelijk thead tr,
+        .vergelijk thead th,
+        .vergelijk thead td {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+        .vergelijk tbody tr {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 6px;
+            padding: 16px 0;
+        }
+        .vergelijk tbody th {
+            padding: 0;
+        }
+        .vergelijk tbody td,
+        .vergelijk tbody td.gg,
+        .vergelijk tbody tr:last-child td.gg {
+            padding: 10px 14px;
+            border-radius: var(--r-md);
+        }
+        .vergelijk tbody td:not(.gg) {
+            background: #fff;
+        }
+        .vergelijk tbody td::before {
+            content: attr(data-label);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+        }
+        .vergelijk tbody td.gg::before {
+            color: var(--blue-on-dark);
+        }
+    }
+    .keuze-noot {
+        margin-top: 20px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+
+    /* 04 */
+    .start {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+    @media (min-width: 1024px) {
+        .start {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 72px;
+            align-items: center;
+        }
+    }
+    .start-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: 12px;
+        font-weight: 600;
+    }
+    .start-stappen {
+        display: grid;
+        gap: 10px;
+    }
+    .start-stappen li {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 18px;
+        align-items: center;
+        padding: 18px 20px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    .start-stappen .num {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .start-stappen p {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.5;
+    }
+</style>

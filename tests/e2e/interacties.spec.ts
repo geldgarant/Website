@@ -95,3 +95,25 @@ test.describe("geen persoonsnamen op de site", () => {
         })
     }
 })
+
+test.describe("incassokosten berekenen", () => {
+    test("rekent staffel en handelsrente, en geen kosten bij een particulier zonder 14-dagenbrief", async ({ page }) => {
+        await page.goto("/incasso/incassokosten-berekenen")
+        await page.fill("#r-bedrag", "2500")
+        await page.fill("#r-verval", "2026-01-15")
+        await page.fill("#r-tot", "2026-11-06")
+        const uit = (k: string) => page.locator(`[data-uit="${k}"]`)
+        await expect(uit("kosten")).toHaveText("€ 375,00")
+        await expect(uit("rente")).toHaveText("€ 207,29") // 166 dagen à 10,15% + 129 dagen à 10,4%
+        await expect(uit("totaal")).toHaveText("€ 3.082,29")
+
+        await page.locator('input[name="soort"][value="consument"]').check({ force: true })
+        await expect(uit("kosten")).toHaveText("€ 0,00")
+        await expect(uit("noot")).toBeVisible()
+        await page.locator('input[name="brief"]').check()
+        await expect(uit("kosten")).toHaveText("€ 375,00")
+
+        await page.locator('input[name="btw"]').check()
+        await expect(uit("btw")).toHaveText("€ 78,75")
+    })
+})

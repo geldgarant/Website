@@ -1,0 +1,519 @@
+---
+// B /incasso/incassokosten-berekenen. Hoofdvraag: "Hoeveel mag ik in rekening brengen?"
+// Volgorde: rekenen (hero met rekenmodule) → hoe komt het bedrag tot stand (01) → wanneer mag het (02) → vragen (03) → CTA.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Rekenmodule from "../../components/incasso/Rekenmodule.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { WIK_STAFFEL, WIK_MIN, WIK_MAX, euro } from "../../lib/wik"
+import { RENTE, RENTE_BIJGEWERKT } from "../../lib/rente"
+import { kostenFaq } from "../../data/faq"
+
+const title = "Incassokosten en wettelijke rente berekenen | GeldGarant"
+const description =
+    "Bereken direct de wettelijke incassokosten (WIK-staffel), btw en wettelijke (handels)rente over uw onbetaalde factuur. Met de actuele percentages."
+const url = "https://geldgarant.com/incasso/incassokosten-berekenen"
+
+const staffel = (() => {
+    let vorige = 0
+    let basis = 0
+    return WIK_STAFFEL.map((t) => {
+        const rij = {
+            over:
+                t.tot === Infinity
+                    ? `Boven ${euro(vorige, 0)}`
+                    : vorige === 0
+                      ? `Eerste ${euro(t.tot, 0)}`
+                      : `${euro(vorige, 0)} tot ${euro(t.tot, 0)}`,
+            pct: `${String(t.pct * 100).replace(".", ",")}%`,
+            vast: vorige === 0 ? "" : `${euro(basis, 0)} + `,
+        }
+        if (t.tot !== Infinity) basis += (t.tot - vorige) * t.pct
+        vorige = t.tot
+        return rij
+    })
+})()
+
+const nl = (iso: string) =>
+    new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+        new Date(`${iso}T00:00:00Z`),
+    )
+const pct = (n: number) => `${String(n).replace(".", ",")}%`
+const recent = (rijen: readonly (readonly [string, number])[]) => [...rijen].reverse().slice(0, 6)
+
+const regels = {
+    bedrijf: [
+        "Incassokosten mogen zodra de debiteur in verzuim is, meestal na één aanmaning",
+        "Wettelijke handelsrente loopt automatisch vanaf de dag na de vervaldatum",
+        "Andere incassokosten zijn mogelijk als u die vooraf heeft afgesproken, bijvoorbeeld in uw voorwaarden",
+    ],
+    particulier: [
+        "Eerst de wettelijke 14-dagenbrief, met het exacte bedrag aan kosten",
+        "Pas na die 14 dagen mogen de incassokosten worden gerekend",
+        "Nooit meer dan de staffel, ook niet via uw algemene voorwaarden",
+    ],
+}
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Incassokosten en wettelijke rente berekenen",
+        url,
+        description,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Incasso", item: "https://geldgarant.com/incasso" },
+            { "@type": "ListItem", position: 3, name: "Incassokosten berekenen", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: kostenFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO + REKENMODULE -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs
+                items={[
+                    { label: "Home", href: "/" },
+                    { label: "Incasso", href: "/incasso" },
+                    { label: "Incassokosten berekenen" },
+                ]}
+            />
+            <div class="hero-kop">
+                <h1 class="display">
+                    Incassokosten en rente <span class="accent">berekenen</span>
+                </h1>
+                <p class="lead">
+                    Vul het factuurbedrag en de vervaldatum in. U ziet direct welke incassokosten en welke wettelijke rente u mag
+                    doorberekenen, volgens de wettelijke staffel en de actuele rentepercentages.
+                </p>
+            </div>
+            <Rekenmodule />
+        </div>
+    </section>
+
+    <!-- 01 OPBOUW -->
+    <section class="section bg-surface" aria-labelledby="opbouw-title">
+        <div class="wrap opbouw">
+            <div class="opbouw-kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Zo wordt het berekend
+                </p>
+                <h2 class="h2" id="opbouw-title">
+                    Staffel en rente, <span class="accent">zonder</span> kleine lettertjes
+                </h2>
+                <p class="lead">
+                    De incassokosten volgen een vaste wettelijke staffel over de hoofdsom. De rente hangt af van uw klant: bij een
+                    bedrijf de wettelijke handelsrente, bij een particulier de wettelijke rente.
+                </p>
+            </div>
+
+            <div class="tabellen">
+                <div class="tabel-kaart">
+                    <h3 class="tabel-kop">Wettelijke staffel incassokosten</h3>
+                    <table class="num">
+                        <caption class="sr-only">Wettelijke staffel buitengerechtelijke incassokosten</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Over de hoofdsom</th>
+                                <th scope="col">Kosten</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {staffel.map((r) => (
+                                <tr>
+                                    <td>{r.over}</td>
+                                    <td>
+                                        {r.vast}
+                                        {r.pct}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <p class="tabel-noot">
+                        Het percentage geldt over het deel van de hoofdsom binnen die trede. Minimaal {euro(WIK_MIN, 0)}, maximaal
+                        {euro(WIK_MAX, 0)} per vordering.
+                    </p>
+                </div>
+
+                <div class="tabel-kaart">
+                    <h3 class="tabel-kop">Wettelijke rente per jaar</h3>
+                    <div class="rente-nu">
+                        <p>
+                            <span>Bedrijf (handelsrente)</span>
+                            <strong class="num">{pct(RENTE.handel.at(-1)![1])}</strong>
+                        </p>
+                        <p>
+                            <span>Particulier</span>
+                            <strong class="num">{pct(RENTE.consument.at(-1)![1])}</strong>
+                        </p>
+                    </div>
+                    <details class="historie">
+                        <summary>
+                            Eerdere percentages
+                            <Icon name="chevron" size={18} />
+                        </summary>
+                        <div class="hist-grid">
+                            <table class="num">
+                                <caption>Handelsrente</caption>
+                                <tbody>
+                                    {recent(RENTE.handel).map(([d, p]) => (
+                                        <tr>
+                                            <td>vanaf {nl(d)}</td>
+                                            <td>{pct(p)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <table class="num">
+                                <caption>Particulier</caption>
+                                <tbody>
+                                    {recent(RENTE.consument).map(([d, p]) => (
+                                        <tr>
+                                            <td>vanaf {nl(d)}</td>
+                                            <td>{pct(p)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <p class="tabel-noot">
+                        Bijgewerkt t/m {RENTE_BIJGEWERKT}. Na elk vol jaar wordt de rente bij de hoofdsom opgeteld (rente op
+                        rente).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 WANNEER -->
+    <section class="section" aria-labelledby="wanneer-title">
+        <div class="wrap">
+            <div class="wanneer-kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Voorwaarden
+                </p>
+                <h2 class="h2" id="wanneer-title">
+                    Wanneer mag u de kosten <span class="accent">rekenen</span>?
+                </h2>
+            </div>
+            <div class="wanneer">
+                <div class="regel-kaart">
+                    <h3 class="regel-kop">
+                        <Icon name="building" size={20} />
+                        Uw klant is een bedrijf
+                    </h3>
+                    <ul role="list">
+                        {regels.bedrijf.map((r) => (
+                            <li>
+                                <Icon name="check" size={16} />
+                                {r}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div class="regel-kaart">
+                    <h3 class="regel-kop">
+                        <Icon name="person" size={20} />
+                        Uw klant is een particulier
+                    </h3>
+                    <ul role="list">
+                        {regels.particulier.map((r) => (
+                            <li>
+                                <Icon name="check" size={16} />
+                                {r}
+                            </li>
+                        ))}
+                    </ul>
+                    <a class="textlink regel-link" href="/incasso/wik-brief">
+                        Zo werkt de 14-dagenbrief
+                    </a>
+                </div>
+                <div class="regel-kaart regel-cta bg-ink">
+                    <h3 class="regel-kop">Liever niet zelf rekenen?</h3>
+                    <p>
+                        Wij sturen de juiste brief, rekenen de kosten en de rente uit en innen alles. Betaalt de debiteur
+                        volledig, dan betaalt u ons niets.
+                    </p>
+                    <a class="btn btn-light" href="/vordering-indienen">
+                        Vordering indienen
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={kostenFaq} idx="03">
+        <Fragment slot="title">
+            Vragen over <span class="accent">kosten</span> en rente
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="U ziet wat u mag vorderen. Wij zorgen dat het binnenkomt, op werkdagen binnen het uur gestart.">
+        Van berekening naar <span class="accent">betaling</span>
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-kop {
+        max-width: 46rem;
+        margin: clamp(24px, 3vw, 40px) 0 clamp(28px, 3.5vw, 48px);
+    }
+    .hero h1 {
+        font-size: clamp(2.25rem, 1.25rem + 3.8vw, 4.125rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 20px;
+    }
+
+    /* 01 */
+    .opbouw {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .opbouw {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .opbouw-kop .h2,
+    .wanneer-kop .h2 {
+        margin-top: 14px;
+    }
+    .opbouw-kop .lead {
+        margin-top: 20px;
+    }
+    .tabellen {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 700px) {
+        .tabellen {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            align-items: start;
+        }
+    }
+    .tabel-kaart {
+        padding: clamp(20px, 2.4vw, 28px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .tabel-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .tabel-kaart table {
+        width: 100%;
+        margin-top: 12px;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+    }
+    .tabel-kaart th {
+        padding: 8px 0;
+        text-align: left;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .tabel-kaart td {
+        padding: 10px 0;
+        border-top: 1px solid var(--line);
+        color: var(--text);
+    }
+    .tabel-kaart td:last-child,
+    .tabel-kaart th:last-child {
+        text-align: right;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .tabel-noot {
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    .rente-nu {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .rente-nu p {
+        display: grid;
+        gap: 2px;
+        padding: 14px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .rente-nu span {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .rente-nu strong {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .historie {
+        margin-top: 10px;
+        border-radius: var(--r-md);
+        border: 1px solid var(--line);
+    }
+    .historie summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 44px;
+        padding: 0 14px;
+        cursor: pointer;
+        list-style: none;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .historie summary::-webkit-details-marker {
+        display: none;
+    }
+    .historie[open] summary :global(svg) {
+        transform: rotate(180deg);
+    }
+    .hist-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 0 14px 12px;
+    }
+    .hist-grid table {
+        margin-top: 0;
+        font-size: var(--fs-xs);
+    }
+    .hist-grid caption {
+        padding-bottom: 4px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .hist-grid td {
+        padding: 6px 0;
+    }
+
+    /* 02 */
+    .wanneer-kop {
+        max-width: 40rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .wanneer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 760px) {
+        .wanneer {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .regel-cta {
+            grid-column: 1 / -1;
+        }
+    }
+    @media (min-width: 1100px) {
+        .wanneer {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .regel-cta {
+            grid-column: auto;
+        }
+    }
+    .regel-kaart {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .regel-kop {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .regel-kop :global(svg) {
+        color: var(--blue);
+    }
+    .regel-kaart ul {
+        display: grid;
+        gap: 10px;
+    }
+    .regel-kaart li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        color: var(--text);
+    }
+    .regel-kaart li :global(svg) {
+        flex-shrink: 0;
+        margin-top: 3px;
+        color: var(--green);
+    }
+    .regel-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: auto;
+        align-self: flex-start;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+    .regel-cta {
+        background: var(--ink);
+    }
+    .regel-cta .regel-kop {
+        color: #fff;
+    }
+    .regel-cta p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .regel-cta .btn {
+        align-self: flex-start;
+        margin-top: auto;
+    }
+</style>

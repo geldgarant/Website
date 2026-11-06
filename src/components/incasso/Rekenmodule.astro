@@ -1,0 +1,494 @@
+---
+// Rekenmodule incassokosten + wettelijke (handels)rente. Logica: src/lib/wik.ts en src/lib/rente.ts (unit-getest).
+// Zonder JavaScript staat er een korte uitleg en de staffel op de pagina zelf.
+import Icon from "../Icon.astro"
+import Veld from "../form/Veld.astro"
+import { RENTE_BIJGEWERKT } from "../../lib/rente"
+---
+
+<div class="reken" data-reken>
+    <div class="reken-in" role="group" aria-label="Gegevens van de vordering" data-reken-in>
+        <Veld
+            id="r-bedrag"
+            name="bedrag"
+            label="Openstaand factuurbedrag"
+            inputmode="decimal"
+            placeholder="2.500,00"
+            maxlength={16}
+        />
+
+        <fieldset class="soort">
+            <legend class="veld-label">Uw klant is</legend>
+            <div class="seg2">
+                <label>
+                    <input type="radio" name="soort" value="handel" checked />
+                    <span>
+                        <Icon name="building" size={16} /> Een bedrijf
+                    </span>
+                </label>
+                <label>
+                    <input type="radio" name="soort" value="consument" />
+                    <span>
+                        <Icon name="person" size={16} /> Een particulier
+                    </span>
+                </label>
+            </div>
+        </fieldset>
+
+        <div class="datums">
+            <Veld id="r-verval" name="verval" label="Vervaldatum factuur" type="date" />
+            <Veld id="r-tot" name="tot" label="Rente berekenen tot" type="date" />
+        </div>
+
+        <label class="vink" data-alleen="consument" hidden>
+            <input type="checkbox" name="brief" />
+            <span>De 14-dagenbrief is verstuurd en de termijn is verlopen</span>
+        </label>
+        <label class="vink">
+            <input type="checkbox" name="btw" />
+            <span>
+                Ik kan de btw niet verrekenen <small>bijvoorbeeld in de zorg, het onderwijs of als particulier</small>
+            </span>
+        </label>
+    </div>
+
+    <div class="reken-uit bg-ink" aria-live="polite">
+        <p class="uit-kop">Dit mag u vorderen</p>
+        <dl class="uit-rijen">
+            <div>
+                <dt>Hoofdsom</dt>
+                <dd class="num" data-uit="hoofdsom">
+                    € 0,00
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Incassokosten <small>wettelijke staffel</small>
+                </dt>
+                <dd class="num" data-uit="kosten">
+                    € 0,00
+                </dd>
+            </div>
+            <div data-rij="btw" hidden>
+                <dt>
+                    Btw over de incassokosten <small>21%</small>
+                </dt>
+                <dd class="num" data-uit="btw">
+                    € 0,00
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    <span data-uit="rentelabel">Wettelijke handelsrente</span>
+                    <small data-uit="rentesub">vul de datums in</small>
+                </dt>
+                <dd class="num" data-uit="rente">
+                    € 0,00
+                </dd>
+            </div>
+        </dl>
+        <p class="uit-totaal">
+            <span>Totaal</span>
+            <strong class="num" data-uit="totaal">
+                € 0,00
+            </strong>
+        </p>
+        <p class="uit-noot" data-uit="noot" hidden></p>
+        <a class="btn btn-light" href="/vordering-indienen">
+            Laat GeldGarant dit innen
+            <span class="btn-dot">
+                <Icon name="arrow" size={18} />
+            </span>
+        </a>
+        <p class="uit-klein">
+            U betaalt ons niets als de debiteur volledig betaalt. Indicatie; rentepercentages bijgewerkt t/m {RENTE_BIJGEWERKT}.
+        </p>
+    </div>
+
+    <details class="uitleg" data-uitleg>
+        <summary>
+            Bekijk de berekening
+            <Icon name="chevron" size={18} />
+        </summary>
+        <div class="uitleg-in">
+            <h3 class="uitleg-kop">Incassokosten</h3>
+            <table class="num">
+                <caption class="sr-only">Opbouw van de incassokosten per trede van de staffel</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Trede</th>
+                        <th scope="col">Bedrag</th>
+                        <th scope="col">Kosten</th>
+                    </tr>
+                </thead>
+                <tbody data-uitleg="kosten"></tbody>
+            </table>
+            <h3 class="uitleg-kop">Rente</h3>
+            <table class="num">
+                <caption class="sr-only">Rente per periode</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Periode</th>
+                        <th scope="col">Dagen</th>
+                        <th scope="col">%</th>
+                        <th scope="col">Rente</th>
+                    </tr>
+                </thead>
+                <tbody data-uitleg="rente"></tbody>
+            </table>
+        </div>
+    </details>
+    <noscript>
+        <p class="geen-js">De rekenmodule werkt met JavaScript. Hieronder staat de staffel, zodat u het zelf kunt uitrekenen.</p>
+    </noscript>
+</div>
+
+<script>
+    import { WIK_STAFFEL, WIK_MIN, WIK_MAX, wikKosten, euro } from "../../lib/wik"
+    import { wettelijkeRente, huidigPercentage, BTW, type Soort } from "../../lib/rente"
+    import { parseBedrag } from "../../lib/intake"
+
+    const root = document.querySelector<HTMLElement>("[data-reken]")
+    if (root) {
+        const form = root.querySelector<HTMLElement>("[data-reken-in]")!
+        const $ = <T extends Element>(s: string) => root.querySelector<T>(s)
+        const uit = (k: string) => $<HTMLElement>(`[data-uit="${k}"]`)!
+        const bedrag = $<HTMLInputElement>("#r-bedrag")!
+        const verval = $<HTMLInputElement>("#r-verval")!
+        const tot = $<HTMLInputElement>("#r-tot")!
+        const isoDag = (d: Date) => d.toISOString().slice(0, 10)
+        const vandaag = new Date()
+        const dertigTerug = new Date(Date.now() - 30 * 86_400_000)
+        tot.value = isoDag(vandaag)
+        verval.value = isoDag(dertigTerug)
+        const datumNL = (iso: string) =>
+            new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(
+                new Date(`${iso}T00:00:00Z`),
+            )
+        const plusDag = (iso: string, n: number) => isoDag(new Date(Date.parse(`${iso}T00:00:00Z`) + n * 86_400_000))
+
+        const staffelRegels = (h: number) => {
+            const rijen: string[] = []
+            let rest = h
+            let vorige = 0
+            for (const t of WIK_STAFFEL) {
+                if (rest <= 0) break
+                const deel = Math.min(rest, t.tot - vorige)
+                rijen.push(
+                    `<tr><td>${String(t.pct * 100).replace(".", ",")}% ${t.tot === Infinity ? `boven ${euro(vorige, 0)}` : `tot ${euro(t.tot, 0)}`}</td><td>${euro(deel)}</td><td>${euro(deel * t.pct)}</td></tr>`,
+                )
+                rest -= deel
+                vorige = t.tot
+            }
+            const ruw = wikKosten(h)
+            rijen.push(
+                `<tr class="som"><td colspan="2">Totaal (min. ${euro(WIK_MIN, 0)}, max. ${euro(WIK_MAX, 0)})</td><td>${euro(ruw)}</td></tr>`,
+            )
+            return rijen.join("")
+        }
+
+        const render = () => {
+            const waarde = (n: string) => form.querySelector<HTMLInputElement>(`input[name="${n}"]:checked`)?.value
+            const soort = (waarde("soort") as Soort) || "handel"
+            const consument = soort === "consument"
+            const h = Math.min(parseBedrag(bedrag.value), 10_000_000)
+            const briefOk = waarde("brief") === "on"
+            const btwPlicht = waarde("btw") === "on"
+
+            root.querySelectorAll<HTMLElement>("[data-alleen]").forEach((el) => (el.hidden = el.dataset.alleen !== soort))
+
+            const kostenMogen = !consument || briefOk
+            const kosten = h > 0 && kostenMogen ? wikKosten(h) : 0
+            const btw = btwPlicht ? Math.round(kosten * BTW * 100) / 100 : 0
+            const vanaf = verval.value ? plusDag(verval.value, 1) : ""
+            const totEx = tot.value ? plusDag(tot.value, 1) : ""
+            const r = wettelijkeRente(h, soort, vanaf, totEx)
+            const dagen = r.perioden.reduce((s, p) => s + p.dagen, 0)
+
+            uit("hoofdsom").textContent = euro(h)
+            uit("kosten").textContent = euro(kosten)
+            uit("btw").textContent = euro(btw)
+            $<HTMLElement>('[data-rij="btw"]')!.hidden = btw === 0
+            uit("rentelabel").textContent = consument ? "Wettelijke rente" : "Wettelijke handelsrente"
+            uit("rentesub").textContent =
+                dagen > 0
+                    ? `${dagen} ${dagen === 1 ? "dag" : "dagen"}, nu ${String(huidigPercentage(soort, tot.value)).replace(".", ",")}% per jaar`
+                    : "vul de datums in"
+            uit("rente").textContent = euro(r.rente)
+            uit("totaal").textContent = euro(h + kosten + btw + r.rente)
+
+            const noot = uit("noot")
+            if (consument && !briefOk && h > 0) {
+                noot.hidden = false
+                noot.textContent =
+                    "Bij een particulier mag u pas incassokosten rekenen nadat de 14-dagenbrief is verstuurd en de termijn is verlopen. Die brief sturen wij voor u."
+            } else noot.hidden = true
+
+            $<HTMLElement>('[data-uitleg="kosten"]')!.innerHTML =
+                h > 0 && kostenMogen ? staffelRegels(h) : `<tr><td colspan="3">Nog geen incassokosten verschuldigd.</td></tr>`
+            $<HTMLElement>('[data-uitleg="rente"]')!.innerHTML = r.perioden.length
+                ? r.perioden
+                      .map(
+                          (p) =>
+                              `<tr><td>${datumNL(p.van)} t/m ${datumNL(plusDag(p.tot, -1))}</td><td>${p.dagen}</td><td>${String(p.pct).replace(".", ",")}</td><td>${euro(p.rente)}</td></tr>`,
+                      )
+                      .join("")
+                : `<tr><td colspan="4">Geen rente: kies een vervaldatum vóór de einddatum.</td></tr>`
+        }
+
+        form.addEventListener("input", render)
+        form.addEventListener("change", render)
+        bedrag.addEventListener("blur", () => {
+            const n = parseBedrag(bedrag.value)
+            bedrag.value =
+                n > 0 ? new Intl.NumberFormat("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) : ""
+        })
+        render()
+    }
+</script>
+
+<style>
+    .reken {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .reken {
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+            gap: 16px;
+        }
+        .uitleg {
+            grid-column: 1 / -1;
+        }
+    }
+    .reken-in {
+        padding: clamp(20px, 2.8vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .soort {
+        min-width: 0;
+        margin: 0 0 16px;
+        padding: 0;
+        border: 0;
+    }
+    .soort legend {
+        margin-bottom: 8px;
+    }
+    .seg2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .seg2 label {
+        position: relative;
+    }
+    .seg2 input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .seg2 span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .seg2 input:checked + span {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.12);
+    }
+    .seg2 input:checked + span :global(svg) {
+        color: var(--blue);
+    }
+    .seg2 input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .datums {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0 12px;
+    }
+    @media (min-width: 480px) {
+        .datums {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .vink {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        min-height: 44px;
+        padding: 10px 0;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+        line-height: 1.45;
+        cursor: pointer;
+    }
+    .vink input {
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        margin: 0;
+        accent-color: var(--blue);
+    }
+    .vink small {
+        display: block;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+
+    .reken-uit {
+        display: flex;
+        flex-direction: column;
+        padding: clamp(20px, 2.8vw, 32px);
+        border-radius: var(--r-xl);
+    }
+    .uit-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .uit-rijen {
+        margin-top: 10px;
+    }
+    .uit-rijen div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line-dark);
+        font-size: var(--fs-sm);
+    }
+    .uit-rijen dt {
+        color: rgba(255, 255, 255, 0.78);
+    }
+    .uit-rijen dt small {
+        display: block;
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .uit-rijen dd {
+        color: #fff;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .uit-totaal {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        padding: 18px 0 6px;
+        color: #fff;
+    }
+    .uit-totaal span {
+        font-weight: 600;
+    }
+    .uit-totaal strong {
+        font-family: var(--font-display);
+        font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+    .uit-noot {
+        margin: 8px 0 4px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        background: rgba(255, 244, 224, 0.12);
+        color: #ffd89a;
+        font-size: var(--fs-xs);
+        line-height: 1.5;
+    }
+    .reken-uit .btn {
+        margin-top: 18px;
+        align-self: flex-start;
+    }
+    @media (max-width: 519px) {
+        .reken-uit .btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+    .uit-klein {
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.62);
+        line-height: 1.5;
+    }
+
+    .uitleg {
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    .uitleg summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 52px;
+        padding: 0 20px;
+        cursor: pointer;
+        list-style: none;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .uitleg summary::-webkit-details-marker {
+        display: none;
+    }
+    .uitleg[open] summary :global(svg) {
+        transform: rotate(180deg);
+    }
+    .uitleg-in {
+        padding: 0 20px 20px;
+        overflow-x: auto;
+    }
+    .uitleg-kop {
+        margin: 12px 0 6px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .uitleg table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-xs);
+    }
+    .uitleg th {
+        text-align: left;
+        padding: 6px 8px 6px 0;
+        color: var(--muted);
+        font-weight: 600;
+    }
+    .uitleg :global(td) {
+        padding: 6px 8px 6px 0;
+        border-top: 1px solid var(--line);
+        color: var(--text);
+    }
+    .uitleg :global(tr.som td) {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .geen-js {
+        padding: 14px;
+        border-radius: var(--r-md);
+        background: #fff4e0;
+        color: #6b4500;
+        font-size: var(--fs-sm);
+    }
+</style>

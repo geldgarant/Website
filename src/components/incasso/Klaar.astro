@@ -3,6 +3,12 @@
 import Icon from "../Icon.astro"
 import { site } from "../../data/site"
 
+interface Props {
+    idx?: string
+    surface?: boolean
+}
+const { idx = "04", surface = false } = Astro.props
+
 const vragen = [
     { id: "vervallen", t: "De betaaltermijn van de factuur is verstreken" },
     { id: "geen-reactie", t: "Uw klant heeft niet betaald, ook niet na een herinnering of belofte" },
@@ -10,11 +16,11 @@ const vragen = [
 ]
 ---
 
-<section class="section" aria-labelledby="klaar-title">
+<section class:list={["section", { "bg-surface": surface }]} aria-labelledby="klaar-title">
     <div class="wrap klaar">
         <div class="klaar-copy">
             <p class="eyebrow">
-                <span class="idx">04</span> Het juiste moment
+                <span class="idx">{idx}</span> Het juiste moment
             </p>
             <h2 class="h2" id="klaar-title">
                 Is uw factuur <span class="accent">klaar</span> voor incasso?

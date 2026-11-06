@@ -237,3 +237,60 @@ export const nowidFaq = [
         a: "Ja. Neem eerst contact met ons op, dan zoeken we samen naar een oplossing. Lukt dat niet, dan staat de route via IncassoKlacht ook voor opdrachtgevers open.",
     },
 ] as const
+
+// Vragen op /incasso/incassokosten-berekenen. Bron: Besluit vergoeding voor buitengerechtelijke incassokosten,
+// art. 6:96, 6:119, 6:119a BW. Rente: src/lib/rente.ts.
+export const kostenFaq = [
+    {
+        q: "Wie betaalt de incassokosten?",
+        a: "De debiteur, mits aan de wettelijke voorwaarden is voldaan. Schakelt u GeldGarant in en betaalt de debiteur volledig, dan betaalt u niets: de incassokosten en de rente zijn dan voor ons, uw hoofdsom krijgt u volledig.",
+    },
+    {
+        q: "Mag ik btw rekenen over de incassokosten?",
+        a: "Alleen als u de btw niet kunt verrekenen met de Belastingdienst, bijvoorbeeld omdat u btw-vrijgestelde diensten levert. Kunt u de btw wel verrekenen, dan rekent u de incassokosten zonder btw.",
+    },
+    {
+        q: "Mag ik bij een bedrijf meer rekenen dan de staffel?",
+        a: "Bij een bedrijf mag u in uw contract of algemene voorwaarden andere incassokosten afspreken, zolang ze redelijk zijn. Zonder zo'n afspraak geldt de wettelijke staffel. Bij een particulier mag u nooit meer rekenen dan de staffel.",
+    },
+    {
+        q: "Vanaf wanneer loopt de rente?",
+        a: "Bij een bedrijf geldt de wettelijke handelsrente automatisch vanaf de dag na de uiterste betaaldatum. Bij een particulier loopt de wettelijke rente vanaf het moment dat hij in verzuim is. Meestal is dat de dag na de vervaldatum, of na het verstrijken van de termijn in een aanmaning.",
+    },
+    {
+        q: "Wat betekent rente op rente?",
+        a: "Na elk vol jaar wordt de opgebouwde rente bij de hoofdsom opgeteld. Vanaf dat moment loopt de rente ook over die rente. De rekenmodule houdt daar automatisch rekening mee.",
+    },
+    {
+        q: "Waarom is het minimum € 40?",
+        a: "De wettelijke staffel kent een minimum van € 40, zodat ook bij een kleine factuur de kosten van het innen worden vergoed. Betaalt een particulier in termijnen en is de termijn kleiner dan € 266,67, dan geldt een plafond van € 140 per half jaar.",
+    },
+] as const
+
+// Vragen op /incasso/incassobureau-inschakelen.
+export const inschakelenFaq = [
+    {
+        q: "Hoe lang wacht ik voordat ik een incassobureau inschakel?",
+        a: "Er is geen vaste termijn. Is de betaaltermijn verstreken en reageert uw klant niet op een herinnering, dan is het moment er. Hoe langer u wacht, hoe kleiner de kans dat de debiteur nog kan en wil betalen.",
+    },
+    {
+        q: "Moet ik eerst zelf een aanmaning sturen?",
+        a: "Dat is niet verplicht. Bij een particulier moet vóór er incassokosten mogen worden gerekend de wettelijke 14-dagenbrief zijn verstuurd. Die brief sturen wij voor u, als eerste stap.",
+    },
+    {
+        q: "Schaadt een incassobureau mijn klantrelatie?",
+        a: "Niet als het netjes gebeurt. Wij schrijven zakelijk en correct, en zoeken eerst naar een oplossing, zoals een betalingsregeling. Vaak is een brief van een onafhankelijke partij al genoeg om de factuur bovenaan de stapel te krijgen.",
+    },
+    {
+        q: "Wat is het verschil met een deurwaarder of advocaat?",
+        a: "Wij doen het minnelijke traject: aanmanen, bellen en regelingen treffen, zonder rechter. Een advocaat of deurwaarder komt pas in beeld als er gedagvaard moet worden of als er na een vonnis beslag nodig is. Dat doen we alleen met uw akkoord, en de kosten hoort u vooraf.",
+    },
+    {
+        q: "Kost een incassobureau inschakelen mij geld?",
+        a: "Bij GeldGarant niet als de debiteur volledig betaalt. Er zijn geen opstartkosten en geen abonnement. Betaalt de debiteur maar een deel, dan verrekenen we de incassokosten met wat binnenkomt, met een minimum van € 45.",
+    },
+    {
+        q: "Kan ik een oude factuur nog laten innen?",
+        a: "Meestal wel. Een vordering verjaart doorgaans na vijf jaar, bij een koop door een consument na twee jaar. Twijfelt u, dien de factuur dan in: we controleren de verjaring als eerste.",
+    },
+] as const
