@@ -1,6 +1,24 @@
-# GeldGarant website: overdracht (6 nov 2026)
+# GeldGarant website: overdracht (7 nov 2026, na fase C kennisbank)
 
 Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document beschrijft waar het project staat, hoe alles werkt en wat de volgende sessie moet doen.
+
+## 0. Start hier (volgende sessie)
+
+1. Koppel de repo (`add_repo` geldgarant/Website, push), kloon naar `/home/claude/geldgarant-site`, `npm ci`.
+2. Lees `CLAUDE.md`, dit bestand en `docs/SITEMAP.md`.
+3. Volgende pagina's: `/werken-bij` + 3 vacatures (`/werken-bij/incasso-medewerker`, `/werken-bij/call-center-medewerker`, `/werken-bij/stage`; slugs behouden, inhoud lezen via Framer-fetch van geldgarant.com), daarna `/hulp-nodig-bij-geldproblemen` (debiteuren, rustige toon). Let op: de oude vacatureslug heet "call-center-medewerker"; de slug blijft, maar het woord "callcenter" mag niet in de zichtbare tekst (regel van Anas).
+4. Werkwijze per pagina: §6. Verifiëren: `CHROME_PATH=/usr/bin/google-chrome npm run qa` (± 8 min, draai in de achtergrond en poll), daarna `npm run lhci` (± 40 min voor 54 pagina's, achtergrond). Preview vóór qa altijd stoppen (`pkill -f "astro preview"`), anders botst poort 4399.
+5. Push: `git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main`; Workers-check: `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`.
+
+**Open punten voor Anas (nog niet bevestigd):**
+
+- Compliance-claims op /over-ons 03 en /wki 02 (VOG, opleidingsniveaus, specificatie in elke brief); NowID-geschillencommissie = IncassoKlacht.
+- Buitenlandpagina: landenlijst en "tarieven vooraf per land". 14-dagenbrief: zowel post als e-mail?
+- /hoe-werkt-het: tekst "Betaalt aan u" (AV art. 9.5).
+- Branchepagina's: juridische uitspraken per branche (bronnen bovenin `src/data/branches.ts`).
+- Kennisbank: juridische inhoud laten nalezen (vooral vroegsignalering bij huurachterstand, AVG-rolverdeling, retentierecht bouw). Artikelen zijn 600–1.100 woorden; desgewenst de kortste uitbreiden voor SEO.
+- Periodiek bijwerken: wettelijke rente (1 jan/1 jul, `src/lib/rente.ts` + artikel `wettelijke-rente-2026.md`), griffierechten (1 jan, `griffierechten-2026.md`), beslagvrije voet (1 jan/1 jul, `beslagvrije-voet-2026.md`). Een herinnering is aangeboden, nog niet ingepland.
+- Cloudflare: `website.geldgarant.workers.dev` toevoegen aan `ALLOWED_ORIGINS` van de intake-worker en aan de Turnstile-widget (zie §6 punt 4).
 
 ## 1. Stand van zaken
 

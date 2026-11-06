@@ -70,3 +70,11 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Header: utility-balk (scrollt weg, korte teksten < 560px) + zwevende kaart `.bar` (sticky top 10px). Mobiel menu is een kaart onder `.bar`, positie berekend bij openen. `StickyCta.astro` = vaste actiebalk < 1080px.
 - Compliance-woordkeus: "Geregistreerd bij Justis", niet "Erkend". Geen verzonnen reviews/cijfers; voorbeelden altijd als voorbeeld labelen.
 - Controle op 10 schermbreedtes: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/resoluties.mjs` (preview op 4399).
+
+## Kennisbank (7 nov 2026)
+
+- Artikelen: `src/content/kennisbank/<slug>.md` (slug = oude Framer-URL). Schema: `src/content.config.ts`; onderwerpen: `src/data/kennisbank.ts`.
+- Kaders in Markdown: blockquote die begint met `**Let op:**`, `**Voorbeeld:**`, `**Rekenvoorbeeld:**`, `**Tip:**` of `**Goed om te weten:**` (verwerkt in `src/lib/artikel.ts`). Kopjes niet met een cijfer laten beginnen (ongeldig id).
+- Geen zichtbare datum en geen disclaimer op artikelen (besluit Anas). Bronnen alleen naar nagelopen URL's (wetten.overheid.nl, rechtspraak.nl, officielebekendmakingen.nl).
+- Ankers: `html` heeft `scroll-padding-top`; geef kopjes geen extra `scroll-margin`. De zijbalk mag nooit zelf scrollen (zie `pas()` in `src/pages/kennisbank/[slug].astro`).
+- CLS-valkuil: het accentfont laadt later; een kop die daardoor van regelaantal wisselt, faalt Lighthouse (zie HANDOFF §5).
