@@ -6,7 +6,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 | Onderdeel         | Status                                                                                                         |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| Repo              | https://github.com/geldgarant/Website, branch `main`, laatste commit `345aedc`                                 |
+| Repo              | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                                 |
 | Hosting (staging) | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
 | Productie         | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
 | Homepage          | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
@@ -76,7 +76,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - Grids met één kolom moeten `grid-template-columns: minmax(0, 1fr)` hebben, anders duwt een nowrap-veegrij de kolom breder dan het scherm.
 - Gebruik `opacity` niet om tekst te dimmen: dat faalt op axe-contrast. Gebruik expliciete kleuren (#586280 / #6b7390 op wit).
 - Een veegrij zonder focusbare inhoud heeft `tabindex="0"` en een `aria-label` nodig.
-- html-validate wil een vaste spatie in telefoonteksten: `Bel{" "}{site.phone}`, `Bel{" "}ons`.
+- html-validate wil een vaste spatie in telefoonteksten: `Bel{"\u00a0"}{site.phone}`, `Bel{"\u00a0"}ons`.
 - Een `position: fixed`-element binnen iets met `backdrop-filter` wordt relatief aan die ouder; daarom staat het mobiele menu naast `.bar`, niet erin.
 - Playwright draait met `reducedMotion: "reduce"`, zodat `data-reveal`-elementen in tests direct zichtbaar zijn.
 
