@@ -1,0 +1,47 @@
+---
+// Adres met zoekhulp (PDOK via de intake-worker) en vier bewerkbare velden. Het script koppelt de zoekhulp
+// aan [data-adres]: combobox met pijltjestoetsen, Enter en Escape. Zonder resultaten vult u gewoon zelf in.
+import Veld from "./Veld.astro"
+import Icon from "../Icon.astro"
+
+interface Props {
+    prefix: string // statuspad, bv. "debiteur_adres"
+    legend: string
+    optioneel?: boolean
+}
+const { prefix, legend, optioneel = false } = Astro.props
+const id = prefix.replace(/_/g, "-")
+---
+
+<fieldset class="adres" data-adres={prefix}>
+    <legend>
+        {legend}
+        {optioneel && <span class="veld-opt">optioneel</span>}
+    </legend>
+    <div class="adres-zoek">
+        <label class="sr-only" for={`${id}-zoek`}>
+            Zoek een adres op postcode of straat
+        </label>
+        <span class="adres-zoek-icon" aria-hidden="true">
+            <Icon name="map" size={18} />
+        </span>
+        <input
+            id={`${id}-zoek`}
+            type="text"
+            role="combobox"
+            aria-expanded="false"
+            aria-controls={`${id}-lijst`}
+            aria-autocomplete="list"
+            autocomplete="off"
+            placeholder="Zoek op postcode en huisnummer, bv. 7418 ET 1"
+            data-adres-zoek
+        />
+        <ul class="adres-lijst" id={`${id}-lijst`} role="listbox" aria-label="Gevonden adressen" hidden data-adres-lijst></ul>
+    </div>
+    <div class="adres-velden">
+        <Veld id={`${id}-postcode`} name={`${prefix}.postcode`} label="Postcode" autocomplete="off" maxlength={12} />
+        <Veld id={`${id}-huisnummer`} name={`${prefix}.huisnummer`} label="Huisnummer" autocomplete="off" maxlength={12} />
+        <Veld id={`${id}-straat`} name={`${prefix}.straat`} label="Straat" autocomplete="off" maxlength={120} />
+        <Veld id={`${id}-plaats`} name={`${prefix}.plaats`} label="Plaats" autocomplete="off" maxlength={80} />
+    </div>
+</fieldset>

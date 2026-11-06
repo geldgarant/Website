@@ -404,6 +404,11 @@ p {
     color: var(--blue-on-dark);
 }
 
+/* hidden wint altijd, ook van componentregels als .btn { display: inline-flex } */
+[hidden] {
+    display: none !important;
+}
+
 /* ruimte voor de vaste actiebalk op mobiel */
 @media (max-width: 1079px) {
     body {

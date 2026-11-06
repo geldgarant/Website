@@ -96,6 +96,9 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - `fieldset` heeft een standaardrand. Zet `border: 0; padding: 0; margin: 0; min-width: 0` in de component.
 - **Na elke push controleren of Cloudflare echt gedeployd heeft.** Een groene GitHub-check zegt niets over Workers Builds. Controleer met `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`: "Workers Builds: website" moet `success` zijn. Op 6 nov faalde één build direct, zonder fout in de code; een nieuwe push loste het op. De buildlog staat alleen in het Cloudflare-dashboard. Vanuit de werkomgeving is staging niet bereikbaar; via Framer-MCP `fetch()` of `api.screenshot()` lukt het wel.
 - `src/pages/404.astro` bestaat (noindex). Zonder 404.html gaf een onbekende URL op Workers geen antwoord. In `lighthouserc.cjs` is 404.html uitgesloten van de assertions.
+- `[hidden] { display: none !important }` staat in global.css: zonder die regel won `.btn { display: inline-flex }` van het hidden-attribuut.
+- `.htmlvalidate.json`: `prefer-native-element` staat `combobox` en `listbox` toe, voor de adres-zoekhulp (ARIA-combobox). Een stap is een `div role="group"`, geen fieldset; radiogroepen zijn een `fieldset` met `legend`.
+- `lighthouserc.cjs`: `maxAutodiscoverUrls: 0`. Standaard meet lhci maar 5 pagina's.
 - html-validate `tel-non-breaking` geldt voor **elke** tekst in een `tel:`-link, ook "Vraag advies": gebruik `\u00a0`.
 - Footer: `.footer a` maakte ook de knop wit-op-wit. Opgelost met `:not(.btn)`; let hierop bij scoped `a`-regels.
 - Dev-scripts `shot.mjs` en `resoluties.mjs` nemen nu een route: `node scripts/dev/shot.mjs /incasso` → `/tmp/incasso-*.png`.
@@ -118,7 +121,7 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
 1. ~~**`/incasso`** (A1)~~: gebouwd op 6 nov 2026, wacht op akkoord. Eerst door de gebruiker te controleren: de `incassoFaq`-teksten (intrekken, rechtstreekse betaling, betwisting), "€ 0" bij een particulier die binnen de 14 dagen betaalt, en de vergelijkingstabel (handelsrente en verjaring van 2 of 5 jaar).
 2. ~~**`/debiteurenbeheer`** (A2)~~: gebouwd op 6 nov 2026. De knoppen wijzen naar `/contact-opnemen?onderwerp=debiteurenbeheer&pakket=…`; dat formulier (A7) moet de parameters `onderwerp` en `pakket` vooraf invullen.
 3. ~~**`/tarieven`** (A3)~~: gebouwd op 6 nov 2026. Provisie = WIK-staffel (`src/lib/wik.ts`), geen succesfee; debiteurenbeheer uit `src/lib/pakketten.ts`. Hergebruik `Kosten.astro`, `Afrekening.astro` en `Pakketten.astro` (eventueel met props).
-4. **`/vordering-indienen`** (A4), de volgende pagina: het formulier op de intake-worker (zie §6 punt 3 hierboven en `claude/intake-worker-index.js` in de projectdocs). Laad de skill `security-and-hardening`.
+4. ~~**`/vordering-indienen`** (A4)~~: gebouwd op 6 nov 2026. **Om live te kunnen versturen vanaf staging** moet Anas in Cloudflare (1) `https://website.geldgarant.workers.dev` toevoegen aan `ALLOWED_ORIGINS` (of `INTAKE_ALLOWED_ORIGINS`) van de worker geldgarant-intake-api, en (2) de hostname `website.geldgarant.workers.dev` toevoegen aan de Turnstile-widget. Bij livegang op geldgarant.com is dat al in orde. Het oude wachtwoordveld is vervallen; de worker sloeg het toch niet op. Het soort debiteur (bedrijf of particulier) gaat mee als eerste regel van `omschrijving`.
 5. `/over-ons`, `/contact-opnemen`, `/hoe-werkt-het` (A5–A7).
 6. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
 7. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.

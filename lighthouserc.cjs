@@ -3,6 +3,8 @@ module.exports = {
     ci: {
         collect: {
             staticDistDir: "./dist",
+            // standaard pakt lhci maar 5 pagina's; 0 = alle pagina's in dist
+            maxAutodiscoverUrls: 0,
             numberOfRuns: 3,
             settings: {
                 chromeFlags: "--no-sandbox --headless=new",

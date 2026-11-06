@@ -1,0 +1,1180 @@
+---
+// A4 /vordering-indienen. Hoofdvraag: "Hoe snel kan ik starten, en wat moet ik invullen?"
+// Vier stappen: factuur → wie moet betalen → uw gegevens → controleren en versturen.
+// Logica: src/scripts/vordering.ts; validatie en API: src/lib/intake.ts (getest).
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Veld from "../components/form/Veld.astro"
+import AdresVelden from "../components/form/AdresVelden.astro"
+import { site } from "../data/site"
+
+const title = "Vordering indienen | Binnen 1 uur in behandeling | GeldGarant"
+const description =
+    "Dien uw onbetaalde factuur in ongeveer drie minuten in. Op werkdagen binnen 1 uur in behandeling. Betaalt de debiteur volledig, dan betaalt u niets."
+
+const stappen = ["Uw factuur", "Wie moet betalen", "Uw gegevens", "Versturen"]
+---
+
+<Base title={title} description={description} stickyCta={false}>
+    <section class="intake">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Vordering indienen" }]} />
+
+            <div class="intake-kop">
+                <h1 class="display">
+                    Vordering indienen in <span class="accent">drie</span> minuten
+                </h1>
+                <ul role="list" class="intake-checks">
+                    <li>
+                        <Icon name="check" size={18} /> € 0 bij volledige betaling
+                    </li>
+                    <li>
+                        <Icon name="check" size={18} /> Op werkdagen binnen 1 uur in behandeling
+                    </li>
+                    <li>
+                        <Icon name="check" size={18} /> Geen abonnement, geen opstartkosten
+                    </li>
+                </ul>
+            </div>
+
+            <div class="intake-grid">
+                <div class="intake-main">
+                    <noscript>
+                        <p class="melding melding-fout">
+                            Dit formulier werkt met JavaScript. Staat dat uit? Mail uw factuur naar{" "}
+                            <a href={`mailto:${site.email}`}>{site.email}</a> of bel <a href={site.phoneHref}>{site.phone}</a>.
+                        </p>
+                    </noscript>
+
+                    <form class="kaart" id="vordering" novalidate data-vordering>
+                        <ol class="stepper" role="list" aria-label="Stappen">
+                            {stappen.map((s, i) => (
+                                <li data-stap-label={i + 1} aria-current={i === 0 ? "step" : undefined}>
+                                    <span class="stepper-nr num">{i + 1}</span>
+                                    <span class="stepper-tekst">{s}</span>
+                                </li>
+                            ))}
+                        </ol>
+                        <p class="sr-only" aria-live="polite" data-stap-status>
+                            Stap 1 van 4: Uw factuur
+                        </p>
+
+                        <!-- STAP 1 -->
+                        <div class="stap" role="group" data-stap="1" aria-labelledby="stap1-kop">
+                            <h2 class="stap-kop" id="stap1-kop" tabindex="-1">
+                                Om welke factuur gaat het?
+                            </h2>
+                            <div class="veld veld-bedrag" data-veld="bedrag">
+                                <label for="v-bedrag">Openstaand bedrag</label>
+                                <div class="bedrag-input">
+                                    <span aria-hidden="true">€</span>
+                                    <input
+                                        id="v-bedrag"
+                                        name="bedrag"
+                                        type="text"
+                                        inputmode="decimal"
+                                        autocomplete="off"
+                                        placeholder="0,00"
+                                        maxlength="16"
+                                        aria-describedby="v-bedrag-uitleg v-bedrag-fout"
+                                        data-bind="bedrag"
+                                    />
+                                </div>
+                                <p class="bedrag-uitleg" id="v-bedrag-uitleg" aria-live="polite" data-bedrag-uitleg>
+                                    De debiteur betaalt de wettelijke incassokosten. U betaalt € 0 bij volledige betaling.
+                                </p>
+                                <p class="veld-fout" id="v-bedrag-fout" data-fout="bedrag"></p>
+                            </div>
+                            <div class="velden">
+                                <Veld id="v-factuurnummer" name="factuurnummer" label="Factuurnummer" optioneel maxlength={60} />
+                                <Veld id="v-vervaldatum" name="vervaldatum" label="Vervaldatum" type="date" optioneel />
+                            </div>
+
+                            <div class="veld" data-veld="bestanden">
+                                <p class="veld-label" id="v-bestanden-label">
+                                    Factuur en bijlagen <span class="veld-opt">optioneel, maar sterk aanbevolen</span>
+                                </p>
+                                <label class="drop" for="v-bestanden" data-drop>
+                                    <span class="drop-icon" aria-hidden="true">
+                                        <Icon name="doc" size={22} />
+                                    </span>
+                                    <span>
+                                        <strong>Sleep bestanden hierheen</strong> of kies ze op uw apparaat
+                                        <span class="drop-sub">Pdf, jpg, png of webp. Maximaal 5 bestanden van 10 MB.</span>
+                                    </span>
+                                </label>
+                                <input
+                                    class="sr-only"
+                                    id="v-bestanden"
+                                    type="file"
+                                    multiple
+                                    accept="application/pdf,image/jpeg,image/png,image/webp"
+                                    aria-describedby="v-bestanden-label v-bestanden-fout"
+                                    data-bestanden
+                                />
+                                <ul class="bestanden" role="list" data-bestandlijst></ul>
+                                <p class="veld-fout" id="v-bestanden-fout" data-fout="bestanden"></p>
+                            </div>
+
+                            <div class="veld" data-veld="omschrijving">
+                                <label for="v-omschrijving">
+                                    Toelichting <span class="veld-opt">optioneel</span>
+                                </label>
+                                <textarea
+                                    id="v-omschrijving"
+                                    name="omschrijving"
+                                    rows="3"
+                                    maxlength="1500"
+                                    placeholder="Bijvoorbeeld: klant reageert niet meer op mails, of heeft al een deel betaald."
+                                    data-bind="omschrijving"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- STAP 2 -->
+                        <div class="stap" role="group" data-stap="2" aria-labelledby="stap2-kop" hidden>
+                            <h2 class="stap-kop" id="stap2-kop" tabindex="-1">
+                                Wie moet er betalen?
+                            </h2>
+                            <fieldset class="soort">
+                                <legend class="veld-label">Uw klant is</legend>
+                                <div class="soort-opties">
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="debiteur_soort"
+                                            value="bedrijf"
+                                            data-bind="debiteur_soort"
+                                            checked
+                                        />
+                                        <span>
+                                            <Icon name="building" size={18} /> Bedrijf
+                                        </span>
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="debiteur_soort"
+                                            value="particulier"
+                                            data-bind="debiteur_soort"
+                                        />
+                                        <span>
+                                            <Icon name="person" size={18} /> Particulier
+                                        </span>
+                                    </label>
+                                </div>
+                                <p class="melding melding-info" data-alleen-particulier hidden>
+                                    Bij een particulier sturen we eerst de wettelijke 14-dagenbrief. Betaalt hij binnen die
+                                    termijn, dan betaalt hij geen incassokosten en u ook niets.
+                                </p>
+                            </fieldset>
+                            <Veld
+                                id="v-deb-naam"
+                                name="debiteur_naam"
+                                label="Naam van uw klant"
+                                hint="Bedrijfsnaam, of voor- en achternaam bij een particulier"
+                                autocomplete="off"
+                            />
+                            <p class="groep-uitleg">Vul minstens één manier in om uw klant te bereiken.</p>
+                            <div class="velden">
+                                <Veld id="v-deb-email" name="debiteur_email" label="E-mail" type="email" autocomplete="off" />
+                                <Veld
+                                    id="v-deb-telefoon"
+                                    name="debiteur_telefoon"
+                                    label="Telefoon"
+                                    type="tel"
+                                    autocomplete="off"
+                                />
+                            </div>
+                            <AdresVelden prefix="debiteur_adres" legend="Adres van uw klant" />
+                            <p class="veld-fout" data-fout="debiteur_contact" id="v-deb-contact-fout"></p>
+                        </div>
+
+                        <!-- STAP 3 -->
+                        <div class="stap" role="group" data-stap="3" aria-labelledby="stap3-kop" hidden>
+                            <h2 class="stap-kop" id="stap3-kop" tabindex="-1">
+                                Uw gegevens
+                            </h2>
+                            <div class="velden">
+                                <Veld
+                                    id="v-bedrijfsnaam"
+                                    name="bedrijfsnaam"
+                                    label="Bedrijfsnaam"
+                                    autocomplete="organization"
+                                    breed
+                                />
+                                <Veld id="v-kvk" name="kvk" label="KvK-nummer" optioneel inputmode="numeric" maxlength={10} />
+                                <fieldset class="veld veld-groep" data-veld="btw_plichtig">
+                                    <legend class="veld-label">Btw-plichtig</legend>
+                                    <div class="mini-seg">
+                                        <label>
+                                            <input type="radio" name="btw_plichtig" value="ja" data-bind="btw_plichtig" checked />
+                                            <span>Ja</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="btw_plichtig" value="nee" data-bind="btw_plichtig" />
+                                            <span>Nee</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                                <Veld
+                                    id="v-iban"
+                                    name="iban"
+                                    label="IBAN voor de uitbetaling"
+                                    optioneel
+                                    hint="Mag ook later. Hierop maken we het geïnde geld over."
+                                    autocomplete="off"
+                                    maxlength={40}
+                                    breed
+                                />
+                            </div>
+                            <AdresVelden prefix="bedrijf_adres" legend="Bedrijfsadres" optioneel />
+                            <div class="velden">
+                                <div class="veld" data-veld="aanspreektitel">
+                                    <label for="v-titel">
+                                        Aanhef <span class="veld-opt">optioneel</span>
+                                    </label>
+                                    <select id="v-titel" name="aanspreektitel" data-bind="aanspreektitel">
+                                        <option value="">Geen voorkeur</option>
+                                        <option value="Dhr.">De heer</option>
+                                        <option value="Mevr.">Mevrouw</option>
+                                    </select>
+                                </div>
+                                <span class="veld-leeg" aria-hidden="true"></span>
+                                <Veld id="v-voornaam" name="voornaam" label="Voornaam" autocomplete="given-name" maxlength={80} />
+                                <Veld
+                                    id="v-achternaam"
+                                    name="achternaam"
+                                    label="Achternaam"
+                                    autocomplete="family-name"
+                                    maxlength={120}
+                                />
+                                <Veld id="v-email" name="email" label="E-mail" type="email" autocomplete="email" />
+                                <Veld id="v-telefoon" name="telefoon" label="Telefoon" type="tel" autocomplete="tel" />
+                            </div>
+                        </div>
+
+                        <!-- STAP 4 -->
+                        <div class="stap" role="group" data-stap="4" aria-labelledby="stap4-kop" hidden>
+                            <h2 class="stap-kop" id="stap4-kop" tabindex="-1">
+                                Klopt alles?
+                            </h2>
+                            <div class="overzicht" data-overzicht></div>
+                            <label class="akkoord">
+                                <input
+                                    id="v-akkoord"
+                                    type="checkbox"
+                                    name="akkoord"
+                                    data-bind="akkoord"
+                                    aria-describedby="v-akkoord-fout"
+                                />
+                                <span>
+                                    Ik ga akkoord met de{" "}
+                                    <a class="textlink" href="/juridisch/algemene-voorwaarden" target="_blank" rel="noopener">
+                                        algemene voorwaarden
+                                    </a>{" "}
+                                    en het{" "}
+                                    <a class="textlink" href="/juridisch/privacy-beleid" target="_blank" rel="noopener">
+                                        privacybeleid
+                                    </a>
+                                    , en verklaar dat de vordering opeisbaar is.
+                                </span>
+                            </label>
+                            <p class="veld-fout" id="v-akkoord-fout" data-fout="akkoord"></p>
+                            <div class="turnstile" data-turnstile></div>
+                        </div>
+
+                        <p class="melding" role="alert" data-melding hidden></p>
+
+                        <div class="nav">
+                            <button type="button" class="btn btn-ghost nav-terug" data-terug hidden>
+                                Vorige
+                            </button>
+                            <button type="submit" class="btn nav-verder" data-verder>
+                                <span data-verder-tekst>Volgende stap</span>
+                                <span class="btn-dot">
+                                    <Icon name="arrow" size={18} />
+                                </span>
+                            </button>
+                        </div>
+                        <p class="nav-noot">
+                            <Icon name="shield" size={14} /> Versleuteld verzonden. We gebruiken uw gegevens alleen voor dit
+                            dossier.
+                        </p>
+                    </form>
+
+                    <!-- KLAAR -->
+                    <div class="kaart klaar" data-klaar hidden>
+                        <span class="klaar-icon" aria-hidden="true">
+                            <Icon name="check" size={28} />
+                        </span>
+                        <h2 class="h2 klaar-kop" tabindex="-1" data-klaar-kop>
+                            Ontvangen. We gaan voor u aan de <span class="accent">slag</span>.
+                        </h2>
+                        <p class="klaar-dossier">
+                            Uw dossiernummer{" "}
+                            <strong class="num" data-klaar-dossier>
+                                GG-2026-00000
+                            </strong>
+                        </p>
+                        <ol class="klaar-stappen" role="list">
+                            <li>
+                                <span class="num">1</span>
+                                <span>
+                                    <strong>Bevestiging per e-mail.</strong> U ontvangt een overzicht van uw aanvraag.
+                                </span>
+                            </li>
+                            <li>
+                                <span class="num">2</span>
+                                <span>
+                                    <strong>Binnen 1 uur in behandeling</strong> op werkdagen tussen 9.00 en 17.00.
+                                </span>
+                            </li>
+                            <li>
+                                <span class="num">3</span>
+                                <span>
+                                    <strong>Opdrachtbevestiging en inloggegevens</strong> voor uw online dossier.
+                                </span>
+                            </li>
+                        </ol>
+                        <p class="klaar-noot">
+                            Nog een factuur?{" "}
+                            <a class="textlink" href="/vordering-indienen" data-opnieuw>
+                                Dien er nog een in
+                            </a>
+                            . Vragen? Bel{" "}
+                            <a class="textlink nowrap" href={site.phoneHref}>
+                                {site.phone}
+                            </a>
+                            .
+                        </p>
+                    </div>
+                </div>
+
+                <!-- SAMENVATTING (desktop) -->
+                <aside class="samenvatting" aria-label="Uw vordering">
+                    <div class="sam-kaart bg-ink">
+                        <p class="sam-titel">Uw vordering</p>
+                        <dl class="sam-rows num">
+                            <div>
+                                <dt>Factuurbedrag</dt>
+                                <dd data-sam="bedrag">€ 0,00</dd>
+                            </div>
+                            <div>
+                                <dt>
+                                    Incassokosten <span>voor de debiteur</span>
+                                </dt>
+                                <dd data-sam="kosten">€ 0,00</dd>
+                            </div>
+                            <div class="sam-u">
+                                <dt>Uw kosten bij volledige betaling</dt>
+                                <dd>€ 0,00</dd>
+                            </div>
+                        </dl>
+                        <p class="sam-deb" data-sam="debiteur" hidden></p>
+                    </div>
+                    <ul role="list" class="sam-trust">
+                        <li>
+                            <Icon name="clock" size={18} /> Op werkdagen binnen 1 uur in behandeling
+                        </li>
+                        <li>
+                            <Icon name="bank" size={18} /> Betalingen via onze derdengeldenrekening
+                        </li>
+                        <li>
+                            <Icon name="shield" size={18} />
+                            <a class="textlink" href={site.incassoRegisterHref}>
+                                Geregistreerd bij Justis, {site.incassoRegister}
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="sam-hulp">
+                        Liever telefonisch?{" "}
+                        <a class="textlink nowrap" href={site.phoneHref}>
+                            Bel{" "}
+                            {site.phone}
+                        </a>
+                    </p>
+                </aside>
+            </div>
+        </div>
+    </section>
+</Base>
+
+<script>
+    import "../scripts/vordering"
+</script>
+
+<style>
+    .intake {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .intake-kop {
+        margin-top: clamp(20px, 3vw, 36px);
+    }
+    .intake-kop h1 {
+        font-size: clamp(2.125rem, 1.3rem + 3.2vw, 3.75rem);
+        text-wrap: balance;
+    }
+    .intake-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        margin-top: 18px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .intake-checks li {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .intake-checks :global(svg) {
+        color: var(--green);
+    }
+    .intake-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+        margin-top: clamp(24px, 3vw, 40px);
+    }
+    @media (min-width: 1024px) {
+        .intake-grid {
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 40px;
+            align-items: start;
+        }
+    }
+
+    /* ---------- kaart en stepper ---------- */
+    .kaart {
+        padding: clamp(20px, 3.4vw, 40px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .stepper {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        margin-bottom: clamp(24px, 3vw, 36px);
+    }
+    .stepper li {
+        display: grid;
+        gap: 8px;
+        padding-top: 10px;
+        border-top: 3px solid var(--surface-2);
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        transition:
+            border-color 0.25s ease,
+            color 0.25s ease;
+    }
+    .stepper li.klaar-stap {
+        border-top-color: var(--green);
+    }
+    .stepper li[aria-current="step"] {
+        border-top-color: var(--blue);
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .stepper-nr {
+        display: none;
+    }
+    @media (max-width: 559px) {
+        .stepper-tekst {
+            display: none;
+        }
+        .stepper li[aria-current="step"] .stepper-tekst {
+            display: inline;
+            white-space: nowrap;
+        }
+        .stepper {
+            grid-template-columns: repeat(4, auto);
+        }
+    }
+
+    /* ---------- stappen en velden ---------- */
+    .stap {
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    .stap-kop {
+        margin-bottom: 22px;
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        outline: none;
+    }
+    .velden {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0 16px;
+    }
+    @media (min-width: 640px) {
+        .velden {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+        .velden :global(.breed) {
+            grid-column: 1 / -1;
+        }
+    }
+    .veld-leeg {
+        display: none;
+    }
+    @media (min-width: 640px) {
+        .veld-leeg {
+            display: block;
+        }
+    }
+    :global(.veld) {
+        display: grid;
+        align-content: start;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+    :global(.veld label),
+    .veld-label,
+    :global(.adres legend) {
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    :global(.veld-opt) {
+        margin-left: 6px;
+        font-weight: 400;
+        color: var(--muted);
+    }
+    :global(.veld input),
+    :global(.veld select),
+    :global(.veld textarea),
+    :global(.adres-zoek input) {
+        width: 100%;
+        min-height: 52px;
+        padding: 12px 14px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-md);
+        background: #fff;
+        font-size: 1rem;
+        color: var(--ink);
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+    :global(.veld textarea) {
+        resize: vertical;
+        min-height: 96px;
+        line-height: 1.5;
+    }
+    :global(.veld input:focus),
+    :global(.veld select:focus),
+    :global(.veld textarea:focus),
+    :global(.adres-zoek input:focus) {
+        outline: none;
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(48, 105, 254, 0.14);
+    }
+    :global(.veld input[aria-invalid="true"]),
+    :global(.bedrag-input:has(input[aria-invalid="true"])) {
+        border-color: #c4291c;
+    }
+    :global(.veld input::placeholder),
+    :global(.veld textarea::placeholder),
+    :global(.adres-zoek input::placeholder) {
+        color: #6b7390;
+    }
+    :global(.veld-hint) {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    :global(.veld-fout) {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: #b42318;
+    }
+    :global(.veld-fout:empty) {
+        display: none;
+    }
+    .groep-uitleg {
+        margin: 4px 0 10px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+
+    /* bedrag */
+    .bedrag-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 16px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-md);
+        background: var(--surface);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .bedrag-input:focus-within {
+        border-color: var(--blue);
+        background: #fff;
+    }
+    .bedrag-input span {
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .bedrag-input input {
+        flex: 1;
+        min-width: 0;
+        height: 68px;
+        border: 0;
+        background: transparent;
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        outline: none;
+    }
+    .bedrag-uitleg {
+        padding: 10px 12px;
+        border-radius: var(--r-sm);
+        background: var(--green-bg);
+        font-size: var(--fs-sm);
+        color: var(--green);
+        line-height: 1.5;
+    }
+    .bedrag-uitleg :global(strong) {
+        font-weight: 700;
+    }
+
+    /* bestanden: verborgen file-input blijft binnen het veld (anders meet de overlooptest hem aan de schermrand) */
+    [data-veld="bestanden"] {
+        position: relative;
+    }
+    .drop {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 88px;
+        padding: 16px 18px;
+        border: 1.5px dashed #b9c0d0;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.45;
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .drop:hover,
+    .drop.is-over {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+    }
+    #v-bestanden:focus-visible + .bestanden,
+    .veld:has(#v-bestanden:focus-visible) .drop {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .drop strong {
+        color: var(--ink);
+    }
+    .drop-sub {
+        display: block;
+        margin-top: 2px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .drop-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .bestanden {
+        display: grid;
+        gap: 6px;
+    }
+    .bestanden :global(li) {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 6px 6px 14px;
+        border-radius: var(--r-sm);
+        background: var(--surface);
+        font-size: var(--fs-sm);
+        color: var(--ink);
+    }
+    .bestanden :global(.bestand-naam) {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .bestanden :global(.bestand-maat) {
+        color: var(--muted);
+        font-size: var(--fs-xs);
+    }
+    .bestanden :global(button) {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+    }
+    .bestanden :global(button:hover) {
+        background: #fff;
+        color: #b42318;
+    }
+
+    /* soort debiteur */
+    .soort,
+    .veld-groep {
+        min-width: 0;
+        margin: 0 0 18px;
+        padding: 0;
+        border: 0;
+    }
+    .veld-groep {
+        margin-bottom: 16px;
+    }
+    .veld-groep legend {
+        margin-bottom: 6px;
+    }
+    .soort-opties {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .soort-opties label,
+    .mini-seg label {
+        position: relative;
+    }
+    .soort-opties input,
+    .mini-seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .soort-opties span {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 56px;
+        padding: 0 16px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-md);
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .soort-opties :global(svg) {
+        color: var(--muted);
+    }
+    .soort-opties input:checked + span {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+    }
+    .soort-opties input:checked + span :global(svg) {
+        color: var(--blue);
+    }
+    .soort-opties input:focus-visible + span,
+    .mini-seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .mini-seg {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .mini-seg span {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .mini-seg input:checked + span {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.12);
+    }
+
+    /* adres */
+    :global(.adres) {
+        min-width: 0;
+        margin: 4px 0 8px;
+        padding: 16px;
+        border: 0;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    :global(.adres legend) {
+        float: left;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    :global(.adres-zoek) {
+        position: relative;
+        clear: both;
+        margin-bottom: 12px;
+    }
+    :global(.adres-zoek input) {
+        padding-left: 44px;
+    }
+    :global(.adres-zoek-icon) {
+        position: absolute;
+        left: 14px;
+        top: 17px;
+        color: var(--muted);
+        pointer-events: none;
+    }
+    :global(.adres-lijst) {
+        position: absolute;
+        z-index: 5;
+        left: 0;
+        right: 0;
+        top: calc(100% + 4px);
+        padding: 6px;
+        border-radius: var(--r-md);
+        background: #fff;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--line);
+    }
+    :global(.adres-lijst li) {
+        min-height: 44px;
+        padding: 11px 12px;
+        border-radius: var(--r-sm);
+        font-size: var(--fs-sm);
+        color: var(--ink);
+        cursor: pointer;
+    }
+    :global(.adres-lijst li[aria-selected="true"]),
+    :global(.adres-lijst li:hover) {
+        background: var(--blue-soft);
+    }
+    :global(.adres-velden) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0 12px;
+    }
+    :global(.adres-velden .veld) {
+        margin-bottom: 8px;
+    }
+    :global(.adres-velden input) {
+        background: #fff;
+    }
+
+    /* akkoord + turnstile */
+    .akkoord {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 20px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.55;
+        cursor: pointer;
+    }
+    .akkoord input {
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        margin: 1px 0 0;
+        accent-color: var(--blue);
+    }
+    .turnstile {
+        margin-top: 16px;
+        min-height: 0;
+    }
+
+    /* overzicht */
+    .overzicht {
+        display: grid;
+        gap: 10px;
+    }
+    .overzicht :global(section) {
+        padding: 16px 18px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .overzicht :global(.ov-kop) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    .overzicht :global(h3) {
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .overzicht :global(.ov-wijzig) {
+        min-height: 44px;
+        padding: 0 4px;
+        border: 0;
+        background: none;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--blue-ink);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+    }
+    .overzicht :global(dl) {
+        display: grid;
+        gap: 4px;
+        font-size: var(--fs-sm);
+    }
+    .overzicht :global(dl div) {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+    }
+    .overzicht :global(dt) {
+        color: var(--muted);
+    }
+    .overzicht :global(dd) {
+        color: var(--ink);
+        overflow-wrap: anywhere;
+    }
+
+    /* meldingen */
+    :global(.melding) {
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    .melding-info {
+        margin-top: 10px;
+        background: var(--blue-soft);
+        color: var(--ink);
+    }
+    .melding-fout,
+    :global(.melding[data-soort="fout"]) {
+        background: #fdecea;
+        color: #8a1c12;
+    }
+    :global(.melding[data-soort="let-op"]) {
+        background: #fff4e0;
+        color: #6b4500;
+    }
+
+    /* navigatie */
+    .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+    }
+    .nav-verder {
+        margin-left: auto;
+    }
+    .nav-verder[aria-busy="true"] {
+        opacity: 0.7;
+        cursor: progress;
+    }
+    @media (max-width: 559px) {
+        .nav-verder {
+            flex: 1;
+            justify-content: space-between;
+        }
+    }
+    .nav-noot {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+
+    /* klaar */
+    .klaar {
+        text-align: left;
+    }
+    .klaar-icon {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .klaar-kop {
+        margin-top: 20px;
+        outline: none;
+        font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+    }
+    .klaar-dossier {
+        margin-top: 14px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .klaar-dossier strong {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 4px 12px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        font-size: 1.0625rem;
+        color: var(--blue-ink);
+    }
+    .klaar-stappen {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+    }
+    .klaar-stappen li {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.5;
+    }
+    .klaar-stappen li > span:first-child {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 600;
+        font-size: var(--fs-xs);
+    }
+    .klaar-stappen strong {
+        color: var(--ink);
+    }
+    .klaar-noot {
+        margin-top: 24px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+
+    /* ---------- samenvatting ---------- */
+    .samenvatting {
+        display: none;
+    }
+    @media (min-width: 1024px) {
+        .samenvatting {
+            display: grid;
+            gap: 16px;
+            position: sticky;
+            top: calc(var(--header-h) + 32px);
+        }
+    }
+    .sam-kaart {
+        padding: 24px;
+        border-radius: var(--r-xl);
+    }
+    .sam-titel {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #fff;
+    }
+    .sam-rows {
+        display: grid;
+        margin-top: 10px;
+    }
+    .sam-rows > div {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line-dark);
+        font-size: var(--fs-sm);
+    }
+    .sam-rows dt {
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .sam-rows dt span {
+        display: block;
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .sam-rows dd {
+        font-weight: 600;
+        color: #fff;
+        white-space: nowrap;
+    }
+    .sam-rows .sam-u {
+        border-bottom: 0;
+    }
+    .sam-u dt,
+    .sam-u dd {
+        color: #7ee2a8;
+        font-weight: 600;
+    }
+    .sam-deb {
+        margin-top: 4px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line-dark);
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.85);
+    }
+    .sam-trust {
+        display: grid;
+        gap: 10px;
+        padding: 0 8px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+    }
+    .sam-trust li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .sam-trust :global(svg) {
+        flex-shrink: 0;
+        color: var(--blue);
+    }
+    .sam-hulp {
+        padding: 0 8px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+</style>

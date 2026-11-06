@@ -13,8 +13,9 @@ interface Props {
     description: string
     jsonLd?: object[]
     noindex?: boolean
+    stickyCta?: boolean
 }
-const { title, description, jsonLd = [], noindex = false } = Astro.props
+const { title, description, jsonLd = [], noindex = false, stickyCta = true } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 
@@ -56,7 +57,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
             <slot />
         </main>
         <Footer />
-        <StickyCta />
+        {stickyCta && <StickyCta />}
         <script>
             // Subtiele onthulling bij scrollen; zonder JS of met reduced motion staat alles direct zichtbaar
             const els = document.querySelectorAll<HTMLElement>("[data-reveal]")
