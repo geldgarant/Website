@@ -115,6 +115,8 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - Adres in JSX: schrijf `{`${site.postcode} ${site.city}`}`; twee losse expressies op aparte regels verliezen de spatie ("7418 ETDeventer").
 - De overlooptest van `resoluties.mjs` meet ook visueel verborgen tabelkoppen: bij een `<thead>` die op mobiel wordt weggeclipt, moeten ook `tr`, `th` en `td` daarin `position:absolute; width:1px; padding:0` krijgen (zie /over-ons).
 - `/contact-opnemen` liep op 320px over door de knop "Naar het debiteurenportaal" (nowrap). Opgelost met `grid-template-columns: minmax(0,1fr)` op `.zij` en `white-space: normal` op die knop.
+- **CLS door het accentfont:** Newsreader (cursief accent) laadt later dan de fallback Georgia. Verandert een kop daardoor van regelaantal, dan schuift alles eronder (CLS). Op `/branches/incasso-mkb` gaf "Incasso voor het _mkb_" 0,107; "Incasso voor _mkb-bedrijven_" geeft 0,001. Meten per pagina: `CHROME_PATH=/usr/bin/google-chrome node node_modules/lighthouse/cli/index.js http://localhost:4399/<pad> --only-audits=cumulative-layout-shift,layout-shifts --output=json --quiet --chrome-flags="--headless=new --no-sandbox"` (preview op 4399). Preloaden van het font is geen optie: 147 kB.
+- **html-validate in artikelen:** kopjes die met een cijfer beginnen ("### 1. De dagvaarding") geven een ongeldig id; nummer dan niet in de kop. Kaders zijn `div role="note"` en geen `<aside>` (twee keer "Let op" = dubbele landmark). Tabellen zitten in `<section tabindex="0" aria-label data-scroller>`.
 - Dev-scripts `shot.mjs` en `resoluties.mjs` nemen nu een route: `node scripts/dev/shot.mjs /incasso` → `/tmp/incasso-*.png`.
 
 ## 6. Volgende stappen (op volgorde, bijgewerkt na besluit gebruiker)

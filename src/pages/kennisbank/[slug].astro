@@ -284,7 +284,7 @@ const jsonLd = [
         let tik = false
         const update = () => {
             tik = false
-            const lijn = window.innerHeight * 0.28
+            const lijn = window.innerHeight * 0.4
             let actief = doelen[0]?.id
             for (const el of doelen) if (el.getBoundingClientRect().top - lijn <= 0) actief = el.id
             if (actief) markeer(actief)

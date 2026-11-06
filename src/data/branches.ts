@@ -597,7 +597,7 @@ export const brancheData: Branche[] = [
         title: "Incassobureau voor het mkb | Binnen 1 uur gestart | GeldGarant",
         description:
             "Onbetaalde facturen drukken op uw cashflow? GeldGarant int voor mkb-bedrijven in elke branche. Binnen 1 uur gestart en geen kosten bij volledige betaling.",
-        h1: ["Incasso voor het ", "mkb"],
+        h1: ["Incasso voor ", "mkb-bedrijven"],
         lead: "In het mkb is cashflow alles. Een paar facturen die blijven liggen, kunnen al voelen in de salarisrun. Wij nemen het innen van u over, zodat u kunt doen waar u goed in bent.",
         kort: "Voor mkb-bedrijven in elke branche: snel gestart en geen kosten bij volledige betaling.",
         feiten: [
