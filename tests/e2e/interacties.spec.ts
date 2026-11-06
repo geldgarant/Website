@@ -87,7 +87,7 @@ test.describe("hoe werkt het", () => {
 })
 
 test.describe("geen persoonsnamen op de site", () => {
-    for (const route of ["/", "/over-ons", "/contact-opnemen", "/hoe-werkt-het"]) {
+    for (const route of ["/", "/over-ons", "/contact-opnemen", "/hoe-werkt-het", "/kennisbank"]) {
         test(`${route} noemt geen namen en geen callcenter`, async ({ page }) => {
             await page.goto(route)
             const tekst = (await page.locator("main, body").first().innerText()).toLowerCase()
@@ -127,5 +127,45 @@ test.describe("14-dagenbrief", () => {
         await page.locator('input[name="via"][value="post"]').check({ force: true })
         await expect(page.locator('[data-t="ontvangen"]')).toContainText("4 nov")
         await expect(page.locator('[data-t="kosten"]')).toContainText("19 nov")
+    })
+})
+
+test.describe("kennisbank", () => {
+    test("zoeken filtert artikelen en toont een melding zonder resultaat", async ({ page }) => {
+        await page.goto("/kennisbank")
+        const zichtbaar = page.locator("[data-kaart]:visible")
+        const totaal = await zichtbaar.count()
+        expect(totaal).toBe(27)
+        await page.fill("#kb-zoek", "verjaring")
+        await expect(page.locator("[data-zoek-status]")).toContainText("gevonden")
+        expect(await zichtbaar.count()).toBeLessThan(totaal)
+        await expect(page.locator("[data-kaart]:visible").first()).toBeVisible()
+        await page.fill("#kb-zoek", "xyzonzin")
+        await expect(page.locator("[data-leeg]")).toBeVisible()
+        await page.fill("#kb-zoek", "")
+        expect(await zichtbaar.count()).toBe(totaal)
+    })
+
+    test("onderwerpknoppen springen naar het blok", async ({ page }) => {
+        await page.goto("/kennisbank")
+        await page.locator('.onderwerpen a[href="#rechter"]').click()
+        await expect(page).toHaveURL(/#rechter$/)
+        await expect(page.locator("#rechter-title")).toBeInViewport()
+    })
+
+    test("inhoudsopgave linkt naar elk kopje en markeert het actieve onderdeel", async ({ page, isMobile }) => {
+        await page.goto("/kennisbank/verjaringstermijnen-vorderingen")
+        const links = page.locator(isMobile ? ".toc-mob [data-toc]" : ".toc [data-toc]")
+        const n = await links.count()
+        expect(n).toBeGreaterThan(3)
+        for (let i = 0; i < n; i++) {
+            const id = await links.nth(i).getAttribute("data-toc")
+            await expect(page.locator(`[id="${id}"]`)).toHaveCount(1)
+        }
+        if (isMobile) await page.locator(".toc-mob summary").click()
+        await links.nth(2).click()
+        const id = await links.nth(2).getAttribute("data-toc")
+        await expect(page.locator(`[id="${id}"]`)).toBeInViewport()
+        if (!isMobile) await expect(links.nth(2)).toHaveAttribute("aria-current", "true")
     })
 })

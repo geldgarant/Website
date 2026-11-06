@@ -1,0 +1,490 @@
+---
+// C /kennisbank: overzicht van alle artikelen, gegroepeerd per onderwerp.
+// Hoofdvraag: "Waar vind ik snel het antwoord op mijn vraag?"
+// Volgorde: zoeken + onderwerpknoppen die direct naar het blok springen (hero) → begin hier + rekenhulpen
+// → één blok per onderwerp (01–06) → CTA. Zoeken filtert live; zonder JS blijft alles gewoon zichtbaar.
+import { getCollection } from "astro:content"
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { onderwerpen, onderwerpById, leestijd } from "../../data/kennisbank"
+import { platteTekst, koppenVan } from "../../lib/artikel"
+import "../../styles/artikel.css"
+
+const alle = (await getCollection("kennisbank")).sort((a, b) => a.data.title.localeCompare(b.data.title, "nl"))
+const perOnderwerp = onderwerpen
+    .map((o) => ({ o, items: alle.filter((a) => a.data.onderwerp === o.id) }))
+    .filter((g) => g.items.length > 0)
+const uitgelicht = alle.find((a) => a.data.uitgelicht) ?? alle[0]
+const minuten = (a: (typeof alle)[number]) => leestijd(platteTekst(a.rendered?.html ?? ""))
+// zoektekst: titel, intro, kopjes en "in het kort", in kleine letters
+const zoek = (a: (typeof alle)[number]) =>
+    [a.data.title, a.data.lead, ...a.data.kort, ...koppenVan(a).map((h) => h.text)].join(" ").toLowerCase()
+
+const title = "Kennisbank incasso en wanbetalers | GeldGarant"
+const description =
+    "Heldere uitleg over onbetaalde facturen, incassokosten, rente, verjaring, de rechter en beslag. Bijgewerkt voor 2026, geschreven voor ondernemers."
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Kennisbank GeldGarant",
+        description,
+        url: "https://geldgarant.com/kennisbank",
+        inLanguage: "nl-NL",
+        mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: alle.length,
+            itemListElement: perOnderwerp
+                .flatMap((g) => g.items)
+                .map((a, i) => ({
+                    "@type": "ListItem",
+                    position: i + 1,
+                    url: `https://geldgarant.com/kennisbank/${a.id}`,
+                    name: a.data.title,
+                })),
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Kennisbank", item: "https://geldgarant.com/kennisbank" },
+        ],
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO: zoeken en direct naar een onderwerp -->
+    <section class="kb-hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Kennisbank" }]} />
+            <div class="kb-kop">
+                <p class="eyebrow">Kennisbank</p>
+                <h1 class="display">
+                    Antwoord op uw vraag over <span class="accent">wanbetalers</span>
+                </h1>
+                <p class="lead">
+                    {alle.length} artikelen over facturen, kosten, de rechter en beslag. In gewone taal, met de regels en bedragen
+                    van 2026.
+                </p>
+            </div>
+
+            <div class="zoek" role="search">
+                <label class="sr-only" for="kb-zoek">
+                    Zoek in de kennisbank
+                </label>
+                <Icon name="search" size={20} class="zoek-icon" />
+                <input
+                    id="kb-zoek"
+                    type="search"
+                    placeholder="Zoek op bijvoorbeeld verjaring, rente of beslag"
+                    autocomplete="off"
+                    data-zoek
+                />
+            </div>
+            <p class="zoek-status" aria-live="polite" data-zoek-status></p>
+
+            <nav class="onderwerpen" aria-label="Onderwerpen">
+                <ul role="list">
+                    {perOnderwerp.map(({ o, items }) => (
+                        <li>
+                            <a href={`#${o.id}`}>
+                                <Icon name={o.icon} size={18} />
+                                <span>{o.label}</span>
+                                <span class="onderwerp-n num">{items.length}</span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- BEGIN HIER + REKENHULPEN -->
+    <section class="kb-start" aria-labelledby="start-title" data-start>
+        <div class="wrap">
+            <h2 class="sr-only" id="start-title">
+                Begin hier
+            </h2>
+            <div class="start-grid">
+                <a class="start-hoofd" href={`/kennisbank/${uitgelicht.id}`}>
+                    <span class="start-label">Begin hier</span>
+                    <span class="start-t">{uitgelicht.data.title}</span>
+                    <span class="start-d">{uitgelicht.data.lead}</span>
+                    <span class="start-meer">
+                        Lees het stappenplan
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </span>
+                </a>
+                <a class="start-tool" href="/incasso/incassokosten-berekenen">
+                    <span class="start-tool-icon">
+                        <Icon name="euro" size={22} />
+                    </span>
+                    <span class="start-tool-t">Incassokosten en rente berekenen</span>
+                    <span class="start-tool-d">Wat mag u doorberekenen? Met de staffel en rente van vandaag.</span>
+                </a>
+                <a class="start-tool" href="/incasso/wik-brief">
+                    <span class="start-tool-icon">
+                        <Icon name="calendar" size={22} />
+                    </span>
+                    <span class="start-tool-t">Termijn van de 14-dagenbrief</span>
+                    <span class="start-tool-d">Vanaf welke dag mag u kosten rekenen aan een particulier?</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ONDERWERPEN -->
+    {perOnderwerp.map(({ o, items }, i) => (
+        <section class="kb-blok" id={o.id} aria-labelledby={`${o.id}-title`} data-blok>
+            <div class="wrap">
+                <div class="kb-blok-kop">
+                    <p class="eyebrow">
+                        <span class="idx">{String(i + 1).padStart(2, "0")}</span> {items.length} artikelen
+                    </p>
+                    <h2 class="h2" id={`${o.id}-title`}>
+                        {o.label}
+                    </h2>
+                    <p class="lead">{o.vraag}</p>
+                </div>
+                <ul role="list" class="kaarten">
+                    {items.map((a) => (
+                        <li data-kaart data-zoektekst={zoek(a)}>
+                            <a class="kaart" href={`/kennisbank/${a.id}`}>
+                                <span class="kaart-tag">
+                                    <Icon name={onderwerpById[a.data.onderwerp].icon} size={14} />
+                                    {minuten(a)} min lezen
+                                </span>
+                                <span class="kaart-t">{a.data.title}</span>
+                                <span class="kaart-d">{a.data.lead}</span>
+                                <span class="kaart-meer">
+                                    Lees artikel <Icon name="arrow" size={16} />
+                                </span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </section>
+    ))}
+
+    <section class="kb-leeg" hidden data-leeg aria-labelledby="leeg-title">
+        <div class="wrap">
+            <h2 class="h3" id="leeg-title">
+                Geen artikel gevonden
+            </h2>
+            <p>
+                Probeer een ander woord, of stel uw vraag direct aan een specialist via
+                <a class="textlink" href={site.phoneHref}>
+                    {site.phone}
+                </a>
+                .
+            </p>
+        </div>
+    </section>
+
+    <SlotCta lead="Liever geen uitzoekwerk? Dien uw vordering in ongeveer drie minuten in, wij doen de rest.">
+        Uw factuur laten <span class="accent">innen</span>?
+    </SlotCta>
+</Base>
+
+<script>
+    // Live filteren. Zoekt op alle woorden (in willekeurige volgorde) in titel, intro, kopjes en samenvatting.
+    const veld = document.querySelector<HTMLInputElement>("[data-zoek]")
+    const status = document.querySelector<HTMLElement>("[data-zoek-status]")
+    const kaarten = [...document.querySelectorAll<HTMLElement>("[data-kaart]")]
+    const blokken = [...document.querySelectorAll<HTMLElement>("[data-blok]")]
+    const leeg = document.querySelector<HTMLElement>("[data-leeg]")
+    const start = document.querySelector<HTMLElement>("[data-start]")
+    const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+
+    const filter = () => {
+        const woorden = norm(veld?.value ?? "")
+            .split(/\s+/)
+            .filter(Boolean)
+        let n = 0
+        for (const k of kaarten) {
+            const tekst = norm(k.dataset.zoektekst ?? "")
+            const ok = woorden.every((w) => tekst.includes(w))
+            k.hidden = !ok
+            if (ok) n++
+        }
+        for (const b of blokken) b.hidden = !b.querySelector("[data-kaart]:not([hidden])")
+        if (start) start.hidden = woorden.length > 0
+        if (leeg) leeg.hidden = n > 0
+        if (status) status.textContent = woorden.length ? `${n} ${n === 1 ? "artikel" : "artikelen"} gevonden` : ""
+    }
+    veld?.addEventListener("input", filter)
+</script>
+
+<style>
+    .kb-hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(40px, 5vw, 64px);
+    }
+    .kb-kop {
+        max-width: 64rem;
+        margin-top: clamp(24px, 3vw, 40px);
+    }
+    .kb-kop h1 {
+        margin-top: 16px;
+        max-width: 13em;
+        text-wrap: balance;
+    }
+    .kb-kop .lead {
+        margin-top: 22px;
+    }
+
+    .zoek {
+        position: relative;
+        max-width: 40rem;
+        margin-top: clamp(28px, 3vw, 40px);
+    }
+    .zoek :global(.zoek-icon) {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+    }
+    .zoek input {
+        width: 100%;
+        height: 60px;
+        padding: 0 20px 0 52px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        background: #fff;
+        font: inherit;
+        font-size: 1rem;
+        color: var(--ink);
+        box-shadow: 0 1px 2px rgba(6, 17, 38, 0.04);
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+    .zoek input::placeholder {
+        color: #7a839c;
+    }
+    .zoek input:focus-visible {
+        outline: none;
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(48, 105, 254, 0.18);
+    }
+    .zoek-status {
+        min-height: 1.5em;
+        margin-top: 10px;
+        padding-left: 22px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+
+    /* onderwerpknoppen: springen direct naar het blok */
+    .onderwerpen {
+        margin-top: 18px;
+    }
+    .onderwerpen ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .onderwerpen a {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 48px;
+        padding: 10px 14px 10px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .onderwerpen a:hover {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+    }
+    .onderwerpen a :global(svg) {
+        color: var(--blue);
+    }
+    .onderwerp-n {
+        display: grid;
+        place-items: center;
+        min-width: 26px;
+        height: 26px;
+        padding: 0 7px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    @media (max-width: 699px) {
+        .onderwerpen ul {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .onderwerpen a {
+            display: grid;
+            grid-template-columns: 18px minmax(0, 1fr) auto;
+            border-radius: var(--r-md);
+        }
+    }
+
+    /* begin hier */
+    .kb-start {
+        padding-bottom: clamp(56px, 6vw, 88px);
+    }
+    .start-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    @media (min-width: 900px) {
+        .start-grid {
+            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+            grid-template-rows: 1fr 1fr;
+        }
+        .start-hoofd {
+            grid-row: span 2;
+        }
+    }
+    .start-hoofd {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: clamp(28px, 4vw, 48px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+        color: rgba(255, 255, 255, 0.76);
+    }
+    .start-label {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--blue-on-dark);
+    }
+    .start-t {
+        max-width: 18em;
+        font-family: var(--font-display);
+        font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem);
+        font-weight: 600;
+        line-height: 1.12;
+        letter-spacing: -0.025em;
+        color: #fff;
+        text-wrap: balance;
+    }
+    .start-d {
+        max-width: 34em;
+        line-height: 1.6;
+    }
+    .start-meer {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 18px;
+        font-weight: 600;
+        color: #fff;
+    }
+    .start-meer .btn-dot {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--blue);
+        transition: transform 0.2s var(--ease);
+    }
+    .start-hoofd:hover .btn-dot {
+        transform: translateX(4px);
+    }
+    .start-tool {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        gap: 4px 16px;
+        align-content: center;
+        padding: clamp(22px, 2.6vw, 30px);
+        border-radius: var(--r-lg);
+        background: var(--blue-soft);
+        transition: background-color 0.15s ease;
+    }
+    .start-tool:hover {
+        background: #dce5ff;
+    }
+    .start-tool-icon {
+        grid-row: span 2;
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: var(--r-md);
+        background: #fff;
+        color: var(--blue);
+    }
+    .start-tool-t {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
+    }
+    .start-tool-d {
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        color: var(--muted);
+    }
+
+    /* onderwerpblokken: om en om wit en grijs */
+    .kb-blok {
+        padding-block: clamp(64px, 7vw, 104px);
+        scroll-margin-top: calc(var(--header-h) + 10px);
+        border-top: 1px solid var(--line);
+    }
+    .kb-blok:nth-of-type(odd) {
+        background: var(--surface);
+        border-top-color: transparent;
+    }
+    .kb-blok:nth-of-type(odd) :global(.kaart) {
+        background: #fff;
+    }
+    .kb-blok:nth-of-type(odd) :global(.kaart:hover) {
+        background: var(--paper);
+        box-shadow: var(--shadow-card);
+    }
+    .kb-blok-kop {
+        max-width: 44rem;
+        margin-bottom: clamp(28px, 3vw, 44px);
+    }
+    .kb-blok-kop .h2 {
+        margin-top: 14px;
+    }
+    .kb-blok-kop .lead {
+        margin-top: 16px;
+    }
+    .kb-leeg {
+        padding-block: clamp(48px, 6vw, 80px);
+    }
+    .kb-leeg p {
+        margin-top: 10px;
+        color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .start-meer .btn-dot {
+            transition: none;
+        }
+    }
+</style>

@@ -1,0 +1,312 @@
+---
+// C /kennisbank/<slug>: één template voor alle artikelen uit src/content/kennisbank.
+// Hoofdvraag van de bezoeker: "Wat is het antwoord, en wat moet ik nu doen?"
+// Volgorde: antwoord (hero + In het kort) → uitleg met meelopende inhoudsopgave → vragen → verder lezen → CTA.
+import { getCollection, type CollectionEntry } from "astro:content"
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { onderwerpById, leestijd, datumNl } from "../../data/kennisbank"
+import { bewerkArtikelHtml, platteTekst, koppenVan } from "../../lib/artikel"
+import "../../styles/artikel.css"
+
+export async function getStaticPaths() {
+    const alle = await getCollection("kennisbank")
+    return alle.map((a) => ({ params: { slug: a.id }, props: { a, alle } }))
+}
+interface Props {
+    a: CollectionEntry<"kennisbank">
+    alle: CollectionEntry<"kennisbank">[]
+}
+const { a, alle } = Astro.props
+const d = a.data
+const o = onderwerpById[d.onderwerp]
+const url = `https://geldgarant.com/kennisbank/${a.id}`
+
+const html = bewerkArtikelHtml(a.rendered?.html ?? "")
+const koppen = koppenVan(a).filter((h) => h.depth === 2)
+const toc = [...koppen.map((h) => ({ slug: h.slug, text: h.text })), { slug: "faq-title", text: "Veelgestelde vragen" }]
+const minuten = leestijd(platteTekst(html))
+
+// Een verkeerde slug in `verwant` laat de build falen, zodat er nooit een dode link ontstaat
+const verwant = d.verwant.slice(0, 3).map((s) => {
+    const x = alle.find((y) => y.id === s)
+    if (!x) throw new Error(`kennisbank/${a.id}: verwant artikel "${s}" bestaat niet`)
+    return x
+})
+
+const iso = (x: Date) => x.toISOString().slice(0, 10)
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: d.title,
+        description: d.description,
+        url,
+        mainEntityOfPage: url,
+        inLanguage: "nl-NL",
+        articleSection: o.label,
+        datePublished: iso(d.gepubliceerd),
+        dateModified: iso(d.bijgewerkt),
+        wordCount: platteTekst(html).split(" ").length,
+        author: { "@type": "Organization", name: "Redactie GeldGarant", url: "https://geldgarant.com/over-ons" },
+        publisher: {
+            "@type": "Organization",
+            name: "GeldGarant",
+            url: "https://geldgarant.com",
+            logo: { "@type": "ImageObject", url: "https://geldgarant.com/apple-touch-icon.png" },
+        },
+        image: "https://geldgarant.com/brand/og-default.png",
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Kennisbank", item: "https://geldgarant.com/kennisbank" },
+            { "@type": "ListItem", position: 3, name: d.title, item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: d.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={d.seoTitle} description={d.description} jsonLd={jsonLd} ogType="article">
+    <Fragment slot="head">
+        <meta property="article:published_time" content={iso(d.gepubliceerd)} />
+        <meta property="article:modified_time" content={iso(d.bijgewerkt)} />
+        <meta property="article:section" content={o.label} />
+    </Fragment>
+
+    <!-- HERO: het antwoord bovenaan -->
+    <section class="art-hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Kennisbank", href: "/kennisbank" }, { label: d.title }]} />
+            <div class="art-kop">
+                <a class="art-tag" href={`/kennisbank#${o.id}`}>
+                    <Icon name={o.icon} size={16} />
+                    {o.label}
+                </a>
+                <h1>{d.title}</h1>
+                <p class="lead">{d.lead}</p>
+                <ul role="list" class="art-meta">
+                    <li>
+                        <Icon name="calendar" size={16} />
+                        Bijgewerkt op <time datetime={iso(d.bijgewerkt)}>{datumNl(d.bijgewerkt)}</time>
+                    </li>
+                    <li>
+                        <Icon name="clock" size={16} />
+                        {minuten} min lezen
+                    </li>
+                    <li>
+                        <Icon name="shield" size={16} />
+                        Redactie GeldGarant
+                    </li>
+                </ul>
+            </div>
+            <div class="kort" role="note" aria-labelledby="kort-title">
+                <p class="kort-title" id="kort-title">
+                    In het kort
+                </p>
+                <ul role="list">
+                    {d.kort.map((k) => (
+                        <li>
+                            <Icon name="check" size={18} />
+                            <span>{k}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- UITLEG + MEELOPENDE INHOUDSOPGAVE -->
+    <div class="wrap art-grid" data-artikel>
+        <details class="toc-mob">
+            <summary>
+                <Icon name="list" size={18} />
+                In dit artikel
+                <span class="toc-mob-n">{toc.length} onderdelen</span>
+                <Icon name="chevron" size={18} class="toc-chev" />
+            </summary>
+            <ol role="list" class="toc-lijst">
+                {toc.map((t, i) => (
+                    <li>
+                        <a href={`#${t.slug}`} data-toc={t.slug}>
+                            <span class="toc-n num">{String(i + 1).padStart(2, "0")}</span>
+                            {t.text}
+                        </a>
+                    </li>
+                ))}
+            </ol>
+        </details>
+
+        <article class="prose">
+            <Fragment set:html={html} />
+
+            {d.hulp && (
+                <a class="hulp" href={d.hulp.href}>
+                    <span class="hulp-icon">
+                        <Icon name="arrow-up-right" size={20} />
+                    </span>
+                    <span>
+                        <strong>{d.hulp.t}</strong>
+                        <span>{d.hulp.d}</span>
+                    </span>
+                </a>
+            )}
+
+            <section class="bronnen" aria-labelledby="bronnen-title">
+                <h2 id="bronnen-title">Bronnen</h2>
+                <ul role="list">
+                    {d.bronnen.map((b) => (
+                        <li>
+                            <a href={b.href} rel="noopener">
+                                {b.t}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <p class="bronnen-noot">
+                    Dit artikel geeft algemene informatie en is geen juridisch advies voor uw situatie. Bedragen en termijnen zijn
+                    gecontroleerd op {datumNl(d.bijgewerkt)}. Twijfelt u? Bel ons op <a href={site.phoneHref}>{site.phone}</a>.
+                </p>
+            </section>
+        </article>
+
+        <aside class="art-aside" aria-label="Inhoudsopgave en contact">
+            <nav class="toc" aria-labelledby="toc-title">
+                <p class="toc-title" id="toc-title">
+                    In dit artikel
+                </p>
+                <div class="toc-voortgang" aria-hidden="true">
+                    <span data-voortgang></span>
+                </div>
+                <ol role="list" class="toc-lijst">
+                    {toc.map((t, i) => (
+                        <li>
+                            <a href={`#${t.slug}`} data-toc={t.slug}>
+                                <span class="toc-n num">{String(i + 1).padStart(2, "0")}</span>
+                                {t.text}
+                            </a>
+                        </li>
+                    ))}
+                </ol>
+            </nav>
+            <div class="aside-cta">
+                <p class="aside-cta-t">Factuur nog altijd niet betaald?</p>
+                <p>Wij nemen het over. Betaalt de debiteur volledig, dan kost het u niets.</p>
+                <a class="btn" href="/vordering-indienen">
+                    Vordering indienen
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+                <a class="aside-tel" href={site.phoneHref}>
+                    <Icon name="phone" size={16} />
+                    {site.phone}
+                </a>
+            </div>
+        </aside>
+    </div>
+
+    <Faq items={d.faq} id="faq-title">
+        <Fragment slot="title">
+            Vragen over dit <span class="accent">onderwerp</span>
+        </Fragment>
+    </Faq>
+
+    {verwant.length > 0 && (
+        <section class="section verder" aria-labelledby="verder-title">
+            <div class="wrap">
+                <div class="verder-kop">
+                    <h2 class="h2" id="verder-title">
+                        Verder <span class="accent">lezen</span>
+                    </h2>
+                    <a class="textlink" href="/kennisbank">
+                        Alle artikelen
+                    </a>
+                </div>
+                <ul role="list" class="kaarten">
+                    {verwant.map((v) => {
+                        const vo = onderwerpById[v.data.onderwerp]
+                        return (
+                            <li>
+                                <a class="kaart" href={`/kennisbank/${v.id}`}>
+                                    <span class="kaart-tag">
+                                        <Icon name={vo.icon} size={14} />
+                                        {vo.label}
+                                    </span>
+                                    <span class="kaart-t">{v.data.title}</span>
+                                    <span class="kaart-d">{v.data.lead}</span>
+                                    <span class="kaart-meer">
+                                        Lees artikel <Icon name="arrow" size={16} />
+                                    </span>
+                                </a>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
+        </section>
+    )}
+
+    <SlotCta lead="Dien uw vordering in ongeveer drie minuten in. Op werkdagen gaan we binnen het uur voor u aan de slag.">
+        Liever dat wij het <span class="accent">regelen</span>?
+    </SlotCta>
+</Base>
+
+<script>
+    // Meelopende inhoudsopgave: markeert het onderdeel dat nu in beeld is en toont de leesvoortgang.
+    const root = document.querySelector<HTMLElement>("[data-artikel]")
+    if (root) {
+        const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc]")]
+        const ids = [...new Set(links.map((l) => l.dataset.toc!))]
+        const doelen = ids.map((id) => document.getElementById(id)).filter((x): x is HTMLElement => Boolean(x))
+        const balk = document.querySelector<HTMLElement>("[data-voortgang]")
+        const mob = root.querySelector<HTMLDetailsElement>(".toc-mob")
+
+        const markeer = (id: string) => {
+            for (const l of links) {
+                if (l.dataset.toc === id) l.setAttribute("aria-current", "true")
+                else l.removeAttribute("aria-current")
+            }
+        }
+
+        let tik = false
+        const update = () => {
+            tik = false
+            const lijn = window.innerHeight * 0.28
+            let actief = doelen[0]?.id
+            for (const el of doelen) if (el.getBoundingClientRect().top - lijn <= 0) actief = el.id
+            if (actief) markeer(actief)
+            if (balk) {
+                const r = root.getBoundingClientRect()
+                const p = Math.min(Math.max((lijn - r.top) / Math.max(r.height - lijn, 1), 0), 1)
+                balk.style.transform = `scaleX(${p})`
+            }
+        }
+        const plan = () => {
+            if (!tik) {
+                tik = true
+                requestAnimationFrame(update)
+            }
+        }
+        addEventListener("scroll", plan, { passive: true })
+        addEventListener("resize", plan)
+        update()
+
+        // Op mobiel klapt de inhoudsopgave dicht nadat u een onderdeel kiest
+        mob?.addEventListener("click", (e) => {
+            if ((e.target as HTMLElement).closest("a")) mob.open = false
+        })
+    }
+</script>

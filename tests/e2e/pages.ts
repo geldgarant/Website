@@ -25,4 +25,10 @@ export const routes = walk(root)
     .map((r) => (r === "/" ? r : r.replace(/\/$/, "")))
     .filter((r) => r !== "/404")
     .concat(branches.map((b) => `/branches/${b.slug}`)) // dynamische routes uit [slug].astro
+    .concat(
+        fs
+            .readdirSync(path.resolve("src/content/kennisbank"))
+            .filter((f) => f.endsWith(".md"))
+            .map((f) => `/kennisbank/${f.replace(/\.md$/, "")}`),
+    )
     .sort()

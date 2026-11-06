@@ -40,24 +40,3 @@ export const branches = [
     { label: "MKB", slug: "incasso-mkb" },
     { label: "Zzp", slug: "incasso-zzp" },
 ]
-
-export const latestArticles = [
-    {
-        title: "BV uitgeschreven met schulden: uw rechten als schuldeiser",
-        slug: "bv-uitgeschreven-schulden",
-        date: "2026-03-25",
-        cat: "Juridisch",
-    },
-    {
-        title: "Huurachterstand incasseren als verhuurder: stap voor stap",
-        slug: "huurachterstand-incasseren",
-        date: "2026-03-22",
-        cat: "Incasso en betaling",
-    },
-    {
-        title: "Openstaande factuur: het complete stappenplan voor ondernemers",
-        slug: "openstaande-factuur-stappenplan",
-        date: "2026-03-10",
-        cat: "Incasso en betaling",
-    },
-]

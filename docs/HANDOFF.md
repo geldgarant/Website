@@ -4,20 +4,22 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 ## 1. Stand van zaken
 
-| Onderdeel                  | Status                                                                                                         |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Repo                       | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
-| Hosting (staging)          | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
-| Productie                  | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
-| Homepage                   | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
-| `/incasso` (A1)            | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
-| `/debiteurenbeheer` (A2)   | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
-| `/tarieven` (A3)           | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
-| `/vordering-indienen` (A4) | Gebouwd 6 nov 2026, intake-worker gekoppeld (API in tests nagebootst)                                          |
-| `/contact-opnemen` (A7)    | Gebouwd 6 nov 2026 (commit 9ba8425). Feedback verwerkt: geen namen, geen "callcenter/keuzemenu"                |
-| `/over-ons` (A6)           | Gebouwd 6 nov 2026, qa (152 e2e) + lhci 100 groen. Wacht op akkoord                                            |
-| `/hoe-werkt-het` (A5)      | Gebouwd 6 nov 2026, qa + lhci 100 groen. Wacht op akkoord                                                      |
-| Overige pagina's           | Fase B (zie §6)                                                                                                |
+| Onderdeel                                          | Status                                                                                                         |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Repo                                               | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
+| Hosting (staging)                                  | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
+| Productie                                          | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
+| Homepage                                           | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
+| `/incasso` (A1)                                    | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
+| `/debiteurenbeheer` (A2)                           | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
+| `/tarieven` (A3)                                   | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
+| `/vordering-indienen` (A4)                         | Gebouwd 6 nov 2026, intake-worker gekoppeld (API in tests nagebootst)                                          |
+| `/contact-opnemen` (A7)                            | Gebouwd 6 nov 2026 (commit 9ba8425). Feedback verwerkt: geen namen, geen "callcenter/keuzemenu"                |
+| `/over-ons` (A6)                                   | Gebouwd 6 nov 2026, qa (152 e2e) + lhci 100 groen. Wacht op akkoord                                            |
+| `/hoe-werkt-het` (A5)                              | Gebouwd 6 nov 2026, qa + lhci 100 groen. Wacht op akkoord                                                      |
+| Fase B (wki, nowid, incasso-subpagina's, branches) | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
+| `/kennisbank` + 27 artikelen (C)                   | Gebouwd 6 nov 2026: content collection, herschreven en feitelijk nagelopen. Wacht op akkoord                   |
+| Overige pagina's                                   | Fase C/D (zie §6)                                                                                              |
 
 **Tarieven (bevestigd door Anas, 6 nov 2026):** de provisie is gelijk aan de WIK-staffel (`src/lib/wik.ts`); er is **geen succesfee**. De AV (art. 7.5, 10% succesfee) past Anas zelf nog aan. Debiteurenbeheer: € 99 / € 199 / € 349 per maand. AV-PDF: `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`.
 
@@ -71,7 +73,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 | `src/components/incasso/Klaar.astro` |        | 04 "Is uw factuur klaar voor incasso?": drie vinkjes, en een klein script zet het oordeel in `role="status"`                                                                                                                                                                                                                                                                           |
 | `src/components/Faq.astro`           |        | Gedeelde FAQ-sectie (props `items`, `idx`, slot `title`), gebruikt op home en /incasso                                                                                                                                                                                                                                                                                                 |
 | `src/components/SlotCta.astro`       |        | Gedeelde navy afsluiter (prop `lead`, kop via slot)                                                                                                                                                                                                                                                                                                                                    |
-| `src/data/site.ts`                   | 63     | Bedrijfsgegevens, `nav`, `branches` (10 slugs), `latestArticles`                                                                                                                                                                                                                                                                                                                       |
+| `src/data/site.ts`                   | 43     | Bedrijfsgegevens, `nav`, `branches` (10 slugs)                                                                                                                                                                                                                                                                                                                                         |
 | `src/data/faq.ts`                    |        | `homeFaq` (8) en `incassoFaq` (7). Bron voor alle compliance-teksten; de AV-artikelen staan in het commentaar                                                                                                                                                                                                                                                                          |
 | `src/lib/wik.ts`                     | 36     | `WIK_STAFFEL` r3, `WIK_MIN` 40, `WIK_MAX` 6775, `wikKosten()` r14, `euro()` r30                                                                                                                                                                                                                                                                                                        |
 | `public/brand/`                      |        | Gecropte transparante logo's (full/main/short × light/dark/primair), iconen, `og-default.png`                                                                                                                                                                                                                                                                                          |
@@ -151,8 +153,19 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
     - Overzicht `src/pages/branches/index.astro` (CollectionPage + ItemList), `branchesFaq`.
     - `tests/e2e/pages.ts` voegt de dynamische routes toe (bestanden met `[` worden anders overgeslagen).
     - **URL-vorm (SEO):** canonicals en sitemap zijn nu zonder slash aan het eind, gelijk aan de Framer-URL's (`trailingSlash: "never"` in `astro.config.mjs`, canonical in `Base.astro` zonder `/`), en Workers stuurt `/pagina/` door naar `/pagina` (`html_handling: "drop-trailing-slash"` in `wrangler.jsonc`).
-12. **Volgende:** fase C: kennisbank (27 artikelen, Astro content collections, slugs behouden), daarna `/werken-bij` + vacatures, `/hulp-nodig-bij-geldproblemen`, en later `/brief-ontvangen`.
-13. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+12. ~~**`/kennisbank`** + 27 artikelen~~ (fase C): gebouwd op 6 nov 2026.
+    - Research: incasso.nl (overzicht met kopjes per onderwerp, vraag-koppen, geen inhoudsopgave), Breyta-blog (samenvatting + "In dit artikel" + meelopende CTA), de huidige GG-artikelen (fouten: placeholder-description `{artikel titel}` op alle 27, je-vorm, gedachtestreepjes, verkeerde intro bij verjaring, "3 jaar" schadevergoeding, verzonnen "Starter pakket").
+    - **Inhoud:** `src/content/kennisbank/<slug>.md` (bestandsnaam = slug = oude Framer-URL). Schema in `src/content.config.ts` (title, seoTitle ≤ 70, description 110–165, onderwerp, lead, kort[3–6], gepubliceerd, bijgewerkt, faq[≥3], bronnen[≥1], verwant[2–4], hulp?, uitgelicht). Alle 27 herschreven in u-vorm, met tabellen, kaders en bronnen (wetten.overheid.nl-ID's nagelopen: BW3 0005291, BW6 0005289, BW7 0005290, BW8 0005034, Rv 0001827, Fw 0001860, Wet OB 0002629, BIK 0031432, Wki 0046685, Besluit Wki 0049422).
+    - **Kaders in Markdown:** een blockquote die begint met `**Let op:**`, `**Voorbeeld:**`, `**Rekenvoorbeeld:**`, `**Tip:**` of `**Goed om te weten:**` wordt een `<div class="kader …" role="note">`. Tabellen krijgen een scrollbare omhulling. Zie `src/lib/artikel.ts` (`bewerkArtikelHtml`). Bewust geen remark/rehype-plugin: Astro 7 gebruikt de nieuwe `markdown-satteri`-processor.
+    - **Onderwerpen:** `src/data/kennisbank.ts` (`onderwerpen`: factuur, kosten, lastig, rechter, regels, situatie; `leestijd()`, `datumNl()`).
+    - **Artikelpagina** `src/pages/kennisbank/[slug].astro`: hero (onderwerp-tag, h1, lead, bijgewerkt/leestijd/Redactie GeldGarant), "In het kort", raster met tekst en meelopende inhoudsopgave (desktop ≥ 1080px sticky rechts met voortgangsbalk en `aria-current`; mobiel `<details>`), hulpkaart, bronnen + disclaimer, `Faq` (idx is nu optioneel), "Verder lezen" (3 kaarten), SlotCta. JSON-LD Article + BreadcrumbList + FAQPage, `og:type=article` (nieuwe prop `ogType` en slot `head` in `Base.astro`). Een onbekende slug in `verwant` laat de build falen.
+    - **Overzicht** `src/pages/kennisbank/index.astro`: zoekveld (filtert live op titel, intro, kopjes en samenvatting), onderwerpknoppen die naar `#<onderwerp>` springen, "Begin hier" (artikel met `uitgelicht: true`) + twee rekenhulpen, zes onderwerpblokken. CollectionPage + ItemList.
+    - Stijlen: `src/styles/artikel.css` (globaal, want de tekst komt via `set:html`). Nieuwe iconen: `search`, `list`, `link`.
+    - Homepage-rij "Kennisbank" komt nu uit de collectie (`kennisSlugs` in `index.astro`); `latestArticles` is uit `site.ts` verwijderd.
+    - Tests: `pages.ts` voegt de 27 artikelroutes toe; `interacties.spec.ts` "kennisbank" (zoeken, onderwerpknoppen, inhoudsopgave).
+    - **Nieuw artikel toevoegen:** kopieer een bestaand `.md`-bestand, pas de frontmatter aan en zet de slug als bestandsnaam. Verder niets: overzicht, sitemap, tests en JSON-LD volgen vanzelf.
+    - **Jaarlijks bijwerken:** griffierechten (1 januari), beslagvrije voet (1 januari en 1 juli), wettelijke rente (1 januari en 1 juli; ook `src/lib/rente.ts`). Pas `bijgewerkt` aan.
+13. **Volgende:** `/werken-bij` + 3 vacatures, `/hulp-nodig-bij-geldproblemen`, en **later** `/brief-ontvangen` met de CaseControl-koppeling (bewust uitgesteld tot de betaallink of het portaal is uitgezocht).
 14. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke

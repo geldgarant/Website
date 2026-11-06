@@ -7,13 +7,27 @@ import Kosten from "../components/home/Kosten.astro"
 import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
 import Icon from "../components/Icon.astro"
-import { site, branches, latestArticles } from "../data/site"
+import { getCollection } from "astro:content"
+import { site, branches } from "../data/site"
+import { onderwerpById } from "../data/kennisbank"
 import { homeFaq } from "../data/faq"
 
 const title = "Incassobureau voor ondernemers | GeldGarant"
 const description =
     "Klant betaalt niet? GeldGarant neemt uw vordering binnen 1 uur in behandeling. Betaalt de debiteur volledig, dan betaalt u niets."
 
+// Drie artikelen voor de kennisbankrij: het stappenplan en twee veelgezochte onderwerpen
+const kennisSlugs = ["openstaande-factuur-stappenplan", "wettelijke-rente-2026", "debiteur-betwist-factuur"]
+const kennis = await getCollection("kennisbank")
+const latestArticles = kennisSlugs
+    .map((slug) => kennis.find((a) => a.id === slug))
+    .filter((a) => a !== undefined)
+    .map((a) => ({
+        title: a.data.title,
+        slug: a.id,
+        date: a.data.bijgewerkt.toISOString().slice(0, 10),
+        cat: onderwerpById[a.data.onderwerp].label,
+    }))
 const fmtDate = (d: string) =>
     new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" }).format(new Date(d))
 

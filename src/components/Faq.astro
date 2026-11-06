@@ -5,7 +5,7 @@ import { site } from "../data/site"
 
 interface Props {
     items: readonly { q: string; a: string }[]
-    idx: string
+    idx?: string
     id?: string
 }
 const { items, idx, id = "faq-title" } = Astro.props
@@ -14,9 +14,7 @@ const { items, idx, id = "faq-title" } = Astro.props
 <section class="section bg-surface" aria-labelledby={id}>
     <div class="wrap split">
         <div class="split-head">
-            <p class="eyebrow">
-                <span class="idx">{idx}</span> Veelgestelde vragen
-            </p>
+            <p class="eyebrow">{idx && <span class="idx">{idx}</span>} Veelgestelde vragen</p>
             <h2 class="h2" id={id}>
                 <slot name="title">
                     Goed om te <span class="accent">weten</span>
