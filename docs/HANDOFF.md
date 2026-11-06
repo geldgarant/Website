@@ -6,7 +6,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 | Onderdeel         | Status                                                                                                         |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| Repo              | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                                 |
+| Repo              | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
 | Hosting (staging) | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
 | Productie         | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
 | Homepage          | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
@@ -80,17 +80,43 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - Een `position: fixed`-element binnen iets met `backdrop-filter` wordt relatief aan die ouder; daarom staat het mobiele menu naast `.bar`, niet erin.
 - Playwright draait met `reducedMotion: "reduce"`, zodat `data-reveal`-elementen in tests direct zichtbaar zijn.
 
-## 6. Volgende stappen (op volgorde)
+## 6. Volgende stappen (op volgorde, bijgewerkt na besluit gebruiker)
 
-Werkwijze per pagina: eerst Breyta's versie plus 2–3 andere incasso- en fintech-sites bekijken (Framer-screenshot, mobiel en desktop). Dan per sectie de bezoekersvraag bepalen, bouwen met de bestaande componenten en tokens, en verifiëren (shot, resoluties, qa, lhci). Push daarna en stuur screenshots.
+De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstructuur met prioriteit, staat in **`docs/SITEMAP.md`**.
 
-1. **`/brief-ontvangen`**: debiteurenpagina (goedgekeurd). Rustige, niet-bedreigende toon. Secties: wat is dit voor brief, direct betalen (`site.debtorPortal`), regeling aanvragen, bezwaar of vraag, contact. Voeg "Hulp bij geldzorgen" toe (`/hulp-nodig-bij-geldproblemen`). Inspiratie: Intrum's keuzetegels ("Ik wil direct betalen", "Ik kan niet volledig betalen").
-2. **`/tarieven`**: volledige provisiestaffel uit de AV (staat nog niet in de code: vraag de gebruiker om het AV-document of haal het van de huidige site via Framer), WIK-staffel, rekenvoorbeelden, `Kosten.astro` hergebruiken, en de debiteurenbeheer-pakketten (voorstel €99/€199/€349 per maand, €9,95 los, €3,95 extra dossier: eerst bevestigen).
-3. **`/vordering-indienen`**: formulier op de bestaande intake-worker `api.geldgarant.com/api/*` (`/incasso-session`, `/incasso-upload`, `/incasso-aanvragen`, PDOK `/location/search`; bron `claude/intake-worker-index.js` in de projectdocs). Meerstaps, velden ≥ 16px, Turnstile. Tijdens tests nooit echte data versturen.
-4. `/incasso`, `/debiteurenbeheer`, `/over-ons`, `/contact-opnemen`.
-5. `/branches` + 10 branchepagina's (slugs in `site.ts`): één template met een branchespecifieke hero, veelvoorkomende situaties en FAQ.
-6. Kennisbank: 27 artikelen migreren uit Framer (CMS uitlezen via de Framer-MCP; alleen lezen) naar Astro content collections. Behoud de slugs.
-7. Juridische pagina's (`/juridisch/*`, `/klachtenregelement`), een 404-pagina, 301-redirects van oude Framer-URL's, sitemap en robots controleren.
-8. Pas als alles af is, en met akkoord: custom domain koppelen in Cloudflare.
+**Werkwijze per pagina:**
+
+1. Bekijk de vergelijkbare pagina van Breyta plus 2–3 andere incasso- en fintech-sites (Framer-screenshot op 390 en 1200px).
+2. Bekijk de huidige inhoud op geldgarant.com (Framer-MCP; alleen lezen).
+3. Bepaal per sectie de bezoekersvraag en zet het plan in 5–10 regels.
+4. Bouw met de bestaande componenten en tokens.
+5. Verifieer: shot, resoluties, qa, lhci.
+6. Push, stuur screenshots en vraag om akkoord voor je de volgende pagina doet.
+
+7. **`/incasso`** (A1): de belangrijkste dienstpagina. Hergebruik `Proces.astro` en `Kosten.astro` waar het past, maar maak er een eigen, diepere pagina van, geen kopie van de homepage.
+8. **`/debiteurenbeheer`** (A2). Prijzen pas tonen na bevestiging.
+9. **`/tarieven`** (A3). Het AV-document met de provisiestaffel is nodig.
+10. **`/vordering-indienen`** (A4): het formulier op de intake-worker.
+11. `/over-ons`, `/contact-opnemen`, `/hoe-werkt-het` (A5–A7).
+12. Fase B: incasso-subpagina's, `/wki`, `/nowid`, branches.
+13. Fase C: kennisbank (27), werken-bij, en **later** `/brief-ontvangen` met de CaseControl-koppeling. De gebruiker wil dat bewust uitstellen tot de betaallink of het portaal uitgezocht is.
+14. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+
+## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
+
+Laad een skill met de Skill-tool voordat je de bijbehorende stap doet. Het overzicht van bronnen en licenties staat in `.claude/skills/THIRD_PARTY.md`.
+
+| Fase                                               | Skills                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Plannen                                            | `writing-plans` (bij elke pagina met meer dan een paar stappen)                                                                                                                                                                                                                |
+| Richting en ontwerp                                | `frontend-design`, `impeccable` (critique, polish, audit; engine: `sh .claude/skills/impeccable/scripts/impeccable detect dist/<pagina>/index.html`), `ui-ux-pro-max` (naslag: `python3 -I scripts/search.py "<q>" --design-system`), `ui-typography`, `web-design-guidelines` |
+| Bouwen                                             | `astro` (content collections voor de kennisbank), `frontend-ui-engineering`, `vercel-composition-patterns` (componentopbouw)                                                                                                                                                   |
+| Animatie (alleen met reden, altijd reduced-motion) | `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins`, `gsap-utils`, `gsap-performance`                                                                                                                                                                           |
+| Kwaliteit en web                                   | `web-quality-audit`, `performance`, `core-web-vitals`, `seo` (per pagina: title, description, JSON-LD, interne links), `best-practices`                                                                                                                                        |
+| Toegankelijkheid                                   | `accessibility`, `accessibility-scan`, `accessibility-inspect`, `accessibility-audit` (vóór livegang), `accessibility-fix`, `accessibility-diff`                                                                                                                               |
+| Testen en debuggen                                 | `webapp-testing`, `browser-testing-with-devtools` (chrome-devtools MCP), `systematic-debugging`                                                                                                                                                                                |
+| Formulieren en veiligheid                          | `security-and-hardening` (vordering-indienen, contact: invoer, uploads, Turnstile, geen geheimen in de client)                                                                                                                                                                 |
+| Livegang                                           | `ci-cd-and-automation`, `shipping-and-launch` (domein, redirects, checklist)                                                                                                                                                                                                   |
+| Afronden                                           | `verification-before-completion`: pas "klaar" melden met bewijs                                                                                                                                                                                                                |
 
 **Open punten bij de gebruiker:** btw-id in de footer (wettelijk verplicht, is gemeld), echte foto's van Anas en Ilyas (fotoshoot), echte reviews en cijfers, bevestiging van de debiteurenbeheer-prijzen, en het AV-document met de provisiestaffel.
