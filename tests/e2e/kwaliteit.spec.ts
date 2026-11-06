@@ -16,6 +16,8 @@ for (const route of routes) {
                 const vw = document.documentElement.clientWidth
                 return [...document.querySelectorAll("body *")]
                     .filter((el) => {
+                        // bewuste veegrijen (scroll-snap) mogen buiten beeld doorlopen; de rij zelf niet
+                        if (el.closest("[data-scroller]") && !el.matches("[data-scroller]")) return false
                         const r = el.getBoundingClientRect()
                         return r.width > 0 && (r.right > vw + 1 || r.left < -1)
                     })

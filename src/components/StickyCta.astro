@@ -1,0 +1,75 @@
+---
+// Vaste actiebalk op mobiel en tablet; verschijnt zodra de hero uit beeld is
+import Icon from "./Icon.astro"
+import { site } from "../data/site"
+---
+
+<div class="sticky-cta" data-sticky-cta>
+    <a class="btn sticky-main" href="/vordering-indienen">
+        Vordering indienen
+        <span class="btn-dot">
+            <Icon name="arrow" size={18} />
+        </span>
+    </a>
+    <a class="sticky-call" href={site.phoneHref} aria-label={`Bel ${site.phone}`}>
+        <Icon name="phone" />
+    </a>
+</div>
+
+<script>
+    const bar = document.querySelector<HTMLElement>("[data-sticky-cta]")
+    const onScroll = () => bar?.classList.toggle("is-visible", window.scrollY > window.innerHeight * 0.6)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+</script>
+
+<style>
+    .sticky-cta {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        z-index: 40;
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        border-radius: var(--r-pill);
+        background: rgba(6, 17, 38, 0.94);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 16px 32px -12px rgba(6, 17, 38, 0.5);
+        transform: translateY(calc(100% + 24px));
+        transition: transform 0.35s var(--ease);
+    }
+    .sticky-cta.is-visible {
+        transform: none;
+    }
+    :global(html.menu-open) .sticky-cta {
+        display: none;
+    }
+    @media (min-width: 1080px) {
+        .sticky-cta {
+            display: none;
+        }
+    }
+    .sticky-main {
+        flex: 1;
+        min-height: 48px;
+        padding-left: 20px;
+        padding-block: 4px;
+    }
+    .sticky-main .btn-dot {
+        width: 36px;
+        height: 36px;
+        margin-left: auto;
+    }
+    .sticky-call {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 56px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+    }
+</style>

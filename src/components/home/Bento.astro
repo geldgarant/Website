@@ -1,0 +1,431 @@
+---
+// Waarom GeldGarant: elke belofte met een mini-visual die laat zien hoe het eruitziet
+import Icon from "../Icon.astro"
+import { site } from "../../data/site"
+---
+
+<section class="section" aria-labelledby="waarom-title">
+    <div class="wrap">
+        <div class="head">
+            <p class="eyebrow">
+                <span class="idx">02</span> Waarom GeldGarant
+            </p>
+            <h2 class="h2" id="waarom-title">
+                Wat u van ons mag <span class="accent">verwachten</span>
+            </h2>
+        </div>
+
+        <ul role="list" class="bento" data-scroller tabindex="0" aria-label="Zes beloftes, veeg voor meer">
+            <li class="tile">
+                <div class="viz viz-bill" aria-hidden="true">
+                    <div class="bill">
+                        <p>
+                            <span>Hoofdsom</span>
+                            <b class="num">€ 2.500,00</b>
+                        </p>
+                        <p class="strike">
+                            <span>Incassokosten</span>
+                            <b class="num">€ 375,00</b>
+                        </p>
+                        <p class="tag-row">
+                            <em>betaalt de debiteur</em>
+                        </p>
+                        <p class="zero">
+                            <span>Uw kosten</span>
+                            <b class="num">€ 0,00</b>
+                        </p>
+                    </div>
+                </div>
+                <h3 class="h3">€0 bij volledige betaling</h3>
+                <p>De wettelijke incassokosten zijn voor de debiteur. Geen abonnement, geen instapkosten.</p>
+            </li>
+
+            <li class="tile">
+                <div class="viz viz-time" aria-hidden="true">
+                    <div class="stamp">
+                        <span>Ingediend</span>
+                        <b class="num">09:12</b>
+                    </div>
+                    <div class="dash">
+                        <span class="num">35 min</span>
+                    </div>
+                    <div class="stamp on">
+                        <span>In behandeling</span>
+                        <b class="num">09:47</b>
+                    </div>
+                </div>
+                <h3 class="h3">Binnen 1 uur aan de slag</h3>
+                <p>Op {site.hours} nemen we elke vordering binnen een uur in behandeling.</p>
+            </li>
+
+            <li class="tile">
+                <div class="viz viz-feed" aria-hidden="true">
+                    <div class="toast">
+                        <Icon name="mail" size={16} />
+                        <span>Sommatie verstuurd</span>
+                        <i>nu</i>
+                    </div>
+                    <div class="toast">
+                        <Icon name="phone" size={16} />
+                        <span>Debiteur gesproken</span>
+                        <i>2u</i>
+                    </div>
+                    <div class="toast">
+                        <Icon name="euro" size={16} />
+                        <span>Betaling ontvangen</span>
+                        <i>1d</i>
+                    </div>
+                </div>
+                <h3 class="h3">Elke stap live te volgen</h3>
+                <p>In uw online dossier ziet u elke brief, elk telefoontje en elke betaling op het moment dat het gebeurt.</p>
+            </li>
+
+            <li class="tile">
+                <div class="viz viz-bank" aria-hidden="true">
+                    <div class="acct">
+                        <Icon name="bank" size={18} />
+                        <span>Derdengeldenrekening</span>
+                    </div>
+                    <div class="arrow">
+                        <Icon name="arrow" size={18} />
+                        <span>elke week</span>
+                    </div>
+                    <div class="acct you">
+                        <Icon name="user" size={18} />
+                        <span>Uw rekening</span>
+                    </div>
+                </div>
+                <h3 class="h3">Uw geld staat apart</h3>
+                <p>Betalingen komen binnen op een aparte derdengeldenrekening, gescheiden van ons eigen geld.</p>
+            </li>
+
+            <li class="tile">
+                <div class="viz viz-team" aria-hidden="true">
+                    <div class="avatars">
+                        <span>A</span>
+                        <span>I</span>
+                    </div>
+                    <p class="names">
+                        Anas &amp; Ilyas<small>uw vaste aanspreekpunten</small>
+                    </p>
+                </div>
+                <h3 class="h3">Geen callcenter</h3>
+                <p>U spreekt direct de mensen die uw dossier behandelen. Telefonisch, per mail of via WhatsApp.</p>
+            </li>
+
+            <li class="tile">
+                <div class="viz viz-reg" aria-hidden="true">
+                    <div class="seal">
+                        <Icon name="shield" size={28} />
+                    </div>
+                    <p>
+                        Incassoregister Justis<b class="num">nr. {site.incassoRegister}</b>
+                    </p>
+                </div>
+                <h3 class="h3">Erkend en volgens de wet</h3>
+                <p>Ingeschreven in het Incassoregister en werkend volgens de wettelijke staffel voor incassokosten.</p>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<style>
+    .head {
+        max-width: 40rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .head .h2 {
+        margin-top: 14px;
+    }
+
+    /* veegrij op mobiel, raster vanaf tablet */
+    .bento {
+        display: flex;
+        gap: 12px;
+        margin-inline: calc(-1 * var(--gutter));
+        padding: 0 var(--gutter) 4px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--gutter);
+        scrollbar-width: none;
+    }
+    .bento::-webkit-scrollbar {
+        display: none;
+    }
+    .tile {
+        flex: 0 0 min(84%, 340px);
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        padding: 12px 12px 24px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    @media (min-width: 720px) {
+        .bento {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-inline: 0;
+            padding: 0;
+            overflow: visible;
+        }
+    }
+    @media (min-width: 1080px) {
+        .bento {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .tile .h3 {
+        margin: 24px 12px 0;
+    }
+    .tile > p {
+        margin: 8px 12px 0;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+
+    /* mini-visuals */
+    .viz {
+        position: relative;
+        display: grid;
+        place-items: center;
+        height: 184px;
+        padding: 20px;
+        border-radius: calc(var(--r-lg) - 6px);
+        background: #fff;
+        overflow: hidden;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .bill {
+        width: 100%;
+        max-width: 250px;
+    }
+    .bill p {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .bill b {
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .bill .strike b {
+        text-decoration: line-through;
+        text-decoration-color: var(--blue);
+        text-decoration-thickness: 2px;
+        color: var(--muted);
+    }
+    .bill .tag-row {
+        justify-content: flex-end;
+        border: 0;
+        padding: 2px 0 6px;
+    }
+    .bill em {
+        font-style: normal;
+        padding: 2px 8px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-weight: 600;
+    }
+    .bill .zero {
+        margin-top: 4px;
+        padding: 8px 10px;
+        border: 0;
+        border-radius: var(--r-sm);
+        background: var(--green-bg);
+    }
+    .bill .zero span,
+    .bill .zero b {
+        color: var(--green);
+        font-weight: 600;
+    }
+
+    .viz-time {
+        grid-auto-flow: column;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+    }
+    .stamp {
+        display: grid;
+        gap: 2px;
+        padding: 10px 12px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        text-align: center;
+    }
+    .stamp b {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        color: var(--ink);
+    }
+    .stamp.on {
+        background: var(--ink);
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .stamp.on b {
+        color: #fff;
+    }
+    .dash {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-width: 40px;
+        height: 2px;
+        background: repeating-linear-gradient(90deg, var(--blue) 0 6px, transparent 6px 11px);
+    }
+    .dash span {
+        position: absolute;
+        top: -26px;
+        padding: 2px 8px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .viz-feed {
+        align-content: center;
+        gap: 8px;
+    }
+    .toast {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: min(100%, 260px);
+        padding: 9px 12px;
+        border-radius: var(--r-md);
+        background: #fff;
+        box-shadow:
+            0 1px 2px rgba(6, 17, 38, 0.06),
+            0 6px 16px -8px rgba(6, 17, 38, 0.2);
+        color: var(--ink);
+        font-weight: 500;
+    }
+    .toast :global(svg) {
+        color: var(--blue);
+        flex-shrink: 0;
+    }
+    .toast span {
+        flex: 1;
+    }
+    .toast i {
+        font-style: normal;
+        color: var(--muted);
+    }
+    .toast:nth-child(2) {
+        transform: translateX(10px);
+    }
+    .toast:nth-child(3) {
+        transform: translateX(20px);
+        box-shadow:
+            0 0 0 1.5px var(--green),
+            0 6px 16px -8px rgba(6, 17, 38, 0.2);
+    }
+    .toast:nth-child(3) :global(svg) {
+        color: var(--green);
+    }
+
+    .viz-bank {
+        grid-auto-flow: column;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 8px;
+    }
+    .acct {
+        display: grid;
+        justify-items: center;
+        gap: 8px;
+        padding: 14px 8px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        color: var(--ink);
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.3;
+    }
+    .acct :global(svg) {
+        color: var(--blue);
+    }
+    .acct.you {
+        background: var(--green-bg);
+    }
+    .acct.you :global(svg) {
+        color: var(--green);
+    }
+    .arrow {
+        display: grid;
+        justify-items: center;
+        gap: 4px;
+        color: var(--blue);
+    }
+    .arrow span {
+        color: var(--muted);
+        white-space: nowrap;
+    }
+
+    .viz-team {
+        gap: 12px;
+        align-content: center;
+    }
+    .avatars {
+        display: flex;
+    }
+    .avatars span {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 600;
+    }
+    .avatars span + span {
+        margin-left: -14px;
+        background: var(--blue);
+    }
+    .names {
+        display: grid;
+        text-align: center;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: var(--fs-sm);
+    }
+    .names small {
+        font-weight: 400;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+
+    .viz-reg {
+        gap: 12px;
+        align-content: center;
+        text-align: center;
+    }
+    .seal {
+        display: grid;
+        place-items: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+        box-shadow: 0 0 0 8px rgba(48, 105, 254, 0.06);
+    }
+    .viz-reg p {
+        display: grid;
+        color: var(--ink);
+        font-weight: 500;
+    }
+    .viz-reg b {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+    }
+</style>

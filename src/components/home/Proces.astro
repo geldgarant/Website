@@ -1,0 +1,436 @@
+---
+// Interactief voorbeelddossier: elke stap laat zien wat er op dat moment met de factuur gebeurt.
+import Icon from "../Icon.astro"
+import { site } from "../../data/site"
+
+const stappen = [
+    {
+        tab: "Indienen",
+        titel: "U dient de vordering in",
+        tekst: "Online in ongeveer drie minuten: factuur uploaden, gegevens van de debiteur invullen, klaar. Liever bellen kan ook.",
+        status: "Ingediend",
+    },
+    {
+        tab: "Binnen 1 uur",
+        titel: "Binnen het uur in behandeling",
+        tekst: `Op ${site.hours} controleren we uw vordering binnen een uur en openen we het dossier. U krijgt direct inloggegevens.`,
+        status: "In behandeling",
+    },
+    {
+        tab: "Debiteur benaderd",
+        titel: "Wij nemen het contact over",
+        tekst: "Per brief, e-mail, sms en telefoon, zakelijk en correct. Bij particulieren altijd eerst de wettelijke 14-dagenbrief.",
+        status: "Debiteur benaderd",
+    },
+    {
+        tab: "Regeling",
+        titel: "Betaling of een regeling",
+        tekst: "De debiteur betaalt in één keer of we spreken een haalbare regeling af. U ziet elke termijn binnenkomen.",
+        status: "Regeling loopt",
+    },
+    {
+        tab: "Uitbetaald",
+        titel: "Uw geld staat op uw rekening",
+        tekst: "Betalingen komen binnen op onze derdengeldenrekening en dragen we wekelijks aan u af. Dossier afgerond.",
+        status: "Afgerond",
+    },
+]
+
+// tijdlijn van het voorbeelddossier; s = stap waarin het gebeurt
+const tijdlijn = [
+    { s: 0, icon: "doc", t: "Vordering ingediend", m: "Factuur 2026-118 · € 2.500,00", tijd: "ma 09:12" },
+    { s: 1, icon: "check", t: "Dossier in behandeling genomen", m: "Binnen 35 minuten", tijd: "ma 09:47" },
+    { s: 2, icon: "mail", t: "Sommatie verstuurd", m: "Per e-mail en per post", tijd: "ma 10:05" },
+    { s: 2, icon: "phone", t: "Debiteur telefonisch gesproken", m: "Wil betalen in twee termijnen", tijd: "wo 14:20" },
+    { s: 3, icon: "calendar", t: "Betalingsregeling vastgelegd", m: "2 termijnen van € 1.250,00", tijd: "wo 14:32" },
+    { s: 3, icon: "euro", t: "Termijn 1 ontvangen", m: "€ 1.250,00", tijd: "vr 11:03" },
+    { s: 4, icon: "euro", t: "Termijn 2 ontvangen", m: "€ 1.250,00", tijd: "vr 10:41" },
+    { s: 4, icon: "bank", t: "Afgedragen aan u", m: "€ 2.500,00 naar uw rekening", tijd: "vr 16:00" },
+] as const
+const ontvangen = [0, 0, 0, 1250, 2500]
+---
+
+<section class="section proces" aria-labelledby="proces-title" data-proces data-active="0">
+    <div class="wrap proces-grid">
+        <div class="proces-copy">
+            <p class="eyebrow">
+                <span class="idx">01</span> Zo werkt het
+            </p>
+            <h2 class="h2" id="proces-title">
+                Volg uw factuur van <span class="accent">indienen</span> tot uitbetaling
+            </h2>
+            <p class="lead">
+                Klik door de stappen en zie wat er in uw online dossier gebeurt. Het voorbeelddossier toont een eenvoudige zaak.
+            </p>
+
+            <div class="tabs" role="tablist" aria-label="Stappen van het incassotraject" data-scroller>
+                {stappen.map((s, i) => (
+                    <button
+                        type="button"
+                        role="tab"
+                        id={`stap-tab-${i}`}
+                        aria-controls={`stap-panel-${i}`}
+                        aria-selected={i === 0 ? "true" : "false"}
+                        tabindex={i === 0 ? 0 : -1}
+                        data-tab={i}
+                    >
+                        <span class="tab-num">{i + 1}</span>
+                        {s.tab}
+                    </button>
+                ))}
+            </div>
+
+            {stappen.map((s, i) => (
+                <div class="panel" role="tabpanel" id={`stap-panel-${i}`} aria-labelledby={`stap-tab-${i}`} hidden={i !== 0}>
+                    <h3 class="h3">{s.titel}</h3>
+                    <p>{s.tekst}</p>
+                </div>
+            ))}
+        </div>
+
+        <div class="dossier-stage" aria-hidden="true">
+            <div class="dossier">
+                <div class="dossier-head">
+                    <div>
+                        <p class="dossier-kicker">Voorbeelddossier</p>
+                        <p class="dossier-title">Bouwbedrijf · factuur 2026-118</p>
+                    </div>
+                    {stappen.map((s, i) => (
+                        <span class:list={["pill", { done: i === 4 }]} data-show={i}>
+                            {s.status}
+                        </span>
+                    ))}
+                </div>
+
+                <div class="dossier-amount">
+                    <div class="amount-row num">
+                        <span>Ontvangen</span>
+                        {ontvangen.map((v, i) => (
+                            <strong data-show={i}>
+                                € {v.toLocaleString("nl-NL")}
+                                <small> / € 2.500</small>
+                            </strong>
+                        ))}
+                    </div>
+                    <div class="bar">
+                        <span class="bar-fill"></span>
+                    </div>
+                </div>
+
+                <ol class="timeline">
+                    {tijdlijn.map((e) => (
+                        <li data-s={e.s}>
+                            <span class="t-icon">
+                                <Icon name={e.icon} size={16} />
+                            </span>
+                            <span class="t-body">
+                                <span class="t-title">{e.t}</span>
+                                <span class="t-meta">{e.m}</span>
+                            </span>
+                            <span class="t-time num">{e.tijd}</span>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll<HTMLElement>("[data-proces]").forEach((root) => {
+        const tabs = [...root.querySelectorAll<HTMLButtonElement>("[role=tab]")]
+        const select = (i: number, focus = false) => {
+            root.dataset.active = String(i)
+            tabs.forEach((t, j) => {
+                const on = i === j
+                t.setAttribute("aria-selected", String(on))
+                t.tabIndex = on ? 0 : -1
+                const panel = root.querySelector<HTMLElement>(`#${t.getAttribute("aria-controls")}`)
+                if (panel) panel.hidden = !on
+            })
+            if (focus) tabs[i].focus()
+            tabs[i].scrollIntoView({ block: "nearest", inline: "nearest" })
+        }
+        tabs.forEach((t, i) => {
+            t.addEventListener("click", () => select(i))
+            t.addEventListener("keydown", (e) => {
+                const n = tabs.length
+                const doel: Record<string, number> = {
+                    ArrowRight: (i + 1) % n,
+                    ArrowDown: (i + 1) % n,
+                    ArrowLeft: (i - 1 + n) % n,
+                    ArrowUp: (i - 1 + n) % n,
+                    Home: 0,
+                    End: n - 1,
+                }
+                if (e.key in doel) {
+                    e.preventDefault()
+                    select(doel[e.key], true)
+                }
+            })
+        })
+    })
+</script>
+
+<style>
+    .proces {
+        background: var(--surface);
+    }
+    .proces-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+    }
+    @media (min-width: 1024px) {
+        .proces-grid {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 72px;
+            align-items: center;
+        }
+    }
+    .proces-copy .h2 {
+        margin-top: 14px;
+    }
+    .proces-copy .lead {
+        margin-top: 20px;
+    }
+
+    /* tabs: veegrij op mobiel, verticale lijst op desktop */
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin: 32px calc(-1 * var(--gutter)) 0;
+        padding: 2px var(--gutter) 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+    .tabs button {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+        min-height: 48px;
+        padding: 6px 18px 6px 8px;
+        border: 0;
+        border-radius: var(--r-pill);
+        background: #fff;
+        color: var(--ink);
+        font-weight: 500;
+        font-size: var(--fs-sm);
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+    .tab-num {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .tabs button[aria-selected="true"] {
+        background: var(--ink);
+        color: #fff;
+    }
+    .tabs button[aria-selected="true"] .tab-num {
+        background: var(--blue);
+        color: #fff;
+    }
+    @media (min-width: 1024px) {
+        .tabs {
+            flex-direction: column;
+            gap: 6px;
+            margin-inline: 0;
+            padding-inline: 0;
+            overflow: visible;
+        }
+        .tabs button {
+            width: 100%;
+            min-height: 56px;
+            padding-right: 20px;
+            border-radius: var(--r-md);
+            font-size: 1rem;
+        }
+        .tabs button:hover:not([aria-selected="true"]) {
+            background: var(--surface-2);
+        }
+    }
+    .panel {
+        margin-top: 24px;
+        min-height: 7.5em;
+    }
+    .panel p {
+        margin-top: 8px;
+        color: var(--muted);
+    }
+
+    /* dossier-mockup */
+    .dossier {
+        padding: clamp(20px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        box-shadow: var(--shadow-card);
+    }
+    .dossier-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+    }
+    .dossier-kicker {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .dossier-title {
+        font-family: var(--font-display);
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+    }
+    .pill {
+        flex-shrink: 0;
+        padding: 4px 12px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .pill.done {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    [data-show] {
+        display: none;
+    }
+    [data-active="0"] [data-show="0"],
+    [data-active="1"] [data-show="1"],
+    [data-active="2"] [data-show="2"],
+    [data-active="3"] [data-show="3"],
+    [data-active="4"] [data-show="4"] {
+        display: inline-block;
+    }
+    .dossier-amount {
+        margin-top: 20px;
+        padding: 16px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .amount-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .amount-row strong {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        color: var(--ink);
+    }
+    .amount-row small {
+        font-family: var(--font-body);
+        font-size: var(--fs-xs);
+        font-weight: 400;
+        color: var(--muted);
+    }
+    .bar {
+        height: 8px;
+        margin-top: 10px;
+        border-radius: var(--r-pill);
+        background: var(--surface-2);
+        overflow: hidden;
+    }
+    .bar-fill {
+        display: block;
+        height: 100%;
+        width: 0%;
+        border-radius: inherit;
+        background: var(--green);
+        transition: width 0.6s var(--ease);
+    }
+    [data-active="3"] .bar-fill {
+        width: 50%;
+    }
+    [data-active="4"] .bar-fill {
+        width: 100%;
+    }
+
+    .timeline {
+        position: relative;
+        margin-top: 20px;
+    }
+    .timeline::before {
+        content: "";
+        position: absolute;
+        left: 17px;
+        top: 18px;
+        bottom: 18px;
+        width: 2px;
+        background: var(--line);
+    }
+    .timeline li {
+        position: relative;
+        display: grid;
+        grid-template-columns: 36px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        padding: 7px 0;
+    }
+    .t-icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        transition:
+            background-color 0.35s ease,
+            color 0.35s ease;
+    }
+    .t-body {
+        display: grid;
+        line-height: 1.3;
+        min-width: 0;
+    }
+    .t-title {
+        font-weight: var(--t-weight, 600);
+        color: var(--t-title, var(--ink));
+        font-size: var(--fs-sm);
+    }
+    .t-meta,
+    .t-time {
+        font-size: var(--fs-xs);
+        color: var(--t-meta, var(--muted));
+    }
+</style>
+
+<style is:global>
+    /* toekomstige tijdlijn-items per actieve stap (globaal: data-attributen op dezelfde sectie) */
+    [data-active="0"] .timeline li:is([data-s="1"], [data-s="2"], [data-s="3"], [data-s="4"]),
+    [data-active="1"] .timeline li:is([data-s="2"], [data-s="3"], [data-s="4"]),
+    [data-active="2"] .timeline li:is([data-s="3"], [data-s="4"]),
+    [data-active="3"] .timeline li[data-s="4"] {
+        --t-title: #586280;
+        --t-meta: #6b7390;
+        --t-weight: 500;
+    }
+    [data-active="0"] .timeline li:is([data-s="1"], [data-s="2"], [data-s="3"], [data-s="4"]) .t-icon,
+    [data-active="1"] .timeline li:is([data-s="2"], [data-s="3"], [data-s="4"]) .t-icon,
+    [data-active="2"] .timeline li:is([data-s="3"], [data-s="4"]) .t-icon,
+    [data-active="3"] .timeline li[data-s="4"] .t-icon {
+        background: #fff;
+        color: #586280;
+        box-shadow: inset 0 0 0 2px #e1e4ec;
+    }
+</style>

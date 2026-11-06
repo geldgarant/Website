@@ -1,0 +1,324 @@
+---
+// "En als het tegenvalt?" Scenario-kiezer: per uitkomst direct zien wat het u kost.
+import Icon from "../Icon.astro"
+import { WIK_STAFFEL, WIK_MIN, WIK_MAX, euro } from "../../lib/wik"
+
+const scenarios = [
+    {
+        id: "volledig",
+        label: "Debiteur betaalt alles",
+        kop: "U betaalt € 0",
+        good: true,
+        tekst: "U krijgt uw volledige hoofdsom. De wettelijke incassokosten en de rente betaalt de debiteur; die zijn voor GeldGarant.",
+        regels: [
+            ["Uw hoofdsom", "100% naar u"],
+            ["Incassokosten en rente", "betaalt de debiteur"],
+            ["Uw kosten", "€ 0"],
+        ],
+    },
+    {
+        id: "deels",
+        label: "Betaalt een deel",
+        kop: "Verrekend met wat binnenkomt",
+        good: false,
+        tekst: "Betaalt de debiteur maar een deel, dan verrekenen we de incassokosten met wat binnenkomt, met een minimum van € 45. De rest is voor u.",
+        regels: [
+            ["Incassokosten", "verrekend met de betaling"],
+            ["Minimum", "€ 45"],
+        ],
+    },
+    {
+        id: "niets",
+        label: "Niets te halen",
+        kop: "Dossier gesloten, zonder kosten",
+        good: true,
+        tekst: "Bij faillissement, overlijden, schuldsanering of als een procedure niet haalbaar is, sluiten we het dossier kosteloos.",
+        regels: [
+            ["Faillissement, overlijden, schuldsanering", "€ 0"],
+            ["Vordering bij de curator indienen", "€ 115 excl. btw, alleen als u dat wilt"],
+        ],
+    },
+    {
+        id: "rechter",
+        label: "Rechter nodig",
+        kop: "Alleen met uw akkoord",
+        good: false,
+        tekst: "We starten altijd minnelijk. Een procedure begint pas als u akkoord geeft, en de kosten van rechtbank en deurwaarder hoort u vooraf.",
+        regels: [
+            ["Start procedure", "pas na uw akkoord"],
+            ["Kosten rechtbank en deurwaarder", "vooraf bekend, voor u"],
+        ],
+    },
+]
+
+const staffelRijen = (() => {
+    let vorige = 0
+    return WIK_STAFFEL.map((s) => {
+        const label =
+            s.tot === Infinity
+                ? `Boven ${euro(vorige, 0)}`
+                : vorige === 0
+                  ? `Eerste ${euro(s.tot, 0)}`
+                  : `${euro(vorige, 0)} tot ${euro(s.tot, 0)}`
+        vorige = s.tot
+        return { label, pct: `${String(s.pct * 100).replace(".", ",")}%` }
+    })
+})()
+---
+
+<section class="section" aria-labelledby="kosten-title">
+    <div class="wrap kosten">
+        <div class="kosten-copy">
+            <p class="eyebrow">
+                <span class="idx">03</span> Kosten
+            </p>
+            <h2 class="h2" id="kosten-title">
+                En als het <span class="accent">tegenvalt?</span>
+            </h2>
+            <p class="lead">Kies wat er met uw factuur gebeurt en zie direct wat het u kost. Zonder kleine lettertjes.</p>
+            <a class="btn btn-dark" href="/tarieven">
+                Alle tarieven
+                <span class="btn-dot">
+                    <Icon name="arrow" size={18} />
+                </span>
+            </a>
+        </div>
+
+        <div class="switch">
+            <fieldset>
+                <legend class="sr-only">Kies een scenario</legend>
+                <div class="seg" data-scroller>
+                    {scenarios.map((s, i) => (
+                        <label>
+                            <input type="radio" name="scenario" value={s.id} checked={i === 0} />
+                            <span>{s.label}</span>
+                        </label>
+                    ))}
+                </div>
+            </fieldset>
+
+            {scenarios.map((s) => (
+                <div class="outcome" data-scenario={s.id}>
+                    <p class:list={["outcome-kop", { good: s.good }]}>{s.kop}</p>
+                    <p class="outcome-tekst">{s.tekst}</p>
+                    <dl>
+                        {s.regels.map(([k, v]) => (
+                            <div>
+                                <dt>{k}</dt>
+                                <dd>{v}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </div>
+            ))}
+
+            <details class="staffel">
+                <summary>
+                    Wettelijke staffel incassokosten
+                    <Icon name="chevron" size={18} />
+                </summary>
+                <table class="num">
+                    <caption class="sr-only">Staffel wettelijke incassokosten</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Over de hoofdsom</th>
+                            <th scope="col">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {staffelRijen.map((r) => (
+                            <tr>
+                                <td>{r.label}</td>
+                                <td>{r.pct}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <p>
+                    Minimaal {euro(WIK_MIN, 0)}, maximaal {euro(WIK_MAX, 0)}. Betaald door de debiteur.
+                </p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<style>
+    .kosten {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .kosten {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .kosten-copy .h2 {
+        margin-top: 14px;
+    }
+    .kosten-copy .lead {
+        margin-top: 20px;
+    }
+    .kosten-copy .btn {
+        margin-top: 32px;
+    }
+    @media (max-width: 1023px) {
+        .kosten-copy .btn {
+            display: none;
+        }
+    }
+
+    .switch {
+        padding: clamp(16px, 2.4vw, 28px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+    }
+    fieldset {
+        border: 0;
+        padding: 0;
+        min-width: 0;
+    }
+    .seg {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .seg::-webkit-scrollbar {
+        display: none;
+    }
+    .seg label {
+        position: relative;
+        flex-shrink: 0;
+    }
+    .seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .seg span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.85);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        white-space: nowrap;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+    .seg input:checked + span {
+        background: #fff;
+        color: var(--ink);
+    }
+    .seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue-on-dark);
+        outline-offset: 2px;
+    }
+
+    .outcome {
+        display: none;
+        margin-top: 14px;
+        padding: clamp(20px, 2.6vw, 32px);
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .switch:has(input[value="volledig"]:checked) [data-scenario="volledig"],
+    .switch:has(input[value="deels"]:checked) [data-scenario="deels"],
+    .switch:has(input[value="niets"]:checked) [data-scenario="niets"],
+    .switch:has(input[value="rechter"]:checked) [data-scenario="rechter"] {
+        display: block;
+    }
+    .outcome-kop {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+    }
+    .outcome-kop.good {
+        color: var(--green);
+    }
+    .outcome-tekst {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: var(--fs-sm);
+    }
+    .outcome dl {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+    }
+    .outcome dl div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+    }
+    .outcome dt {
+        color: var(--muted);
+    }
+    .outcome dd {
+        color: var(--ink);
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .staffel {
+        margin-top: 10px;
+        border-radius: var(--r-lg);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.8);
+        font-size: var(--fs-sm);
+    }
+    .staffel summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 52px;
+        padding: 0 20px;
+        cursor: pointer;
+        list-style: none;
+        color: #fff;
+        font-weight: 500;
+    }
+    .staffel summary::-webkit-details-marker {
+        display: none;
+    }
+    .staffel[open] summary :global(svg) {
+        transform: rotate(180deg);
+    }
+    .staffel table {
+        width: calc(100% - 40px);
+        margin: 0 20px;
+        border-collapse: collapse;
+    }
+    .staffel th {
+        text-align: left;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+        padding-bottom: 8px;
+    }
+    .staffel td {
+        padding: 8px 0;
+        border-top: 1px solid var(--line-dark);
+    }
+    .staffel :is(th, td):last-child {
+        text-align: right;
+    }
+    .staffel p {
+        padding: 12px 20px 18px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+</style>

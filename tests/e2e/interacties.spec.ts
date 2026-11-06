@@ -46,4 +46,24 @@ test.describe("homepage interacties", () => {
         const hrefs = await page.$$eval('a[href^="tel:"]', (as) => [...new Set(as.map((a) => a.getAttribute("href")))])
         expect(hrefs).toEqual(["tel:+31852127914"])
     })
+
+    test("voorbeelddossier: stappen zijn met muis en pijltjestoetsen te kiezen", async ({ page }) => {
+        await page.goto("/")
+        const proces = page.locator("[data-proces]")
+        await proces.locator('[role="tab"]').nth(4).click()
+        await expect(proces).toHaveAttribute("data-active", "4")
+        await expect(page.locator("#stap-panel-4")).toBeVisible()
+        await expect(page.locator("#stap-panel-0")).toBeHidden()
+        await page.keyboard.press("ArrowRight")
+        await expect(proces).toHaveAttribute("data-active", "0")
+        await expect(proces.locator('[role="tab"]').nth(0)).toBeFocused()
+    })
+
+    test("kosten-scenario's tonen per keuze de juiste uitkomst", async ({ page }) => {
+        await page.goto("/")
+        await expect(page.locator('[data-scenario="volledig"]')).toBeVisible()
+        await page.locator('input[value="niets"]').check({ force: true })
+        await expect(page.locator('[data-scenario="niets"]')).toBeVisible()
+        await expect(page.locator('[data-scenario="volledig"]')).toBeHidden()
+    })
 })
