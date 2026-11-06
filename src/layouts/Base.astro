@@ -12,8 +12,9 @@ interface Props {
     title: string
     description: string
     jsonLd?: object[]
+    noindex?: boolean
 }
-const { title, description, jsonLd = [] } = Astro.props
+const { title, description, jsonLd = [], noindex = false } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 
@@ -25,6 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={canonical} />
+        {noindex && <meta name="robots" content="noindex" />}
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="nl_NL" />
         <meta property="og:title" content={title} />
