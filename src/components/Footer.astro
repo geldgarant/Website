@@ -129,11 +129,12 @@ const bedrijf = [
         font-size: var(--fs-sm);
         padding-block: clamp(64px, 7vw, 96px) 28px;
     }
-    .footer a {
+    /* :not(.btn): anders wint deze regel van de knopkleur en wordt de tekst wit op wit */
+    .footer a:not(.btn) {
         color: #fff;
         transition: color 0.15s ease;
     }
-    .footer a:hover {
+    .footer a:not(.btn):hover {
         color: var(--blue-on-dark);
     }
     .footer h2 {

@@ -1,0 +1,146 @@
+---
+// Veelgestelde vragen: kop links (sticky op desktop), uitklappers rechts. Gebruikt op home en dienstpagina's.
+import Icon from "./Icon.astro"
+import { site } from "../data/site"
+
+interface Props {
+    items: readonly { q: string; a: string }[]
+    idx: string
+    id?: string
+}
+const { items, idx, id = "faq-title" } = Astro.props
+---
+
+<section class="section bg-surface" aria-labelledby={id}>
+    <div class="wrap split">
+        <div class="split-head">
+            <p class="eyebrow">
+                <span class="idx">{idx}</span> Veelgestelde vragen
+            </p>
+            <h2 class="h2" id={id}>
+                <slot name="title">
+                    Goed om te <span class="accent">weten</span>
+                </slot>
+            </h2>
+            <div class="ask">
+                <p>
+                    <strong>Staat uw vraag er niet tussen?</strong> Bel ons, we helpen u direct verder.
+                </p>
+                <a class="btn btn-dark" href={site.phoneHref}>
+                    Bel{"\u00a0"}
+                    {site.phone}
+                    <span class="btn-dot">
+                        <Icon name="phone" size={18} />
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="faq">
+            {items.map((f) => (
+                <details class="faq-item">
+                    <summary>
+                        <span>{f.q}</span>
+                        <span class="faq-icon" aria-hidden="true">
+                            <Icon name="plus" size={18} />
+                        </span>
+                    </summary>
+                    <p>{f.a}</p>
+                </details>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+    }
+    @media (min-width: 1024px) {
+        .split {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 72px;
+            align-items: start;
+        }
+        .split-head {
+            position: sticky;
+            top: calc(var(--header-h) + 40px);
+        }
+    }
+    .split-head .h2 {
+        margin-top: 14px;
+    }
+    .ask {
+        margin-top: 32px;
+        padding: 24px;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .ask p {
+        color: var(--muted);
+        font-size: var(--fs-sm);
+    }
+    .ask strong {
+        display: block;
+        color: var(--ink);
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    .ask .btn {
+        margin-top: 20px;
+    }
+    .faq {
+        display: grid;
+        gap: 8px;
+    }
+    .faq-item {
+        border-radius: var(--r-md);
+        background: #fff;
+        transition: box-shadow 0.2s ease;
+    }
+    .faq-item[open] {
+        box-shadow: var(--shadow-card);
+    }
+    .faq-item summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 64px;
+        padding: 16px 16px 16px 24px;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 1.0625rem;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        cursor: pointer;
+        list-style: none;
+    }
+    .faq-item summary::-webkit-details-marker {
+        display: none;
+    }
+    .faq-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--ink);
+        transition:
+            transform 0.25s var(--ease),
+            background-color 0.2s ease;
+    }
+    .faq-item[open] .faq-icon {
+        transform: rotate(45deg);
+        background: var(--blue);
+        color: #fff;
+    }
+    .faq-item p {
+        padding: 0 24px 24px;
+        color: var(--muted);
+        max-width: 44em;
+    }
+</style>

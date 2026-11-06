@@ -1,0 +1,247 @@
+---
+// "Is mijn factuur rijp voor incasso?" Drie vinkjes, direct een antwoord. Zonder JS blijft de neutrale tekst staan.
+import Icon from "../Icon.astro"
+import { site } from "../../data/site"
+
+const vragen = [
+    { id: "vervallen", t: "De betaaltermijn van de factuur is verstreken" },
+    { id: "geen-reactie", t: "Uw klant heeft niet betaald, ook niet na een herinnering of belofte" },
+    { id: "geen-geschil", t: "Uw klant betwist de factuur niet inhoudelijk" },
+]
+---
+
+<section class="section" aria-labelledby="klaar-title">
+    <div class="wrap klaar">
+        <div class="klaar-copy">
+            <p class="eyebrow">
+                <span class="idx">04</span> Het juiste moment
+            </p>
+            <h2 class="h2" id="klaar-title">
+                Is uw factuur <span class="accent">klaar</span> voor incasso?
+            </h2>
+            <p class="lead">Vink aan wat klopt. Hoe eerder u indient, hoe groter de kans dat de debiteur nog kan betalen.</p>
+
+            <h3 class="anders-title">Eerst iets anders als</h3>
+            <ul role="list" class="anders">
+                <li>
+                    <strong>de factuur nog niet vervallen is.</strong>
+                    <span>
+                        Met{" "}
+                        <a class="textlink" href="/debiteurenbeheer">
+                            debiteurenbeheer
+                        </a>{" "}
+                        bewaken we uw openstaande posten, nog voor het een incassozaak wordt.
+                    </span>
+                </li>
+                <li>
+                    <strong>uw klant de factuur inhoudelijk betwist.</strong>
+                    <span>
+                        <a class="textlink nowrap" href={site.phoneHref}>
+                            Bel{" "}ons
+                        </a>
+                        , dan kijken we samen wat de verstandigste stap is.
+                    </span>
+                </li>
+                <li>
+                    <strong>uw klant failliet is.</strong>
+                    <span>Dan dienen we uw vordering in bij de curator, voor € 115 excl. btw.</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="check" data-klaar>
+            <fieldset>
+                <legend class="check-legend">Klaar voor incasso?</legend>
+                {vragen.map((v) => (
+                    <label class="check-row">
+                        <input type="checkbox" id={`klaar-${v.id}`} name={v.id} />
+                        <span>{v.t}</span>
+                    </label>
+                ))}
+            </fieldset>
+
+            <div class="verdict" role="status">
+                <div class="verdict-ja" data-verdict="ja" hidden>
+                    <p class="verdict-kop">
+                        <Icon name="check" size={20} />
+                        Uw factuur is klaar voor incasso
+                    </p>
+                    <p>Dien hem in en op werkdagen gaan we binnen het uur voor u aan de slag.</p>
+                </div>
+                <div data-verdict="nee">
+                    <p class="verdict-kop verdict-kop-neutraal">Nog niet alles aangevinkt?</p>
+                    <p>Twijfelt u, bel ons gerust. We zeggen eerlijk of incasso nu de beste stap is.</p>
+                </div>
+            </div>
+            <div class="check-actions">
+                <a class="btn" href="/vordering-indienen">
+                    Vordering indienen
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+                <a class="btn btn-ghost" href={site.phoneHref}>
+                    <Icon name="phone" size={18} />
+                    Bel{"\u00a0"}
+                    {site.phone}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll<HTMLElement>("[data-klaar]").forEach((root) => {
+        const boxes = [...root.querySelectorAll<HTMLInputElement>("input[type=checkbox]")]
+        const ja = root.querySelector<HTMLElement>('[data-verdict="ja"]')
+        const nee = root.querySelector<HTMLElement>('[data-verdict="nee"]')
+        const update = () => {
+            const alles = boxes.every((b) => b.checked)
+            if (ja) ja.hidden = !alles
+            if (nee) nee.hidden = alles
+            root.classList.toggle("is-klaar", alles)
+        }
+        boxes.forEach((b) => b.addEventListener("change", update))
+        update()
+    })
+</script>
+
+<style>
+    .klaar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+    }
+    @media (min-width: 1024px) {
+        .klaar {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 80px;
+            align-items: start;
+        }
+    }
+    .klaar-copy .h2 {
+        margin-top: 14px;
+    }
+    .klaar-copy .lead {
+        margin-top: 20px;
+    }
+    .anders-title {
+        margin-top: 36px;
+        font-family: var(--font-body);
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .anders {
+        display: grid;
+        margin-top: 8px;
+    }
+    .anders li {
+        display: grid;
+        gap: 2px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+    }
+    .anders strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .anders span {
+        color: var(--muted);
+    }
+
+    .check {
+        padding: clamp(20px, 3vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+        transition: background-color 0.3s var(--ease);
+    }
+    .check fieldset {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    .check-legend {
+        margin-bottom: 14px;
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .check-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 60px;
+        padding: 12px 18px;
+        border-radius: var(--r-md);
+        background: #fff;
+        border: 1.5px solid transparent;
+        color: var(--ink);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        line-height: 1.45;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+    }
+    .check-row:hover {
+        border-color: var(--line);
+    }
+    .check-row:has(input:checked) {
+        border-color: var(--blue);
+    }
+    .check-row input {
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        margin: 0;
+        accent-color: var(--blue);
+        cursor: pointer;
+    }
+    .verdict {
+        margin-top: 20px;
+        padding: 18px 20px;
+        border-radius: var(--r-md);
+        background: #fff;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.55;
+    }
+    .is-klaar .verdict {
+        background: var(--green-bg);
+        color: var(--text);
+    }
+    .verdict-kop {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 2px;
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--green);
+    }
+    .verdict-kop-neutraal {
+        color: var(--ink);
+    }
+    .check .btn-ghost:hover {
+        --btn-bg: #fff;
+    }
+    .check-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    @media (max-width: 519px) {
+        .check-actions .btn {
+            width: 100%;
+        }
+    }
+</style>

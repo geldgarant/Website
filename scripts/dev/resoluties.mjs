@@ -1,9 +1,11 @@
 // Controle op veel schermbreedtes: horizontale overloop, header-hoogte, kleine tikdoelen; plus header-screenshots
 import { chromium } from "@playwright/test"
+// Gebruik: node scripts/dev/resoluties.mjs [route]  (standaard "/")
+const route = process.argv[2] || "/"
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH })
 for (const w of [320, 360, 390, 430, 768, 1024, 1280, 1440, 1920, 2560]) {
     const p = await b.newPage({ viewport: { width: w, height: 900 }, isMobile: w < 1024, hasTouch: w < 1024 })
-    await p.goto("http://localhost:4399/", { waitUntil: "networkidle" })
+    await p.goto(`http://localhost:4399${route}`, { waitUntil: "networkidle" })
     const r = await p.evaluate(() => {
         const vw = document.documentElement.clientWidth
         const over = [...document.querySelectorAll("body *")]

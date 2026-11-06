@@ -1,0 +1,612 @@
+---
+// A1 /incasso. Hoofdvraag van de bezoeker: "Hoe innen jullie mijn factuur, en wat kan ik verwachten?"
+// Volgorde: kan het en wat kost het (hero) → wat gebeurt er (01) → maakt de klant uit (02)
+// → wat kost het precies (03) → is het nu het moment (04) → verder lezen (05) → vragen (06) → CTA.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Afrekening from "../../components/Afrekening.astro"
+import Kosten from "../../components/home/Kosten.astro"
+import Fasen from "../../components/incasso/Fasen.astro"
+import Klaar from "../../components/incasso/Klaar.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { incassoFaq } from "../../data/faq"
+
+const title = "Incasso uitbesteden voor ondernemers | GeldGarant"
+const description =
+    "Onbetaalde factuur? GeldGarant neemt de incasso over, van aanmaning tot alleen met uw akkoord de rechter. Volledig betaald? Dan betaalt u niets."
+
+const url = "https://geldgarant.com/incasso"
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Incasso",
+        serviceType: "Incassodienstverlening",
+        url,
+        areaServed: "NL",
+        audience: { "@type": "BusinessAudience", name: "Ondernemers" },
+        provider: {
+            "@type": "ProfessionalService",
+            name: "GeldGarant",
+            url: "https://geldgarant.com",
+            telephone: "+31852127914",
+            address: {
+                "@type": "PostalAddress",
+                streetAddress: site.street,
+                postalCode: site.postcode,
+                addressLocality: site.city,
+                addressCountry: "NL",
+            },
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Incasso", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: incassoFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+
+// Hero: de afspraken in één oogopslag
+const feiten = [
+    { icon: "euro", k: "Debiteur betaalt volledig", v: "U betaalt € 0" },
+    { icon: "clock", k: "Start op werkdagen", v: "Binnen 1 uur" },
+    { icon: "building", k: "Uw klant", v: "Bedrijf of particulier" },
+    { icon: "scale", k: "Naar de rechter", v: "Alleen met uw akkoord" },
+    { icon: "bank", k: "Uitbetaling", v: "Wekelijks, via de derdengeldenrekening" },
+] as const
+
+// 02: verschillen tussen een zakelijke en een particuliere debiteur (wettelijk kader)
+const verschillen = [
+    {
+        k: "Eerste brief",
+        b: "Een aanmaning met een korte betaaltermijn",
+        p: "De wettelijke 14-dagenbrief, met 14 dagen om zonder kosten te betalen",
+    },
+    {
+        k: "Incassokosten",
+        b: "Volgens de wettelijke staffel, minimaal € 40",
+        p: "Volgens de wettelijke staffel, minimaal € 40, pas na de 14-dagenbrief",
+    },
+    { k: "Rente", b: "Wettelijke handelsrente", p: "Wettelijke rente" },
+    { k: "Verjaring", b: "Meestal na 5 jaar", p: "Na 2 jaar bij een koop, anders meestal na 5 jaar" },
+]
+
+const verder = [
+    {
+        t: "Wanneer schakelt u een incassobureau in?",
+        d: "De signalen, en wat u zelf al kunt doen voordat u ons inschakelt.",
+        href: "/incasso/incassobureau-inschakelen",
+    },
+    {
+        t: "Incassokosten berekenen",
+        d: "Reken uit welke incassokosten en rente u mag doorberekenen.",
+        href: "/incasso/incassokosten-berekenen",
+    },
+    {
+        t: "De 14-dagenbrief (WIK-brief)",
+        d: "Wat erin moet staan en waarom die termijn zo belangrijk is.",
+        href: "/incasso/wik-brief",
+    },
+    {
+        t: "Incasso in het buitenland",
+        d: "Klant over de grens? Zo pakken we een buitenlandse vordering aan.",
+        href: "/incasso/incasso-in-het-buitenland",
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <nav class="crumbs" aria-label="Kruimelpad">
+                <ol role="list">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li aria-current="page">Incasso</li>
+                </ol>
+            </nav>
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Incasso uitbesteden? De kosten zijn voor de <span class="accent">debiteur</span>.
+                    </h1>
+                    <p class="lead">
+                        Wij nemen uw onbetaalde factuur over: van de eerste aanmaning tot, als het moet, de rechter. Betaalt de
+                        debiteur volledig, dan betaalt u ons niets.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="/vordering-indienen">
+                            Vordering indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#zo-werkt-het">
+                            Zo werkt het
+                        </a>
+                    </div>
+                </div>
+
+                <aside class="feiten bg-ink" aria-labelledby="feiten-title">
+                    <img class="feiten-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                    <h2 class="feiten-title" id="feiten-title">
+                        Incasso bij GeldGarant
+                    </h2>
+                    <dl>
+                        {feiten.map((f) => (
+                            <div>
+                                <dt>
+                                    <span class="feit-icon" aria-hidden="true">
+                                        <Icon name={f.icon} size={18} />
+                                    </span>
+                                    {f.k}
+                                </dt>
+                                <dd>{f.v}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                    <a class="feiten-reg" href={site.incassoRegisterHref}>
+                        <Icon name="shield" size={16} />
+                        Geregistreerd bij Justis, incassoregister {site.incassoRegister}
+                    </a>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <Fasen />
+
+    <!-- 02 BEDRIJF OF PARTICULIER -->
+    <section class="section" aria-labelledby="klant-title">
+        <div class="wrap klant">
+            <div class="klant-copy">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Uw klant
+                </p>
+                <h2 class="h2" id="klant-title">
+                    Bedrijf of <span class="accent">particulier</span>, wij doen beide
+                </h2>
+                <p class="lead">
+                    De wet beschermt consumenten extra. Daarom verloopt de start bij een particulier anders. Wij houden ons aan de
+                    regels, zodat uw incassokosten ook echt verhaalbaar zijn.
+                </p>
+            </div>
+            <div class="vergelijk-wrap">
+                <table class="vergelijk">
+                    <caption class="sr-only">Verschillen tussen een zakelijke en een particuliere debiteur</caption>
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <th scope="col">
+                                <Icon name="building" size={18} />
+                                Bedrijf
+                            </th>
+                            <th scope="col">
+                                <Icon name="person" size={18} />
+                                Particulier
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {verschillen.map((r) => (
+                            <tr>
+                                <th scope="row">{r.k}</th>
+                                <td data-label="Bedrijf">{r.b}</td>
+                                <td data-label="Particulier">{r.p}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <Kosten
+        surface
+        idx="03"
+        lead="Bij volledige betaling betaalt u niets. Kies hieronder wat er met uw factuur gebeurt en zie wat het u kost."
+    >
+        <Fragment slot="title">
+            Wat kost <span class="accent">incasso</span> u?
+        </Fragment>
+        <div class="kosten-reken">
+            <Afrekening />
+        </div>
+    </Kosten>
+
+    <Klaar />
+
+    <!-- 05 VERDER LEZEN -->
+    <section class="section bg-surface" aria-labelledby="verder-title">
+        <div class="wrap">
+            <div class="verder-head">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Verder lezen
+                </p>
+                <h2 class="h2" id="verder-title">
+                    Meer over <span class="accent">incasso</span>
+                </h2>
+            </div>
+            <ul role="list" class="services">
+                {verder.map((d) => (
+                    <li>
+                        <a class="service" href={d.href}>
+                            <span class="service-text">
+                                <span class="service-title">{d.t}</span>
+                                <span class="service-desc">{d.d}</span>
+                            </span>
+                            <span class="service-go" aria-hidden="true">
+                                <Icon name="arrow-up-right" size={18} />
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <Faq items={incassoFaq} idx="06">
+        <Fragment slot="title">
+            Vragen over <span class="accent">incasso</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Dien uw vordering in ongeveer drie minuten in. Op werkdagen gaan we binnen het uur voor u aan de slag.">
+        Uw factuur, ons <span class="accent">werk</span>
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .crumbs ol {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .crumbs li + li::before {
+        content: "/";
+        margin-right: 6px;
+        color: var(--line);
+    }
+    .crumbs a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        color: var(--muted);
+        text-decoration: underline;
+        text-decoration-color: var(--line);
+        text-underline-offset: 3px;
+    }
+    .crumbs a:hover {
+        color: var(--ink);
+        text-decoration-color: var(--blue);
+    }
+    .crumbs [aria-current] {
+        color: var(--ink);
+        font-weight: 500;
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11.5em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    /* Feitenkaart: de afspraken die een ondernemer eerst wil weten */
+    .feiten {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(24px, 3vw, 36px);
+        border-radius: var(--r-xl);
+    }
+    .feiten > :not(img) {
+        position: relative;
+    }
+    .feiten-mark {
+        position: absolute;
+        right: 0;
+        bottom: -12%;
+        width: 52%;
+        height: auto;
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    .feiten-title {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: #fff;
+    }
+    .feiten dl {
+        display: grid;
+        margin-top: 12px;
+    }
+    .feiten dl > div {
+        display: grid;
+        gap: 4px;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line-dark);
+    }
+    @media (min-width: 520px) {
+        .feiten dl > div {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            align-items: center;
+            gap: 16px;
+        }
+    }
+    .feiten dt {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .feit-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--blue-on-dark);
+    }
+    .feiten dd {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 1.0625rem;
+        letter-spacing: -0.01em;
+        color: #fff;
+        line-height: 1.35;
+    }
+    @media (max-width: 519px) {
+        .feiten dd {
+            padding-left: 42px;
+        }
+    }
+    .feiten dl > div:first-child dd {
+        color: #7ee2a8;
+    }
+    .feiten-reg {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.72);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.28);
+        text-underline-offset: 3px;
+    }
+    .feiten-reg:hover {
+        color: #fff;
+    }
+    .feiten-reg :global(svg) {
+        color: var(--blue-on-dark);
+        flex-shrink: 0;
+    }
+
+    /* ---------- 02 BEDRIJF OF PARTICULIER ---------- */
+    .klant {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .klant {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 72px;
+            align-items: start;
+        }
+    }
+    .klant-copy .h2 {
+        margin-top: 14px;
+    }
+    .klant-copy .lead {
+        margin-top: 20px;
+    }
+    .vergelijk {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    .vergelijk thead th {
+        padding: 0 16px 14px;
+        text-align: left;
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+        vertical-align: bottom;
+    }
+    .vergelijk thead th :global(svg) {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--blue);
+    }
+    .vergelijk tbody th {
+        padding: 18px 16px 18px 0;
+        text-align: left;
+        font-weight: 600;
+        color: var(--ink);
+        vertical-align: top;
+        white-space: nowrap;
+    }
+    .vergelijk tbody td {
+        padding: 18px 16px;
+        color: var(--text);
+        vertical-align: top;
+    }
+    .vergelijk tbody tr {
+        border-top: 1px solid var(--line);
+    }
+    .vergelijk tbody td:last-child {
+        background: var(--surface);
+    }
+    .vergelijk thead th:last-child {
+        background: var(--surface);
+        border-radius: var(--r-md) var(--r-md) 0 0;
+        padding-top: 16px;
+    }
+    .vergelijk tbody tr:last-child td:last-child {
+        border-radius: 0 0 var(--r-md) var(--r-md);
+    }
+    /* Smal scherm: per onderwerp een blok met twee kolommen eronder */
+    @media (max-width: 639px) {
+        .vergelijk thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+        .vergelijk tbody tr {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 8px;
+            padding: 16px 0;
+        }
+        .vergelijk tbody th {
+            grid-column: 1 / -1;
+            padding: 0;
+            white-space: normal;
+        }
+        .vergelijk tbody td,
+        .vergelijk tbody td:last-child {
+            padding: 12px 14px;
+            border-radius: var(--r-md);
+            background: var(--surface);
+        }
+        .vergelijk tbody td::before {
+            content: attr(data-label);
+            display: block;
+            margin-bottom: 4px;
+            font-size: var(--fs-xs);
+            font-weight: 600;
+            color: var(--blue-ink);
+        }
+    }
+
+    /* ---------- 03 KOSTEN: rekenmodule onder de kop ---------- */
+    .kosten-reken {
+        margin-top: 32px;
+    }
+    /* Mobiel: de scenario-kiezer beantwoordt de kostenvraag al; de rekenmodule zou de pagina alleen langer maken */
+    @media (max-width: 1023px) {
+        .kosten-reken {
+            display: none;
+        }
+    }
+
+    /* ---------- 05 VERDER LEZEN ---------- */
+    .verder-head {
+        max-width: 44rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .verder-head .h2 {
+        margin-top: 14px;
+    }
+    .services {
+        display: grid;
+        gap: 8px;
+    }
+    @media (min-width: 900px) {
+        .services {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+    }
+    .service {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        height: 100%;
+        padding: 18px 16px 18px 22px;
+        border-radius: var(--r-lg);
+        background: #fff;
+        transition: box-shadow 0.25s var(--ease);
+    }
+    .service:hover {
+        box-shadow: var(--shadow-card);
+    }
+    .service-text {
+        display: grid;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+    }
+    .service-title {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.125rem;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .service-desc {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    .service-go {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        transition: transform 0.25s var(--ease);
+    }
+    .service:hover .service-go {
+        transform: rotate(45deg);
+    }
+</style>

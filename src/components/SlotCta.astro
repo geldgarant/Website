@@ -1,0 +1,76 @@
+---
+// Navy afsluiter onderaan een pagina: kop (slot), korte tekst en twee acties.
+import Icon from "./Icon.astro"
+import { site } from "../data/site"
+
+interface Props {
+    lead: string
+    id?: string
+}
+const { lead, id = "cta-title" } = Astro.props
+---
+
+<section class="cta-wrap" aria-labelledby={id}>
+    <div class="wrap">
+        <div class="cta bg-ink">
+            <img class="cta-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+            <h2 class="h2" id={id}>
+                <slot />
+            </h2>
+            <p class="lead">{lead}</p>
+            <div class="cta-actions">
+                <a class="btn btn-light" href="/vordering-indienen">
+                    Vordering indienen
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+                <a class="btn btn-ghost" href={site.phoneHref}>
+                    Bel{"\u00a0"}
+                    {site.phone}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .cta-wrap {
+        padding-bottom: clamp(48px, 6vw, 96px);
+    }
+    .cta {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(48px, 7vw, 96px) clamp(24px, 6vw, 80px);
+        border-radius: var(--r-xl);
+        text-align: center;
+    }
+    .cta-mark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(60%, 520px);
+        height: auto;
+        transform: translate(-50%, -50%);
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    .cta > :not(img) {
+        position: relative;
+    }
+    .cta .h2 {
+        max-width: 14em;
+        margin-inline: auto;
+    }
+    .cta .lead {
+        margin: 20px auto 0;
+        max-width: 34em;
+    }
+    .cta-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 36px;
+    }
+</style>

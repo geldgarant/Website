@@ -1,0 +1,415 @@
+---
+// De drie fasen van een incassodossier. Desktop: matrix (rijen lijnen uit via subgrid).
+// Mobiel: één fase tegelijk via radioknoppen + :has(), zonder JavaScript.
+import Icon from "../Icon.astro"
+
+const fasen = [
+    {
+        id: "aanmaning",
+        kort: "Aanmaning",
+        tag: null,
+        titel: "Aanmaning: een laatste kans",
+        intro: "We openen uw dossier en vragen de debiteur nog één keer om te betalen. Bij een particulier is dat de wettelijke 14-dagenbrief.",
+        wij: [
+            "Vordering controleren en dossier openen, op werkdagen binnen 1 uur",
+            "Bij een particulier: de 14-dagenbrief",
+            "Bij een bedrijf: een aanmaning per e-mail, sms en brief",
+        ],
+        u: ["Factuur en gegevens van de debiteur aanleveren", "Reacties van de debiteur naar ons doorsturen"],
+        termijn: "14 dagen bij een particulier, wettelijk vastgelegd",
+        kosten: "€ 0 bij volledige betaling",
+        toelichting: "Betaalt een particulier binnen de 14 dagen, dan betaalt ook hij geen incassokosten.",
+    },
+    {
+        id: "minnelijk",
+        kort: "Minnelijk",
+        tag: null,
+        titel: "Minnelijk: wij nemen het contact over",
+        intro: "Betaalt de debiteur niet, dan blijven we aandringen: zakelijk, correct en via elk kanaal. Het doel is betaling of een haalbare regeling, zonder rechter.",
+        wij: [
+            "Aanmaningen en een sommatie per e-mail, sms en brief",
+            "De debiteur bellen en zo nodig een regeling vastleggen",
+            "Betalingen ontvangen op onze derdengeldenrekening",
+        ],
+        u: ["Vragen van ons binnen 14 dagen beantwoorden", "Betalingen die bij u binnenkomen binnen een week melden"],
+        termijn: "Tot betaling, een regeling of uw besluit over de volgende stap",
+        kosten: "€ 0 bij volledige betaling",
+        toelichting: "Bij een deelbetaling verrekenen we de incassokosten met wat binnenkomt, minimaal € 45.",
+    },
+    {
+        id: "rechter",
+        kort: "Rechter",
+        tag: "Alleen met uw akkoord",
+        titel: "Rechter: alleen als het nodig is",
+        intro: "Blijft betaling uit, dan bekijken we eerlijk of een procedure kans heeft en wat er bij de debiteur te halen valt. U beslist.",
+        wij: [
+            "Advies over de kans op verhaal, vóór u beslist",
+            "Dagvaarding en dossier voorbereiden",
+            "Na het vonnis de deurwaarder aansturen",
+        ],
+        u: ["Schriftelijk akkoord geven op de procedure", "Een voorschot betalen voor de proceskosten"],
+        termijn: "Afhankelijk van de rechtbank en het verweer van de debiteur",
+        kosten: "Vooraf bekend",
+        toelichting: "Griffierecht en deurwaarder zijn voor u. Waar mogelijk verhalen we ze op de debiteur.",
+    },
+]
+---
+
+<section class="section bg-surface" aria-labelledby="fasen-title" id="zo-werkt-het">
+    <div class="wrap">
+        <div class="fasen-head">
+            <p class="eyebrow">
+                <span class="idx">01</span> Het traject
+            </p>
+            <h2 class="h2" id="fasen-title">
+                Zo innen we uw <span class="accent">factuur</span>
+            </h2>
+            <p class="lead">
+                Elk dossier doorloopt dezelfde fasen. Per fase ziet u wat wij doen, wat we van u vragen en wat het u kost.
+            </p>
+        </div>
+
+        <div class="fasen">
+            <fieldset class="fasen-kies">
+                <legend class="sr-only">Kies een fase</legend>
+                <div class="seg">
+                    {fasen.map((f, i) => (
+                        <label>
+                            <input type="radio" name="fase" value={f.id} checked={i === 0} />
+                            <span>
+                                <span class="seg-nr">{i + 1}</span>
+                                {f.kort}
+                            </span>
+                        </label>
+                    ))}
+                </div>
+            </fieldset>
+
+            <div class="fasen-grid">
+                {fasen.map((f, i) => (
+                    <article class="fase" data-fase={f.id} aria-labelledby={`fase-${f.id}`}>
+                        <div class="fase-top">
+                            <span class="node num">{i + 1}</span>
+                            {f.tag && <span class="fase-tag">{f.tag}</span>}
+                        </div>
+                        <div class="fase-intro">
+                            <h3 class="h3" id={`fase-${f.id}`}>
+                                {f.titel}
+                            </h3>
+                            <p>{f.intro}</p>
+                        </div>
+                        <div class="fase-row">
+                            <h4 class="fase-label">Wat wij doen</h4>
+                            <ul role="list" class="fase-list">
+                                {f.wij.map((w) => (
+                                    <li>
+                                        <Icon name="check" size={16} />
+                                        {w}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div class="fase-row">
+                            <h4 class="fase-label">Wat u doet</h4>
+                            <ul role="list" class="fase-list fase-list-u">
+                                {f.u.map((w) => (
+                                    <li>
+                                        <Icon name="person" size={16} />
+                                        {w}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div class="fase-row">
+                            <h4 class="fase-label">Hoe lang</h4>
+                            <p>{f.termijn}</p>
+                        </div>
+                        <div class="fase-row fase-kosten">
+                            <h4 class="fase-label">Wat het u kost</h4>
+                            <p class="fase-bedrag">{f.kosten}</p>
+                            <p>{f.toelichting}</p>
+                        </div>
+                    </article>
+                ))}
+            </div>
+
+            <p class="zijspoor">
+                <span class="zijspoor-icon" aria-hidden="true">
+                    <Icon name="shield" size={20} />
+                </span>
+                <span>
+                    <strong>Niets te halen?</strong> Bij faillissement, overlijden of schuldsanering van de debiteur sluiten we
+                    het dossier zonder kosten. Uw vordering bij de curator indienen kan voor € 115 excl. btw, als u dat wilt.
+                </span>
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .fasen-head {
+        max-width: 46rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .fasen-head .h2 {
+        margin-top: 14px;
+    }
+    .fasen-head .lead {
+        margin-top: 20px;
+    }
+
+    /* ---------- keuze (alleen mobiel/tablet) ---------- */
+    .fasen-kies {
+        min-width: 0;
+        margin: 0 0 12px;
+        padding: 0;
+        border: 0;
+    }
+    @media (max-width: 429px) {
+        .seg .seg-nr {
+            display: none;
+        }
+    }
+    .seg {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        border: 1px solid var(--line);
+    }
+    .seg label {
+        position: relative;
+    }
+    .seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .seg > label > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 44px;
+        padding: 0 8px;
+        border-radius: var(--r-pill);
+        color: var(--text);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        white-space: nowrap;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+    .seg-nr {
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .seg input:checked + span {
+        background: var(--ink);
+        color: #fff;
+    }
+    .seg input:checked + span .seg-nr {
+        background: var(--blue);
+        color: #fff;
+    }
+    .seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+
+    /* ---------- fasen ---------- */
+    .fasen-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        border-radius: var(--r-xl);
+        background: #fff;
+        overflow: hidden;
+    }
+    .fase {
+        display: grid;
+        align-content: start;
+        gap: 22px;
+        padding: clamp(22px, 3vw, 36px);
+    }
+    @supports selector(:has(*)) {
+        @media (max-width: 1023px) {
+            .fase {
+                display: none;
+            }
+            .fasen:has(input[value="aanmaning"]:checked) .fase[data-fase="aanmaning"],
+            .fasen:has(input[value="minnelijk"]:checked) .fase[data-fase="minnelijk"],
+            .fasen:has(input[value="rechter"]:checked) .fase[data-fase="rechter"] {
+                display: grid;
+            }
+        }
+    }
+    .fase-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 40px;
+    }
+    .node {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .fase[data-fase="rechter"] .node {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: inset 0 0 0 1.5px var(--ink);
+    }
+    .fase-tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 0 12px;
+        border-radius: var(--r-pill);
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .fase-intro .h3 {
+        font-size: 1.375rem;
+    }
+    .fase-intro p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+    }
+    .fase-row {
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+    }
+    .fase-label {
+        margin-bottom: 10px;
+        font-family: var(--font-body);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.01em;
+    }
+    .fase-row > p {
+        font-size: var(--fs-sm);
+        color: var(--text);
+        line-height: 1.55;
+    }
+    .fase-list {
+        display: grid;
+        gap: 8px;
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        color: var(--ink);
+    }
+    .fase-list li {
+        display: grid;
+        grid-template-columns: 16px minmax(0, 1fr);
+        gap: 10px;
+    }
+    .fase-list :global(svg) {
+        margin-top: 3px;
+        color: var(--green);
+    }
+    .fase-list-u :global(svg) {
+        color: var(--blue);
+    }
+    .fase-row > .fase-bedrag {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.25rem;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .fase-kosten > p + p {
+        margin-top: 4px;
+        color: var(--muted);
+    }
+
+    /* Desktop: drie kolommen, rijen uitgelijnd via subgrid, verbonden door een lijn langs de nummers */
+    @media (min-width: 1024px) {
+        .fasen-kies {
+            display: none;
+        }
+        .fasen-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-rows: repeat(6, auto);
+        }
+        .fase {
+            grid-row: span 6;
+            grid-template-rows: subgrid;
+            gap: 0;
+        }
+        .fase > * + * {
+            margin-top: 22px;
+        }
+        .fase + .fase {
+            border-left: 1px solid var(--line);
+        }
+        .fase-top {
+            position: relative;
+        }
+        .fase-top::after {
+            content: "";
+            position: absolute;
+            left: 52px;
+            right: calc(-2 * clamp(22px, 3vw, 36px) - 1px);
+            top: 50%;
+            border-top: 1.5px dashed var(--line);
+        }
+        .fase-tag {
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 0 8px #fff;
+        }
+        .fase:last-child .fase-top::after {
+            display: none;
+        }
+    }
+
+    .zijspoor {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-top: 12px;
+        padding: 18px 22px;
+        border-radius: var(--r-lg);
+        background: #fff;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height: 1.55;
+    }
+    .zijspoor strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .zijspoor-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--ink);
+    }
+</style>

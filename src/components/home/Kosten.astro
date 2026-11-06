@@ -3,6 +3,17 @@
 import Icon from "../Icon.astro"
 import { WIK_STAFFEL, WIK_MIN, WIK_MAX, euro } from "../../lib/wik"
 
+interface Props {
+    idx?: string
+    lead?: string
+    surface?: boolean
+}
+const {
+    idx = "03",
+    surface = false,
+    lead = "Kies wat er met uw factuur gebeurt en zie direct wat het u kost. Zonder kleine lettertjes.",
+} = Astro.props
+
 const scenarios = [
     {
         id: "volledig",
@@ -66,16 +77,19 @@ const staffelRijen = (() => {
 })()
 ---
 
-<section class="section" aria-labelledby="kosten-title">
+<section class:list={["section", { "bg-surface": surface }]} aria-labelledby="kosten-title">
     <div class="wrap kosten">
         <div class="kosten-copy">
             <p class="eyebrow">
-                <span class="idx">03</span> Kosten
+                <span class="idx">{idx}</span> Kosten
             </p>
             <h2 class="h2" id="kosten-title">
-                En als het <span class="accent">tegenvalt?</span>
+                <slot name="title">
+                    En als het <span class="accent">tegenvalt?</span>
+                </slot>
             </h2>
-            <p class="lead">Kies wat er met uw factuur gebeurt en zie direct wat het u kost. Zonder kleine lettertjes.</p>
+            <p class="lead">{lead}</p>
+            <slot />
             <a class="btn btn-dark" href="/tarieven">
                 Alle tarieven
                 <span class="btn-dot">
