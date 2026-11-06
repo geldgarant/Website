@@ -1,18 +1,18 @@
 # GeldGarant website (geldgarant.com)
 
-Incassobureau voor ondernemers, landelijk, kantoor Deventer. Astro 7, statisch, gehost op Cloudflare Pages naast de
-intake-worker (api.geldgarant.com). Benchmark: breyta.nl, maar beter op mobiel, prijstransparantie en bewijs.
+Incassobureau voor ondernemers, landelijk, kantoor Deventer. Astro 7, statisch, gehost op Cloudflare Workers (static assets, `wrangler.jsonc`;
+staging: website.geldgarant.workers.dev) naast de intake-worker (api.geldgarant.com). Overdracht: `docs/HANDOFF.md`. Benchmark: breyta.nl, maar beter op mobiel, prijstransparantie en bewijs.
 
 ## Harde regels
 
-- Merkkleur exact `#3f68f5`; alleen voor knoppen, accenten en onderstrepingen. Als tekstkleur haalt hij op getinte
-  achtergronden geen 4,5:1, dus tekstlinks zijn navy met blauwe onderstreping.
+- Merkkleur `--blue #3069FE` (uit het logo) voor knoppen, accenten en onderstrepingen. Blauw als tekst: `--blue-ink #1F4FD6`.
+  Tekstlinks zijn navy met blauwe onderstreping (`.textlink`).
 - Bedrijfsgegevens alleen uit `src/data/site.ts` (telefoon, KvK 90622375, register 00273). Nooit hardcoden.
 - Copy: Nederlands, altijd `u`, geen em-dashes, geen uitroeptekens in koppen, geen emoji, woordenlijst uit het werkplan.
-- Geen verzonnen reviews, logo's, cijfers, percentages of certificaten. Voorbeeldinhoud krijgt `.todo` en gaat nooit live.
+- Geen verzonnen reviews, logo's, cijfers, percentages of certificaten. Voorbeelden (zoals het voorbeelddossier) altijd zichtbaar als voorbeeld labelen.
 - Rechtsvorm niet noemen; nooit "B.V.". Btw-id niet in de footer.
 - Kosten exact volgens de AV: WIK-staffel in `src/lib/wik.ts`; volledig betaald = €0, deels = verrekening (min. €45).
-- Het logo blijft het bestaande GeldGarant-logo (nog te exporteren uit Framer); het huidige woordmerk is tijdelijk.
+- Officieel GeldGarant-logo staat gecropt en transparant in `public/brand/` (aangeleverd door de gebruiker).
 - Formuliervelden altijd ≥16px, tikdoelen ≥44px, geen vaste breedtes die op 360px overlopen.
 - Bestaande URL's van de Framer-site behouden of 301-redirect geven.
 
