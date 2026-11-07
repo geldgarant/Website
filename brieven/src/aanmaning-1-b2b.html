@@ -78,10 +78,11 @@
         <td style="width:50%; vertical-align:top; padding:4.5mm 5mm 4.5mm 5mm; background-color:#f3f4f7; border-left:1.2pt solid #3f68f5;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%%">
                 <tr>
-                    <td style="width:24mm; vertical-align:top; padding:0;"><img src="[[QR_DATA]]" alt="QR-code naar geldgarant.com/betalen" style="width:21mm; height:21mm;"></td>
+                    <!-- Dynamische QR: betaallink van dit dossier (variabele case.online_payment_link) via onze route /api/qr; zie tools/bouw.py -->
+                    <td style="width:24mm; vertical-align:top; padding:0;"><a href="{{case.online_payment_link}}"><img src="[[QR_BETAAL]]" alt="QR-code naar de betaalpagina van dit dossier" style="width:21mm; height:21mm;"></a></td>
                     <td style="vertical-align:top; padding:0 0 0 1mm;">
-                        <div style="%%h3%%">Online met iDEAL</div>
-                        <div style="%%kaart%%">Scan de code of ga naar <b style="color:#061126;">geldgarant.com/betalen</b>. Vul uw dossiernummer en het bedrag in en betaal in uw eigen bank-app. Wij boeken de betaling automatisch op uw dossier.</div>
+                        <div style="%%h3%%"><a href="{{case.online_payment_link}}" style="color:#061126; text-decoration:none;">Online met iDEAL</a></div>
+                        <div style="%%kaart%%">Scan de code met uw telefoon. U komt direct op de betaalpagina van dit dossier en betaalt in uw eigen bank-app. Lukt scannen niet? Ga naar <b style="color:#061126;">geldgarant.com/betalen</b> en vul uw dossiernummer en het bedrag in.</div>
                     </td>
                 </tr>
             </table>

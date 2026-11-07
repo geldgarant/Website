@@ -1,0 +1,21 @@
+{
+ "ASSETS": "public/brief",
+ "DATUM": "7 november 2026",
+ "DOSSIERNUMMER": "26-1008",
+ "OPDRACHTGEVER": "Icon koeriersdiensten",
+ "UITERSTE_DATUM": "13 november 2026",
+ "DEBITEUR_NAAM": "EANA Transport",
+ "DEBITEUR_TAV": "T.a.v. de directie",
+ "DEBITEUR_ADRES": "Aquamarijnstraat 155",
+ "DEBITEUR_POSTCODE": "7554 NP",
+ "DEBITEUR_PLAATS": "HENGELO",
+ "AANHEF": "Geachte directie,",
+ "VORDERINGEN_RIJEN": "<tr><td>202604-013</td><td>01-04-2026</td><td>02-04-2026</td><td class=\"r\">€ 1.554,85</td><td class=\"r\">€ 0,00</td><td class=\"r\">€ 1.554,85</td></tr><tr><td>202604-014</td><td>01-04-2026</td><td>02-04-2026</td><td class=\"r\">€ 1.681,90</td><td class=\"r\">€ 0,00</td><td class=\"r\">€ 1.681,90</td></tr><tr><td>202604-016</td><td>17-04-2026</td><td>01-05-2026</td><td class=\"r\">€ 4.017,02</td><td class=\"r\">€ 0,00</td><td class=\"r\">€ 4.017,02</td></tr>",
+ "HOOFDSOM": "€ 7.253,77",
+ "RENTE": "€ 421,70",
+ "RENTE_TOELICHTING": "Vanaf de vervaldatum per factuur tot en met 7-11-2026 (10,15%, vanaf 1-7-2026 10,40%)",
+ "INCASSOKOSTEN": "€ 737,69",
+ "BTW_RIJ": "",
+ "TOTAAL": "€ 8.413,16",
+ "QR_URL": "brieven/voorbeeld/qr-voorbeeld.png"
+}

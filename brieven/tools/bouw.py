@@ -3,11 +3,15 @@
 
 - %%naam%% in een style-attribuut wordt vervangen door de stijlregels hieronder (CaseControl's editor bewaart
   alleen inline stijlen; zo blijft de bron leesbaar en is elke stijl op één plek te wijzigen).
-- [[LOGO_DATA]] en [[QR_DATA]] worden data-URI's van brieven/assets/*.png: CaseControl laadt geen externe
-  afbeeldingen (gezien in hun PDF van 7 nov 2026: de QR-code van api.qrserver.com bleef leeg).
+- [[LOGO_DATA]] en [[QR_DATA]] worden data-URI's van brieven/assets/*.png (vaste afbeeldingen, laden altijd).
+- [[QR_BETAAL]] wordt de dynamische QR-code: een afbeelding van onze eigen worker-route /api/qr met de betaallink van
+  het dossier ({{case.online_payment_link}}) erin. Ontbreekt die link, dan wijst de QR naar onze betaalpagina met het
+  dossiernummer ingevuld. Laadt CaseControl geen externe afbeeldingen (de QR blijft leeg in de proefbrief), bouw dan
+  met QR=statisch: dan wordt het de vaste QR-code naar geldgarant.com/betalen.
 Gebruik: python3 brieven/tools/bouw.py   (schrijft brieven/<naam>.html)
+         QR=statisch python3 brieven/tools/bouw.py
 """
-import base64, pathlib, re, sys
+import base64, os, pathlib, re, sys
 
 HIER = pathlib.Path(__file__).resolve().parent.parent
 F = "font-family:Helvetica,Arial,sans-serif;"
@@ -31,7 +35,17 @@ STIJL = {
     "contact-l": F + " font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#3f68f5; font-weight:bold;",
     "contact-w": F + " font-size:8.5pt; line-height:11.5pt; color:#061126; font-weight:bold; margin-top:0.6mm;",
     "contact-x": F + " font-size:7.5pt; line-height:10pt; color:#6b7390;",
+    "stap": "vertical-align:top; padding:1.6mm 2mm 0 0;",
+    "stap-l": F + " font-size:6.5pt; line-height:9pt; letter-spacing:0.6pt; text-transform:uppercase; font-weight:bold;",
+    "stap-w": F + " font-size:9pt; line-height:12pt; font-weight:bold; color:#061126;",
+    "stap-x": F + " font-size:7.5pt; line-height:10pt; color:#6b7390;",
+    "gevolg": "width:50%; vertical-align:top; padding:3mm 4mm 3mm 4mm; background-color:#f3f4f7;",
 }
+
+# Host van de QR-route. website.geldgarant.workers.dev blijft ook na de livegang werken; daarna mag het geldgarant.com zijn.
+QR_HOST = os.environ.get("QR_HOST", "https://website.geldgarant.workers.dev")
+QR_BETAAL = QR_HOST + "/api/qr?d={{case.case_number}}&amp;data={{case.online_payment_link}}"
+
 
 def data_uri(naam):
     return "data:image/png;base64," + base64.b64encode((HIER / "assets" / naam).read_bytes()).decode()
@@ -45,6 +59,7 @@ def bouw(bron):
         return STIJL[sleutel]
     s = re.sub(r"%%([a-z0-9-]+)%%", stijl, s)
     s = s.replace("[[LOGO_DATA]]", data_uri("logo-brief.png")).replace("[[QR_DATA]]", data_uri("qr-betalen.png"))
+    s = s.replace("[[QR_BETAAL]]", data_uri("qr-betalen.png") if os.environ.get("QR") == "statisch" else QR_BETAAL)
     # dubbele spaties uit "stijl% extra" opschonen
     s = re.sub(r";\s{2,}", "; ", s)
     for verboden in ("—", "–"):

@@ -32,6 +32,12 @@ $html = preg_replace_callback('/\{\{\s*([a-z0-9_.]+)\s*\}\}/i', function ($m) us
     fwrite(STDERR, "Geen voorbeeldwaarde: {$m[1]}\n");
     return $m[0];
 }, $html);
+// De dynamische QR (src naar onze route /api/qr) laadt hier niet (geen netwerk, isRemoteEnabled uit). Geef met
+// QR_PNG=<pad> een PNG mee (gemaakt met scripts/dev/qr-proef.mts, dezelfde code als de route), dan komt die erin.
+$qr = getenv('QR_PNG');
+if ($qr && is_file($qr)) {
+    $html = preg_replace('#src="https://[^"]+/api/qr\?[^"]*"#', 'src="data:image/png;base64,' . base64_encode(file_get_contents($qr)) . '"', $html);
+}
 $marge = getenv('MARGE') ?: '20mm';
 $html = "<!DOCTYPE html><html lang=\"nl\"><head><meta charset=\"utf-8\"><style>@page{margin:$marge}</style></head><body>$html</body></html>";
 $o = new Dompdf\Options();

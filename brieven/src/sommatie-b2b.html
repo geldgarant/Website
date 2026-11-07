@@ -1,0 +1,152 @@
+<!-- GG | BRIEF | B2B | Sommatie -->
+<!-- Versie 1, 7 nov 2026. Bron: brieven/src/sommatie-b2b.html, gebouwd met brieven/tools/bouw.py. Zelfde raster en variabelen als de aanmaning (brieven/README.md). Verzending: aangetekend en per e-mail (workflow fase 4). -->
+<!-- Vouwtekens (99 en 198 mm) en ponsteken (148,5 mm), alleen op pagina 1 -->
+<div style="position:absolute; left:-13mm; top:79mm; width:5mm; height:0; border-top:0.3pt solid #9aa3b5;"></div>
+<div style="position:absolute; left:-13mm; top:128.5mm; width:3mm; height:0; border-top:0.3pt solid #9aa3b5;"></div>
+<div style="position:absolute; left:-13mm; top:178mm; width:5mm; height:0; border-top:0.3pt solid #9aa3b5;"></div>
+<!-- Voettekst op elke pagina (in de ondermarge) -->
+<div style="position:fixed; left:0; right:0; bottom:-12mm; height:8mm; border-top:0.5pt solid #dfe3ec; padding-top:2mm; font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; color:#6b7390;">GeldGarant&nbsp;&nbsp;|&nbsp;&nbsp;{{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.zipcode}} {{org_visiting_address.city}}&nbsp;&nbsp;|&nbsp;&nbsp;KvK {{org_registration.chamber_of_commerce_number}}&nbsp;&nbsp;|&nbsp;&nbsp;Incassoregister Justis {{org_registration.business_license_number}}&nbsp;&nbsp;|&nbsp;&nbsp;Derdengelden {{org_escrow_bank_account.iban}}&nbsp;&nbsp;|&nbsp;&nbsp;Dossier <b>{{case.case_number}}</b></div>
+
+<!-- KOP + ADRESVELD: vaste hoogtes, zodat het adres altijd in het venster valt (pagina-marge 20 mm) -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%%">
+    <tr>
+        <td style="width:113mm; height:22mm; vertical-align:top; padding:0;"><img src="[[LOGO_DATA]]" alt="GeldGarant" style="width:50mm; height:8mm;"></td>
+        <td style="height:22mm; vertical-align:top; text-align:right; padding:0; font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#5b6478;"><b style="color:#061126;">GeldGarant</b><br>{{org_visiting_address.street}} {{org_visiting_address.house_no}}<br>{{org_visiting_address.zipcode}} {{org_visiting_address.city}}<br>{{org_communication.telephone}}<br>{{org_communication.email}}<br>geldgarant.com</td>
+    </tr>
+    <tr>
+        <!-- Venster: retourregel op 50 mm, adres van ca. 56 tot 75 mm van boven, 25 mm van links -->
+        <td style="width:108mm; height:49mm; vertical-align:top; padding:8mm 0 0 5mm;">
+            <div style="font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; color:#6b7390; padding-bottom:2.2mm;">Retour: GeldGarant, {{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.zipcode}} {{org_visiting_address.city}}</div>
+            <div style="font-family:Helvetica,Arial,sans-serif; font-size:10pt; line-height:14pt; color:#061126;">{{debtor.name}}<br>{{debtor.correspondence_attention_of_merged}}<br>{{debtor.street}} {{debtor.house_no}}{{debtor.house_no_suffix}}<br>{{debtor.zipcode}}&nbsp;&nbsp;<span style="text-transform:uppercase;">{{debtor.city}}</span></div>
+        </td>
+        <!-- Rechts van het venster (vanaf 133 mm): referenties -->
+        <td style="height:49mm; vertical-align:top; padding:8mm 0 0 0;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%%">
+                <tr><td style="%%ref-l%%">Datum</td><td style="%%ref-w%%">{{misc.today}}</td></tr>
+                <tr><td style="%%ref-l%%">Dossiernummer</td><td style="%%ref-w%% font-weight:bold;">{{case.case_number}}</td></tr>
+                <tr><td style="%%ref-l%%">Namens</td><td style="%%ref-w%%">{{creditor.name}}</td></tr>
+                <tr><td style="%%ref-l%%">Verzonden</td><td style="%%ref-w%% white-space:nowrap;">aangetekend, e-mail</td></tr>
+                <tr><td style="%%ref-l%% border-bottom:0;">Betalen uiterlijk</td><td style="%%ref-w%% border-bottom:0; font-weight:bold;">{{misc.today_plus_5_business_days}}</td></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- ONDERWERP (net onder de eerste vouw) -->
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; font-weight:bold; letter-spacing:1.2pt; text-transform:uppercase; color:#3f68f5; margin:3mm 0 1.2mm 0;">Sommatie</div>
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:15pt; line-height:19pt; font-weight:bold; color:#061126; margin:0 0 5mm 0;">Laatste verzoek om te betalen voordat de rechter eraan te pas komt</div>
+
+<p style="%%p%%">{{debtor.correspondence_salutation_merged}}</p>
+<p style="%%p%%">Eerder hebben wij u namens {{creditor.name}} gevraagd de factuur of facturen hieronder te betalen. Tot nu toe hebben wij geen (volledige) betaling van u ontvangen en is er geen betalingsregeling afgesproken.</p>
+<p style="%%p%%"><b style="color:#061126;">Met deze brief sommeren wij u het totaalbedrag uiterlijk op {{misc.today_plus_5_business_days}} te betalen.</b> Dit is het laatste verzoek voordat wij onze opdrachtgever adviseren de vordering aan de rechter voor te leggen.</p>
+
+<!-- BEDRAG, DATUM, KENMERK -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin:4mm 0 4mm 0;">
+    <tr>
+        <td style="%%blok%% width:38%;"><div style="%%blok-l%%">Totaal te betalen</div><div style="%%blok-w%% font-size:15pt; line-height:19pt;">{{case.total_amount_due}}</div></td>
+        <td style="%%blok%% width:34%; border-left:0.5pt solid #2a3550;"><div style="%%blok-l%%">Uiterlijk op</div><div style="%%blok-w%%">{{misc.today_plus_5_business_days}}</div></td>
+        <td style="%%blok%% width:28%; border-left:0.5pt solid #2a3550;"><div style="%%blok-l%%">Betalingskenmerk</div><div style="%%blok-w%%">{{case.case_number}}</div></td>
+    </tr>
+</table>
+
+<!-- WAAR STAAT HET DOSSIER: drie stappen, de huidige donker -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin:1mm 0 1.4mm 0;">
+    <tr>
+        <td style="width:33.3%; height:1.6mm; padding:0; background-color:#3f68f5;"></td>
+        <td style="width:0.6%; padding:0;"></td>
+        <td style="width:32.7%; height:1.6mm; padding:0; background-color:#061126;"></td>
+        <td style="width:0.6%; padding:0;"></td>
+        <td style="width:32.8%; height:1.6mm; padding:0; background-color:#dfe3ec;"></td>
+    </tr>
+    <tr>
+        <td style="%%stap%%"><div style="%%stap-l%% color:#3f68f5;">Gedaan</div><div style="%%stap-w%%">Aanmaning</div><div style="%%stap-x%%">betaalverzoek met specificatie</div></td>
+        <td></td>
+        <td style="%%stap%%"><div style="%%stap-l%% color:#061126;">Nu</div><div style="%%stap-w%%">Sommatie</div><div style="%%stap-x%%">laatste termijn: {{misc.today_plus_5_business_days}}</div></td>
+        <td></td>
+        <td style="%%stap%%"><div style="%%stap-l%% color:#6b7390;">Als betaling uitblijft</div><div style="%%stap-w%% color:#6b7390;">Rechter</div><div style="%%stap-x%%">na akkoord van onze opdrachtgever</div></td>
+    </tr>
+</table>
+
+<!-- SPECIFICATIE (Besluit Wki art. 3.1) -->
+<div style="%%h2%%">Specificatie</div>
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; color:#2b3245;">{{misc.case_original_claims}}</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin-top:1mm;">
+    <tr>
+        <td style="%%spec-l%%">Wettelijke handelsrente (art. 6:119a BW) vanaf de vervaldatum van elke factuur tot en met {{misc.today}}, volgens het wettelijke percentage per periode (sinds 1 juli 2026: 10,40% per jaar)</td>
+        <td style="%%spec-w%%">{{case.interest}}</td>
+    </tr>
+    <tr>
+        <td style="%%spec-l%%">Buitengerechtelijke incassokosten, berekend volgens de wettelijke staffel (art. 6:96 BW en Besluit vergoeding voor buitengerechtelijke incassokosten)</td>
+        <td style="%%spec-w%%">{{case.penalty_amount_incl_vat}}</td>
+    </tr>
+    <tr>
+        <td style="%%spec-l%% border-bottom:0; border-top:1.2pt solid #3f68f5; font-size:10pt; font-weight:bold; color:#061126; padding-top:2.4mm;">Totaal te betalen</td>
+        <td style="%%spec-w%% border-bottom:0; border-top:1.2pt solid #3f68f5; font-size:10pt; color:#061126; padding-top:2.4mm;">{{case.total_amount_due}}</td>
+    </tr>
+</table>
+<p style="%%klein%% margin-top:1.5mm;">De rente loopt door tot de dag van betaling. Heeft u de afgelopen dagen al betaald? Dan kunt u deze brief als niet verzonden beschouwen. Mist u een betaling in dit overzicht? Laat het ons weten, dan zoeken wij het uit.</p>
+
+<!-- PAGINA 2 -->
+<div style="page-break-before:always;"></div>
+
+<div style="%%h2%% margin-top:0;">Wat er gebeurt als u niet betaalt</div>
+<p style="%%p%%">Ontvangen wij uiterlijk op {{misc.today_plus_5_business_days}} geen betaling en ook geen reactie, dan leggen wij het dossier aan {{creditor.name}} voor met het advies de vordering aan de rechter voor te leggen. Kiest onze opdrachtgever daarvoor, dan ontvangt u een dagvaarding van een gerechtsdeurwaarder. Betaalt u op tijd, of neemt u vóór die datum contact met ons op, dan is dat niet nodig.</p>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin:0 0 1mm 0;">
+    <tr>
+        <td style="%%gevolg%% border-left:1.2pt solid #061126;"><div style="%%h3%%">Hogere kosten</div><div style="%%kaart%%">Wijst de rechter de vordering toe, dan komen ook de proceskosten meestal voor uw rekening: griffierecht, de kosten van de deurwaarder en een vergoeding voor de gemachtigde. De rente loopt door.</div></td>
+        <td style="width:3mm; padding:0;"></td>
+        <td style="%%gevolg%% border-left:1.2pt solid #061126;"><div style="%%h3%%">Beslag na een vonnis</div><div style="%%kaart%%">Met een vonnis kan de deurwaarder beslag leggen, bijvoorbeeld op uw bankrekening, op bedrijfsmiddelen of op bedragen die anderen aan uw onderneming moeten betalen.</div></td>
+    </tr>
+</table>
+
+<div style="%%h2%%">Zo betaalt u</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin-bottom:4mm;">
+    <tr>
+        <td style="width:50%; vertical-align:top; padding:4.5mm 5mm 4.5mm 5mm; background-color:#f3f4f7; border-left:1.2pt solid #3f68f5;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%%">
+                <tr>
+                    <!-- Dynamische QR: betaallink van dit dossier (variabele case.online_payment_link) via onze route /api/qr; zie tools/bouw.py -->
+                    <td style="width:24mm; vertical-align:top; padding:0;"><a href="{{case.online_payment_link}}"><img src="[[QR_BETAAL]]" alt="QR-code naar de betaalpagina van dit dossier" style="width:21mm; height:21mm;"></a></td>
+                    <td style="vertical-align:top; padding:0 0 0 1mm;">
+                        <div style="%%h3%%"><a href="{{case.online_payment_link}}" style="color:#061126; text-decoration:none;">Online met iDEAL</a></div>
+                        <div style="%%kaart%%">Scan de code met uw telefoon. U komt direct op de betaalpagina van dit dossier en betaalt in uw eigen bank-app. Lukt scannen niet? Ga naar <b style="color:#061126;">geldgarant.com/betalen</b> en vul uw dossiernummer en het bedrag in.</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="width:3mm; padding:0;"></td>
+        <td style="vertical-align:top; padding:4.5mm 5mm 4.5mm 5mm; background-color:#f3f4f7;">
+            <div style="%%h3%%">Overmaken</div>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%%">
+                <tr><td style="%%bank-l%%">IBAN</td><td style="%%bank-w%%">{{org_escrow_bank_account.iban}}</td></tr>
+                <tr><td style="%%bank-l%%">Ten name van</td><td style="%%bank-w%%">{{org_escrow_bank_account.account_name}}</td></tr>
+                <tr><td style="%%bank-l%%">BIC</td><td style="%%bank-w%%">{{org_escrow_bank_account.bic}}</td></tr>
+                <tr><td style="%%bank-l%%">Kenmerk</td><td style="%%bank-w%% font-weight:bold;">{{case.case_number}}</td></tr>
+            </table>
+            <div style="%%kaart%% margin-top:1.5mm;">Vermeld altijd uw dossiernummer als kenmerk. Dan komt uw betaling goed terecht.</div>
+        </td>
+    </tr>
+</table>
+
+<div style="%%h2%%">Kunt u niet in één keer betalen?</div>
+<p style="%%p%%">Neem dan uiterlijk op {{misc.today_plus_5_business_days}} contact met ons op, liefst telefonisch. Wij bespreken met u wat haalbaar is en leggen uw voorstel voor een betalingsregeling voor aan onze opdrachtgever. Een regeling geldt pas als wij die schriftelijk aan u hebben bevestigd.</p>
+
+<div style="%%h2%%">Bent u het niet eens met de vordering?</div>
+<p style="%%p%%">Laat ons dan uiterlijk op {{misc.today_plus_5_business_days}} schriftelijk weten waarom, met de stukken die uw standpunt onderbouwen. Wij leggen uw reactie voor aan onze opdrachtgever en laten u schriftelijk weten wat de uitkomst is. Het deel van de vordering waarover u het wel eens bent, vragen wij u te betalen.</p>
+
+<!-- CONTACT (Regeling Wki art. 5) -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin:4mm 0 4mm 0; border-top:0.5pt solid #dfe3ec; border-bottom:0.5pt solid #dfe3ec;">
+    <tr>
+        <td style="%%contact%% width:21%;"><div style="%%contact-l%%">Bellen</div><div style="%%contact-w%%">{{org_communication.telephone}}</div><div style="%%contact-x%%">op werkdagen</div></td>
+        <td style="%%contact%% width:26%;"><div style="%%contact-l%%">E-mail</div><div style="%%contact-w%%">{{org_communication.email}}</div><div style="%%contact-x%%">noem uw dossiernummer</div></td>
+        <td style="%%contact%% width:33%;"><div style="%%contact-l%%">Online</div><div style="%%contact-w%%">geldgarant.com/brief-ontvangen</div><div style="%%contact-x%%">betalen, regeling, reactie</div></td>
+        <td style="%%contact%% width:20%; padding-right:0;"><div style="%%contact-l%%">Op kantoor</div><div style="%%contact-w%%">{{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.city}}</div><div style="%%contact-x%%">op afspraak</div></td>
+    </tr>
+</table>
+
+<p style="%%p%% margin-bottom:1mm;">Met vriendelijke groet,</p>
+<p style="%%p%% margin-bottom:4mm;"><b style="color:#061126;">GeldGarant</b><br>Afdeling incasso</p>
+
+<!-- KLEINE LETTERS -->
+<p style="%%klein%%">GeldGarant is als incassodienstverlener ingeschreven in het Incassoregister van Justis onder nummer {{org_registration.business_license_number}}. Wij handelen in opdracht van en namens {{creditor.name}}. Betalingen die wij ontvangen, staan op onze derdengeldenrekening en dragen wij af aan onze opdrachtgever. Heeft u een klacht over onze werkwijze? Lees dan onze klachtenregeling op geldgarant.com/klachtenregelement.</p>
+<p style="%%klein%%">Geldzorgen? Uw gemeente helpt gratis, net als Geldfit (geldfit.nl, 0800 8115). Loopt het u boven het hoofd? Praat erover met 113 Zelfmoordpreventie, gratis via 0800 0113 of 113.nl.</p>

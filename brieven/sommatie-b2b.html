@@ -1,319 +1,152 @@
-<!--
-    GG | BRIEF | B2B | Sommatie aangetekend  (versie 2, 7 nov 2026)
+<!-- GG | BRIEF | B2B | Sommatie -->
+<!-- Versie 1, 7 nov 2026. Bron: brieven/src/sommatie-b2b.html, gebouwd met brieven/tools/bouw.py. Zelfde raster en variabelen als de aanmaning (brieven/README.md). Verzending: aangetekend en per e-mail (workflow fase 4). -->
+<!-- Vouwtekens (99 en 198 mm) en ponsteken (148,5 mm), alleen op pagina 1 -->
+<div style="position:absolute; left:-13mm; top:79mm; width:5mm; height:0; border-top:0.3pt solid #9aa3b5;"></div>
+<div style="position:absolute; left:-13mm; top:128.5mm; width:3mm; height:0; border-top:0.3pt solid #9aa3b5;"></div>
+<div style="position:absolute; left:-13mm; top:178mm; width:5mm; height:0; border-top:0.3pt solid #9aa3b5;"></div>
+<!-- Voettekst op elke pagina (in de ondermarge) -->
+<div style="position:fixed; left:0; right:0; bottom:-12mm; height:8mm; border-top:0.5pt solid #dfe3ec; padding-top:2mm; font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; color:#6b7390;">GeldGarant&nbsp;&nbsp;|&nbsp;&nbsp;{{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.zipcode}} {{org_visiting_address.city}}&nbsp;&nbsp;|&nbsp;&nbsp;KvK {{org_registration.chamber_of_commerce_number}}&nbsp;&nbsp;|&nbsp;&nbsp;Incassoregister Justis {{org_registration.business_license_number}}&nbsp;&nbsp;|&nbsp;&nbsp;Derdengelden {{org_escrow_bank_account.iban}}&nbsp;&nbsp;|&nbsp;&nbsp;Dossier <b>{{case.case_number}}</b></div>
 
-    CaseControl-template (dompdf 3.1). Geen DOCTYPE/html/head/body: CaseControl zet die er zelf omheen.
-    Tokens tussen [[ ]] vervangen door de CaseControl-variabelen (zie brieven/README.md, tabel "Tokens").
-    Raster: A4, marges 20 mm links en rechts. Adresveld voor een vensterenvelop met venster links
-    (EA5/6 of C5/6, venster 20 mm van links): 22 mm van links, 47 tot 90 mm van boven, max. 85 mm breed.
-    Vouwtekens op 99 en 198 mm (zigzag in drieën), ponsteken op 148,5 mm.
-    Kleuren: blauw #3f68f5, navy #061126. Lettertypes: Poppins (koppen) en Inter (tekst), uit [[ASSETS]]/fonts.
--->
-<style>
-    @font-face { font-family: "Inter"; font-weight: 400; src: url("[[ASSETS]]/fonts/Inter-Regular.ttf") format("truetype"); }
-    @font-face { font-family: "Inter"; font-weight: 600; src: url("[[ASSETS]]/fonts/Inter-SemiBold.ttf") format("truetype"); }
-    @font-face { font-family: "Inter"; font-weight: 700; src: url("[[ASSETS]]/fonts/Inter-Bold.ttf") format("truetype"); }
-    @font-face { font-family: "Poppins"; font-weight: 600; src: url("[[ASSETS]]/fonts/Poppins-SemiBold.ttf") format("truetype"); }
-
-    @page { size: A4; margin: 22mm 20mm 24mm 20mm; }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: "Inter", Helvetica, Arial, sans-serif; font-size: 9.2pt; line-height: 1.45; color: #1d2539; }
-    p { margin: 0 0 2.6mm; }
-    strong { font-weight: 700; color: #061126; }
-    .num { white-space: nowrap; }
-
-    /* ---------- vaste elementen (elke pagina) ---------- */
-    .vouw { position: fixed; left: -16mm; width: 4mm; height: 0; border-top: 0.25pt solid #9aa3b8; }
-    .vouw-1 { top: 77mm; }      /* 99 mm van boven */
-    .vouw-2 { top: 176mm; }     /* 198 mm van boven */
-    .pons { position: fixed; left: -16mm; top: 126.5mm; width: 2.5mm; height: 0; border-top: 0.25pt solid #c3c9d6; } /* 148,5 mm */
-
-    .voet { position: fixed; left: 0; right: 0; bottom: -15mm; height: 12mm; border-top: 0.5pt solid #d9dde7; padding-top: 2.4mm; font-size: 6.8pt; line-height: 1.55; color: #6b7390; }
-    .voet table { width: 100%; border-collapse: collapse; }
-    .voet td { vertical-align: top; padding: 0; }
-    .voet .pagina { width: 32mm; }
-    .voet .pagina { text-align: right; white-space: nowrap; color: #061126; font-weight: 600; }
-    .voet .pagina:after { content: "Pagina " counter(page); }
-
-    /* ---------- kop pagina 1 (posities t.o.v. de inhoud: 20 mm van links, 22 mm van boven) ---------- */
-    .logo { position: absolute; top: -8mm; left: 0; width: 52mm; }
-    .afzender { position: absolute; top: -8.5mm; right: 0; border-collapse: collapse; font-size: 7.6pt; line-height: 1.55; color: #4a5470; }
-    .afzender td { padding: 0 0 0 7mm; vertical-align: top; border-left: 0.5pt solid #d9dde7; padding-left: 3mm; }
-    .afzender td + td { padding-left: 3mm; }
-    .afzender .naam { font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 8pt; color: #061126; }
-
-    .venster { position: absolute; top: 25mm; left: 2mm; width: 85mm; height: 43mm; }
-    .retour { font-size: 6.4pt; color: #6b7390; padding-bottom: 1mm; border-bottom: 0.4pt solid #c3c9d6; margin-bottom: 3mm; white-space: nowrap; }
-    .adres { font-size: 10pt; line-height: 1.42; color: #061126; }
-    .adres .bedrijf { font-weight: 700; }
-
-    .verzending { position: absolute; top: 21mm; left: 113mm; right: 0; } /* rechts van het venster (venster loopt tot ca. 130 mm) */
-    .stempel { display: inline-block; padding: 1.3mm 2.6mm; border: 0.8pt solid #061126; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #061126; }
-    .verzending .ook { margin-left: 2.5mm; font-size: 7.2pt; color: #6b7390; }
-    .referentie { width: 100%; margin-top: 3mm; border-collapse: collapse; }
-    .referentie td { padding: 1.1mm 0; border-bottom: 0.5pt solid #e1e4ec; vertical-align: top; }
-    .referentie .label { width: 25mm; white-space: nowrap; font-size: 6.2pt; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #6b7390; padding-top: 2mm; }
-    .referentie .waarde { font-size: 9pt; font-weight: 600; color: #061126; }
-    .referentie .rood { color: #b42318; }
-
-    .kop1 { height: 78mm; } /* ruimte voor de vaste kop; de tekst begint 104 mm van boven, net onder de eerste vouw */
-
-    /* ---------- tekst ---------- */
-    .onderwerp { margin: 0 0 3.5mm; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 14pt; line-height: 1.22; color: #061126; }
-    .onderwerp .sub { display: block; margin-top: 1mm; font-family: "Inter", Helvetica, sans-serif; font-weight: 400; font-size: 9.5pt; color: #4a5470; }
-
-    .bedrag { width: 100%; border-collapse: collapse; margin: 3mm 0 3.6mm; background: #061126; }
-    .bedrag td { padding: 2.4mm 4.5mm; vertical-align: middle; color: #ffffff; }
-    .bedrag .label { display: block; font-size: 6.8pt; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #a9b7e6; }
-    .bedrag .groot { display: block; margin-top: 0.6mm; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 15pt; line-height: 1.1; color: #ffffff; }
-    .bedrag .mid { display: block; margin-top: 0.6mm; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 11pt; color: #ffffff; }
-    .bedrag .scheiding { border-left: 0.5pt solid #2a3555; }
-    .bedrag .accent { width: 1.6mm; padding: 0; background: #3f68f5; }
-
-    .traject { width: 100%; border-collapse: collapse; margin: 0 0 1mm; table-layout: fixed; }
-    .traject td { padding: 0; vertical-align: top; text-align: center; font-size: 7pt; line-height: 1.35; color: #6b7390; }
-    .lijn { height: 0; }
-    .lijn.vol { border-top: 0.8pt solid #3f68f5; }
-    .lijn.open { border-top: 0.8pt dashed #9aa3b8; }
-    .lijn.half-r { margin-left: 50%; }   /* begint bij de eerste stip */
-    .lijn.half-l { margin-right: 50%; }  /* stopt bij de laatste stip */
-    .stip { width: 3.6mm; height: 3.6mm; margin: -1.95mm auto 1.6mm; border-radius: 1.8mm; background: #3f68f5; }
-    .stip.nu { width: 4.2mm; height: 4.2mm; margin-top: -2.25mm; border-radius: 2.1mm; background: #ffffff; border: 1.4pt solid #3f68f5; }
-    .stip.open { background: #ffffff; border: 0.8pt solid #9aa3b8; }
-    .traject .stap { display: block; font-weight: 600; color: #061126; }
-    .traject .nu-tekst { color: #3f68f5; }
-
-    h2 { margin: 3.6mm 0 1.4mm; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 10.5pt; color: #061126; page-break-after: avoid; }
-    h2 .nr { color: #3f68f5; margin-right: 1.5mm; }
-    h2.nieuwe-pagina { page-break-before: always; margin-top: 0; }
-
-    .spec { width: 100%; border-collapse: collapse; font-size: 8.4pt; line-height: 1.35; page-break-inside: auto; }
-    .spec th { padding: 1.2mm 2mm 1.2mm 0; border-bottom: 0.8pt solid #061126; font-size: 6.8pt; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6b7390; text-align: left; }
-    .spec td { padding: 0.8mm 2mm 0.8mm 0; border-bottom: 0.4pt solid #e1e4ec; vertical-align: top; }
-    .spec .r { text-align: right; padding-right: 0; white-space: nowrap; }
-    .spec .sub td { border-bottom: 0.8pt solid #061126; font-weight: 600; color: #061126; }
-    .spec .post td { padding-top: 1.2mm; }
-    .spec .uitleg { display: block; font-size: 7pt; color: #6b7390; }
-    .spec .totaal td { padding: 2.2mm 0 0; border-bottom: 0; border-top: 1.2pt solid #061126; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 11pt; color: #061126; }
-    .spec .totaal td.r { color: #3f68f5; }
-    .noot { margin-top: 1.5mm; font-size: 7.6pt; color: #6b7390; }
-
-    .betalen { width: 100%; border-collapse: collapse; margin-top: 1mm; page-break-inside: avoid; }
-    .betalen > tbody > tr > td { vertical-align: top; padding: 4mm 4.5mm; border: 0.5pt solid #d9dde7; }
-    .betalen .online { width: 52%; background: #f3f4f7; border-right: 0; }
-    .betalen .qr { float: left; width: 26mm; height: 26mm; margin-right: 4mm; background: #ffffff; padding: 1.2mm; border: 0.4pt solid #d9dde7; }
-    .betalen .qr img { width: 23.6mm; height: 23.6mm; }
-    .betalen .kopje { font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 9.6pt; color: #061126; margin-bottom: 1.2mm; }
-    .betalen .klein { font-size: 7.8pt; line-height: 1.5; color: #4a5470; }
-    .betalen .link { font-weight: 600; color: #3f68f5; white-space: nowrap; }
-    .bank { width: 100%; border-collapse: collapse; font-size: 8.4pt; }
-    .bank td { padding: 0.9mm 0; vertical-align: top; }
-    .bank .k { width: 24mm; color: #6b7390; }
-    .bank .v { font-weight: 600; color: #061126; }
-
-    .blok { margin: 0 0 3mm; font-size: 9pt; page-break-inside: avoid; }
-    .blok h3 { margin: 0 0 1.2mm; font-family: "Poppins", Helvetica, sans-serif; font-weight: 600; font-size: 9.6pt; color: #061126; }
-    .gevolg { padding: 3mm 4.5mm; border-left: 1.6mm solid #3f68f5; background: #f3f4f7; }
-
-    .contact { width: 100%; border-collapse: collapse; margin: 1mm 0 4mm; font-size: 8.4pt; page-break-inside: avoid; }
-    .contact td { width: 33.3%; padding: 2.4mm 4mm 0 0; line-height: 1.4; border-top: 0.5pt solid #d9dde7; vertical-align: top; }
-    .contact .k { display: block; font-size: 6.6pt; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7390; }
-    .contact .v { display: block; margin-top: 0.6mm; font-weight: 600; color: #061126; }
-
-    .groet { margin-top: 2mm; page-break-inside: avoid; }
-    .groet .afd { margin-top: 4mm; font-weight: 700; color: #061126; }
-    .grondslag { margin-top: 3mm; padding-top: 2.4mm; border-top: 0.4pt solid #e1e4ec; font-size: 7pt; line-height: 1.5; color: #6b7390; page-break-inside: avoid; }
-</style>
-
-<!-- vaste elementen -->
-<div class="vouw vouw-1"></div>
-<div class="vouw vouw-2"></div>
-<div class="pons"></div>
-<div class="voet">
-    <table>
-        <tr>
-            <td>
-                GeldGarant &middot; Keulenstraat 1, 7418 ET Deventer &middot; 085 212 73 88 &middot; info@geldgarant.com<br />
-                KvK 90622375 &middot; Incassoregister Justis 00273 &middot; Derdengelden NL57 BUNQ 2188 2124 36
-            </td>
-            <td class="pagina">Kenmerk [[DOSSIERNUMMER]]<br /></td>
-        </tr>
-    </table>
-</div>
-
-<!-- kop pagina 1 -->
-<img class="logo" src="[[ASSETS]]/logo.png" alt="GeldGarant" />
-<table class="afzender">
+<!-- KOP + ADRESVELD: vaste hoogtes, zodat het adres altijd in het venster valt (pagina-marge 20 mm) -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%;">
     <tr>
-        <td>
-            <span class="naam">GeldGarant</span><br />
-            Keulenstraat 1<br />
-            7418 ET Deventer
-        </td>
-        <td>
-            085 212 73 88<br />
-            info@geldgarant.com<br />
-            geldgarant.com
-        </td>
+        <td style="width:113mm; height:22mm; vertical-align:top; padding:0;"><img src="data:image/png;base64,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" alt="GeldGarant" style="width:50mm; height:8mm;"></td>
+        <td style="height:22mm; vertical-align:top; text-align:right; padding:0; font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#5b6478;"><b style="color:#061126;">GeldGarant</b><br>{{org_visiting_address.street}} {{org_visiting_address.house_no}}<br>{{org_visiting_address.zipcode}} {{org_visiting_address.city}}<br>{{org_communication.telephone}}<br>{{org_communication.email}}<br>geldgarant.com</td>
     </tr>
-</table>
-
-<div class="venster">
-    <div class="retour">Retour: GeldGarant, Keulenstraat 1, 7418 ET Deventer</div>
-    <div class="adres">
-        <span class="bedrijf">[[DEBITEUR_NAAM]]</span><br />
-        [[DEBITEUR_TAV]]<br />
-        [[DEBITEUR_ADRES]]<br />
-        [[DEBITEUR_POSTCODE]]&nbsp;&nbsp;[[DEBITEUR_PLAATS]]
-    </div>
-</div>
-
-<div class="verzending">
-    <span class="stempel">Aangetekend</span><span class="ook">en per e-mail</span>
-    <table class="referentie">
-        <tr><td class="label">Datum</td><td class="waarde">[[DATUM]]</td></tr>
-        <tr><td class="label">Ons kenmerk</td><td class="waarde">[[DOSSIERNUMMER]]</td></tr>
-        <tr><td class="label">Namens</td><td class="waarde">[[OPDRACHTGEVER]]</td></tr>
-        <tr><td class="label">Betalen uiterlijk</td><td class="waarde rood">[[UITERSTE_DATUM]]</td></tr>
-    </table>
-</div>
-
-<div class="kop1"></div>
-
-<!-- tekst -->
-<h1 class="onderwerp">Sommatie: laatste gelegenheid tot betaling</h1>
-
-<p>[[AANHEF]]</p>
-
-<p>
-    Namens [[OPDRACHTGEVER]] hebben wij u eerder een herinnering en een aanmaning gestuurd voor de facturen hieronder.
-    Wij hebben geen betaling en geen reactie van u ontvangen. Met deze brief <strong>sommeren wij u</strong> om het volledige
-    bedrag uiterlijk <strong>[[UITERSTE_DATUM]]</strong> te betalen. Dit is de laatste stap voordat wij onze opdrachtgever
-    adviseren de vordering aan de rechter voor te leggen.
-</p>
-
-<table class="bedrag">
     <tr>
-        <td class="accent"></td>
-        <td style="width: 42%">
-            <span class="label">Totaal te betalen</span>
-            <span class="groot num">[[TOTAAL]]</span>
+        <!-- Venster: retourregel op 50 mm, adres van ca. 56 tot 75 mm van boven, 25 mm van links -->
+        <td style="width:108mm; height:49mm; vertical-align:top; padding:8mm 0 0 5mm;">
+            <div style="font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; color:#6b7390; padding-bottom:2.2mm;">Retour: GeldGarant, {{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.zipcode}} {{org_visiting_address.city}}</div>
+            <div style="font-family:Helvetica,Arial,sans-serif; font-size:10pt; line-height:14pt; color:#061126;">{{debtor.name}}<br>{{debtor.correspondence_attention_of_merged}}<br>{{debtor.street}} {{debtor.house_no}}{{debtor.house_no_suffix}}<br>{{debtor.zipcode}}&nbsp;&nbsp;<span style="text-transform:uppercase;">{{debtor.city}}</span></div>
         </td>
-        <td class="scheiding">
-            <span class="label">Uiterlijk op</span>
-            <span class="mid num">[[UITERSTE_DATUM]]</span>
-        </td>
-        <td class="scheiding">
-            <span class="label">Betalingskenmerk</span>
-            <span class="mid num">[[DOSSIERNUMMER]]</span>
-        </td>
-    </tr>
-</table>
-
-<table class="traject">
-    <tr>
-        <td><div class="lijn vol half-r"></div><div class="stip"></div><span class="stap">Herinnering</span>Verstuurd</td>
-        <td><div class="lijn vol"></div><div class="stip"></div><span class="stap">Aanmaning</span>Verstuurd</td>
-        <td><div class="lijn open"></div><div class="stip nu"></div><span class="stap nu-tekst">Sommatie</span>Deze brief</td>
-        <td><div class="lijn open half-l"></div><div class="stip open"></div><span class="stap">Rechter</span>Als u niet betaalt</td>
-    </tr>
-</table>
-
-<h2><span class="nr">1</span> Specificatie van de vordering</h2>
-<table class="spec">
-    <thead>
-        <tr>
-            <th>Factuur</th>
-            <th>Factuurdatum</th>
-            <th>Vervaldatum</th>
-            <th class="r">Bedrag</th>
-            <th class="r">Betaald</th>
-            <th class="r">Open</th>
-        </tr>
-    </thead>
-    <tbody>
-        [[VORDERINGEN_RIJEN]]
-        <tr class="sub">
-            <td colspan="5">Hoofdsom</td>
-            <td class="r">[[HOOFDSOM]]</td>
-        </tr>
-        <tr class="post">
-            <td colspan="5">Wettelijke handelsrente (art. 6:119a BW)<span class="uitleg">[[RENTE_TOELICHTING]], loopt door tot de dag van betaling</span></td>
-            <td class="r">[[RENTE]]</td>
-        </tr>
-        <tr class="post">
-            <td colspan="5">Buitengerechtelijke incassokosten (wettelijke staffel)</td>
-            <td class="r">[[INCASSOKOSTEN]]</td>
-        </tr>
-        [[BTW_RIJ]]
-        <tr class="totaal">
-            <td colspan="5">Totaal te betalen</td>
-            <td class="r">[[TOTAAL]]</td>
-        </tr>
-    </tbody>
-</table>
-
-<h2 class="nieuwe-pagina"><span class="nr">2</span> Zo betaalt u</h2>
-<table class="betalen">
-    <tr>
-        <td class="online">
-            <div class="qr"><img src="[[QR_URL]]" alt="" /></div>
-            <div class="kopje">Online met iDEAL</div>
-            <div class="klein">
-                Scan de code met de camera van uw telefoon, of ga naar <span class="link">geldgarant.com/brief-ontvangen</span>
-                en vul uw kenmerk in. U betaalt in de omgeving van uw eigen bank.
-            </div>
-        </td>
-        <td>
-            <div class="kopje">Of maak het bedrag over</div>
-            <table class="bank">
-                <tr><td class="k">IBAN</td><td class="v num">NL57 BUNQ 2188 2124 36</td></tr>
-                <tr><td class="k">BIC</td><td class="v">BUNQNL2AXXX</td></tr>
-                <tr><td class="k">Ten name van</td><td class="v">Stichting Beheer Derdengelden GeldGarant</td></tr>
-                <tr><td class="k">Kenmerk</td><td class="v">[[DOSSIERNUMMER]]</td></tr>
-                <tr><td class="k">Bedrag</td><td class="v num">[[TOTAAL]]</td></tr>
+        <!-- Rechts van het venster (vanaf 133 mm): referenties -->
+        <td style="height:49mm; vertical-align:top; padding:8mm 0 0 0;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%;">
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11pt; color:#6b7390; padding:1.3mm 3mm 1.3mm 0; border-bottom:0.5pt solid #dfe3ec; white-space:nowrap; vertical-align:top;">Datum</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11pt; color:#061126; padding:1.3mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; vertical-align:top;">{{misc.today}}</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11pt; color:#6b7390; padding:1.3mm 3mm 1.3mm 0; border-bottom:0.5pt solid #dfe3ec; white-space:nowrap; vertical-align:top;">Dossiernummer</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11pt; color:#061126; padding:1.3mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; vertical-align:top; font-weight:bold;">{{case.case_number}}</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11pt; color:#6b7390; padding:1.3mm 3mm 1.3mm 0; border-bottom:0.5pt solid #dfe3ec; white-space:nowrap; vertical-align:top;">Namens</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11pt; color:#061126; padding:1.3mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; vertical-align:top;">{{creditor.name}}</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11pt; color:#6b7390; padding:1.3mm 3mm 1.3mm 0; border-bottom:0.5pt solid #dfe3ec; white-space:nowrap; vertical-align:top;">Verzonden</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11pt; color:#061126; padding:1.3mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; vertical-align:top; white-space:nowrap;">aangetekend, e-mail</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11pt; color:#6b7390; padding:1.3mm 3mm 1.3mm 0; border-bottom:0.5pt solid #dfe3ec; white-space:nowrap; vertical-align:top; border-bottom:0;">Betalen uiterlijk</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11pt; color:#061126; padding:1.3mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; vertical-align:top; border-bottom:0; font-weight:bold;">{{misc.today_plus_5_business_days}}</td></tr>
             </table>
         </td>
     </tr>
 </table>
 
-<h2><span class="nr">3</span> Als u niet betaalt</h2>
-<div class="blok gevolg">
-    <p style="margin-bottom: 0">
-        Hebben wij uw betaling uiterlijk [[UITERSTE_DATUM]] niet ontvangen, dan adviseren wij onze opdrachtgever een
-        gerechtelijke procedure te starten, zonder dat u daarover nog een brief van ons krijgt. De kosten daarvan, zoals
-        griffierecht, deurwaarderskosten en proceskosten, komen dan in beginsel voor uw rekening, bovenop het bedrag in deze
-        brief. Met een vonnis kan de deurwaarder beslag leggen, bijvoorbeeld op de bankrekening of de bedrijfsmiddelen van uw
-        onderneming. Dat kunt u voorkomen door nu te betalen.
-    </p>
-</div>
+<!-- ONDERWERP (net onder de eerste vouw) -->
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; font-weight:bold; letter-spacing:1.2pt; text-transform:uppercase; color:#3f68f5; margin:3mm 0 1.2mm 0;">Sommatie</div>
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:15pt; line-height:19pt; font-weight:bold; color:#061126; margin:0 0 5mm 0;">Laatste verzoek om te betalen voordat de rechter eraan te pas komt</div>
 
-<h2><span class="nr">4</span> Bent u het niet eens of kunt u niet in één keer betalen?</h2>
-<div class="blok">
-    <p>
-        <strong>Niet eens met de vordering?</strong> Laat het ons dan uiterlijk [[UITERSTE_DATUM]] schriftelijk weten, met de
-        redenen en de stukken die uw standpunt onderbouwen. Wij leggen uw reactie voor aan onze opdrachtgever en laten u
-        weten wat er gebeurt. Reageert u niet, dan gaan wij ervan uit dat u de vordering niet betwist.
-    </p>
-    <p style="margin-bottom: 0">
-        <strong>Niet in één keer betalen?</strong> Neem dan vóór [[UITERSTE_DATUM]] contact met ons op. Een betalingsregeling
-        is alleen mogelijk met akkoord van onze opdrachtgever en leggen wij altijd schriftelijk vast.
-    </p>
-</div>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0;">{{debtor.correspondence_salutation_merged}}</p>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0;">Eerder hebben wij u namens {{creditor.name}} gevraagd de factuur of facturen hieronder te betalen. Tot nu toe hebben wij geen (volledige) betaling van u ontvangen en is er geen betalingsregeling afgesproken.</p>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0;"><b style="color:#061126;">Met deze brief sommeren wij u het totaalbedrag uiterlijk op {{misc.today_plus_5_business_days}} te betalen.</b> Dit is het laatste verzoek voordat wij onze opdrachtgever adviseren de vordering aan de rechter voor te leggen.</p>
 
-<table class="contact">
+<!-- BEDRAG, DATUM, KENMERK -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%; margin:4mm 0 4mm 0;">
     <tr>
-        <td><span class="k">Bellen</span><span class="v">085 212 73 88</span>Werkdagen 9.00 tot 17.00 uur</td>
-        <td><span class="k">E-mail</span><span class="v">info@geldgarant.com</span>Vermeld uw kenmerk [[DOSSIERNUMMER]]</td>
-        <td><span class="k">Online</span><span class="v">geldgarant.com/brief-ontvangen</span>Betalen, reageren of een regeling vragen</td>
+        <td style="background-color:#061126; padding:3.2mm 4.5mm; vertical-align:top; width:38%;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#b9c3dc;">Totaal te betalen</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#ffffff; margin-top:0.6mm; font-size:15pt; line-height:19pt;">{{case.total_amount_due}}</div></td>
+        <td style="background-color:#061126; padding:3.2mm 4.5mm; vertical-align:top; width:34%; border-left:0.5pt solid #2a3550;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#b9c3dc;">Uiterlijk op</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#ffffff; margin-top:0.6mm;">{{misc.today_plus_5_business_days}}</div></td>
+        <td style="background-color:#061126; padding:3.2mm 4.5mm; vertical-align:top; width:28%; border-left:0.5pt solid #2a3550;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#b9c3dc;">Betalingskenmerk</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#ffffff; margin-top:0.6mm;">{{case.case_number}}</div></td>
     </tr>
 </table>
 
-<div class="groet">
-    <p>Met vriendelijke groet,</p>
-    <p class="afd">GeldGarant<br /><span style="font-weight: 400; color: #4a5470">Afdeling Incasso</span></p>
-</div>
+<!-- WAAR STAAT HET DOSSIER: drie stappen, de huidige donker -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%; margin:1mm 0 1.4mm 0;">
+    <tr>
+        <td style="width:33.3%; height:1.6mm; padding:0; background-color:#3f68f5;"></td>
+        <td style="width:0.6%; padding:0;"></td>
+        <td style="width:32.7%; height:1.6mm; padding:0; background-color:#061126;"></td>
+        <td style="width:0.6%; padding:0;"></td>
+        <td style="width:32.8%; height:1.6mm; padding:0; background-color:#dfe3ec;"></td>
+    </tr>
+    <tr>
+        <td style="vertical-align:top; padding:1.6mm 2mm 0 0;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; letter-spacing:0.6pt; text-transform:uppercase; font-weight:bold; color:#3f68f5;">Gedaan</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:9pt; line-height:12pt; font-weight:bold; color:#061126;">Aanmaning</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">betaalverzoek met specificatie</div></td>
+        <td></td>
+        <td style="vertical-align:top; padding:1.6mm 2mm 0 0;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; letter-spacing:0.6pt; text-transform:uppercase; font-weight:bold; color:#061126;">Nu</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:9pt; line-height:12pt; font-weight:bold; color:#061126;">Sommatie</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">laatste termijn: {{misc.today_plus_5_business_days}}</div></td>
+        <td></td>
+        <td style="vertical-align:top; padding:1.6mm 2mm 0 0;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:6.5pt; line-height:9pt; letter-spacing:0.6pt; text-transform:uppercase; font-weight:bold; color:#6b7390;">Als betaling uitblijft</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:9pt; line-height:12pt; font-weight:bold; color:#061126; color:#6b7390;">Rechter</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">na akkoord van onze opdrachtgever</div></td>
+    </tr>
+</table>
 
-<div class="grondslag">
-    Grondslag: artikel 6:96 en 6:119a Burgerlijk Wetboek en het Besluit vergoeding voor buitengerechtelijke incassokosten.
-    Een klacht over onze werkwijze behandelen wij volgens onze klachtenregeling op geldgarant.com/klachtenregelement.
-</div>
+<!-- SPECIFICATIE (Besluit Wki art. 3.1) -->
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#061126; margin:5mm 0 1.6mm 0;">Specificatie</div>
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; color:#2b3245;">{{misc.case_original_claims}}</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%; margin-top:1mm;">
+    <tr>
+        <td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245; padding:1.8mm 6mm 1.8mm 0; border-bottom:0.5pt solid #dfe3ec; vertical-align:top;">Wettelijke handelsrente (art. 6:119a BW) vanaf de vervaldatum van elke factuur tot en met {{misc.today}}, volgens het wettelijke percentage per periode (sinds 1 juli 2026: 10,40% per jaar)</td>
+        <td style="font-family:Helvetica,Arial,sans-serif; font-size:9pt; line-height:12pt; font-weight:bold; color:#2b3245; padding:1.8mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; white-space:nowrap; vertical-align:top; width:30mm;">{{case.interest}}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245; padding:1.8mm 6mm 1.8mm 0; border-bottom:0.5pt solid #dfe3ec; vertical-align:top;">Buitengerechtelijke incassokosten, berekend volgens de wettelijke staffel (art. 6:96 BW en Besluit vergoeding voor buitengerechtelijke incassokosten)</td>
+        <td style="font-family:Helvetica,Arial,sans-serif; font-size:9pt; line-height:12pt; font-weight:bold; color:#2b3245; padding:1.8mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; white-space:nowrap; vertical-align:top; width:30mm;">{{case.penalty_amount_incl_vat}}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245; padding:1.8mm 6mm 1.8mm 0; border-bottom:0.5pt solid #dfe3ec; vertical-align:top; border-bottom:0; border-top:1.2pt solid #3f68f5; font-size:10pt; font-weight:bold; color:#061126; padding-top:2.4mm;">Totaal te betalen</td>
+        <td style="font-family:Helvetica,Arial,sans-serif; font-size:9pt; line-height:12pt; font-weight:bold; color:#2b3245; padding:1.8mm 0; border-bottom:0.5pt solid #dfe3ec; text-align:right; white-space:nowrap; vertical-align:top; width:30mm; border-bottom:0; border-top:1.2pt solid #3f68f5; font-size:10pt; color:#061126; padding-top:2.4mm;">{{case.total_amount_due}}</td>
+    </tr>
+</table>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; color:#6b7390; margin:0 0 1.6mm 0; margin-top:1.5mm;">De rente loopt door tot de dag van betaling. Heeft u de afgelopen dagen al betaald? Dan kunt u deze brief als niet verzonden beschouwen. Mist u een betaling in dit overzicht? Laat het ons weten, dan zoeken wij het uit.</p>
+
+<!-- PAGINA 2 -->
+<div style="page-break-before:always;"></div>
+
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#061126; margin:5mm 0 1.6mm 0; margin-top:0;">Wat er gebeurt als u niet betaalt</div>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0;">Ontvangen wij uiterlijk op {{misc.today_plus_5_business_days}} geen betaling en ook geen reactie, dan leggen wij het dossier aan {{creditor.name}} voor met het advies de vordering aan de rechter voor te leggen. Kiest onze opdrachtgever daarvoor, dan ontvangt u een dagvaarding van een gerechtsdeurwaarder. Betaalt u op tijd, of neemt u vóór die datum contact met ons op, dan is dat niet nodig.</p>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%; margin:0 0 1mm 0;">
+    <tr>
+        <td style="width:50%; vertical-align:top; padding:3mm 4mm 3mm 4mm; background-color:#f3f4f7; border-left:1.2pt solid #061126;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:13pt; font-weight:bold; color:#061126; margin:0 0 1.2mm 0;">Hogere kosten</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245;">Wijst de rechter de vordering toe, dan komen ook de proceskosten meestal voor uw rekening: griffierecht, de kosten van de deurwaarder en een vergoeding voor de gemachtigde. De rente loopt door.</div></td>
+        <td style="width:3mm; padding:0;"></td>
+        <td style="width:50%; vertical-align:top; padding:3mm 4mm 3mm 4mm; background-color:#f3f4f7; border-left:1.2pt solid #061126;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:13pt; font-weight:bold; color:#061126; margin:0 0 1.2mm 0;">Beslag na een vonnis</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245;">Met een vonnis kan de deurwaarder beslag leggen, bijvoorbeeld op uw bankrekening, op bedrijfsmiddelen of op bedragen die anderen aan uw onderneming moeten betalen.</div></td>
+    </tr>
+</table>
+
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#061126; margin:5mm 0 1.6mm 0;">Zo betaalt u</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%; margin-bottom:4mm;">
+    <tr>
+        <td style="width:50%; vertical-align:top; padding:4.5mm 5mm 4.5mm 5mm; background-color:#f3f4f7; border-left:1.2pt solid #3f68f5;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%;">
+                <tr>
+                    <!-- Dynamische QR: betaallink van dit dossier (variabele case.online_payment_link) via onze route /api/qr; zie tools/bouw.py -->
+                    <td style="width:24mm; vertical-align:top; padding:0;"><a href="{{case.online_payment_link}}"><img src="https://website.geldgarant.workers.dev/api/qr?d={{case.case_number}}&amp;data={{case.online_payment_link}}" alt="QR-code naar de betaalpagina van dit dossier" style="width:21mm; height:21mm;"></a></td>
+                    <td style="vertical-align:top; padding:0 0 0 1mm;">
+                        <div style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:13pt; font-weight:bold; color:#061126; margin:0 0 1.2mm 0;"><a href="{{case.online_payment_link}}" style="color:#061126; text-decoration:none;">Online met iDEAL</a></div>
+                        <div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245;">Scan de code met uw telefoon. U komt direct op de betaalpagina van dit dossier en betaalt in uw eigen bank-app. Lukt scannen niet? Ga naar <b style="color:#061126;">geldgarant.com/betalen</b> en vul uw dossiernummer en het bedrag in.</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="width:3mm; padding:0;"></td>
+        <td style="vertical-align:top; padding:4.5mm 5mm 4.5mm 5mm; background-color:#f3f4f7;">
+            <div style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:13pt; font-weight:bold; color:#061126; margin:0 0 1.2mm 0;">Overmaken</div>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%;">
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11.5pt; color:#6b7390; padding:0.6mm 3mm 0.6mm 0; white-space:nowrap; vertical-align:top;">IBAN</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; padding:0.6mm 0; vertical-align:top;">{{org_escrow_bank_account.iban}}</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11.5pt; color:#6b7390; padding:0.6mm 3mm 0.6mm 0; white-space:nowrap; vertical-align:top;">Ten name van</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; padding:0.6mm 0; vertical-align:top;">{{org_escrow_bank_account.account_name}}</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11.5pt; color:#6b7390; padding:0.6mm 3mm 0.6mm 0; white-space:nowrap; vertical-align:top;">BIC</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; padding:0.6mm 0; vertical-align:top;">{{org_escrow_bank_account.bic}}</td></tr>
+                <tr><td style="font-family:Helvetica,Arial,sans-serif; font-size:8pt; line-height:11.5pt; color:#6b7390; padding:0.6mm 3mm 0.6mm 0; white-space:nowrap; vertical-align:top;">Kenmerk</td><td style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; padding:0.6mm 0; vertical-align:top; font-weight:bold;">{{case.case_number}}</td></tr>
+            </table>
+            <div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:12pt; color:#2b3245; margin-top:1.5mm;">Vermeld altijd uw dossiernummer als kenmerk. Dan komt uw betaling goed terecht.</div>
+        </td>
+    </tr>
+</table>
+
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#061126; margin:5mm 0 1.6mm 0;">Kunt u niet in één keer betalen?</div>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0;">Neem dan uiterlijk op {{misc.today_plus_5_business_days}} contact met ons op, liefst telefonisch. Wij bespreken met u wat haalbaar is en leggen uw voorstel voor een betalingsregeling voor aan onze opdrachtgever. Een regeling geldt pas als wij die schriftelijk aan u hebben bevestigd.</p>
+
+<div style="font-family:Helvetica,Arial,sans-serif; font-size:11pt; line-height:15pt; font-weight:bold; color:#061126; margin:5mm 0 1.6mm 0;">Bent u het niet eens met de vordering?</div>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0;">Laat ons dan uiterlijk op {{misc.today_plus_5_business_days}} schriftelijk weten waarom, met de stukken die uw standpunt onderbouwen. Wij leggen uw reactie voor aan onze opdrachtgever en laten u schriftelijk weten wat de uitkomst is. Het deel van de vordering waarover u het wel eens bent, vragen wij u te betalen.</p>
+
+<!-- CONTACT (Regeling Wki art. 5) -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%; margin:4mm 0 4mm 0; border-top:0.5pt solid #dfe3ec; border-bottom:0.5pt solid #dfe3ec;">
+    <tr>
+        <td style="vertical-align:top; padding:3mm 3mm 3mm 0; width:21%;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#3f68f5; font-weight:bold;">Bellen</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; font-weight:bold; margin-top:0.6mm;">{{org_communication.telephone}}</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">op werkdagen</div></td>
+        <td style="vertical-align:top; padding:3mm 3mm 3mm 0; width:26%;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#3f68f5; font-weight:bold;">E-mail</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; font-weight:bold; margin-top:0.6mm;">{{org_communication.email}}</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">noem uw dossiernummer</div></td>
+        <td style="vertical-align:top; padding:3mm 3mm 3mm 0; width:33%;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#3f68f5; font-weight:bold;">Online</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; font-weight:bold; margin-top:0.6mm;">geldgarant.com/brief-ontvangen</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">betalen, regeling, reactie</div></td>
+        <td style="vertical-align:top; padding:3mm 3mm 3mm 0; width:20%; padding-right:0;"><div style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; letter-spacing:0.6pt; text-transform:uppercase; color:#3f68f5; font-weight:bold;">Op kantoor</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:8.5pt; line-height:11.5pt; color:#061126; font-weight:bold; margin-top:0.6mm;">{{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.city}}</div><div style="font-family:Helvetica,Arial,sans-serif; font-size:7.5pt; line-height:10pt; color:#6b7390;">op afspraak</div></td>
+    </tr>
+</table>
+
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0; margin-bottom:1mm;">Met vriendelijke groet,</p>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:9.5pt; line-height:14pt; color:#2b3245; margin:0 0 3.2mm 0; margin-bottom:4mm;"><b style="color:#061126;">GeldGarant</b><br>Afdeling incasso</p>
+
+<!-- KLEINE LETTERS -->
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; color:#6b7390; margin:0 0 1.6mm 0;">GeldGarant is als incassodienstverlener ingeschreven in het Incassoregister van Justis onder nummer {{org_registration.business_license_number}}. Wij handelen in opdracht van en namens {{creditor.name}}. Betalingen die wij ontvangen, staan op onze derdengeldenrekening en dragen wij af aan onze opdrachtgever. Heeft u een klacht over onze werkwijze? Lees dan onze klachtenregeling op geldgarant.com/klachtenregelement.</p>
+<p style="font-family:Helvetica,Arial,sans-serif; font-size:7pt; line-height:10pt; color:#6b7390; margin:0 0 1.6mm 0;">Geldzorgen? Uw gemeente helpt gratis, net als Geldfit (geldfit.nl, 0800 8115). Loopt het u boven het hoofd? Praat erover met 113 Zelfmoordpreventie, gratis via 0800 0113 of 113.nl.</p>
