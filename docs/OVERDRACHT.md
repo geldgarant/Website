@@ -1,8 +1,8 @@
-# GeldGarant website: complete overdracht (7 nov 2026, 08:30)
+# GeldGarant website: complete overdracht (7 nov 2026, 11:00)
 
 Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt alle eerdere overdrachten (ook `claude/website-overdracht-*.md` en `claude/website-START-HIER.md` in het claude.ai-project, die dezelfde inhoud hebben). Details staan in de repo: `CLAUDE.md`, `docs/HANDOFF.md` (§6b), `brieven/README.md`, `docs/SITEMAP.md`, `docs/LIVEGANG.md`.
 
-Stand: alles staat op `main` en op staging (https://website.geldgarant.workers.dev), laatste Workers Build geslaagd. Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`.
+Stand: alles staat op `main` en op staging (https://website.geldgarant.workers.dev), laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Cloudflare 7 nov: Turnstile-hostname en origin voor staging toegevoegd (zie §5.5).
 
 ---
 
@@ -10,7 +10,7 @@ Stand: alles staat op `main` en op staging (https://website.geldgarant.workers.d
 
 > Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Draai `bash scripts/dev/dompdf-lib.sh` (dompdf voor de brieven). Controleer of de Framer-connector actief is (anders RefreshMcpTools). Lees docs/OVERDRACHT.md, daarna CLAUDE.md, docs/HANDOFF.md (§0 en §6b), brieven/README.md, docs/SITEMAP.md en docs/LIVEGANG.md.
 >
-> Volgende taak: mijn feedback op de nieuwe betaalflow en de eerste aanmaning verwerken (OVERDRACHT §6 en §7), daarna de sommatie opnieuw maken in dezelfde opbouw als de aanmaning, dan de 14-dagenbrief voor particulieren, de open punten in §5 en de livegang. Werkwijze per pagina: kort plan, bouwen, verifiëren, pushen, screenshots sturen. Kwaliteit en creativiteit voorop. Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
+> Volgende taak: mijn feedback op de sommatie en de 14-dagenbrief verwerken (OVERDRACHT §7), de proefbrieven in CaseControl (laadt de dynamische QR?), de open punten in §5 en de livegang. Werkwijze per pagina: kort plan, bouwen, verifiëren, pushen, screenshots sturen. Kwaliteit en creativiteit voorop. Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
 
 **Meenemen naar een nieuw claude.ai-project** (projectkennis): dit bestand (`docs/OVERDRACHT.md`), en als je ze nog nodig hebt de intake-workerbestanden `claude/intake-worker-index.js`, `claude/intake-worker-setup.md`, `claude/intake-worker-sollicitatie.js`, `claude/intake-worker-sollicitatie-installeren.md`, plus `GeldGarant_CaseControl_Context.md`. De CaseControl-variabelenlijst en de oude sommatie staan nu in de repo (`brieven/casecontrol-variabelen.md`, `brieven/oud/`). Vervallen: `claude/intake-worker-betaallink.md`, `claude/website-handoff.md`, `claude/website-sitemap.md`.
 
@@ -96,7 +96,12 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
 2. Telegram-melding intake-worker met minimale persoonsgegevens.
 3. Verwerkersovereenkomsten: Cloudflare, Resend, Telegram, CaseControl.
 4. WhatsApp Business op 085 212 73 88.
-5. Intake-worker: sollicitatie-route installeren; origins en Turnstile-hostnames (staging, `geldgarant.com`, `www`).
+5. Intake-worker (Cloudflare, nagelopen 7 nov in de ingebouwde browser):
+    - gedaan: `website.geldgarant.workers.dev` bij de Turnstile-widget `geldgarant-incassoform` en in `INTAKE_ALLOWED_ORIGINS` (gecontroleerd via `/api/health`); `geldgarant.com` en `www` stonden er al;
+    - open: route `POST /api/sollicitatie` uitrollen (de editor van Cloudflare laat geen geautomatiseerd plakken toe; code = `docs/projectkennis/intake-worker-index.js` + route + `intake-worker-sollicitatie.js`, sha256 `48dcfd59…`); daarna 15 ongebruikte geheimen van de vorige bouwer verwijderen (Airtable, Supabase, Trigger.dev, CaseControl-client, `PORTAL_PROVISION_SYNC_SECRET`; akkoord Anas);
+    - Telegram bewust uit (akkoord Anas): token staat er, `TELEGRAM_CHAT_ID` niet;
+    - opvallend: elke 15 minuten roept een externe partij `POST /api/internal/portal-provisioning/run` aan (Trigger.dev-job van de vorige bouwer). De route bestaat niet meer, maar die partij heeft nog sleutels: CaseControl-API-client (`CASECONTROL_CLIENT_SECRET`) laten vernieuwen bij CaseControl en de bouwer vragen de job te stoppen;
+    - Resend: alleen `resend._domainkey` staat in de DNS, de records op `send.` (MX/SPF) ontbreken. In Resend nakijken of het domein geverifieerd is en of de API-key van het eigen account is; daarna één echte test via `/contact-opnemen` op staging.
 6. Compliance-claims /over-ons 03 en /wki 02 bevestigen.
 7. Buitenlandpagina: landenlijst en tariefaanpak.
 8. Foto's kantoor/team zonder namen; later echte reviews en cijfers.
@@ -106,8 +111,9 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
     - antwoord van CaseControl op Anas' mail: mogen wij `/pay` vanaf onze server aanroepen (technisch werkt het);
     - testbetaling van € 5 op een eigen testdossier via https://website.geldgarant.workers.dev/betalen: landt hij op het dossier, waar komt de bezoeker na iDEAL uit (terugkeer-URL; `/brief-ontvangen/bedankt` en `/mislukt` staan klaar);
     - telefoonnummer in CaseControl (organisatie) naar 085 212 73 88 (brieven halen het daar; oud: 085 083 5230);
-    - aanmaning in CaseControl plakken (codeweergave), proefbrief: logo en QR zichtbaar? Printen, vouwen, adres in het venster?
-    - eerste variabelenlijst (`case.*`, `creditor.*`) opvragen: is er een variabele voor hoofdsom, rentepercentage of betaallink?
+    - aanmaning, sommatie en 14-dagenbrief in CaseControl plakken (codeweergave), proefbrief: logo zichtbaar, **laadt de dynamische QR** (anders `QR=statisch` bouwen)? Printen, vouwen, adres in het venster?
+    - 14-dagenbrief: incassokostensjabloon pas na de 14 dagen aanzetten (`case.total_amount_due` mag dan nog geen kosten bevatten); controleren dat `case.penalty_amount_incl_vat` al het staffelbedrag geeft;
+    - eerste variabelenlijst (`case.*`, `creditor.*`) opvragen: is er een variabele voor hoofdsom of rentepercentage? (Betaallink: `case.online_payment_link`, nu gebruikt.)
     - signing secret van de webhook vernieuwen (was zichtbaar in een screenshot).
 12. Livegang volgens `docs/LIVEGANG.md` (DNS bij Cloudflare; A-records en www-CNAME naar Worker "website"; MX/TXT ongemoeid).
 
@@ -121,16 +127,18 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
 - Bewust geen naam/e-mail zoals Breyta: CaseControl gebruikt ze niet.
 - Tests: `tests/unit/betalen-worker.test.ts`, `tests/e2e/brief.spec.ts`.
 
-## 7. Brieven voor CaseControl (gebouwd 7 nov)
+## 7. Brieven voor CaseControl (gebouwd 7 nov, bijgewerkt 11:00)
 
-- **Zo maakt CaseControl een brief** (gemeten aan hun PDF, nagebouwd): dompdf 3.1.6, A4, marges 20 mm rondom, standaardfont Roboto, geen externe afbeeldingen, editor bewaart alleen inline stijlen. `{{misc.letter_logo}}` geeft een logo van 79 mm breed; wij gebruiken een eigen logo als data-URI.
-- **Aanmaning 1 B2B** (`brieven/aanmaning-1-b2b.html`, voorbeeld `brieven/voorbeeld/aanmaning-1-b2b-voorbeeld.pdf`):
-    - raster: kop 20–42 mm; retourregel 50 mm; adres 56–75 mm op 25 mm van links (venster links, EA5/6 of C5/6); referenties (Datum, Dossiernummer, Namens, Telefoon, Betalen uiterlijk) vanaf 133 mm; onderwerp na de vouw op 99 mm; vouwtekens 99/198 mm, ponsteken 148,5 mm; vaste voettekst met dossiernummer;
-    - pagina 1: "Aanmaning / Uw betaling aan {{creditor.name}} staat nog open", aanhef `{{debtor.correspondence_salutation_merged}}`, navy balk (totaal, uiterlijk op, kenmerk), specificatie (`{{misc.case_original_claims}}`, handelsrente met periode en 10,40%, incassokosten volgens staffel, totaal);
-    - pagina 2: QR (naar geldgarant.com/betalen) + iDEAL en overmaken, regeling, niet eens, "als wij niets van u horen" (sommatie, daarna mogelijk de rechter), contact, "GeldGarant, Afdeling incasso", register en klachtenregeling, Geldfit en 113;
-    - termijn `{{misc.today_plus_7_business_days}}` (14 werkdagen: `misc.today_plus_14_business_days`).
-- **Werkwijze**: bron `brieven/src/<naam>.html` (stijlen `%%naam%%` uit `tools/bouw.py`, afbeeldingen `[[LOGO_DATA]]`/`[[QR_DATA]]`) → `python3 brieven/tools/bouw.py` → `DOMPDF_LIB=/home/claude/brief/lib php brieven/tools/render-cc.php brieven/<naam>.html brieven/voorbeeld/<naam>.json uit.pdf` → bekijken (`pdftoppm`, `pdfplumber` voor posities in mm).
-- **Website**: de voorbeeldbrief op /brief-ontvangen volgt deze aanmaning.
-- **Volgende**: sommatie opnieuw (oude CaseControl-code en PDF in `brieven/oud/`, mijn eerste opzet `brieven/sommatie-b2b.html` gebruikt nog tokens en eigen fonts), daarna 14-dagenbrief B2C, betalingsherinnering, regelingsbevestiging.
+Alles staat in `brieven/README.md` (raster, variabelen, werkwijze, QR). Kort:
+
+- **Zo maakt CaseControl een brief** (gemeten aan hun PDF, nagebouwd): dompdf 3.1.6, A4, marges 20 mm rondom, standaardfont Roboto, editor bewaart alleen inline stijlen. Eigen logo als data-URI.
+- **Drie brieven**, zelfde raster en opbouw (kop, venster links, referenties vanaf 133 mm, onderwerp na de vouw, navy balk, specificatie, pagina 2 betalen/regeling/niet eens/contact/klachten/hulp):
+    - `aanmaning-1-b2b.html`: akkoord Anas; termijn `misc.today_plus_7_business_days`;
+    - `sommatie-b2b.html`: "Laatste verzoek om te betalen voordat de rechter eraan te pas komt", verzonden aangetekend en per e-mail, termijn `misc.today_plus_5_business_days`, voortgangsbalk Aanmaning/Sommatie/Rechter, gevolgen feitelijk (dagvaarding na akkoord opdrachtgever, proceskosten, beslag na vonnis);
+    - `aanmaning-14-dagen-b2c.html`: "U kunt nog betalen zonder extra kosten", eisen art. 6:96 lid 6 BW (14 dagen vanaf de dag na ontvangst, exact kostenbedrag `case.penalty_amount_incl_vat`, gevolgen, geen kosten voor de brief), wettelijke rente 4%, hulpblok geldzorgen.
+- **Dynamische QR** (wens Anas): `<img src="https://website.geldgarant.workers.dev/api/qr?d={{case.case_number}}&data={{case.online_payment_link}}">`, route `worker/qr.ts` (PNG, eigen encoder, `uqr`), terugval naar `/brief-ontvangen?dossier=…#betalen`. QR en "Online met iDEAL" ook klikbaar in de PDF. Proefbrief moet uitwijzen of CaseControl externe afbeeldingen laadt; zo niet: `QR=statisch python3 brieven/tools/bouw.py`.
+- **Werkwijze**: bron `brieven/src/<naam>.html` → `python3 brieven/tools/bouw.py` → `npx tsx scripts/dev/qr-proef.mts "d=…&data=…" /tmp/qr.png` → `QR_PNG=/tmp/qr.png DOMPDF_LIB=/home/claude/brief/lib php brieven/tools/render-cc.php brieven/<naam>.html brieven/voorbeeld/<naam>.json brieven/voorbeeld/<naam>-voorbeeld.pdf`.
+- **Website**: de voorbeeldbrief op /brief-ontvangen volgt de aanmaning (met vaste QR naar /betalen, gelabeld als voorbeeld).
+- **Volgende brieven**: betalingsherinnering B2C na de 14 dagen, regelingsbevestiging, eventueel Engelstalige B2B-varianten (buitenland).
 
 **Kritiek op de oude sommatie** (voor de nieuwe): oud telefoonnummer, gedachtestreepjes, "Geachte relatie", leeg veld "Grondslag", kapotte vinkjes ("v", "!"), QR-blok zonder QR, "zonder nadere aankondiging naar de juridische afdeling" (procedure vraagt akkoord opdrachtgever), loonbeslag bij een bedrijf, "worden niet door de rechter gematigd" (onjuist), geen rentepercentage of periode, adres niet op het vensterraster, te veel gekleurde vlakken.
