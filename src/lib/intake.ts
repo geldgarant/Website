@@ -395,7 +395,8 @@ export function bouwContactPayload(
         },
         details: {
             toelichting: toelichting.slice(0, 2000),
-            dossiernummer: s.onderwerp === "bestaand_dossier" ? schoon(s.dossiernummer, 80) : "",
+            dossiernummer:
+                s.onderwerp === "bestaand_dossier" || s.onderwerp === "klacht_geschil" ? schoon(s.dossiernummer, 80) : "",
             land: s.onderwerp === "buitenland" ? schoon(s.land, 120) : "",
             openstaand_bedrag: s.onderwerp === "buitenland" && bedrag > 0 ? bedrag : null,
             aantal_facturen: s.onderwerp === "debiteurenbeheer" ? schoon(s.aantal_facturen, 80) : "",

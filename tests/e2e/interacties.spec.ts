@@ -241,3 +241,35 @@ test.describe("hulp bij geldproblemen", () => {
         await expect(page.locator('[data-p="brief"]')).toBeHidden()
     })
 })
+
+test.describe("klachtenregeling", () => {
+    test("toont alle routes en de termijnen voor vandaag", async ({ page }) => {
+        await page.goto("/klachtenregelement")
+        await expect(page.locator('#melden a[href="/contact-opnemen?onderwerp=klacht_geschil"]')).toBeVisible()
+        await expect(page.locator('#melden a[href^="mailto:klachten@geldgarant.com"]')).toBeVisible()
+        await expect(page.locator('#melden a[href^="tel:"]')).toBeVisible()
+        // rekenvoorbeeld: drie datums in de vorm "maandag 9 november"
+        for (const k of ["ontvangen", "bevestiging", "antwoord"]) {
+            await expect(page.locator(`[data-termijnen] [data-k="${k}"]`)).toHaveText(/^[a-z]+dag \d{1,2} [a-z]+$/)
+        }
+        await expect(page.locator(".artikel")).toHaveCount(10)
+        const ld = await page.locator('script[type="application/ld+json"]').allTextContents()
+        expect(ld.join(" ")).toContain('"FAQPage"')
+    })
+})
+
+test.describe("juridische documenten", () => {
+    test("elke documentpagina linkt naar een bestaande pdf, ook per pagina", async ({ page, request }) => {
+        for (const slug of ["algemene-voorwaarden", "privacy-beleid", "cookie-beleid"]) {
+            await page.goto(`/juridisch/${slug}`)
+            const pdf = await page.getByRole("link", { name: /Pdf openen/ }).getAttribute("href")
+            expect(pdf).toMatch(/^\/juridisch\/[a-z-]+\.pdf$/)
+            const res = await request.get(pdf!)
+            expect(res.ok()).toBe(true)
+            expect(res.headers()["content-type"]).toContain("pdf")
+            const toc = page.locator(".toc a")
+            expect(await toc.count()).toBeGreaterThan(5)
+            await expect(toc.first()).toHaveAttribute("href", /\.pdf#page=\d+$/)
+        }
+    })
+})

@@ -53,7 +53,7 @@ function init(form: HTMLFormElement) {
     }
 
     function toonExtra() {
-        for (const blok of $$("[data-alleen]")) blok.hidden = blok.dataset.alleen !== state.onderwerp
+        for (const blok of $$("[data-alleen]")) blok.hidden = !(blok.dataset.alleen ?? "").split(" ").includes(state.onderwerp)
         const telVerplicht = state.voorkeur !== "email" || state.onderwerp === "terugbelverzoek"
         const telLabel = $<HTMLLabelElement>('label[for="c-telefoon"]')
         if (telLabel) {

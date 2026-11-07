@@ -50,6 +50,24 @@ test.describe("contact opnemen", () => {
         expect(body.turnstile_token).toBe("test-token")
     })
 
+    test("klacht vanaf de klachtenregeling: dossiernummer gaat mee", async ({ page }) => {
+        const verzoeken = await mockApi(page)
+        await page.goto("/contact-opnemen?onderwerp=klacht_geschil")
+        await expect(page.locator('input[name="onderwerp"][value="klacht_geschil"]')).toBeChecked()
+        await expect(page.locator("#c-dossier")).toBeVisible()
+        await page.fill("#c-dossier", "GG-2026-01234")
+        await page.fill("#c-naam", "Test Persoon")
+        await page.fill("#c-bedrijf", "Persoon")
+        await page.fill("#c-email", "test@voorbeeld.nl")
+        await page.fill("#c-toelichting", "Ik ben niet tevreden over hoe ik te woord ben gestaan.")
+        await page.getByRole("button", { name: /Bericht versturen/ }).click()
+        await expect(page.locator("[data-verzonden]")).toBeVisible()
+        expect(verzoeken).toHaveLength(1)
+        const { body } = verzoeken[0]
+        expect((body.onderwerp as Record<string, string>).key).toBe("klacht_geschil")
+        expect((body.details as Record<string, string>).dossiernummer).toBe("GG-2026-01234")
+    })
+
     test("terugbelverzoek maakt telefoon verplicht en toont het moment-veld", async ({ page }) => {
         await mockApi(page)
         await page.goto("/contact-opnemen")

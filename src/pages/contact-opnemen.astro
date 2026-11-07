@@ -142,7 +142,7 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
                             maxlength={20}
                         />
                     </div>
-                    <div class="extra" data-alleen="bestaand_dossier" hidden>
+                    <div class="extra" data-alleen="bestaand_dossier klacht_geschil" hidden>
                         <Veld
                             id="c-dossier"
                             name="dossiernummer"
@@ -288,6 +288,9 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
                             <span class="btn-dot">
                                 <Icon name="arrow-up-right" size={18} />
                             </span>
+                        </a>
+                        <a class="textlink zij-klacht" href="/klachtenregelement">
+                            Niet tevreden? Zo dient u een klacht in
                         </a>
                     </div>
                 </aside>
@@ -652,6 +655,14 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
         margin-top: 8px;
         font-size: var(--fs-xs);
         color: rgba(255, 255, 255, 0.65);
+    }
+    .zij-klacht {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
     }
     .zij-deb {
         padding: 22px 24px;

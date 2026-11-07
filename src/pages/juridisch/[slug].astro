@@ -1,0 +1,593 @@
+---
+// Fase D: /juridisch/algemene-voorwaarden, /juridisch/privacy-beleid en /juridisch/cookie-beleid (slugs uit Framer).
+// Hoofdvraag: "Waar vind ik het document, en waar staat wat ik zoek?" Zoals voorheen is de pdf leidend (GeldGarant
+// stelt de documenten zelf op); de pagina maakt hem vindbaar: preview van pagina 1, meta (pagina's, grootte, datum),
+// een inhoudsopgave die de pdf op de juiste pagina opent, en de route naar de andere documenten.
+// Research (7 nov 2026): Breyta /algemene-voorwaarden is één lange tekst zonder inhoudsopgave (25.000px mobiel),
+// Breyta /cookiebeleid-eu werkt met tabellen, Vesting /privacy-statement is lange tekst.
+// Inhoud per document: src/data/juridisch.ts.
+import { statSync } from "node:fs"
+import { join } from "node:path"
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import { site } from "../../data/site"
+import { juridisch, pdfHref, type JuridischDoc } from "../../data/juridisch"
+
+export function getStaticPaths() {
+    return juridisch.map((doc) => ({ params: { slug: doc.slug }, props: { doc } }))
+}
+
+interface Props {
+    doc: JuridischDoc
+}
+const { doc } = Astro.props
+
+const url = `https://geldgarant.com/juridisch/${doc.slug}`
+const kb = Math.round(statSync(join(process.cwd(), "public/juridisch", doc.bestand)).size / 1024)
+const datum = (iso: string) =>
+    new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+        new Date(`${iso}T00:00:00Z`),
+    )
+
+const anderen = [
+    ...juridisch
+        .filter((d) => d.slug !== doc.slug)
+        .map((d) => ({
+            href: `/juridisch/${d.slug}`,
+            titel: d.naam,
+            tekst: `${d.voor}, pdf van ${d.paginas} pagina’s`,
+            icon: "doc" as const,
+        })),
+    { href: "/klachtenregelement", titel: "Klachtenregeling", tekst: "Voor iedereen, tien artikelen", icon: "scale" as const },
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: `${doc.naam} | GeldGarant`,
+        url,
+        description: doc.description,
+        mainEntity: {
+            "@type": "DigitalDocument",
+            name: `${doc.naam} GeldGarant`,
+            url: `https://geldgarant.com${pdfHref(doc)}`,
+            encodingFormat: "application/pdf",
+            inLanguage: "nl-NL",
+            ...(doc.bijgewerkt ? { dateModified: doc.bijgewerkt } : {}),
+            publisher: { "@type": "Organization", name: site.name, url: "https://geldgarant.com" },
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Juridisch", item: "https://geldgarant.com/juridisch" },
+            { "@type": "ListItem", position: 3, name: doc.naam, item: url },
+        ],
+    },
+]
+---
+
+<Base title={doc.seoTitle} description={doc.description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Juridisch", href: "/juridisch" }, { label: doc.naam }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <p class="voor">{doc.voor}</p>
+                    <h1 class="display">
+                        {doc.h1[0].endsWith(" ") ? (
+                            <Fragment>
+                                {doc.h1[0].trim()}
+                                <br />
+                                <span class="accent">{doc.h1[1]}</span>
+                            </Fragment>
+                        ) : (
+                            <Fragment set:html={`${doc.h1[0]}&shy;<span class="accent">${doc.h1[1]}</span>`} />
+                        )}
+                    </h1>
+                    <p class="lead">{doc.lead}</p>
+                    <ul role="list" class="meta">
+                        <li>
+                            <Icon name="doc" size={16} />
+                            Pdf, {doc.paginas} pagina’s, {kb}
+                            {"\u00a0"}kB
+                        </li>
+                        {doc.bijgewerkt && (
+                            <li>
+                                <Icon name="calendar" size={16} />
+                                Bijgewerkt op {datum(doc.bijgewerkt)}
+                            </li>
+                        )}
+                    </ul>
+                    <div class="hero-actions">
+                        <a class="btn" href={pdfHref(doc)} target="_blank" rel="noopener">
+                            Pdf openen
+                            <span class="btn-dot">
+                                <Icon name="arrow-up-right" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={pdfHref(doc)} download>
+                            Downloaden
+                        </a>
+                    </div>
+                </div>
+                <a class="papier" href={pdfHref(doc)} target="_blank" rel="noopener" aria-label={`${doc.naam} openen als pdf`}>
+                    <span class="papier-laag" aria-hidden="true"></span>
+                    <span class="papier-laag" aria-hidden="true"></span>
+                    <img
+                        src={`/juridisch/${doc.preview}`}
+                        alt=""
+                        width="600"
+                        height="849"
+                        fetchpriority="high"
+                        decoding="async"
+                    />
+                    <span class="papier-knop" aria-hidden="true">
+                        <Icon name="arrow-up-right" size={18} />
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 INHOUD -->
+    <section class="section bg-surface" id="inhoudsopgave" aria-labelledby="inhoud-title">
+        <div class="wrap inhoud">
+            <div class="inhoud-kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Inhoud
+                </p>
+                <h2 class="h2" id="inhoud-title">
+                    Wat staat er <span class="accent">in</span>
+                </h2>
+                <p class="lead">Kies een onderdeel: de pdf opent direct op de juiste pagina.</p>
+                <p class="snel-label">Snel naar</p>
+                <ul role="list" class="snel">
+                    {doc.snel.map((s) => (
+                        <li>
+                            <a href={pdfHref(doc, s.pagina)} target="_blank" rel="noopener">
+                                {s.label}
+                                <Icon name="arrow-up-right" size={16} />
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <ol role="list" class="toc">
+                {doc.inhoud.map((h) => (
+                    <li>
+                        <a href={pdfHref(doc, h.pagina)} target="_blank" rel="noopener">
+                            <span class="toc-nr num">{h.nr}</span>
+                            <span class="toc-titel">{h.titel}</span>
+                            <span class="toc-p">
+                                <span class="sr-only">pagina </span>
+                                <span aria-hidden="true">p.{"\u00a0"}</span>
+                                {h.pagina}
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 02 VERDER -->
+    <section class="section" aria-labelledby="verder-title">
+        <div class="wrap">
+            <div class="verder-kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Verder
+                </p>
+                <h2 class="h2" id="verder-title">
+                    Andere <span class="accent">documenten</span>
+                </h2>
+            </div>
+            <div class="verder">
+                <ul role="list" class="docs">
+                    {anderen.map((a) => (
+                        <li>
+                            <a class="doc-kaart" href={a.href}>
+                                <span class="doc-thumb" aria-hidden="true">
+                                    <Icon name={a.icon} size={22} />
+                                </span>
+                                <span class="doc-tekst">
+                                    <span class="doc-titel">{a.titel}</span>
+                                    <span class="doc-voor">{a.tekst}</span>
+                                </span>
+                                <Icon name="arrow" size={18} />
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <aside class="vraag bg-ink" aria-labelledby="vraag-title">
+                    {doc.slug === "privacy-beleid" ? (
+                        <>
+                            <h3 class="vraag-kop" id="vraag-title">
+                                Uw rechten uitoefenen
+                            </h3>
+                            <p>
+                                Inzage, correctie of verwijdering van uw gegevens? Dien een verzoek in, dan reageren we binnen
+                                vier weken.
+                            </p>
+                            <a class="btn btn-light" href="/contact-opnemen?onderwerp=privacy_avg">
+                                Verzoek indienen
+                                <span class="btn-dot">
+                                    <Icon name="arrow" size={18} />
+                                </span>
+                            </a>
+                        </>
+                    ) : (
+                        <>
+                            <h3 class="vraag-kop" id="vraag-title">
+                                Vraag over een artikel?
+                            </h3>
+                            <p>Bel of mail ons. We leggen het u graag in gewone taal uit.</p>
+                            <a class="btn btn-light" href={site.phoneHref}>
+                                Bel{"\u00a0"}
+                                {site.phone}
+                            </a>
+                        </>
+                    )}
+                    <a class="textlink vraag-mail" href={`mailto:${site.email}`}>
+                        {site.email}
+                    </a>
+                </aside>
+            </div>
+        </div>
+    </section>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+        overflow: hidden;
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        /* start, niet center: anders schuift de tekst mee als het accentfont later laadt (CLS) */
+        align-items: start;
+    }
+    @media (min-width: 900px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+        }
+    }
+    .voor {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .hero h1 {
+        margin-top: 18px;
+        hyphens: manual;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 34em;
+    }
+    .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        margin-top: 24px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .meta li {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .meta :global(svg) {
+        color: var(--blue);
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 36px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    /* papier: echte eerste pagina met twee lagen erachter, zoals een stapel */
+    .papier {
+        position: relative;
+        display: block;
+        /* ruimte rechts voor de gedraaide lagen, zodat ze nooit buiten het scherm steken */
+        width: min(calc(100% - 48px), 340px);
+        margin-inline: auto;
+        aspect-ratio: 600 / 849;
+        isolation: isolate;
+    }
+    @media (max-width: 899px) {
+        .papier {
+            width: min(72%, 300px);
+        }
+    }
+    .papier img,
+    .papier-laag {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
+    .papier img {
+        z-index: 2;
+        object-fit: cover;
+        background: #fff;
+        box-shadow:
+            0 1px 2px rgba(6, 17, 38, 0.08),
+            0 12px 32px rgba(6, 17, 38, 0.12),
+            0 40px 80px rgba(6, 17, 38, 0.1);
+        transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .papier-laag {
+        z-index: 1;
+        background: #fff;
+        border: 1px solid var(--line);
+        transform: rotate(4deg) translate(10px, 6px);
+        transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .papier-laag + .papier-laag {
+        z-index: 0;
+        background: var(--surface);
+        transform: rotate(8deg) translate(20px, 14px);
+    }
+    .papier-knop {
+        position: absolute;
+        z-index: 3;
+        right: -14px;
+        bottom: 28px;
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(48, 105, 254, 0.35);
+    }
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+        .papier:hover img {
+            transform: translateY(-6px) rotate(-1deg);
+        }
+        .papier:hover .papier-laag {
+            transform: rotate(6deg) translate(14px, 8px);
+        }
+    }
+    .papier:focus-visible {
+        outline: none;
+    }
+    .papier:focus-visible img {
+        outline: 3px solid var(--blue);
+        outline-offset: 4px;
+    }
+
+    /* ---------- 01 INHOUD ---------- */
+    .inhoud {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .inhoud {
+            grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+            gap: 72px;
+            align-items: start;
+        }
+        .inhoud-kop {
+            position: sticky;
+            top: 120px;
+        }
+    }
+    .inhoud-kop .h2 {
+        margin-top: 14px;
+    }
+    .inhoud-kop .lead {
+        margin-top: 18px;
+    }
+    .snel-label {
+        margin-top: 28px;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+    .snel {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .snel a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        transition:
+            border-color 0.2s,
+            color 0.2s;
+    }
+    .snel a:hover {
+        border-color: var(--blue);
+        color: var(--blue-ink);
+    }
+    .snel :global(svg) {
+        color: var(--blue);
+    }
+    .toc {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        overflow: hidden;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .toc li + li {
+        border-top: 1px solid var(--line);
+    }
+    .toc a {
+        display: grid;
+        grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+        gap: 14px;
+        align-items: center;
+        min-height: 56px;
+        padding: 12px 22px;
+        color: var(--ink);
+        transition: background 0.2s;
+    }
+    .toc a:hover {
+        background: var(--blue-soft);
+    }
+    .toc-nr {
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        background: var(--surface);
+        font-family: var(--font-display);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .toc a:hover .toc-nr {
+        background: #fff;
+        color: var(--blue-ink);
+    }
+    .toc-titel {
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        line-height: 1.4;
+    }
+    .toc-p {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* ---------- 02 VERDER ---------- */
+    .verder-kop {
+        margin-bottom: clamp(28px, 3.5vw, 44px);
+    }
+    .verder-kop .h2 {
+        margin-top: 14px;
+    }
+    .verder {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    @media (min-width: 1024px) {
+        .verder {
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+            align-items: stretch;
+        }
+    }
+    .docs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+    .doc-kaart {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        padding: 16px 22px 16px 16px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+        color: var(--ink);
+        transition: background 0.2s;
+    }
+    .doc-kaart:hover {
+        background: var(--blue-soft);
+    }
+    .doc-kaart > :global(svg) {
+        color: var(--blue);
+        transition: transform 0.2s;
+    }
+    .doc-kaart:hover > :global(svg) {
+        transform: translateX(3px);
+    }
+    .doc-thumb {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .doc-tekst {
+        display: grid;
+        gap: 2px;
+    }
+    .doc-titel {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.0625rem;
+    }
+    .doc-voor {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .vraag {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: clamp(26px, 3vw, 36px);
+        border-radius: var(--r-xl);
+        color: rgba(255, 255, 255, 0.78);
+    }
+    .vraag-kop {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #fff;
+    }
+    .vraag p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+    }
+    .vraag .btn {
+        margin-top: 8px;
+    }
+    .vraag-mail {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: auto;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: #fff;
+    }
+</style>

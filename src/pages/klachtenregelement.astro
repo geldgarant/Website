@@ -1,0 +1,938 @@
+---
+// /klachtenregelement (slug met deze spelling behouden: oude Framer-URL). Hoofdvraag: "Ik ben niet tevreden. Hoe meld ik
+// dat, en wat gebeurt er dan?" Voor debiteuren én opdrachtgevers, dus rustige toon en geen verkoop (stickyCta uit).
+// Eisen uit art. 6.1 Besluit kwaliteit incassodienstverlening (Stb. 2024, 44): mondelinge én schriftelijke klachten,
+// regeling bepaalt hoe u indient, wie behandelt, binnen welke termijn, bevestiging binnen twee werkdagen en welke
+// gegevens worden vastgelegd. Research (7 nov 2026): Breyta /klachtenregeling (alleen schriftelijk, 12 artikelen),
+// Vesting Finance /info/klachtenprocedure (kanaalkaarten + tijdlijn), Flanderijn /klacht (formulier + termijn).
+// Volgorde: hoe en wat kost het (hero) → hoe meld ik (01) → wat gebeurt er (02) → en als we het niet eens worden (03)
+// → de regeling zelf (04) → vragen (05) → CTA.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Feitenkaart from "../components/Feitenkaart.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site } from "../data/site"
+import { klachtTermijnen } from "../lib/werkdagen"
+
+const title = "Klachtenregeling | Klacht indienen bij GeldGarant"
+const description =
+    "Niet tevreden over GeldGarant? Dien gratis een klacht in: online, per e-mail, telefonisch of per post. Bevestiging binnen twee werkdagen."
+const url = "https://geldgarant.com/klachtenregelement"
+const formHref = "/contact-opnemen?onderwerp=klacht_geschil"
+const klachtHref = "https://www.incassoklacht.nl"
+const adres = `${site.street}, ${site.postcode} ${site.city}`
+
+const feiten = [
+    { icon: "euro", k: "Kosten", v: "Gratis" },
+    { icon: "clock", k: "Bevestiging", v: "Binnen 2 werkdagen" },
+    { icon: "calendar", k: "Antwoord", v: "Streven: binnen 14 werkdagen" },
+    { icon: "user", k: "Behandelaar", v: "Niet uw dossierbehandelaar" },
+    { icon: "scale", k: "Daarna", v: "IncassoKlacht via NowID", href: "/nowid" },
+] as const
+
+const kanalen = [
+    {
+        icon: "screen",
+        titel: "Online formulier",
+        tekst: "U krijgt direct een referentienummer. Uw dossiernummer kunt u meteen meesturen.",
+        link: { href: formHref, label: "Naar het formulier" },
+        tag: "Snelst",
+    },
+    {
+        icon: "mail",
+        titel: "Per e-mail",
+        tekst: "Zet uw dossiernummer in de onderwerpregel, dan koppelen we uw klacht direct.",
+        link: { href: `mailto:${site.klachtenEmail}?subject=Klacht`, label: site.klachtenEmail },
+    },
+    {
+        icon: "phone",
+        titel: "Telefonisch",
+        tekst: `Op ${site.hours}. We noteren uw klacht en bevestigen hem daarna schriftelijk.`,
+        link: { href: site.phoneHref, label: `Bel\u00a0${site.phone}` },
+    },
+    {
+        icon: "pin",
+        titel: "Per post",
+        tekst: `${site.name}, t.a.v. Klachtenbehandeling, ${adres}.`,
+    },
+] as const
+
+const helpt = [
+    "Uw naam en hoe we u het beste bereiken",
+    "Het dossiernummer uit onze brief of e-mail",
+    "Wat er is gebeurd, en wanneer",
+    "Wat u graag als oplossing ziet",
+    "Eventuele stukken, zoals een brief of e-mail",
+]
+
+const stappen = [
+    {
+        kop: "We registreren uw klacht",
+        tekst: "Op de dag dat hij binnenkomt, of op de eerstvolgende werkdag. Ook als u hem telefonisch doorgeeft.",
+    },
+    {
+        kop: "U krijgt een bevestiging",
+        tekst: "Binnen twee werkdagen, schriftelijk. Daarin staat wie uw klacht behandelt en wanneer u antwoord kunt verwachten.",
+    },
+    {
+        kop: "Een collega zoekt het uit",
+        tekst: "Een andere medewerker dan uw dossierbehandelaar bekijkt het dossier en hoort beide kanten. Soms bellen we u voor een toelichting.",
+    },
+    {
+        kop: "U krijgt ons antwoord",
+        tekst: "Schriftelijk en onderbouwd: wat we hebben gevonden, wat onze conclusie is en wat we eraan doen. We streven naar binnen veertien werkdagen. Lukt dat niet, dan hoort u vóór die datum waarom, en wanneer wel.",
+    },
+]
+
+const artikelen = [
+    {
+        kop: "Wat is een klacht",
+        tekst: "Elke uiting van ontevredenheid over hoe GeldGarant of een van onze medewerkers heeft gehandeld. Het maakt niet uit of u het woord klacht gebruikt.",
+    },
+    {
+        kop: "Wie kan klagen",
+        tekst: "Iedereen met wie wij te maken hebben: debiteuren, opdrachtgevers en wie namens hen optreedt, zoals een schuldhulpverlener of bewindvoerder.",
+    },
+    {
+        kop: "Hoe u klaagt",
+        tekst: `Mondeling of schriftelijk: via het online formulier, per e-mail aan ${site.klachtenEmail}, telefonisch op ${site.phone} of per post.`,
+    },
+    {
+        kop: "Bevestiging",
+        tekst: "Binnen twee werkdagen na ontvangst bevestigen wij uw klacht schriftelijk, met de naam van de behandelaar.",
+    },
+    {
+        kop: "Behandeling",
+        tekst: "Uw klacht wordt behandeld door een medewerker die niet bij uw dossier betrokken is. U krijgt de gelegenheid uw klacht toe te lichten.",
+    },
+    {
+        kop: "Termijn",
+        tekst: "We streven naar afhandeling binnen veertien werkdagen na ontvangst. Is meer tijd nodig, dan laten we u dat binnen die termijn weten, met de reden en een nieuwe datum.",
+    },
+    {
+        kop: "Uitkomst",
+        tekst: "U ontvangt een schriftelijk en gemotiveerd antwoord met onze conclusie en de maatregelen die we eventueel nemen.",
+    },
+    {
+        kop: "Wat we vastleggen",
+        tekst: "Uw naam en contactgegevens, het dossiernummer, de datum van ontvangst, de inhoud van de klacht, de behandelaar, de uitkomst en de datum van afhandeling. We gebruiken deze gegevens alleen voor uw klacht en om onze werkwijze te verbeteren.",
+    },
+    {
+        kop: "Kosten",
+        tekst: "Een klacht indienen en laten behandelen bij GeldGarant is gratis.",
+    },
+    {
+        kop: "Geschil",
+        tekst: "Bent u het niet eens met de uitkomst, dan kunt u de klacht voorleggen aan IncassoKlacht, de onafhankelijke geschillencommissie van NowID.",
+    },
+]
+
+const klachtFaq = [
+    {
+        q: "Kost een klacht indienen geld?",
+        a: "Nee, bij GeldGarant is een klacht indienen en laten behandelen gratis. Legt u de klacht daarna voor aan IncassoKlacht, dan geldt daar een eigen vergoeding. De actuele bedragen staan op incassoklacht.nl.",
+    },
+    {
+        q: "Is een klacht hetzelfde als bezwaar tegen de vordering?",
+        a: "Nee. Bent u het niet eens met het bedrag of met de vordering zelf, reageer dan op onze brief en laat weten waarom. Dat behandelen we als een betwisting. Een klacht gaat over de manier waarop wij werken, bijvoorbeeld hoe u te woord bent gestaan of hoe vaak we contact opnamen.",
+    },
+    {
+        q: "Loopt mijn dossier door terwijl mijn klacht in behandeling is?",
+        a: "Een klacht zet een dossier niet automatisch stil. Gaat uw klacht ook over de vordering zelf, dan beoordelen we dat eerst voordat we verdere stappen zetten.",
+    },
+    {
+        q: "Mag iemand anders namens mij een klacht indienen?",
+        a: "Ja, bijvoorbeeld uw schuldhulpverlener, bewindvoerder of een familielid. We vragen dan om uw toestemming, zodat we over uw dossier mogen praten.",
+    },
+    {
+        q: "Kan ik anoniem een klacht indienen?",
+        a: "Om uw klacht te onderzoeken en u te antwoorden, hebben we uw naam en contactgegevens nodig. We behandelen uw klacht vertrouwelijk.",
+    },
+    {
+        q: "Ik ben opdrachtgever. Geldt deze regeling ook voor mij?",
+        a: "Ja, dezelfde regeling geldt voor opdrachtgevers. Uw vaste dossierbehandelaar lost veel direct op. Lukt dat niet naar uw tevredenheid, dan volgt u deze route.",
+    },
+]
+
+// Rekenvoorbeeld: bij de build berekend, in de browser opnieuw voor de echte dag van vandaag.
+const vandaag = new Date().toISOString().slice(0, 10)
+const tv = klachtTermijnen(vandaag)
+const dagNl = (iso: string) =>
+    new Intl.DateTimeFormat("nl-NL", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(
+        new Date(`${iso}T00:00:00Z`),
+    )
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Klachtenregeling GeldGarant",
+        url,
+        description,
+        publisher: { "@type": "Organization", name: site.name, url: "https://geldgarant.com" },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Contact", item: "https://geldgarant.com/contact-opnemen" },
+            { "@type": "ListItem", position: 3, name: "Klachtenregeling", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: klachtFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs
+                items={[
+                    { label: "Home", href: "/" },
+                    { label: "Contact", href: "/contact-opnemen" },
+                    { label: "Klachtenregeling" },
+                ]}
+            />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Niet tevreden? Laat het ons <span class="accent">weten</span>
+                    </h1>
+                    <p class="lead">
+                        Gaat er iets mis in de manier waarop wij werken, dan horen we dat graag. Een klacht indienen is gratis,
+                        kan op de manier die u het prettigst vindt en wordt behandeld door iemand die niet bij uw dossier
+                        betrokken is.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#melden">
+                            Klacht indienen
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={site.phoneHref}>
+                            <Icon name="phone" size={18} />
+                            Bel{"\u00a0"}
+                            {site.phone}
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="Zo gaan we met uw klacht om" id="feiten-title" items={feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 MELDEN -->
+    <section class="section bg-surface" id="melden" aria-labelledby="melden-title">
+        <div class="wrap">
+            <div class="kop kop-smal">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Klacht indienen
+                </p>
+                <h2 class="h2" id="melden-title">
+                    Kies de manier die bij u <span class="accent">past</span>
+                </h2>
+                <p class="lead">
+                    Alle routes zijn gelijkwaardig. Ook een klacht die u telefonisch doorgeeft, nemen we op en bevestigen we
+                    schriftelijk.
+                </p>
+            </div>
+            <div class="melden">
+                <ul role="list" class="kanalen">
+                    {kanalen.map((k, i) => (
+                        <li class="kanaal" data-reveal style={`--d:${i}`}>
+                            <div class="kanaal-top">
+                                <span class="kanaal-icon" aria-hidden="true">
+                                    <Icon name={k.icon} size={22} />
+                                </span>
+                                {"tag" in k && <span class="tag">{k.tag}</span>}
+                            </div>
+                            <h3 class="h3">{k.titel}</h3>
+                            <p>{k.tekst}</p>
+                            {"link" in k && (
+                                <a class="textlink kanaal-link" href={k.link.href}>
+                                    {k.link.label}
+                                </a>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+                <aside class="helpt" aria-labelledby="helpt-title">
+                    <h3 class="h3" id="helpt-title">
+                        Dit helpt ons om snel te reageren
+                    </h3>
+                    <ul role="list" class="checks">
+                        {helpt.map((h) => (
+                            <li>
+                                <Icon name="check" size={18} />
+                                {h}
+                            </li>
+                        ))}
+                    </ul>
+                    <p class="helpt-noot">
+                        Iemand anders mag de klacht ook namens u indienen, bijvoorbeeld uw schuldhulpverlener. We vragen dan om uw
+                        toestemming.
+                    </p>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 WAT ER DAARNA GEBEURT -->
+    <section class="section" id="daarna" aria-labelledby="daarna-title">
+        <div class="wrap daarna">
+            <div>
+                <div class="kop">
+                    <p class="eyebrow">
+                        <span class="idx">02</span> Wat er daarna gebeurt
+                    </p>
+                    <h2 class="h2" id="daarna-title">
+                        Van melding naar <span class="accent">antwoord</span>
+                    </h2>
+                    <p class="lead">Vier stappen, met vaste termijnen. U weet steeds waar u aan toe bent.</p>
+                </div>
+                <ol role="list" class="stappen">
+                    {stappen.map((s, i) => (
+                        <li class="stap" data-reveal style={`--d:${i}`}>
+                            <span class="stap-num num" aria-hidden="true">
+                                {i + 1}
+                            </span>
+                            <div>
+                                <h3 class="h3">
+                                    <span class="sr-only">Stap {i + 1}: </span>
+                                    {s.kop}
+                                </h3>
+                                <p>{s.tekst}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+            <aside class="reken bg-ink" aria-labelledby="reken-title">
+                <p class="reken-label">Rekenvoorbeeld</p>
+                <h3 class="reken-title" id="reken-title">
+                    Dient u vandaag een klacht in, dan:
+                </h3>
+                {tv && (
+                    <dl class="reken-rijen" data-termijnen>
+                        <div>
+                            <dt>Ontvangen</dt>
+                            <dd data-k="ontvangen">{dagNl(tv.ontvangen)}</dd>
+                        </div>
+                        <div>
+                            <dt>Bevestiging uiterlijk</dt>
+                            <dd data-k="bevestiging">{dagNl(tv.bevestiging)}</dd>
+                        </div>
+                        <div class="reken-eind">
+                            <dt>Antwoord, streefdatum</dt>
+                            <dd data-k="antwoord">{dagNl(tv.antwoord)}</dd>
+                        </div>
+                    </dl>
+                )}
+                <p class="reken-noot">
+                    Weekenden en feestdagen tellen niet mee. Komt uw klacht buiten werktijd binnen, dan rekenen we vanaf de
+                    eerstvolgende werkdag.
+                </p>
+            </aside>
+        </div>
+    </section>
+
+    <!-- 03 INCASSOKLACHT -->
+    <section class="section geschil-sec" id="incassoklacht" aria-labelledby="geschil-title">
+        <div class="wrap">
+            <div class="geschil bg-ink">
+                <img class="geschil-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                <div class="geschil-kop">
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Komen we er samen niet uit?
+                    </p>
+                    <h2 class="h2" id="geschil-title">
+                        Dan oordeelt een <span class="accent">onafhankelijke</span> commissie
+                    </h2>
+                    <p class="lead">
+                        GeldGarant is aangesloten bij NowID. Bent u het niet eens met ons antwoord, dan kunt u de klacht
+                        voorleggen aan IncassoKlacht, de geschillencommissie van NowID. Die toetst of wij volgens de Wki hebben
+                        gehandeld.
+                    </p>
+                    <div class="geschil-acties">
+                        <a class="btn btn-light" href={klachtHref} rel="noopener" target="_blank">
+                            Naar incassoklacht.nl
+                            <Icon name="arrow-up-right" size={18} />
+                        </a>
+                        <a class="textlink textlink-licht" href="/nowid">
+                            Meer over NowID
+                        </a>
+                    </div>
+                </div>
+                <ol role="list" class="geschil-route">
+                    <li>
+                        <span class="num">1</span>
+                        <span>
+                            <strong>Eerst bij ons.</strong> Volgens deze regeling, gratis.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="num">2</span>
+                        <span>
+                            <strong>Dan IncassoKlacht.</strong> Met onafhankelijke leden.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="num">3</span>
+                        <span>
+                            <strong>Bindend advies.</strong> Daar houden beide partijen zich aan.
+                        </span>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 04 DE REGELING -->
+    <section class="section bg-surface" id="regeling" aria-labelledby="regeling-title">
+        <div class="wrap split">
+            <div class="kop regeling-kop">
+                <p class="eyebrow">
+                    <span class="idx">04</span> De regeling
+                </p>
+                <h2 class="h2" id="regeling-title">
+                    Tien afspraken, zwart op <span class="accent">wit</span>
+                </h2>
+                <p class="lead">
+                    Dit is onze klachtenregeling: de afspraken waar we ons aan houden, op één plek. Opgesteld volgens artikel 6.1
+                    van het Besluit kwaliteit incassodienstverlening.
+                </p>
+                <p class="vastgesteld">Vastgesteld in november 2026</p>
+            </div>
+            <ol role="list" class="artikelen">
+                {artikelen.map((a, i) => (
+                    <li class="artikel" id={`artikel-${i + 1}`}>
+                        <p class="artikel-nr">Artikel {i + 1}</p>
+                        <h3 class="h3">{a.kop}</h3>
+                        <p>{a.tekst}</p>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <Faq items={klachtFaq} idx="05" id="faq-klacht-title">
+        <Fragment slot="title">
+            Vragen over een <span class="accent">klacht</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        lead="Veel ongenoegen is in één gesprek opgelost. Bel ons op werkdagen, of dien uw klacht direct online in."
+        href={formHref}
+        label="Klacht online indienen"
+    >
+        Liever eerst even <span class="accent">praten</span>?
+    </SlotCta>
+</Base>
+
+<script>
+    import { klachtTermijnen } from "../lib/werkdagen"
+
+    const dl = document.querySelector<HTMLElement>("[data-termijnen]")
+    if (dl) {
+        // Datum van vandaag in Nederland; na 17.00 uur of buiten werkdagen rekent klachtTermijnen vanaf de volgende werkdag.
+        const nu = new Date()
+        const delen = new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Europe/Amsterdam",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            hourCycle: "h23",
+        }).formatToParts(nu)
+        const deel = (t: string) => delen.find((d) => d.type === t)?.value ?? ""
+        let vandaag = `${deel("year")}-${deel("month")}-${deel("day")}`
+        if (Number(deel("hour")) >= 17) {
+            const morgen = new Date(Date.parse(`${vandaag}T00:00:00Z`) + 86_400_000)
+            vandaag = morgen.toISOString().slice(0, 10)
+        }
+        const tv = klachtTermijnen(vandaag)
+        const fmt = new Intl.DateTimeFormat("nl-NL", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })
+        if (tv) {
+            for (const k of ["ontvangen", "bevestiging", "antwoord"] as const) {
+                const el = dl.querySelector<HTMLElement>(`[data-k="${k}"]`)
+                if (el) el.textContent = fmt.format(new Date(`${tv[k]}T00:00:00Z`))
+            }
+        }
+    }
+</script>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 11em;
+        font-size: clamp(2.375rem, 1.3rem + 4.2vw, 4.5rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+    .kop-smal {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+
+    /* ---------- 01 MELDEN ---------- */
+    .melden {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    @media (min-width: 1080px) {
+        .melden {
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+    }
+    .kanalen {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 640px) {
+        .kanalen {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .kanaal {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: clamp(22px, 2.4vw, 28px);
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    @media (max-width: 639px) {
+        .kanaal {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            column-gap: 16px;
+            row-gap: 6px;
+            padding: 20px;
+        }
+        .kanaal-top {
+            grid-row: span 3;
+            align-self: start;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .kanaal .tag {
+            padding: 3px 8px;
+            font-size: 0.6875rem;
+        }
+    }
+    .kanaal-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+    }
+    .kanaal-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .tag {
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    .kanaal p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .kanaal-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: auto;
+        align-self: flex-start;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+    .helpt {
+        padding: clamp(24px, 2.8vw, 36px);
+        border-radius: var(--r-lg);
+        background: #fff;
+        border: 1px solid var(--line);
+    }
+    @media (min-width: 1080px) {
+        .helpt {
+            position: sticky;
+            top: 120px;
+        }
+    }
+    .checks {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+    }
+    .checks li {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+    .checks :global(svg) {
+        margin-top: 2px;
+        color: var(--blue);
+    }
+    .helpt-noot {
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--muted);
+    }
+
+    /* ---------- 02 DAARNA ---------- */
+    .daarna {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(36px, 5vw, 64px);
+    }
+    @media (min-width: 1024px) {
+        .daarna {
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+            align-items: start;
+        }
+    }
+    .stappen {
+        position: relative;
+        display: grid;
+        gap: 4px;
+        margin-top: clamp(28px, 3.5vw, 44px);
+    }
+    .stap {
+        position: relative;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 20px;
+        padding-bottom: 28px;
+    }
+    /* verbindingslijn tussen de nummers */
+    .stap:not(:last-child)::before {
+        content: "";
+        position: absolute;
+        left: 21px;
+        top: 48px;
+        bottom: 4px;
+        width: 2px;
+        background: var(--line);
+    }
+    .stap-num {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .stap:last-child .stap-num {
+        background: var(--blue);
+        color: #fff;
+    }
+    .stap .h3 {
+        margin-top: 9px;
+    }
+    .stap p {
+        margin-top: 8px;
+        max-width: 36em;
+        font-size: var(--fs-sm);
+        line-height: 1.65;
+        color: var(--text);
+    }
+    .reken {
+        position: relative;
+        padding: clamp(26px, 3vw, 36px);
+        border-radius: var(--r-xl);
+        color: #fff;
+    }
+    @media (min-width: 1024px) {
+        .reken {
+            position: sticky;
+            top: 120px;
+            margin-top: 8px;
+        }
+    }
+    .reken-label {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: #fff;
+    }
+    .reken-title {
+        margin-top: 16px;
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #fff;
+    }
+    .reken-rijen {
+        display: grid;
+        gap: 0;
+        margin-top: 20px;
+    }
+    .reken-rijen div {
+        display: grid;
+        gap: 4px;
+        padding-block: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .reken-rijen dt {
+        font-size: var(--fs-xs);
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .reken-rijen dd {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .reken-rijen dd::first-letter {
+        text-transform: uppercase;
+    }
+    .reken-eind dd {
+        color: #b9cbff;
+    }
+    .reken-noot {
+        margin-top: 8px;
+        font-size: var(--fs-xs);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ---------- 03 GESCHIL ---------- */
+    .geschil-sec {
+        padding-top: 0;
+    }
+    .geschil {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(32px, 4vw, 56px);
+        padding: clamp(32px, 5vw, 72px);
+        border-radius: var(--r-xl);
+        color: #fff;
+    }
+    @media (min-width: 1024px) {
+        .geschil {
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+            align-items: center;
+        }
+    }
+    .geschil-mark {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 220px;
+        height: auto;
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    .geschil-kop,
+    .geschil-route {
+        position: relative;
+    }
+    .geschil .eyebrow {
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .geschil .h2 {
+        margin-top: 14px;
+        color: #fff;
+    }
+    .geschil .lead {
+        margin-top: 20px;
+        color: rgba(255, 255, 255, 0.78);
+    }
+    .geschil-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 28px;
+        margin-top: 32px;
+    }
+    .textlink-licht {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-weight: 600;
+        color: #fff;
+    }
+    .geschil-route {
+        display: grid;
+        gap: 10px;
+    }
+    .geschil-route li {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 16px;
+        align-items: center;
+        padding: 18px 20px;
+        border-radius: var(--r-lg);
+        background: rgba(255, 255, 255, 0.07);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .geschil-route strong {
+        color: #fff;
+    }
+    .geschil-route .num {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+
+    /* ---------- 04 REGELING ---------- */
+    .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+    }
+    @media (min-width: 1024px) {
+        .split {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 72px;
+            align-items: start;
+        }
+        .regeling-kop {
+            position: sticky;
+            top: 120px;
+        }
+    }
+    .vastgesteld {
+        margin-top: 20px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .artikelen {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+    @media (min-width: 700px) {
+        .artikelen {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .artikel {
+        padding: 22px 24px;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    /* mobiel: één kaart met scheidingslijnen in plaats van tien losse kaarten */
+    @media (max-width: 699px) {
+        .artikelen {
+            gap: 0;
+            border-radius: var(--r-lg);
+            background: #fff;
+            overflow: hidden;
+        }
+        .artikel {
+            padding: 20px 22px;
+            border-radius: 0;
+        }
+        .artikel + .artikel {
+            border-top: 1px solid var(--line);
+        }
+    }
+    .artikel:target {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .artikel-nr {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--blue-ink);
+    }
+    .artikel .h3 {
+        margin-top: 6px;
+        font-size: 1.0625rem;
+    }
+    .artikel p:last-child {
+        margin-top: 8px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+</style>

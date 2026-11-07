@@ -1,4 +1,4 @@
-# GeldGarant website: overdracht (7 nov 2026, na /werken-bij, cv-upload en /hulp-nodig-bij-geldproblemen)
+# GeldGarant website: overdracht (7 nov 2026, na fase D: klachtenregeling, juridisch, redirects en OG-beelden)
 
 Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document beschrijft waar het project staat, hoe alles werkt en wat de volgende sessie moet doen.
 
@@ -6,12 +6,12 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 1. Koppel de repo (`add_repo` geldgarant/Website, push), kloon naar `/home/claude/geldgarant-site`, `npm ci`.
 2. Lees `CLAUDE.md`, dit bestand en `docs/SITEMAP.md`.
-3. Volgende stap: **fase D, juridische pagina's.** Research al gedaan (7 nov, Framer-project `R87P79buXWtsQbzZzCmY`):
-    - `/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid` en `/juridisch/cookie-beleid` zijn in Framer alleen een korte intro plus een pdf-knop. Pdf's: AV `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`, privacy `…/2izbyXtWSxM6Ol6krKySymhwjr0.pdf` of `…/xkKe3X1RnaSiWWQvc5ckrHPphEk.pdf` (twee versies in Framer, laat Anas kiezen), cookies `…/38Azuy074oau4xAosmmWKGR3fNo.pdf` of `…/BiRy2wQp3zflDhjnS3siOmM7yc.pdf`.
-    - framerusercontent.com is vanuit de werkomgeving **niet bereikbaar** (proxy, ook niet via WebFetch). Vraag Anas de pdf's als bijlage te sturen; zet ze in `public/juridisch/` zodat ze na de verhuis van Framer blijven werken. De AV past Anas zelf nog aan (succesfee eruit).
-    - `/klachtenregelement` (slug met deze spelling behouden) heeft echte tekst: klacht per e-mail naar **klachten@geldgarant.com**, bevestiging binnen twee werkdagen, afhandeling streven binnen veertien werkdagen, daarna geschillencommissie via NowID (toetst aan de Wki). Herschrijven in u-vorm, als HTML-pagina met stappen; linken vanuit /nowid, /contact-opnemen en de footer.
-    - Idee: privacyverklaring ook als HTML (SEO, toegankelijk) zodra de pdf-tekst er is. Let op: de sollicitatie-belofte "binnen vier weken verwijderen" moet in de privacyverklaring passen.
-    - Daarna: 301-redirects (Framer-URL's die verdwijnen), OG-beelden per pagina, en `/brief-ontvangen` zodra de CaseControl-betaallink bekend is.
+3. Fase D is gebouwd (7 nov, zie §6 punt 16). Volgende stappen, in overleg met Anas:
+    - Feedback van Anas verwerken op /klachtenregelement, /juridisch en de juridische pagina's.
+    - Nieuwe AV, privacy- en cookieverklaring: Anas maakt ze opnieuw (besluit 7 nov). Dan alleen de pdf's in `public/juridisch/` vervangen en `src/data/juridisch.ts` bijwerken (zie het commentaar daar). Pas de AV-versie aan bij de nieuwe tarieven (geen succesfee).
+    - `/brief-ontvangen` zodra de CaseControl-betaallink bekend is; dan de 302 in `public/_redirects` weghalen.
+    - Livegang voorbereiden (`shipping-and-launch`): domein koppelen alleen samen met Anas. Controleer na de DNS-switch de redirects op productie (`curl -sI https://geldgarant.com/faq`).
+    - Werkomgeving: Framer-connector is nu nodig voor research; als de shell andere sites niet bereikt, zie §2.
 4. Werkwijze per pagina: §6. Verifiëren: `CHROME_PATH=/usr/bin/google-chrome npm run qa` (± 8 min, draai in de achtergrond en poll), daarna `npm run lhci` (± 40 min voor 54 pagina's, achtergrond). Preview vóór qa altijd stoppen (`pkill -f "astro preview"`), anders botst poort 4399.
 5. Push: `git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main`; Workers-check: `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`.
 
@@ -29,24 +29,25 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 ## 1. Stand van zaken
 
-| Onderdeel                                          | Status                                                                                                         |
-| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Repo                                               | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                            |
-| Hosting (staging)                                  | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push         |
-| Productie                                          | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker |
-| Homepage                                           | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                      |
-| `/incasso` (A1)                                    | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker               |
-| `/debiteurenbeheer` (A2)                           | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                    |
-| `/tarieven` (A3)                                   | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
-| `/vordering-indienen` (A4)                         | Gebouwd 6 nov 2026, intake-worker gekoppeld (API in tests nagebootst)                                          |
-| `/contact-opnemen` (A7)                            | Gebouwd 6 nov 2026 (commit 9ba8425). Feedback verwerkt: geen namen, geen "callcenter/keuzemenu"                |
-| `/over-ons` (A6)                                   | Gebouwd 6 nov 2026, qa (152 e2e) + lhci 100 groen. Wacht op akkoord                                            |
-| `/hoe-werkt-het` (A5)                              | Gebouwd 6 nov 2026, qa + lhci 100 groen. Wacht op akkoord                                                      |
-| Fase B (wki, nowid, incasso-subpagina's, branches) | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
-| `/kennisbank` + 27 artikelen (C)                   | Gebouwd 6 nov 2026: content collection, herschreven en feitelijk nagelopen. Wacht op akkoord                   |
-| `/werken-bij` + 3 vacatures                        | Gebouwd 7 nov 2026, slugs behouden, JobPosting-schema. Wacht op akkoord                                        |
-| `/hulp-nodig-bij-geldproblemen`                    | Gebouwd 7 nov 2026 (debiteuren, situatiekiezer, 9 instanties, 113). Wacht op akkoord                           |
-| Overige pagina's                                   | `/brief-ontvangen` (later) en fase D (zie §6)                                                                  |
+| Onderdeel                                          | Status                                                                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Repo                                               | https://github.com/geldgarant/Website, branch `main`, laatste commit: zie `git log`                                       |
+| Hosting (staging)                                  | Cloudflare Workers "website" → https://website.geldgarant.workers.dev, bouwt automatisch bij elke push                    |
+| Productie                                          | geldgarant.com draait nog op Framer. DNS pas omzetten als de hele site af is, en alleen samen met de gebruiker            |
+| Homepage                                           | v3 af, inclusief header v2 (zwevende kaart). Alle kwaliteitspoorten groen                                                 |
+| `/incasso` (A1)                                    | Gebouwd 6 nov 2026, qa + lhci (100 op alle categorieën) groen. Wacht op akkoord van de gebruiker                          |
+| `/debiteurenbeheer` (A2)                           | Gebouwd 6 nov 2026, qa + lhci (100) groen. Wacht op akkoord                                                               |
+| `/tarieven` (A3)                                   | Gebouwd 6 nov 2026, qa + lhci groen                                                                                       |
+| `/vordering-indienen` (A4)                         | Gebouwd 6 nov 2026, intake-worker gekoppeld (API in tests nagebootst)                                                     |
+| `/contact-opnemen` (A7)                            | Gebouwd 6 nov 2026 (commit 9ba8425). Feedback verwerkt: geen namen, geen "callcenter/keuzemenu"                           |
+| `/over-ons` (A6)                                   | Gebouwd 6 nov 2026, qa (152 e2e) + lhci 100 groen. Wacht op akkoord                                                       |
+| `/hoe-werkt-het` (A5)                              | Gebouwd 6 nov 2026, qa + lhci 100 groen. Wacht op akkoord                                                                 |
+| Fase B (wki, nowid, incasso-subpagina's, branches) | Gebouwd 6 nov 2026, qa + lhci groen                                                                                       |
+| `/kennisbank` + 27 artikelen (C)                   | Gebouwd 6 nov 2026: content collection, herschreven en feitelijk nagelopen. Wacht op akkoord                              |
+| `/werken-bij` + 3 vacatures                        | Gebouwd 7 nov 2026, slugs behouden, JobPosting-schema. Wacht op akkoord                                                   |
+| `/hulp-nodig-bij-geldproblemen`                    | Gebouwd 7 nov 2026 (debiteuren, situatiekiezer, 9 instanties, 113). Wacht op akkoord                                      |
+| Fase D: `/klachtenregelement`, `/juridisch` + 3    | Gebouwd 7 nov 2026: klachtenregeling (Wki art. 6.1), juridische pagina's met pdf, redirects, OG-beelden. Wacht op akkoord |
+| Overige pagina's                                   | `/brief-ontvangen` (later, nu 302 naar /hulp-nodig-bij-geldproblemen#brief)                                               |
 
 **Tarieven (bevestigd door Anas, 6 nov 2026):** de provisie is gelijk aan de WIK-staffel (`src/lib/wik.ts`); er is **geen succesfee**. De AV (art. 7.5, 10% succesfee) past Anas zelf nog aan. Debiteurenbeheer: € 99 / € 199 / € 349 per maand. AV-PDF: `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`.
 
@@ -209,7 +210,14 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
     - Akkoord van Anas (7 nov): de beloftes "met uw schuldhulpverlener overleggen" en "regeling schriftelijk vastleggen", en de AVG-zin "binnen vier weken verwijderen" in `werkenFaq`.
     - **Salaris en cv-upload (7 nov, akkoord Anas):** salarisindicatie bruto per maand bij 40 uur in `vacatures.ts` (`SAL_INCASSO` € 2.750 tot € 3.400, `SAL_KLANTCONTACT` € 2.650 tot € 3.100; bronnen in het commentaar), zichtbaar in hero, feitenkaart, kaartchip en "wat u krijgt", en als `baseSalary` in JobPosting (`directApply: true`). Sollicitatieformulier `src/components/Sollicitatie.astro` (props `functie`, `id`) met cv-upload (slepen of kiezen, PDF/DOC/DOCX tot 10 MB), Turnstile lui bij eerste focus (action `sollicitatie_submit`), succespaneel met referentie, terugval naar `mailto`. Logica `src/scripts/sollicitatie.ts`, contract en validatie `src/lib/sollicitatie.ts` (multipart naar `/api/sollicitatie`, header `X-Request-Nonce`). Staat op elke vacature (05 `#solliciteren`, alle knoppen wijzen ernaar) en op /werken-bij (05 `#open-sollicitatie`). Tests: `tests/unit/sollicitatie.test.ts`, `tests/e2e/sollicitatie.spec.ts` (API nagebootst).
 15. **Later:** `/brief-ontvangen` met de CaseControl-koppeling (bewust uitgesteld tot de betaallink of het portaal is uitgezocht).
-16. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+16. ~~**Fase D**~~: gebouwd op 7 nov 2026.
+    - **Research** (Framer-MCP `api.screenshot`, 390 en 1200 px): Breyta /klachtenregeling (12 artikelen, alleen schriftelijk: voldoet niet aan art. 6.1 lid 1 Besluit Wki), Vesting Finance /info/klachtenprocedure (kanaalkaarten, formulier, tijdlijn "wat gebeurt er daarna"), Flanderijn /klacht, Breyta /algemene-voorwaarden (muur tekst, 25.000 px mobiel) en /cookiebeleid-eu (tabellen).
+    - **`/klachtenregelement`** (`src/pages/klachtenregelement.astro`, `stickyCta={false}`): hero + Feitenkaart (gratis, 2 werkdagen, streven 14 werkdagen, behandelaar niet de dossierbehandelaar: akkoord Anas 7 nov), 01 vier kanalen (online formulier via `/contact-opnemen?onderwerp=klacht_geschil`, `site.klachtenEmail`, telefoon, post) + "dit helpt ons", 02 tijdlijn met **live rekenvoorbeeld** (bevestiging en antwoord voor vandaag; `src/lib/werkdagen.ts` met de feestdagen uit de Algemene termijnenwet, na 17.00 uur vanaf de volgende dag; unit-test `tests/unit/werkdagen.test.ts`), 03 IncassoKlacht (navy), 04 de regeling in tien artikelen (`#artikel-1` t/m `#artikel-10`, dekt alle eisen van art. 6.1 lid 2), 05 FAQ, SlotCta naar het formulier. Lighthouse 100 (mobiel performance 99).
+    - **Contactformulier:** onderwerp `klacht_geschil` toont nu ook het dossiernummerveld (`data-alleen` accepteert meerdere onderwerpen, gescheiden door een spatie) en stuurt het mee in `details.dossiernummer`. Zijbalk van /contact-opnemen linkt naar de klachtenregeling.
+    - **Juridische pagina's** (`src/pages/juridisch/[slug].astro`, inhoud in `src/data/juridisch.ts`): de pdf blijft leidend (zoals in Framer). Per document: preview van pagina 1 als "stapel papier" (`public/juridisch/*.webp`), meta (pagina's, kB uit het bestand, datum), "Pdf openen" en "Downloaden", inhoudsopgave die de pdf op de juiste pagina opent (`#page=N`), "Snel naar", andere documenten en een vraagkaart (privacy: verzoek via `?onderwerp=privacy_avg`). JSON-LD WebPage met DigitalDocument. **Overzicht `/juridisch`** (nieuw, CollectionPage).
+    - **Redirects:** `public/_redirects` (Workers static assets). Alle Framer-URL's en CMS-slugs bestaan 1-op-1; alleen `/faq` (noindex) verdwijnt → `/#veelgestelde-vragen` (nieuwe `sectionId` op de home-FAQ). `/brief-ontvangen` → 302 naar `/hulp-nodig-bij-geldproblemen#brief` (stond in header en footer en gaf een 404). Plus varianten (/privacy, /cookies, /klachtenregeling, /contact, /vacatures, ...). `tests/unit/redirects.test.ts` controleert dat elk doel bestaat en geen bron een pagina is. Lokaal (astro preview) werken de redirects niet; controleer op staging met `curl -sI`.
+    - **OG-beelden:** `scripts/og.mjs` draait na `astro build` (`npm run build`) en maakt per pagina `dist/og/<pad>.png` uit de echte H1 (accentwoord in Newsreader cursief), met satori (tekst als paden) en sharp. ± 9 s voor 64 pagina's. `Base.astro` zet `og:image`, `og:image:alt` en `twitter:image` per pagina; `check:seo` faalt als het beeld ontbreekt. Fonts voor satori: `@fontsource/newsreader` en `@fontsource/inter` (devDependencies, want satori leest geen woff2).
+    - Pas na akkoord van Anas: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 

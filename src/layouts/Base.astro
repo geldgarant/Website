@@ -19,6 +19,9 @@ interface Props {
 }
 const { title, description, jsonLd = [], noindex = false, stickyCta = true, ogType = "website" } = Astro.props
 const canonical = new URL(Astro.url.pathname.replace(/\/+$/, "") || "/", Astro.site)
+// Eigen OG-beeld per pagina, na de build gemaakt door scripts/og.mjs uit de H1 van de pagina.
+const ogPad = Astro.url.pathname.replace(/^\/+|\/+$/g, "").replace(/\.html$/, "") || "index"
+const ogImage = new URL(`/og/${ogPad}.png`, Astro.site)
 ---
 
 <!doctype html>
@@ -35,10 +38,12 @@ const canonical = new URL(Astro.url.pathname.replace(/\/+$/, "") || "/", Astro.s
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={canonical} />
-        <meta property="og:image" content={new URL("/brand/og-default.png", Astro.site)} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content={title} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={ogImage} />
         <meta name="theme-color" content="#061126" />
         <slot name="head" />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />

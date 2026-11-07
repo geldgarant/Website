@@ -1,5 +1,5 @@
 // Controleert de gebouwde site (dist) op technische SEO: unieke titles en descriptions,
-// canonical, één h1, lang-attribuut, geldige JSON-LD met verplichte velden, sitemap en robots.txt.
+// canonical, één h1, eigen og:image die bestaat, lang-attribuut, geldige JSON-LD met verplichte velden, sitemap en robots.txt.
 // Gebruik: npm run build && node scripts/check-seo.mjs
 import fs from "node:fs"
 import path from "node:path"
@@ -43,6 +43,10 @@ for (const f of files) {
     if (!/<html lang="nl"/.test(html)) problems.push(`${rel}: lang="nl" ontbreekt`)
     const h1 = (html.match(/<h1[\s>]/g) || []).length
     if (h1 !== 1) problems.push(`${rel}: ${h1} h1-koppen (verwacht 1)`)
+    const og = get(/<meta property="og:image" content="([^"]*)"/)
+    if (!og) problems.push(`${rel}: geen og:image`)
+    else if (!fs.existsSync(path.join(dist, new URL(og).pathname)))
+        problems.push(`${rel}: og:image ${new URL(og).pathname} bestaat niet`)
     if (title) titles.set(title, [...(titles.get(title) || []), rel])
     if (desc) descs.set(desc, [...(descs.get(desc) || []), rel])
     for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {

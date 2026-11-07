@@ -1,0 +1,38 @@
+# Redirects voor Cloudflare Workers static assets (zelfde formaat als Cloudflare Pages: bron, doel, status).
+# Regel van het project: elke bestaande Framer-URL blijft bestaan of krijgt een 301. Alle Framer-pagina's en
+# CMS-items (kennisbank 27, branches 10, vacatures 3) bestaan 1-op-1 in de nieuwe site; alleen /faq verdwijnt.
+# Daarnaast vangen we gangbare varianten af die bezoekers zelf intypen of die in oude mails staan.
+# Test: tests/unit/redirects.test.ts controleert dat elk doel een bestaande pagina is.
+
+# Framer-pagina die verdwijnt (stond op noindex)
+/faq                          /#veelgestelde-vragen                  301
+
+# Tijdelijk: de debiteurenpagina komt later, met de CaseControl-koppeling (dan deze regel weghalen)
+/brief-ontvangen              /hulp-nodig-bij-geldproblemen#brief    302
+
+# Juridisch
+/juridisch/privacyverklaring  /juridisch/privacy-beleid              301
+/juridisch/cookieverklaring   /juridisch/cookie-beleid               301
+/algemene-voorwaarden         /juridisch/algemene-voorwaarden        301
+/voorwaarden                  /juridisch/algemene-voorwaarden        301
+/av                           /juridisch/algemene-voorwaarden        301
+/privacy                      /juridisch/privacy-beleid              301
+/privacy-beleid               /juridisch/privacy-beleid              301
+/privacyverklaring            /juridisch/privacy-beleid              301
+/cookies                      /juridisch/cookie-beleid               301
+/cookie-beleid                /juridisch/cookie-beleid               301
+/cookieverklaring             /juridisch/cookie-beleid               301
+/klachtenregeling             /klachtenregelement                    301
+/klachten                     /klachtenregelement                    301
+/klacht                       /klachtenregelement                    301
+
+# Gangbare varianten
+/contact                      /contact-opnemen                       301
+/vacatures                    /werken-bij                            301
+/vacatures/*                  /werken-bij/:splat                     301
+/prijzen                      /tarieven                              301
+/kosten                       /tarieven                              301
+/blog                         /kennisbank                            301
+/vordering                    /vordering-indienen                    301
+/incasso-starten              /vordering-indienen                    301
+/home                         /                                      301

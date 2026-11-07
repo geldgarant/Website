@@ -113,9 +113,11 @@ Elke pagina krijgt één hoofdvraag van de bezoeker. Elke sectie op die pagina b
 
 ### Fase D: juridisch en techniek
 
-- `/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid`, `/juridisch/cookie-beleid`, `/klachtenregelement`.
+- ✓ (7 nov) `/klachtenregelement`, `/juridisch` (nieuw overzicht), `/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid`, `/juridisch/cookie-beleid`.
+- ✓ (7 nov) Redirects in `public/_redirects`: `/faq` → `/#veelgestelde-vragen` (301), `/brief-ontvangen` tijdelijk 302, gangbare varianten. OG-beeld per pagina (`scripts/og.mjs`).
+- ✓ 404-pagina, sitemap en robots (eerder).
 - Overweeg een verwerkersovereenkomst, zoals Breyta: zakelijke opdrachtgevers vragen daarom.
-- 404-pagina, bedankpagina's per formulier, redirects (`public/_redirects` of een Worker-route), sitemap en robots, OG-beelden per pagina.
+- Bedankpagina's per formulier: niet nodig, de formulieren tonen een succespaneel met referentie.
 
 ## 4. Navigatie (voorstel)
 

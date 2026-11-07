@@ -78,3 +78,11 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Geen zichtbare datum en geen disclaimer op artikelen (besluit Anas). Bronnen alleen naar nagelopen URL's (wetten.overheid.nl, rechtspraak.nl, officielebekendmakingen.nl).
 - Ankers: `html` heeft `scroll-padding-top`; geef kopjes geen extra `scroll-margin`. De zijbalk mag nooit zelf scrollen (zie `pas()` in `src/pages/kennisbank/[slug].astro`).
 - CLS-valkuil: het accentfont laadt later; een kop die daardoor van regelaantal wisselt, faalt Lighthouse (zie HANDOFF §5).
+
+## Fase D (7 nov 2026)
+
+- Juridische documenten: pdf's in `public/juridisch/`, gegevens per document in `src/data/juridisch.ts`, template `src/pages/juridisch/[slug].astro`. Nieuwe pdf? Alleen bestand + data bijwerken (zie commentaar in het databestand).
+- Klachtenregeling `/klachtenregelement` volgt art. 6.1 Besluit Wki (mondeling én schriftelijk, bevestiging binnen 2 werkdagen). Termijnen rekenen met `src/lib/werkdagen.ts`.
+- Redirects alleen in `public/_redirects` (getest door `tests/unit/redirects.test.ts`).
+- OG-beelden worden na de build gemaakt door `scripts/og.mjs` uit de H1 van elke pagina. Een pagina zonder H1 krijgt geen beeld en laat `check:seo` falen.
+- Klachten-e-mail: `site.klachtenEmail`.

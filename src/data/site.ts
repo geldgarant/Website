@@ -5,6 +5,7 @@ export const site = {
     phoneHref: "tel:+31852127914",
     whatsappHref: "https://wa.me/31852127914",
     email: "info@geldgarant.com",
+    klachtenEmail: "klachten@geldgarant.com",
     street: "Keulenstraat 1",
     postcode: "7418 ET",
     city: "Deventer",
