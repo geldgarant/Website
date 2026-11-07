@@ -28,7 +28,7 @@ bronnen:
       href: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/facturen_maken/factuureisen/"
     - t: "Burgerlijk Wetboek Boek 6, art. 6:119a (betaaltermijn handelstransacties)"
       href: "https://wetten.overheid.nl/BWBR0005289/"
-verwant: ["algemene-voorwaarden-incasso", "debiteur-betwist-factuur", "openstaande-factuur-stappenplan"]
+verwant: ["algemene-voorwaarden-incasso", "debiteur-betwist-factuur", "incasso-zzp"]
 hulp:
     t: "Debiteurenbeheer"
     d: "Wij bewaken uw facturen en sturen herinneringen voordat het een incassozaak wordt."

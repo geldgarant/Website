@@ -26,7 +26,7 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0005291/"
     - t: "Besluit vergoeding voor buitengerechtelijke incassokosten"
       href: "https://wetten.overheid.nl/BWBR0031432/"
-verwant: ["openstaande-factuur-stappenplan", "verjaringstermijnen-vorderingen", "herincasso-afgeschreven-facturen"]
+verwant: ["huurachterstand-incasseren", "geleend-geld-terugvorderen", "verjaringstermijnen-vorderingen"]
 hulp:
     t: "Regeling via GeldGarant"
     d: "Wij leggen de regeling vast en bewaken elke termijn voor u."
@@ -75,7 +75,7 @@ Met onze [voorbeeldbrief voor een betalingsregeling](/voorbeeldbrieven/betalings
 Bij particulieren gelden dezelfde principes, met twee aandachtspunten:
 
 - **Geen extra kosten voor de regeling.** De wettelijke incassokosten dekken alle werkzaamheden buiten de rechter, ook het opstellen en bewaken van een regeling. U mag daar niets bij rekenen.
-- **Wees redelijk.** Een particulier met schulden heeft recht op een bestaansminimum. Een regeling die hij niet kan volhouden, levert u niets op. Is er sprake van meerdere schulden, dan kan schuldhulpverlening via de gemeente uitkomst bieden voor beide partijen.
+- **Wees redelijk.** Een particulier met schulden heeft recht op een bestaansminimum. Een regeling die hij niet kan volhouden, levert u niets op. Is er sprake van meerdere schulden, dan kan schuldhulpverlening via de gemeente uitkomst bieden voor beide partijen. Op [hulp bij geldzorgen](/hulp-nodig-bij-geldproblemen) staan de gratis hulpinstanties waar u een debiteur naar kunt verwijzen.
 
 ## Wat als de debiteur de regeling niet nakomt?
 

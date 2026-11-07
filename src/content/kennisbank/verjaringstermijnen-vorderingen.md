@@ -30,7 +30,7 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0005290/"
     - t: "Burgerlijk Wetboek Boek 8, art. 8:1711 (verjaring wegvervoer)"
       href: "https://wetten.overheid.nl/BWBR0005034/"
-verwant: ["herincasso-afgeschreven-facturen", "betalingsherinnering-aanmaning-wik-brief", "openstaande-factuur-stappenplan"]
+verwant: ["herincasso-afgeschreven-facturen", "geleend-geld-terugvorderen", "betalingsherinnering-aanmaning-wik-brief"]
 hulp:
     t: "Oude factuur laten beoordelen"
     d: "Twijfelt u of een factuur al verjaard is? We kijken het kosteloos voor u na."

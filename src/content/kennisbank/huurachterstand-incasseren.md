@@ -92,4 +92,4 @@ Bij de huur van bedrijfsruimte gelden ruimere mogelijkheden:
 - Screen een nieuwe huurder op inkomen en vorige verhuurders.
 - Laat de huur automatisch afschrijven, rond de dag dat het salaris binnenkomt.
 - Reageer op de eerste gemiste betaling, niet pas op de derde.
-- Bied bij een terugval in inkomen tijdig een regeling aan, en verwijs naar schuldhulpverlening als er meer schulden zijn.
+- Bied bij een terugval in inkomen tijdig een regeling aan, en verwijs naar [gratis schuldhulp](/hulp-nodig-bij-geldproblemen) als er meer schulden zijn.

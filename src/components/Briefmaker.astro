@@ -151,7 +151,14 @@ const p = (n: string) => `bm-${n}`
         </p>
         <figure class="bm-figuur">
             <figcaption class="bm-label">Voorbeeldbrief, geen juridisch advies</figcaption>
-            <div class="papier" data-papier set:html={briefHtml(maakBrief(slug))} />
+            <!-- Scrollt op desktop (max-height): focusbaar zodat het ook met het toetsenbord te lezen is (axe: scrollable-region-focusable) -->
+            <section
+                class="papier"
+                data-papier
+                aria-label="Voorbeeld van de brief"
+                tabindex="0"
+                set:html={briefHtml(maakBrief(slug))}
+            />
         </figure>
     </div>
 </div>

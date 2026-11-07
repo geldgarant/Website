@@ -138,6 +138,13 @@ const jsonLd = [
                     <span class="start-tool-t">Termijn van de 14-dagenbrief</span>
                     <span class="start-tool-d">Vanaf welke dag mag u kosten rekenen aan een particulier?</span>
                 </a>
+                <a class="start-tool" href="/voorbeeldbrieven">
+                    <span class="start-tool-icon">
+                        <Icon name="doc" size={22} />
+                    </span>
+                    <span class="start-tool-t">Gratis voorbeeldbrieven</span>
+                    <span class="start-tool-d">Herinnering, aanmaning of sommatie: invullen en downloaden.</span>
+                </a>
             </div>
         </div>
     </section>
@@ -353,10 +360,10 @@ const jsonLd = [
     @media (min-width: 900px) {
         .start-grid {
             grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-            grid-template-rows: 1fr 1fr;
+            grid-template-rows: repeat(3, 1fr);
         }
         .start-hoofd {
-            grid-row: span 2;
+            grid-row: span 3;
         }
     }
     .start-hoofd {

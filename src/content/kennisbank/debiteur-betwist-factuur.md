@@ -28,7 +28,7 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0005290/"
     - t: "Wetboek van Burgerlijke Rechtsvordering, art. 150 (bewijslast)"
       href: "https://wetten.overheid.nl/BWBR0001827/"
-verwant: ["eisen-correcte-factuur", "gerechtelijke-procedure-kantonrechter", "algemene-voorwaarden-incasso"]
+verwant: ["eisen-correcte-factuur", "incasso-bouwsector", "gerechtelijke-procedure-kantonrechter"]
 hulp:
     t: "Laat een betwisting beoordelen"
     d: "Stuur ons de factuur en de klacht. We vertellen u hoe sterk uw positie is."

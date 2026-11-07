@@ -90,7 +90,7 @@ Automatiseer wat kan. Herinneringen en aanmaningen kunnen vanuit de meeste boekh
 
 Veel ondernemers wachten te lang met uit handen geven, uit angst de klant te verliezen. Maar een klant die na herinnering en aanmaning nog steeds niet betaalt, is al een probleem. Een professionele, correcte aanpak door een incassobureau beschadigt de relatie minder dan maanden van boze telefoontjes.
 
-Spreek met uzelf een vast moment af, bijvoorbeeld zeven dagen na het verlopen van de laatste termijn, en houd u eraan.
+Spreek met uzelf een vast moment af, bijvoorbeeld zeven dagen na het verlopen van de laatste termijn, en houd u eraan. Welke signalen erop wijzen dat het zover is, staat op [incassobureau inschakelen](/incasso/incassobureau-inschakelen).
 
 ## Niet elke klant is gelijk
 

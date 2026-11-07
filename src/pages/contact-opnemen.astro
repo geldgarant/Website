@@ -291,6 +291,9 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
                         <a class="textlink zij-klacht" href="/klachtenregelement">
                             Niet tevreden? Zo dient u een klacht in
                         </a>
+                        <a class="textlink zij-klacht" href="/hulp-nodig-bij-geldproblemen">
+                            Geldzorgen? Hier vindt u gratis hulp
+                        </a>
                     </div>
                 </aside>
             </div>
@@ -656,12 +659,16 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
         color: rgba(255, 255, 255, 0.65);
     }
     .zij-klacht {
-        display: inline-flex;
+        display: flex;
         align-items: center;
+        width: fit-content;
         min-height: 44px;
         margin-top: 10px;
         font-size: var(--fs-sm);
         font-weight: 600;
+    }
+    .zij-klacht + .zij-klacht {
+        margin-top: 0;
     }
     .zij-deb {
         padding: 22px 24px;

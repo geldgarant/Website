@@ -28,7 +28,7 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0031432/"
     - t: "Burgerlijk Wetboek Boek 6, art. 6:96 (incassokosten)"
       href: "https://wetten.overheid.nl/BWBR0005289/"
-verwant: ["wettelijke-rente-2026", "griffierechten-2026", "openstaande-factuur-stappenplan"]
+verwant: ["wettelijke-rente-2026", "incasso-zzp", "griffierechten-2026"]
 hulp:
     t: "Bekijk onze tarieven"
     d: "Alle kosten op één pagina, met rekenvoorbeelden."

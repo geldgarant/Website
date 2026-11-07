@@ -5,18 +5,19 @@ hypotheses gescheiden.
 
 ## Beschikbare bronnen (7 nov 2026)
 
-| Bron                    | Status                                                                                                 |
-| ----------------------- | ------------------------------------------------------------------------------------------------------ |
-| Repository + live site  | beschikbaar (`curl`/Node fetch via proxy werkt; `NODE_USE_ENV_PROXY=1`)                                |
-| GitHub                  | git push werkt; `gh` CLI niet ingelogd (token ongeldig)                                                |
-| Search Console          | **niet**: geldgarant@gmail.com heeft geen toegang; bestaande TXT hoort bij ander account (E3)          |
-| GA4 / analytics         | geen; Cloudflare Web Analytics akkoord, nog niet aan                                                   |
-| PageSpeed Insights API  | bereikbaar maar 429 zonder API-sleutel                                                                 |
-| CrUX                    | niet beschikbaar (te weinig verkeer verwacht, geen sleutel)                                            |
-| Bing Webmaster Tools    | niet gekoppeld                                                                                         |
-| Google Bedrijfsprofiel  | bestaat volgens gebruiker; geen toegang in deze sessie                                                 |
-| Browserpaneel (desktop) | in deze sessie niet meer beschikbaar (remote-devices-tools weg); was ingelogd bij Cloudflare en Google |
-| WebFetch/WebSearch      | tijdelijk gelimiteerd (5-uurslimiet bereikt om ~12:00)                                                 |
+| Bron                                   | Status                                                                                                                |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Werkomgeving (vanaf 7 nov 2026, 23:45) | Windows-pc van de gebruiker (Claude-desktopapp); repo in `C:\Users\Ilyas Chattat\code\geldgarant-website`, geen proxy |
+| Repository + live site                 | beschikbaar (`curl`/Node fetch rechtstreeks; in de cloudomgeving via proxy met `NODE_USE_ENV_PROXY=1`)                |
+| GitHub                                 | git push werkt; `gh` CLI ingelogd als `geldgarant` (op de pc van de gebruiker)                                        |
+| Search Console                         | **niet**: geldgarant@gmail.com heeft geen toegang; bestaande TXT hoort bij ander account (E3)                         |
+| GA4 / analytics                        | geen; Cloudflare Web Analytics akkoord, nog niet aan                                                                  |
+| PageSpeed Insights API                 | bereikbaar maar 429 zonder API-sleutel                                                                                |
+| CrUX                                   | niet beschikbaar (te weinig verkeer verwacht, geen sleutel)                                                           |
+| Bing Webmaster Tools                   | niet gekoppeld                                                                                                        |
+| Google Bedrijfsprofiel                 | bestaat volgens gebruiker; geen toegang in deze sessie                                                                |
+| Browserpaneel (desktop)                | in deze sessie niet meer beschikbaar (remote-devices-tools weg); was ingelogd bij Cloudflare en Google                |
+| WebFetch/WebSearch                     | tijdelijk gelimiteerd (5-uurslimiet bereikt om ~12:00)                                                                |
 
 ## Productie
 
@@ -40,6 +41,9 @@ hypotheses gescheiden.
 - Gevolg: http-duplicaten bereikbaar; canonical wijst wel naar https, dus beperkt risico, maar onnodig.
 - Let op: de livegangcontrole van 7 nov (OVERDRACHT §5.12) meldde "http → https" wel goed. Mogelijk verschil door de
   uitgaande proxy van deze werkomgeving. **Eerst bevestigen** in een gewone browser (http://geldgarant.com typen).
+- **Bevestigd 7 nov 2026, 23:50** vanaf de pc van de gebruiker (gewone internetverbinding, geen proxy):
+  `curl.exe -sI http://geldgarant.com/` → `HTTP/1.1 200 OK`, `CF-Cache-Status: HIT`, geen `Location`;
+  `http://www.geldgarant.com/` → 200. De bevinding klopt: Always Use HTTPS moet aan.
 - Oplossing als het klopt: Cloudflare → SSL/TLS → Edge Certificates → **Always Use HTTPS** aan (gebruiker; omkeerbaar).
 
 ### E3. Search Console (7 nov 2026)
@@ -49,6 +53,9 @@ hypotheses gescheiden.
   bouwer). Voor geldgarant@gmail.com is een TXT-record nodig:
   `google-site-verification=IBklbLEvZbA3XR53hRmVoH-RuAY1GPVcEVf8zSlH5k0` (naam `@`). DNS-wijziging mocht Claude niet
   zelf opslaan; gebruiker gevraagd. Daarna: Verifiëren, sitemap `https://geldgarant.com/sitemap-index.xml` indienen.
+- Controle 7 nov 2026, 23:50 (`Resolve-DnsName geldgarant.com -Type TXT -Server 1.1.1.1`): alleen het oude record
+  `_Y0Q2…` en SPF. Het nieuwe TXT-record staat er **nog niet**.
+- Web Analytics: homepage bevat geen `cloudflareinsights`; CSP staat het script niet toe. Nog niet aan.
 
 ### E5. robots.txt (7 nov 2026)
 
@@ -87,3 +94,32 @@ hypotheses gescheiden.
 - 70 URL's (64 + 6 voorbeeldbrieven), alle 200, canonicals correct, geen noindex, één H1, geen titels > 65, alle
   pagina's met JSON-LD. Enige nieuwe afwijking: description `/voorbeeldbrieven` 174 tekens (ingekort in batch 2b).
   Ongewijzigd: dunne functionele pagina's en 6 zwak gelinkte pagina's (zie E1). CSV: `docs/seo/crawl-2026-11-07.csv`.
+
+### E7. Productiecrawl vóór en lokale crawl na batch 3 (7 nov 2026, ±23:50)
+
+- Productie (`node scripts/seo/crawl.mjs`, rechtstreeks vanaf de pc): 70 URL's, alle 200, geen afwijkingen behalve
+  dunne functionele pagina's en de 6 zwak gelinkte pagina's (elk 1 inlink in main). CSV: `docs/seo/crawl-2026-11-07.csv`.
+- Lokaal na batch 3 (`node scripts/seo/crawl.mjs http://localhost:4399`): `weinigInlinks` leeg. Inlinks in main:
+  `/incasso/incassobureau-inschakelen` 9, `/hulp-nodig-bij-geldproblemen` 4, `/kennisbank/incasso-zzp` 4,
+  `/kennisbank/geleend-geld-terugvorderen` 3, `/kennisbank/huurachterstand-incasseren` 3,
+  `/kennisbank/incasso-bouwsector` 3, `/voorbeeldbrieven` 8.
+
+### E8. Keyword-URL-kaart (7 nov 2026)
+
+- `docs/seo/keyword-url-map.csv`: 56 zoekclusters, elk met één voorkeurs-URL (alle URL's gecontroleerd tegen de crawl).
+  Geen zoekvolumes (geen databron); clusters zijn hypotheses, behalve waar E4 staat.
+- Kannibalisatierisico's gevonden (titels die dezelfde vraag bedienen): `/wki` ↔ `/kennisbank/wki-proof-werken-2026`
+  (titels bijna gelijk), `/branches/incasso-zzp` ↔ `/kennisbank/incasso-zzp` ("factuur niet betaald"),
+  `/branches/incasso-verhuur` ↔ `/kennisbank/huurachterstand-incasseren` ("huurachterstand"), `/tarieven` ↔
+  `/kennisbank/wat-kost-incasso-uitbesteden` ("wat kost een incassobureau"). Te bewaken: `/` ↔ `/incasso` ↔
+  `/branches/incasso-mkb`, `/voorbeeldbrieven/betalingsregeling` ↔ `/kennisbank/betalingsregeling-treffen`.
+
+### Lokaal batch 3 (8 nov 2026, Windows-pc)
+
+- `npm run check` 0 fouten, eslint en prettier schoon, unit-tests groen, `check:html` 0 fouten, `check:seo` 73 pagina's
+  zonder problemen, `audit:deps` 0 kwetsbaarheden.
+- Volledige e2e (zonder visueel): 1002 groen, 6 rood: axe `scrollable-region-focusable` op desktop voor alle
+  briefmaker-pagina's (`/incasso/wik-brief`, 5 voorbeeldbrieven). Oorzaak: het briefvoorbeeld `.papier` scrollt vanaf
+  1080 px en was niet focusbaar; op Windows loopt de inhoud net over (in de Linux-omgeving niet). Fix: `<section
+aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker.astro`. Daarna de 102 tests van die
+  pagina's (kwaliteit + interacties) groen.

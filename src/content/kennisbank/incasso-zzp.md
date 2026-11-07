@@ -64,7 +64,7 @@ Zakelijker van toon. Noem de laatste betaaltermijn en wat er daarna gebeurt: ove
 
 ### Uit handen geven
 
-Is ook de laatste termijn verlopen, stop dan met zelf herinneren. Een incassobureau neemt het over: brieven, telefoontjes, een eventuele betalingsregeling en zo nodig de rechter.
+Is ook de laatste termijn verlopen, stop dan met zelf herinneren. Een incassobureau neemt het over: brieven, telefoontjes, een eventuele betalingsregeling en zo nodig de rechter. Hoe dat in zijn werk gaat, leest u op [incassobureau inschakelen](/incasso/incassobureau-inschakelen).
 
 ## Wat kost incasso voor een zzp'er?
 

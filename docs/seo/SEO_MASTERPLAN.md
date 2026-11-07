@@ -23,8 +23,9 @@ lokale aanwezigheid en vermeldingen.
 | 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | open                           |
 | 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | live (batch 2), meten na GSC   |
 | 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                |
-| 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | open                           |
-| 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | deels (E4), kaart open         |
+| 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | klaar (batch 3, E7)            |
+| 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | kaart klaar (E8), SERP deels   |
+| 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | open                           |
 | 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | open                           |
 | 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | profiel bestaat; toegang nodig |
 | 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | open                           |
@@ -77,6 +78,12 @@ Systeemkaart (kort; details in `CLAUDE.md`, `docs/HANDOFF.md`, `docs/OVERDRACHT.
     - incassobureau Deventer → homepage + Bedrijfsprofiel (geen stadspagina's)
     - brief van GeldGarant ontvangen → `/brief-ontvangen` (debiteur, niet acquisitie)
 - **DoD:** kaart in de repo, kannibalisatie gecontroleerd vóór elke nieuwe URL.
+- **Gedaan (batch 3, E8):** `docs/seo/keyword-url-map.csv`, 56 clusters met voorkeurs-URL, ondersteunende en
+  concurrerende URL's, status en volgende stap. Gevonden kannibalisatierisico's (titels): `/wki` ↔
+  `/kennisbank/wki-proof-werken-2026`, `/branches/incasso-zzp` ↔ `/kennisbank/incasso-zzp`, `/branches/incasso-verhuur`
+  ↔ `/kennisbank/huurachterstand-incasseren`, `/tarieven` ↔ `/kennisbank/wat-kost-incasso-uitbesteden`.
+  Voorstel: branchepagina's richten op "incassobureau voor …" (commercieel), kennisbank houdt de probleemvraag;
+  kennisbanktitel Wki richten op "Wki-proof werken als schuldeiser". Pas na akkoord of na GSC-data wijzigen.
 
 ## Fase 3. Technische SEO
 
@@ -98,7 +105,10 @@ Systeemkaart (kort; details in `CLAUDE.md`, `docs/HANDOFF.md`, `docs/OVERDRACHT.
 - **Voorbeeldbrieven-bibliotheek (klaar, batch 2):** `/voorbeeldbrieven` + 5 briefpagina's met briefmaker (live voorbeeld,
   Word zonder afhankelijkheden, pdf via afdrukken, kopiëren). 14-dagenbrief blijft op `/incasso/wik-brief` (briefmaker
   daar toevoegen) om kannibalisatie te voorkomen. Interne links vanuit kennisbank, `/incasso`, footer.
-- Interne links naar zwak gelinkte pagina's (E1).
+- Interne links naar zwak gelinkte pagina's (E1): **klaar in batch 3 (E7)**. Branchepagina's tonen het passende
+  kennisbankartikel (`kennis` in `src/data/branches.ts`, build faalt bij een onbekende slug); `verwant` aangepast in 5
+  artikelen; contextuele links naar `/incasso/incassobureau-inschakelen` (3 artikelen + alle voorbeeldbrieven) en
+  `/hulp-nodig-bij-geldproblemen` (2 artikelen + `/contact-opnemen`); `/voorbeeldbrieven` vanaf `/incasso` en `/kennisbank`.
 - Daarna: bewijsstukkenchecklist, beslisboom "kan ik deze vordering nog innen?" (verjaring), alleen met primaire bronnen.
 
 ## Fase 6. Lokaal

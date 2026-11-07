@@ -2,7 +2,8 @@
 // B /branches/<slug>: één template, eigen inhoud per branche uit src/data/branches.ts.
 // Hoofdvraag: "Snappen jullie mijn branche, en wat doen jullie in mijn situatie?"
 // Volgorde: wie en wat (hero + feiten) → herkenbare situaties (01) → regels in uw branche (02)
-// → rekenvoorbeeld (03) → vragen (04) → verder (05: verwante branches + diensten) → CTA.
+// → rekenvoorbeeld (03) → vragen (04) → verder (05: verwante branches, kennisbankartikel + diensten) → CTA.
+import { getEntry } from "astro:content"
 import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
 import Crumbs from "../../components/Crumbs.astro"
@@ -31,7 +32,11 @@ const rentePct = String(huidigPercentage(b.voorbeeld.soort, vandaag)).replace(".
 const consument = b.voorbeeld.soort === "consument"
 
 const verwant = b.verwant.map((s) => brancheBySlug[s]).filter(Boolean)
+// Een verkeerde slug laat de build falen, zodat er nooit een dode link ontstaat
+const artikel = await getEntry("kennisbank", b.kennis)
+if (!artikel) throw new Error(`branches/${b.slug}: kennisbankartikel "${b.kennis}" bestaat niet`)
 const verder = [
+    { t: artikel.data.title, d: "Uit onze kennisbank.", href: `/kennisbank/${artikel.id}` },
     { t: "Zo werkt incasso", d: "Van indienen tot uitbetaling, stap voor stap.", href: "/hoe-werkt-het" },
     { t: "Tarieven", d: "Wat het kost, en wanneer het u niets kost.", href: "/tarieven" },
     { t: "Debiteurenbeheer", d: "Facturen bewaken voordat het een incassozaak wordt.", href: "/debiteurenbeheer" },

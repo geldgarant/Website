@@ -86,7 +86,7 @@ Bij een zakelijke klant is de 14-dagenbrief niet verplicht. U mag incassokosten 
 
 ## Stap 4: de factuur uit handen geven
 
-Is ook de laatste termijn verlopen, dan heeft verder herinneren weinig zin. Een incassobureau neemt het dossier over, stuurt de debiteur een sommatie, belt en onderhandelt over een eventuele betalingsregeling.
+Is ook de laatste termijn verlopen, dan heeft verder herinneren weinig zin. Een incassobureau neemt het dossier over, stuurt de debiteur een sommatie, belt en onderhandelt over een eventuele betalingsregeling. Twijfelt u of het moment daar is? Op [incassobureau inschakelen](/incasso/incassobureau-inschakelen) staan de signalen en de stappen op een rij.
 
 Bij GeldGarant betaalt de debiteur de wettelijke incassokosten en rente. Betaalt hij volledig, dan kost het u niets en ontvangt u de hele hoofdsom. In het artikel [wat incasso uitbesteden kost](/kennisbank/wat-kost-incasso-uitbesteden) staat hoe de kosten precies verdeeld worden.
 

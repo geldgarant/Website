@@ -43,6 +43,12 @@ staging: website.geldgarant.workers.dev) naast de intake-worker (api.geldgarant.
 | Lighthouse (doel 95+ per categorie) | `npm run lhci`                                                       |
 | Afhankelijkheden                    | `npm run audit:deps`                                                 |
 
+Op de Windows-pc van de gebruiker (Claude-desktopapp, sinds 7 nov 2026): repo in `C:\Users\Ilyas Chattat\code\geldgarant-website`,
+Git, Node 26 en `gh` (ingelogd als `geldgarant`) via winget; Playwright-Chromium via `npx playwright install chromium`,
+dus geen `CHROME_PATH`. Geen proxy: `node scripts/seo/crawl.mjs` werkt zonder `NODE_USE_ENV_PROXY`. Externe sites
+(staging, Cloudflare, Search Console) via het ingebouwde browserpaneel. Visuele snapshots zijn `-linux.png`: niet op
+Windows bijwerken (andere fontweergave); de CI draait ze niet.
+
 In de cloudwerkomgeving van Claude: zet `CHROME_PATH=/usr/bin/google-chrome` voor Playwright en Lighthouse
 (browserdownloads zijn daar geblokkeerd). Playwright MCP daar handmatig met
 `--executable-path /usr/bin/google-chrome --headless --no-sandbox`.
@@ -106,6 +112,8 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Crawl: `NODE_USE_ENV_PROXY=1 node scripts/seo/crawl.mjs [basis]` (productie standaard, of `http://localhost:4399`); schrijft `docs/seo/crawl-<datum>.csv` en print afwijkingen.
 - SEO-skills in `.claude/skills`: `seo-*` en `seo-claude` (AgriciDaniel/claude-seo), `ai-seo`, `link-building`, `site-architecture`, `copywriting`, `analytics`, `conversion-tracking`, `free-tools`, `mk-schema`, `mk-seo-audit` (coreyhaines31/marketingskills). Bij overlap gaan `seo` (addyosmani) en de projectregels voor.
 - Doelgroepen gescheiden houden: debiteurenverkeer (`/brief-ontvangen`, `/betalen`) is geen acquisitie.
+- Zoekintentie per URL: `docs/seo/keyword-url-map.csv`. Controleer die vóór een nieuwe pagina of titelwijziging (kannibalisatie).
+- Branchepagina's linken naar één kennisbankartikel via `kennis` in `src/data/branches.ts` (onbekende slug = build faalt).
 
 ## Voorbeeldbrieven (7 nov 2026)
 

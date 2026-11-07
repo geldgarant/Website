@@ -26,6 +26,8 @@ export interface Branche {
     voorbeeld: { bedrag: number; wat: string; soort: Soort }
     faq: { q: string; a: string }[]
     verwant: string[]
+    /** slug van het kennisbankartikel dat het best bij deze branche past (link in "Verder kijken") */
+    kennis: string
 }
 
 export const brancheData: Branche[] = [
@@ -98,6 +100,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-verhuur", "incasso-groothandel", "incasso-zzp"],
+        kennis: "incasso-bouwsector",
     },
     {
         slug: "incasso-transport",
@@ -168,6 +171,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-groothandel", "incasso-mkb", "incasso-automotive"],
+        kennis: "verjaringstermijnen-vorderingen",
     },
     {
         slug: "incasso-verhuur",
@@ -238,6 +242,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-bouw", "incasso-dienstverlening", "incasso-mkb"],
+        kennis: "huurachterstand-incasseren",
     },
     {
         slug: "incasso-automotive",
@@ -308,6 +313,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-dienstverlening", "incasso-transport", "incasso-ecommerce"],
+        kennis: "debiteur-betwist-factuur",
     },
     {
         slug: "incasso-groothandel",
@@ -378,6 +384,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-transport", "incasso-ecommerce", "incasso-mkb"],
+        kennis: "debiteur-failliet-vordering-beschermen",
     },
     {
         slug: "incasso-dienstverlening",
@@ -448,6 +455,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-zzp", "incasso-mkb", "incasso-zorg"],
+        kennis: "creditmanagement-openstaande-facturen-voorkomen",
     },
     {
         slug: "incasso-ecommerce",
@@ -518,6 +526,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-groothandel", "incasso-dienstverlening", "incasso-zzp"],
+        kennis: "betalingsherinnering-aanmaning-wik-brief",
     },
     {
         slug: "incasso-zorg",
@@ -588,6 +597,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-dienstverlening", "incasso-zzp", "incasso-mkb"],
+        kennis: "betalingsregeling-treffen",
     },
     {
         slug: "incasso-mkb",
@@ -658,6 +668,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-zzp", "incasso-dienstverlening", "incasso-groothandel"],
+        kennis: "openstaande-factuur-stappenplan",
     },
     {
         slug: "incasso-zzp",
@@ -728,6 +739,7 @@ export const brancheData: Branche[] = [
             },
         ],
         verwant: ["incasso-dienstverlening", "incasso-mkb", "incasso-bouw"],
+        kennis: "incasso-zzp",
     },
 ]
 
