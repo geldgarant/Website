@@ -12,7 +12,8 @@ permissions:
 jobs:
     controle:
         runs-on: ubuntu-latest
-        timeout-minutes: 20
+        # Lighthouse (lhci) duurt ± 40 min; met 20 min werd elke run afgebroken (7-8 nov 2026)
+        timeout-minutes: 60
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
