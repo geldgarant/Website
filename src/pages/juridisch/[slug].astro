@@ -542,10 +542,14 @@ const jsonLd = [
     }
     /* tabellen: op smalle schermen elke rij als kaart, met het kolomlabel boven elke waarde */
     @media screen and (max-width: 719px) {
-        .juridisch :global(.tabel) {
+        .juridisch :global(.tabel:has(.kaarttabel)) {
             overflow: visible;
             border: 0;
             border-radius: 0;
+        }
+        /* tabellen met twee kolommen passen op elk scherm: geen minimumbreedte en dus nooit zijwaarts scrollen */
+        .juridisch :global(.tabel:not(:has(.kaarttabel)) table) {
+            min-width: 0;
         }
         .juridisch :global(.kaarttabel),
         .juridisch :global(.kaarttabel tbody),

@@ -25,6 +25,9 @@ for (const route of routes) {
                     .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].join(".")}`)
             })
             expect(overloop, "elementen breder dan het scherm").toEqual([])
+            // en de pagina als geheel mag nooit zijwaarts scrollen (ook niet door inhoud van een veegrij die niet scrollt)
+            const breedte = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+            expect(breedte, "pagina scrolt zijwaarts").toBeLessThanOrEqual(1)
             expect(fouten, "console- en scriptfouten").toEqual([])
         })
 
