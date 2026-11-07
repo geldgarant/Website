@@ -39,3 +39,25 @@ Overgenomen op 2026-11-06 na controle van SKILL.md, scripts en hooks. Hooks van 
 | verification-before-completion | https://github.com/obra/superpowers/tree/22f0b46/skills/verification-before-completion | MIT |
 | writing-plans | https://github.com/obra/superpowers/tree/22f0b46/skills/writing-plans | MIT |
 | shared | https://github.com/AccessLint/skills (gedeelde methodologie voor de accessibility-skills) | MIT |
+| seo-audit | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-audit | MIT |
+| seo-technical | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-technical | MIT |
+| seo-schema | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-schema | MIT |
+| seo-local | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-local | MIT |
+| seo-geo | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-geo | MIT |
+| seo-backlinks | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-backlinks | MIT |
+| seo-plan | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-plan | MIT |
+| seo-page | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-page | MIT |
+| seo-content | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-content | MIT |
+| seo-content-brief | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-content-brief | MIT |
+| seo-cluster | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-cluster | MIT |
+| seo-sitemap | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo-sitemap | MIT |
+| seo-claude | https://github.com/AgriciDaniel/claude-seo/tree/6be93f4/skills/seo (hernoemd: botst met `seo`) | MIT |
+| ai-seo | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/ai-seo | MIT |
+| link-building | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/link-building | MIT |
+| site-architecture | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/site-architecture | MIT |
+| copywriting | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/copywriting | MIT |
+| analytics | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/analytics | MIT |
+| conversion-tracking | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/conversion-tracking | MIT |
+| free-tools | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/free-tools | MIT |
+| mk-schema | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/schema (hernoemd: botst) | MIT |
+| mk-seo-audit | https://github.com/coreyhaines31/marketingskills/tree/96798cf/skills/seo-audit (hernoemd: botst) | MIT |

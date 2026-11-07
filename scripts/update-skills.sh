@@ -38,6 +38,15 @@ for s in accessibility-scan accessibility-audit accessibility-inspect accessibil
     SKILLS+=("$s|AccessLint/skills|plugins/accesslint/skills/$s")
 done
 
+for s in seo-audit seo-technical seo-schema seo-local seo-geo seo-backlinks seo-plan seo-page seo-content seo-content-brief seo-cluster seo-sitemap; do
+    SKILLS+=("$s|AgriciDaniel/claude-seo|skills/$s")
+done
+SKILLS+=("seo-claude|AgriciDaniel/claude-seo|skills/seo") # na bijwerken: name in SKILL.md weer op seo-claude zetten
+for s in ai-seo link-building site-architecture copywriting analytics conversion-tracking free-tools; do
+    SKILLS+=("$s|coreyhaines31/marketingskills|skills/$s")
+done
+SKILLS+=("mk-schema|coreyhaines31/marketingskills|skills/schema" "mk-seo-audit|coreyhaines31/marketingskills|skills/seo-audit") # idem: name mk-*
+
 for entry in "${SKILLS[@]}"; do
     IFS="|" read -r name repo path <<<"$entry"
     dir="$TMP/${repo//\//__}"
