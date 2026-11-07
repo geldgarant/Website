@@ -1,4 +1,4 @@
-# GeldGarant website: overdracht (7 nov 2026, na /werken-bij en /hulp-nodig-bij-geldproblemen)
+# GeldGarant website: overdracht (7 nov 2026, na /werken-bij, cv-upload en /hulp-nodig-bij-geldproblemen)
 
 Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document beschrijft waar het project staat, hoe alles werkt en wat de volgende sessie moet doen.
 
@@ -6,7 +6,12 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 1. Koppel de repo (`add_repo` geldgarant/Website, push), kloon naar `/home/claude/geldgarant-site`, `npm ci`.
 2. Lees `CLAUDE.md`, dit bestand en `docs/SITEMAP.md`.
-3. Volgende stappen: `/brief-ontvangen` (pas als de CaseControl-betaallink of portaal-deeplink is uitgezocht), daarna fase D: juridische pagina's (`/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid`, `/juridisch/cookie-beleid`, `/klachtenregelement`), redirects en OG-beelden. Eerst eventuele feedback op /werken-bij, de vacatures en /hulp-nodig-bij-geldproblemen verwerken.
+3. Volgende stap: **fase D, juridische pagina's.** Research al gedaan (7 nov, Framer-project `R87P79buXWtsQbzZzCmY`):
+    - `/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid` en `/juridisch/cookie-beleid` zijn in Framer alleen een korte intro plus een pdf-knop. Pdf's: AV `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`, privacy `…/2izbyXtWSxM6Ol6krKySymhwjr0.pdf` of `…/xkKe3X1RnaSiWWQvc5ckrHPphEk.pdf` (twee versies in Framer, laat Anas kiezen), cookies `…/38Azuy074oau4xAosmmWKGR3fNo.pdf` of `…/BiRy2wQp3zflDhjnS3siOmM7yc.pdf`.
+    - framerusercontent.com is vanuit de werkomgeving **niet bereikbaar** (proxy, ook niet via WebFetch). Vraag Anas de pdf's als bijlage te sturen; zet ze in `public/juridisch/` zodat ze na de verhuis van Framer blijven werken. De AV past Anas zelf nog aan (succesfee eruit).
+    - `/klachtenregelement` (slug met deze spelling behouden) heeft echte tekst: klacht per e-mail naar **klachten@geldgarant.com**, bevestiging binnen twee werkdagen, afhandeling streven binnen veertien werkdagen, daarna geschillencommissie via NowID (toetst aan de Wki). Herschrijven in u-vorm, als HTML-pagina met stappen; linken vanuit /nowid, /contact-opnemen en de footer.
+    - Idee: privacyverklaring ook als HTML (SEO, toegankelijk) zodra de pdf-tekst er is. Let op: de sollicitatie-belofte "binnen vier weken verwijderen" moet in de privacyverklaring passen.
+    - Daarna: 301-redirects (Framer-URL's die verdwijnen), OG-beelden per pagina, en `/brief-ontvangen` zodra de CaseControl-betaallink bekend is.
 4. Werkwijze per pagina: §6. Verifiëren: `CHROME_PATH=/usr/bin/google-chrome npm run qa` (± 8 min, draai in de achtergrond en poll), daarna `npm run lhci` (± 40 min voor 54 pagina's, achtergrond). Preview vóór qa altijd stoppen (`pkill -f "astro preview"`), anders botst poort 4399.
 5. Push: `git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main`; Workers-check: `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`.
 
