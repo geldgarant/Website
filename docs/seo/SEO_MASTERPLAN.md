@@ -18,8 +18,8 @@ lokale aanwezigheid en vermeldingen.
 
 | #   | Initiatief                                              | Fase | Impact | Bewijs | Urgentie | Inspanning | Status                         |
 | --- | ------------------------------------------------------- | ---- | ------ | ------ | -------- | ---------- | ------------------------------ |
-| 1   | HTTP → HTTPS-redirect (nu 200 op http://)               | 3    | middel | sterk  | hoog     | laag       | wacht op gebruiker (E2)        |
-| 2   | Search Console + sitemap + Bing                         | 0/9  | hoog   | sterk  | hoog     | laag       | wacht op TXT-record (E3)       |
+| 1   | HTTP → HTTPS-redirect (nu 200 op http://)               | 3    | middel | sterk  | hoog     | laag       | aan (8 nov), hertest open      |
+| 2   | Search Console + sitemap + Bing                         | 0/9  | hoog   | sterk  | hoog     | laag       | GSC klaar (E9), Bing open      |
 | 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | open                           |
 | 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | live (batch 2), meten na GSC   |
 | 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                |
@@ -96,7 +96,9 @@ Systeemkaart (kort; details in `CLAUDE.md`, `docs/HANDOFF.md`, `docs/OVERDRACHT.
 
 ## Fase 4. Commerciële pagina's
 
-- Volgorde: `/incasso/incassobureau-inschakelen`, `/incasso`, `/debiteurenbeheer`, `/tarieven`, `/vordering-indienen`.
+- Volgorde (bijgesteld 8 nov op basis van GSC, E9): `/debiteurenbeheer` (2.082 vertoningen op "debiteurenbeheer
+  uitbesteden", pos 65), huurachterstand (`/branches/incasso-verhuur` + kennisbank, ruim 3.000 vertoningen),
+  `/branches/incasso-mkb` ("mkb incasso", ruim 3.000), `/incasso/incassobureau-inschakelen`, `/incasso`, `/tarieven`.
 - Per pagina: SERP-vergelijking, intentie, ontbrekende antwoorden (benodigde stukken, termijnen, uitkomsten,
   uitzonderingen), één primaire CTA, schema. Geen verzonnen claims.
 

@@ -123,3 +123,32 @@ hypotheses gescheiden.
   1080 px en was niet focusbaar; op Windows loopt de inhoud net over (in de Linux-omgeving niet). Fix: `<section
 aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker.astro`. Daarna de 102 tests van die
   pagina's (kwaliteit + interacties) groen.
+
+### E9. Search Console (8 nov 2026, ±01:00, browserpaneel, account met toegang tot `sc-domain:geldgarant.com`)
+
+- Toegang werkt (TXT-record `IBklbLEv…` door de gebruiker toegevoegd, gecontroleerd via de Cloudflare-API).
+  Always Use HTTPS staat nu `on` (Cloudflare-API, zone-instelling).
+- Sitemaps: oud `https://geldgarant.com/sitemap.xml` (ingediend 13 apr 2026, gelezen 31 okt, 57 pagina's; geeft nu
+  301 naar de index). Nieuw ingediend: `https://geldgarant.com/sitemap-index.xml`, direct gelezen, status Succesvol.
+- Indexering (rapport bijgewerkt 23 okt 2026, dus vóór de livegang): 35 geïndexeerd, 32 niet. Redenen: noindex 5,
+  omleiding 3, 404 2 (`/algemene-voorwaarden`, nu 301 naar `/juridisch/algemene-voorwaarden`; en
+  `email.dossiers.geldgarant.com`, Mailgun-tracking, geen site), gecrawld niet geïndexeerd 11 (o.a.
+  `/incasso/incassobureau-inschakelen`, `/incasso/incassokosten-berekenen`, `/hoe-werkt-het`, 7 kennisbankartikelen),
+  gevonden niet geïndexeerd 11.
+- URL-inspectie 8 nov: `/debiteurenbeheer`, `/incasso/incassobureau-inschakelen`, `/kennisbank/huurachterstand-incasseren`
+  geïndexeerd (oude versie); `/voorbeeldbrieven` gevonden via de nieuwe sitemap, niet geïndexeerd. Voor alle vier
+  "Indexering aanvragen" gedaan (prioriteitscrawlwachtrij).
+- Prestaties, 16 maanden (grotendeels Framer-site): 137 klikken, 28,9K vertoningen, CTR 0,5%, gem. positie 43,1;
+  704 zoekvragen. Niet integraal opgeslagen (enkele zoekvragen bevatten namen of nummers). Kern:
+    - Merk/lokaal met klikken: "geldgarant" 31 klikken (pos 1,4); "incassobureau deventer" 7 klikken, 496 vert. (pos 4,1);
+      "incassobureau" 217 vert. (pos 4,1).
+    - Veel vertoningen, slechte positie: "debiteurenbeheer uitbesteden" 2.082 (65), "uitbesteden debiteurenbeheer" 391,
+      "debiteurenbeheer mkb" 477; huurachterstand-cluster ("incasso verhuurder" 685, "incasso huurachterstand" 335,
+      "huurachterstand" 322, plus regionale varianten Weert/Roermond/Venray/Noord-Brabant) samen ruim 3.000;
+      "mkb incasso" + regionale varianten (Weert, Venray, Venlo, Roermond) ruim 3.000; "incassobureau zzp" 399 (53);
+      "internationale incasso" 337 (47); "lege bv" 323 (50); "wik brief"/"wik-brief"/"wik" ±600 (37 tot 49).
+    - Dicht bij pagina 1: "incasso e-commerce" 207 (12,1), "incasso webshops" 112 (18), "openstaande facturen" 260
+      (19,1), "openstaande factuur" 138 (19,9), "beslagvrije voet 2026" en varianten (9 tot 14), "incasso zzp" 277 (23,9),
+      "incasso bouw" 38 (21,8), "incasso groothandel" 33 (13,9), "incasso zorg" 20 (13,9).
+- Beperking: de data meet de oude Framer-pagina's op dezelfde URL's; effect van de nieuwe site pas over 2 tot 4 weken
+  zichtbaar.
