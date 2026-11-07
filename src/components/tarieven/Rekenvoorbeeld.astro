@@ -248,9 +248,11 @@ const scenarios = [
             border-color 0.15s ease,
             background-color 0.15s ease;
     }
+    /* zelfde focusring als de formuliervelden (form.css), duidelijk zichtbaar bij toetsenbordgebruik */
     .rv-input:focus-within {
         border-color: var(--blue);
         background: #fff;
+        box-shadow: 0 0 0 4px rgba(48, 105, 254, 0.14);
     }
     .rv-input span {
         font-size: 1.5rem;

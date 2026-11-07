@@ -11,7 +11,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
     - Controleren bij Anas: wat er in de Telegram-melding van de intake-worker staat (zo min mogelijk persoonsgegevens), en of de verwerkersovereenkomsten met Cloudflare, Resend, Telegram en CaseControl er zijn (de privacyverklaring noemt ze).
     - WhatsApp: `site.whatsappHref` wijst nu naar het nieuwe nummer; Anas moet WhatsApp Business op 085 212 73 88 zetten.
     - `/brief-ontvangen` zodra de CaseControl-betaallink bekend is; dan de 302 in `public/_redirects` weghalen.
-    - Livegang voorbereiden (`shipping-and-launch`): domein koppelen alleen samen met Anas.
+    - Livegang: draaiboek in `docs/LIVEGANG.md` (DNS-overstap stap voor stap, controle met `node scripts/livegang-check.mjs`, terugdraaiplan). Alleen samen met Anas.
 4. Werkwijze per pagina: §6. Verifiëren: `CHROME_PATH=/usr/bin/google-chrome npm run qa` (± 8 min, draai in de achtergrond en poll), daarna `npm run lhci` (± 40 min voor 54 pagina's, achtergrond). Preview vóór qa altijd stoppen (`pkill -f "astro preview"`), anders botst poort 4399.
 5. Push: `git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main`; Workers-check: `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`.
 

@@ -12,8 +12,13 @@ export const site = {
     city: "Deventer",
     hours: "werkdagen van 9.00 tot 17.00",
     incassoRegister: "00273",
-    incassoRegisterHref: "https://www.justis.nl/registers/incassodienstverlening",
-    // TODO: aanleveren door GeldGarant
+    // rechtstreeks naar de inschrijving van GeldGarant in het register van Justis (nagelopen 7 nov 2026)
+    incassoRegisterHref: "https://www.justis.nl/registers/incassoregister/geldgarant",
+    // het hele register, om zelf te zoeken
+    incassoRegisterOverzichtHref: "https://www.justis.nl/registers/register-incassodienstverlening",
+    // debiteurenpagina "Brief ontvangen?" komt later (CaseControl); tot die tijd naar het briefblok op de hulppagina
+    briefHref: "/hulp-nodig-bij-geldproblemen#brief",
+    // btw bewust leeg: btw-id niet tonen op de site (keuze GeldGarant, 7 nov 2026; wettelijk wel verplicht, is gemeld)
     kvk: "90622375" as string | null,
     btw: null as string | null,
     portalLogin: "https://geldgarant.dossierportal.nl",

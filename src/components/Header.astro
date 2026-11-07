@@ -8,7 +8,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
 
 <div class="utility">
     <div class="wrap utility-inner">
-        <a class="utility-pill" href="/brief-ontvangen">
+        <a class="utility-pill" href={site.briefHref}>
             <span class="hide-xs">Brief of e-mail van ons ontvangen?</span>
             <span class="show-xs">Brief ontvangen?</span>
             <Icon name="arrow" size={14} />
@@ -114,7 +114,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
                 </a>
             </li>
             <li>
-                <a href="/brief-ontvangen">
+                <a href={site.briefHref}>
                     <Icon name="doc" size={16} />
                     Brief van ons ontvangen?
                 </a>

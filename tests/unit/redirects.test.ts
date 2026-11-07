@@ -9,7 +9,11 @@ const regels = readFileSync("public/_redirects", "utf8")
     .filter((r) => r && !r.startsWith("#"))
     .map((r) => r.split(/\s+/))
 
+// bestanden die de build zelf maakt (geen pagina in src/pages)
+const BUILD = ["/sitemap-index.xml"]
+
 const pagina = (pad: string) => {
+    if (BUILD.includes(pad)) return true
     const p = pad.split("#")[0].replace(/\/$/, "")
     if (p === "") return existsSync("src/pages/index.astro")
     if (p.startsWith("/werken-bij/:splat")) return existsSync("src/pages/werken-bij/[slug].astro")

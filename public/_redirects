@@ -4,6 +4,9 @@
 # Daarnaast vangen we gangbare varianten af die bezoekers zelf intypen of die in oude mails staan.
 # Test: tests/unit/redirects.test.ts controleert dat elk doel een bestaande pagina is.
 
+# Sitemap: Framer had /sitemap.xml (staat waarschijnlijk zo in Google Search Console); Astro maakt /sitemap-index.xml
+/sitemap.xml                  /sitemap-index.xml                     301
+
 # Framer-pagina die verdwijnt (stond op noindex)
 /faq                          /#veelgestelde-vragen                  301
 

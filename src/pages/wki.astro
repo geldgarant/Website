@@ -47,7 +47,7 @@ const eisen = [
         eis: "Registratie",
         wet: "Inschrijving in het openbare register van Justis, na screening. Elk jaar opnieuw.",
         gg: `Ingeschreven onder nummer ${site.incassoRegister}.`,
-        link: { href: site.incassoRegisterHref, label: "Bekijk het register" },
+        link: { href: site.incassoRegisterHref, label: "Bekijk onze inschrijving" },
     },
     {
         eis: "Vakbekwaamheid",
@@ -243,7 +243,7 @@ const jsonLd = [
                             </li>
                         ))}
                     </ol>
-                    <a class="btn btn-light" href={site.incassoRegisterHref} rel="noopener" target="_blank">
+                    <a class="btn btn-light" href={site.incassoRegisterOverzichtHref} rel="noopener" target="_blank">
                         Open het register van Justis
                         <span class="btn-dot">
                             <Icon name="arrow-up-right" size={18} />
