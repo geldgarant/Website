@@ -71,6 +71,14 @@ export const incassoFaq = [
 // Vragen op /debiteurenbeheer. Pakketbedragen staan in src/lib/pakketten.ts; houd de teksten daarmee gelijk.
 export const debiteurenFaq = [
     {
+        q: "Wat kost debiteurenbeheer uitbesteden?",
+        a: "Bij GeldGarant betaalt u een vast bedrag per maand, afhankelijk van het aantal vervallen facturen dat we opvolgen. De pakketten beginnen bij € 99 per maand exclusief btw, zonder opstartkosten en maandelijks opzegbaar. Met de rekenhulp op deze pagina ziet u welk pakket voor u het voordeligst is.",
+    },
+    {
+        q: "Is debiteurenbeheer hetzelfde als factoring?",
+        a: "Nee. Bij factoring verkoopt of financiert u uw facturen en krijgt u een groot deel direct uitbetaald, tegen rente en provisie. Bij debiteurenbeheer blijven de facturen van u en nemen wij alleen de opvolging over, voor een vast bedrag per maand.",
+    },
+    {
         q: "Wat is het verschil tussen debiteurenbeheer en incasso?",
         a: "Debiteurenbeheer begint op de vervaldatum: vriendelijke herinneringen, een sms en een telefoontje, meestal in uw naam. Uw klant betaalt geen extra kosten. Incasso komt pas daarna, als uw klant niet reageert: dan schrijven we namens GeldGarant en betaalt de debiteur de wettelijke incassokosten.",
     },

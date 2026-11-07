@@ -164,3 +164,17 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   `/branches/incasso-verhuur`, `/tarieven`, en kennisbank `huurachterstand-incasseren`, `wki-proof-werken-2026`,
   `wat-kost-incasso-uitbesteden`; H1 van kennisbank `incasso-zzp` en `huurachterstand-incasseren`. Check, lint, unit,
   html, seo groen; e2e van de geraakte pagina's 99 groen.
+
+### E11. Fase 4: /debiteurenbeheer (8 nov 2026)
+
+- Aanleiding: GSC (E9) "debiteurenbeheer uitbesteden" 2.082 vertoningen, pos 65 (oude Framer-pagina).
+- SERP-steekproef "debiteurenbeheer uitbesteden" en "… kosten mkb" (WebSearch, niet gepersonaliseerd, geen NL-locatie):
+  vooral uitleg- en afwegingsartikelen (mtsprout.nl, mkbservicedesk.nl, dezaak.nl, mijnzzp.nl) en aanbieders;
+  terugkerende vragen: wat het is, wanneer het loont, verschil met factoring, kosten. Geen van de bronnen noemt concrete
+  prijzen; onze pagina wel (pakketten).
+- Toegevoegd: sectie 04 "Wanneer loont het om uw debiteurenbeheer uit te besteden?" (`src/components/debiteuren/Afweging.astro`):
+  wel/niet-afweging, vergelijking debiteurenbeheer / factoring / incasso, "Zo start u" in 3 stappen; 2 FAQ's (kosten,
+  factoring); "uitbesteden" in lead en description. Alleen bestaande site-feiten; factoring algemeen beschreven.
+  Woorden in main: 1.072 → 1.576 (gemeten in de build).
+- Controles: check, lint, format, unit, build, html, seo groen; e2e /debiteurenbeheer + contact 45 groen; screenshots
+  390/1440 bekeken, geen overloop.

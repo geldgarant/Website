@@ -1,0 +1,319 @@
+---
+// 04 "Moet ik mijn debiteurenbeheer uitbesteden, en wat is het verschil met factoring?" (zoekintentie
+// "debiteurenbeheer uitbesteden", SERP-steekproef 8 nov 2026: uitleg, afweging en factoring komen steeds terug).
+// Alleen feiten die elders op de site bevestigd zijn: pakketten (src/lib/pakketten.ts), afzender en toon, grenzen
+// voor regelingen, koppeling en kosteloze overstap naar incasso (src/data/faq.ts). Factoring algemeen beschreven.
+import Icon from "../Icon.astro"
+import { PAKKETTEN } from "../../lib/pakketten"
+import { euro } from "../../lib/wik"
+
+const vanaf = euro(Math.min(...PAKKETTEN.map((p) => p.prijs)), 0)
+
+const wel = [
+    "U of uw medewerkers besteden elke maand uren aan herinneren en nabellen.",
+    "Herinneringen gaan te laat de deur uit, omdat er altijd iets voorgaat.",
+    "U wilt klanten niet zelf aanspreken op hun betaalgedrag.",
+    "Het aantal facturen wisselt per maand en u wilt kunnen op- en afschalen.",
+]
+const niet = [
+    "U stuurt maar een paar facturen per maand en vrijwel iedereen betaalt op tijd. Een herinnering uit uw boekhoudpakket is dan vaak genoeg.",
+    "Het gaat om één klant die niet meer reageert. Dan is incasso de snellere stap, en die kost u niets als de klant volledig betaalt.",
+]
+
+const opties = [
+    {
+        id: "beheer",
+        titel: "Debiteurenbeheer",
+        rijen: [
+            ["Wat het is", "Wij nemen de opvolging van uw vervallen facturen over"],
+            ["Uw facturen", "Blijven van u"],
+            ["Wat het kost", `Een vast bedrag per maand, vanaf ${vanaf} exclusief btw`],
+            ["Past bij", "U wilt tijd terug en een vaste opvolging"],
+        ],
+    },
+    {
+        id: "factoring",
+        titel: "Factoring",
+        rijen: [
+            ["Wat het is", "U verkoopt of financiert uw facturen en krijgt een groot deel direct uitbetaald"],
+            ["Uw facturen", "Gaan naar de factormaatschappij"],
+            ["Wat het kost", "Rente en provisie, afhankelijk van volume en risico"],
+            ["Past bij", "U heeft vooral snel geld nodig om door te kunnen"],
+        ],
+    },
+    {
+        id: "incasso",
+        titel: "Incasso",
+        rijen: [
+            ["Wat het is", "Een geregistreerd incassobureau int een vordering die na herinneringen open blijft"],
+            ["Uw facturen", "Blijven van u, wij innen namens u"],
+            ["Wat het kost", "De debiteur betaalt de wettelijke kosten; u € 0 bij volledige betaling"],
+            ["Past bij", "Een klant reageert niet meer op uw herinneringen"],
+        ],
+    },
+]
+
+const start = [
+    {
+        t: "Kennismaken",
+        d: "U vertelt hoeveel facturen u per maand verstuurt en wat uw klanten gewend zijn. Wij adviseren welk pakket past, of dat u het beter zelf kunt doen.",
+    },
+    {
+        t: "Afspraken vastleggen",
+        d: "We spreken af in wiens naam we schrijven, welke toon past, welke termijnen we hanteren en binnen welke grenzen we een betalingsregeling mogen treffen. Waar mogelijk koppelen we met uw boekhoudpakket.",
+    },
+    {
+        t: "Wij volgen op",
+        d: "Vanaf de vervaldatum sturen we herinneringen, een sms en bellen we. Betaalt een klant na de laatste herinnering niet, dan gaat het dossier door naar incasso, zonder extra kosten voor u.",
+    },
+]
+---
+
+<section class="section" aria-labelledby="afweging-title" id="uitbesteden">
+    <div class="wrap">
+        <div class="af-head">
+            <p class="eyebrow">
+                <span class="idx">04</span> Uitbesteden of niet
+            </p>
+            <h2 class="h2" id="afweging-title">
+                Wanneer loont het om uw debiteurenbeheer <span class="accent">uit te besteden</span>?
+            </h2>
+            <p class="lead">
+                Debiteurenbeheer uitbesteden betekent dat een externe partij de opvolging van uw openstaande facturen overneemt.
+                Dat is niet voor iedereen de beste keuze. Dit is hoe u het afweegt.
+            </p>
+        </div>
+
+        <div class="af-keuze">
+            <div class="af-kolom af-wel">
+                <h3 class="af-kop">Uitbesteden loont als</h3>
+                <ul role="list">
+                    {wel.map((t) => (
+                        <li>
+                            <span class="af-icon" aria-hidden="true">
+                                <Icon name="check" size={16} />
+                            </span>
+                            {t}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div class="af-kolom af-niet">
+                <h3 class="af-kop">Doe het liever niet als</h3>
+                <ul role="list">
+                    {niet.map((t) => (
+                        <li>
+                            <span class="af-icon" aria-hidden="true">
+                                <Icon name="arrow" size={16} />
+                            </span>
+                            {t}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="af-sub" id="factoring-title">
+            Debiteurenbeheer, factoring of incasso?
+        </h3>
+        <p class="af-intro">Drie oplossingen die vaak door elkaar worden gehaald. Ze lossen elk een ander probleem op.</p>
+        <div class="af-opties">
+            {opties.map((o) => (
+                <article class:list={["optie", `optie-${o.id}`]} aria-labelledby={`optie-${o.id}`}>
+                    <h4 class="optie-titel" id={`optie-${o.id}`}>
+                        {o.titel}
+                    </h4>
+                    <dl>
+                        {o.rijen.map(([k, v]) => (
+                            <div>
+                                <dt>{k}</dt>
+                                <dd>{v}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </article>
+            ))}
+        </div>
+
+        <h3 class="af-sub" id="start-title">
+            Zo start u
+        </h3>
+        <ol role="list" class="af-start">
+            {start.map((s, i) => (
+                <li>
+                    <span class="start-num num" aria-hidden="true">
+                        {i + 1}
+                    </span>
+                    <div>
+                        <h4 class="start-t">{s.t}</h4>
+                        <p>{s.d}</p>
+                    </div>
+                </li>
+            ))}
+        </ol>
+    </div>
+</section>
+
+<style>
+    .af-head {
+        max-width: 46rem;
+        margin-bottom: clamp(32px, 4vw, 48px);
+    }
+    .af-head .h2 {
+        margin-top: 14px;
+    }
+    .af-head .lead {
+        margin-top: 20px;
+    }
+
+    .af-keuze {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .af-keuze {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .af-kolom {
+        padding: clamp(22px, 3vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .af-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .af-kolom ul {
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+    }
+    .af-kolom li {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 12px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .af-icon {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+    }
+    .af-niet .af-icon {
+        background: #fff;
+        color: var(--ink);
+    }
+
+    .af-sub {
+        margin-top: clamp(48px, 6vw, 72px);
+        font-family: var(--font-display);
+        font-size: var(--fs-h3);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .af-intro {
+        margin-top: 8px;
+        max-width: 40rem;
+        color: var(--text);
+    }
+
+    .af-opties {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        margin-top: 24px;
+    }
+    @media (min-width: 1024px) {
+        .af-opties {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .optie {
+        padding: clamp(20px, 2.6vw, 28px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .optie-beheer {
+        box-shadow: inset 0 0 0 2px var(--blue);
+    }
+    .optie-titel {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .optie dl {
+        display: grid;
+        margin-top: 12px;
+    }
+    .optie dl > div {
+        display: grid;
+        gap: 2px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+    }
+    .optie dt {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .optie dd {
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        line-height: 1.5;
+        color: var(--ink);
+    }
+
+    .af-start {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        margin-top: 24px;
+    }
+    @media (min-width: 900px) {
+        .af-start {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .af-start li {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 14px;
+        padding: clamp(20px, 2.6vw, 28px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .start-num {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .start-t {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .af-start p {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+</style>

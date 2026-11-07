@@ -1,7 +1,8 @@
 ---
 // A2 /debiteurenbeheer. Hoofdvraag: "Kunnen jullie voorkomen dat mijn facturen een incassozaak worden?"
 // Volgorde: wat is het en wat kost het ongeveer (hero) → verschil met incasso (01) → wat doen jullie, hoe klinkt
-// dat naar mijn klant (02) → welk pakket en wat kost het precies (03) → vragen (04) → CTA.
+// dat naar mijn klant (02) → welk pakket en wat kost het precies (03) → loont uitbesteden, en factoring of incasso (04)
+// → vragen (05) → CTA.
 import Base from "../layouts/Base.astro"
 import Icon from "../components/Icon.astro"
 import Crumbs from "../components/Crumbs.astro"
@@ -9,6 +10,7 @@ import Overzicht from "../components/debiteuren/Overzicht.astro"
 import Zones from "../components/debiteuren/Zones.astro"
 import Berichten from "../components/debiteuren/Berichten.astro"
 import Pakketten from "../components/debiteuren/Pakketten.astro"
+import Afweging from "../components/debiteuren/Afweging.astro"
 import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
 import { site } from "../data/site"
@@ -17,7 +19,7 @@ import { PAKKETTEN } from "../lib/pakketten"
 
 const title = "Debiteurenbeheer uitbesteden vanaf € 99 per maand | GeldGarant"
 const description =
-    "Wij volgen uw openstaande facturen op met herinneringen, sms en een telefoontje, in uw eigen naam. Vaste prijs per maand, maandelijks opzegbaar."
+    "Debiteurenbeheer uitbesteden: wij volgen uw openstaande facturen op met herinneringen, sms en een telefoontje, in uw naam. Vast bedrag, maandelijks opzegbaar."
 
 const url = "https://geldgarant.com/debiteurenbeheer"
 const jsonLd = [
@@ -73,8 +75,8 @@ const jsonLd = [
                         Debiteurenbeheer, zodat het geen <span class="accent">incasso</span> wordt
                     </h1>
                     <p class="lead">
-                        Wij volgen uw openstaande facturen op met een herinnering, een sms en een persoonlijk telefoontje. In uw
-                        eigen naam, voor een vast bedrag per maand.
+                        Besteed uw debiteurenbeheer uit aan GeldGarant. Wij volgen uw openstaande facturen op met een herinnering,
+                        een sms en een persoonlijk telefoontje. In uw eigen naam, voor een vast bedrag per maand.
                     </p>
                     <div class="hero-actions">
                         <a class="btn" href="#pakketten">
@@ -119,8 +121,9 @@ const jsonLd = [
     <Zones />
     <Berichten />
     <Pakketten />
+    <Afweging />
 
-    <Faq items={debiteurenFaq} idx="04" id="faq-title">
+    <Faq items={debiteurenFaq} idx="05" id="faq-title">
         <Fragment slot="title">
             Vragen over <span class="accent">debiteurenbeheer</span>
         </Fragment>
