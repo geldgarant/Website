@@ -30,4 +30,24 @@ const kennisbank = defineCollection({
     }),
 })
 
-export const collections = { kennisbank }
+// Juridische documenten: AV, privacy- en cookieverklaring. Bestandsnaam = slug onder /juridisch/ (oude Framer-URL's).
+// Bedrijfsgegevens staan als plaatshouder in de tekst ({{telefoon}}, {{adres}}, ...) en komen bij de build uit
+// src/data/site.ts; de WIK-staffel ({{wikStaffel}}) uit src/lib/wik.ts. Zie src/lib/juridisch.ts.
+const juridisch = defineCollection({
+    loader: glob({ pattern: "*.md", base: "./src/content/juridisch" }),
+    schema: z.object({
+        naam: z.string(),
+        // h1 als [vóór het accent, accent]; eindigt het eerste deel op een spatie, dan komt het accent op een nieuwe regel
+        h1: z.tuple([z.string(), z.string()]),
+        seoTitle: z.string().max(70),
+        description: z.string().min(110).max(165),
+        lead: z.string(),
+        voor: z.string(),
+        // pdf in public/juridisch/, gemaakt met `node scripts/juridisch-pdf.mjs`
+        bestand: z.string().regex(/^[a-z-]+\.pdf$/),
+        versie: z.coerce.date(),
+        kort: z.array(z.string()).min(3).max(6),
+    }),
+})
+
+export const collections = { kennisbank, juridisch }

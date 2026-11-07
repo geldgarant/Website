@@ -5,21 +5,26 @@ import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
 import Crumbs from "../../components/Crumbs.astro"
 import { site } from "../../data/site"
-import { juridisch } from "../../data/juridisch"
+import { getCollection } from "astro:content"
+import { VOLGORDE, pdfInfo } from "../../data/juridisch"
 
 const title = "Juridische documenten | GeldGarant"
 const description =
     "Algemene voorwaarden, privacyverklaring, cookieverklaring en klachtenregeling van GeldGarant op één plek. Online te lezen en als pdf te downloaden."
 const url = "https://geldgarant.com/juridisch"
 
+const docs = await getCollection("juridisch")
 const kaarten = [
-    ...juridisch.map((d) => ({
-        href: `/juridisch/${d.slug}`,
-        titel: d.naam,
-        voor: d.voor,
-        tekst: d.lead.split(". ")[0].replace(/\.$/, "") + ".",
-        preview: `/juridisch/${d.preview}`,
-    })),
+    ...VOLGORDE.map((slug) => {
+        const d = docs.find((x) => x.id === slug)!.data
+        return {
+            href: `/juridisch/${slug}`,
+            titel: d.naam,
+            voor: d.voor,
+            tekst: d.lead.split(". ")[0].replace(/\.$/, "") + ".",
+            preview: `/juridisch/${pdfInfo(slug).preview}`,
+        }
+    }),
     {
         href: "/klachtenregelement",
         titel: "Klachtenregeling",
@@ -84,7 +89,8 @@ const jsonLd = [
                                         alt=""
                                         width="600"
                                         height="849"
-                                        loading={i < 2 ? "eager" : "lazy"}
+                                        loading={i === 0 ? "eager" : "lazy"}
+                                        fetchpriority={i === 0 ? "high" : "auto"}
                                         decoding="async"
                                     />
                                 ) : (

@@ -149,7 +149,7 @@ export function valideerStap(stap: number, s: FormState): Fouten {
         if (!isTelefoon(s.telefoon)) f.telefoon = "Vul uw telefoonnummer in, dan kunnen we u bellen bij vragen."
     }
     if (stap === 4) {
-        if (!s.akkoord) f.akkoord = "Ga akkoord met de voorwaarden en het privacybeleid om te versturen."
+        if (!s.akkoord) f.akkoord = "Ga akkoord met de voorwaarden en de privacyverklaring om te versturen."
     }
     return f
 }

@@ -35,8 +35,9 @@ export const euro = (n: number, decimals = 2) =>
         maximumFractionDigits: decimals,
     }).format(n)
 
-// Afrekening volgens de AV: binnengekomen bedragen gaan eerst naar de incassokosten (art. 7.8),
-// bij een deelbetaling met een minimum van € 45 (art. 7.4). Rente laten we in het voorbeeld buiten beschouwing.
+// Afrekening volgens de AV (art. 6.3 en 6.4): volledig betaald = incassokosten voor GeldGarant, hoofdsom voor u;
+// deels betaald = eerst de incassokosten, minimaal € 45 maar nooit meer dan er binnenkwam, de rest voor u.
+// Rente laten we in het voorbeeld buiten beschouwing.
 export const DEEL_MIN = 45
 
 export interface Afrekening {

@@ -117,7 +117,7 @@ export const tarievenFaq = [
     },
     {
         q: "Wat als de debiteur maar een deel betaalt?",
-        a: "Wat binnenkomt gaat eerst naar de incassokosten, met een minimum van €45. De rest maken we aan u over. U kunt het dossier dan sluiten of, met uw akkoord, doorpakken via de rechter.",
+        a: "Wat binnenkomt gaat eerst naar de incassokosten, met een minimum van €45, maar nooit meer dan er binnenkwam. De rest maken we aan u over. U kunt het dossier dan sluiten of, met uw akkoord, doorpakken via de rechter.",
     },
     {
         q: "Wat kost een gerechtelijke procedure?",

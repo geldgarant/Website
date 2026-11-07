@@ -81,8 +81,11 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 
 ## Fase D (7 nov 2026)
 
-- Juridische documenten: pdf's in `public/juridisch/`, gegevens per document in `src/data/juridisch.ts`, template `src/pages/juridisch/[slug].astro`. Nieuwe pdf? Alleen bestand + data bijwerken (zie commentaar in het databestand).
+- Juridische documenten (AV, privacy, cookies) zijn HTML-pagina's uit `src/content/juridisch/<slug>.md` (collectie `juridisch`), template `src/pages/juridisch/[slug].astro`. De HTML is leidend; de pdf's in `public/juridisch/` maak je daaruit met `node scripts/juridisch-pdf.mjs` (preview op 4399; schrijft ook previews en `src/data/juridisch-pdf.ts`). Na elke tekstwijziging: build, script, opnieuw build, committen.
+- In die Markdown nooit bedrijfsgegevens typen: plaatshouders `{{telefoon}}`, `{{email}}`, `{{klachtenEmail}}`, `{{adres}}`, `{{kvk}}`, `{{register}}`, `{{uren}}`, `{{wikStaffel}}` (ingevuld door `src/lib/juridisch.ts`, getest in `tests/unit/juridisch.test.ts`). Leden schrijven als "6.4 Tekst" (anker `#lid-6-4`), artikelkoppen als "## Artikel 6 Titel" (anker `#artikel-6`).
+- De AV moeten kloppen met de site: volledig betaald € 0, deels = incassokosten (min. € 45, nooit meer dan ontvangen), niets binnen = € 0, intrekken 10% / min. € 95, faillissement € 115 excl. btw, wekelijkse afdracht, debiteurenbeheer maandelijks opzegbaar. Wijzigt een tarief, pas dan site én AV aan.
 - Klachtenregeling `/klachtenregelement` volgt art. 6.1 Besluit Wki (mondeling én schriftelijk, bevestiging binnen 2 werkdagen). Termijnen rekenen met `src/lib/werkdagen.ts`.
 - Redirects alleen in `public/_redirects` (getest door `tests/unit/redirects.test.ts`).
 - OG-beelden worden na de build gemaakt door `scripts/og.mjs` uit de H1 van elke pagina. Een pagina zonder H1 krijgt geen beeld en laat `check:seo` falen.
-- Klachten-e-mail: `site.klachtenEmail`.
+- Knoppen: een `.btn` zonder `.btn-dot` krijgt automatisch aan beide kanten 24px (global.css). Controle op scheve knoppen: `CHROME_PATH=/usr/bin/google-chrome npx tsx scripts/dev/uitlijning.mjs` (preview op 4399).
+- Telefoon: `site.phone` (085 212 73 88), `site.phoneHref`, en voor JSON-LD `site.phoneIntl`. Klachten-e-mail: `site.klachtenEmail`.

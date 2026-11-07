@@ -11,8 +11,7 @@ import { ONDERWERPEN } from "../lib/intake"
 import { PAKKETTEN } from "../lib/pakketten"
 
 const title = "Contact opnemen | Bel, app of mail GeldGarant"
-const description =
-    "Vraag over incasso, debiteurenbeheer of een lopend dossier? Bel 085 212 79 14, stuur een WhatsApp of mail. Op werkdagen direct een specialist aan de lijn."
+const description = `Vraag over incasso, debiteurenbeheer of een lopend dossier? Bel ${site.phone}, stuur een WhatsApp of mail. Op werkdagen direct een specialist aan de lijn.`
 
 const kanalen = [
     { icon: "phone", titel: "Bellen", waarde: site.phone, sub: "Werkdagen\u00a09.00\u00a0tot\u00a017.00", href: site.phoneHref },
@@ -38,7 +37,7 @@ const jsonLd = [
         "@type": "LocalBusiness",
         name: "GeldGarant",
         url: "https://geldgarant.com",
-        telephone: "+31852127914",
+        telephone: site.phoneIntl,
         email: site.email,
         address: {
             "@type": "PostalAddress",
@@ -224,9 +223,9 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
                             </span>
                         </button>
                         <p class="form-noot">
-                            We gebruiken uw gegevens alleen om uw vraag te beantwoorden. Lees ons{" "}
+                            We gebruiken uw gegevens alleen om uw vraag te beantwoorden. Lees onze{" "}
                             <a class="textlink" href="/juridisch/privacy-beleid">
-                                privacybeleid
+                                privacyverklaring
                             </a>
                             .
                         </p>

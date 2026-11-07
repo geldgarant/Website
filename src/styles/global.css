@@ -300,7 +300,9 @@ p {
 .btn:hover .btn-dot {
     transform: translateX(3px);
 }
-.btn-plain {
+/* Zonder pijlbol: aan beide kanten evenveel ruimte, zodat de tekst echt in het midden staat */
+.btn-plain,
+.btn:not(:has(.btn-dot)) {
     padding-right: 24px;
 }
 .btn-dark {

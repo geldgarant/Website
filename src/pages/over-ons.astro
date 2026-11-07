@@ -114,7 +114,7 @@ const jsonLd = [
         "@type": "ProfessionalService",
         name: "GeldGarant",
         url: "https://geldgarant.com",
-        telephone: "+31852127914",
+        telephone: site.phoneIntl,
         email: site.email,
         areaServed: "NL",
         ...(site.kvk ? { identifier: { "@type": "PropertyValue", propertyID: "KvK", value: site.kvk } } : {}),

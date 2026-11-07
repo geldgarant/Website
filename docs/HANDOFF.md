@@ -1,4 +1,4 @@
-# GeldGarant website: overdracht (7 nov 2026, na fase D: klachtenregeling, juridisch, redirects en OG-beelden)
+# GeldGarant website: overdracht (7 nov 2026, na nieuwe AV, privacy- en cookieverklaring en nieuw telefoonnummer)
 
 Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document beschrijft waar het project staat, hoe alles werkt en wat de volgende sessie moet doen.
 
@@ -6,12 +6,12 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 1. Koppel de repo (`add_repo` geldgarant/Website, push), kloon naar `/home/claude/geldgarant-site`, `npm ci`.
 2. Lees `CLAUDE.md`, dit bestand en `docs/SITEMAP.md`.
-3. Fase D is gebouwd (7 nov, zie §6 punt 16). Volgende stappen, in overleg met Anas:
-    - Feedback van Anas verwerken op /klachtenregelement, /juridisch en de juridische pagina's.
-    - Nieuwe AV, privacy- en cookieverklaring: Anas maakt ze opnieuw (besluit 7 nov). Dan alleen de pdf's in `public/juridisch/` vervangen en `src/data/juridisch.ts` bijwerken (zie het commentaar daar). Pas de AV-versie aan bij de nieuwe tarieven (geen succesfee).
+3. Stand 7 nov (nacht): fase D af, plus nieuwe juridische documenten en het nieuwe nummer (zie §6 punt 17). Volgende stappen, in overleg met Anas:
+    - Feedback van Anas verwerken op de nieuwe AV, privacy- en cookieverklaring. Laat ze bij voorkeur ook door een jurist nalezen.
+    - Controleren bij Anas: wat er in de Telegram-melding van de intake-worker staat (zo min mogelijk persoonsgegevens), en of de verwerkersovereenkomsten met Cloudflare, Resend, Telegram en CaseControl er zijn (de privacyverklaring noemt ze).
+    - WhatsApp: `site.whatsappHref` wijst nu naar het nieuwe nummer; Anas moet WhatsApp Business op 085 212 73 88 zetten.
     - `/brief-ontvangen` zodra de CaseControl-betaallink bekend is; dan de 302 in `public/_redirects` weghalen.
-    - Livegang voorbereiden (`shipping-and-launch`): domein koppelen alleen samen met Anas. Controleer na de DNS-switch de redirects op productie (`curl -sI https://geldgarant.com/faq`).
-    - Werkomgeving: Framer-connector is nu nodig voor research; als de shell andere sites niet bereikt, zie §2.
+    - Livegang voorbereiden (`shipping-and-launch`): domein koppelen alleen samen met Anas.
 4. Werkwijze per pagina: §6. Verifiëren: `CHROME_PATH=/usr/bin/google-chrome npm run qa` (± 8 min, draai in de achtergrond en poll), daarna `npm run lhci` (± 40 min voor 54 pagina's, achtergrond). Preview vóór qa altijd stoppen (`pkill -f "astro preview"`), anders botst poort 4399.
 5. Push: `git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main`; Workers-check: `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`.
 
@@ -218,6 +218,14 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
     - **Redirects:** `public/_redirects` (Workers static assets). Alle Framer-URL's en CMS-slugs bestaan 1-op-1; alleen `/faq` (noindex) verdwijnt → `/#veelgestelde-vragen` (nieuwe `sectionId` op de home-FAQ). `/brief-ontvangen` → 302 naar `/hulp-nodig-bij-geldproblemen#brief` (stond in header en footer en gaf een 404). Plus varianten (/privacy, /cookies, /klachtenregeling, /contact, /vacatures, ...). `tests/unit/redirects.test.ts` controleert dat elk doel bestaat en geen bron een pagina is. Lokaal (astro preview) werken de redirects niet; controleer op staging met `curl -sI`.
     - **OG-beelden:** `scripts/og.mjs` draait na `astro build` (`npm run build`) en maakt per pagina `dist/og/<pad>.png` uit de echte H1 (accentwoord in Newsreader cursief), met satori (tekst als paden) en sharp. ± 9 s voor 64 pagina's. `Base.astro` zet `og:image`, `og:image:alt` en `twitter:image` per pagina; `check:seo` faalt als het beeld ontbreekt. Fonts voor satori: `@fontsource/newsreader` en `@fontsource/inter` (devDependencies, want satori leest geen woff2).
     - Pas na akkoord van Anas: het domein koppelen.
+17. ~~**Nieuwe juridische documenten en telefoonnummer**~~ (7 nov 2026, nacht, op verzoek van Anas):
+    - **AV, privacy, cookies opnieuw geschreven** in gewone taal (wij/u), als HTML-pagina's: `src/content/juridisch/*.md`, template `src/pages/juridisch/[slug].astro` (hero met pdf-preview, "In het kort" in navy, volledige tekst met meelopende inhoudsopgave en mobiele uitklapper, artikel- en lidankers, andere documenten, vraagkaart). Tabellen met 3+ kolommen worden op mobiel kaarten (`data-label`). Printopmaak in dezelfde template; `scripts/juridisch-pdf.mjs` maakt daaruit de pdf's (A4, kop met logo en bedrijfsgegevens, voet met paginanummers), de previews en `src/data/juridisch-pdf.ts`.
+    - **Inhoud AV** sluit aan op de site: no cure no pay, volledig betaald € 0, deels = incassokosten (min. € 45, nooit meer dan ontvangen, rest incl. rente naar de opdrachtgever), niets binnen € 0, directe betaling aan opdrachtgever = afrekening alsof via ons, intrekken 10% / min. € 95, geen succesfee (ook geen herincassoprovisie), procedure alleen met schriftelijk akkoord en kosten vooraf, derdengelden met wekelijkse afdracht, faillissement € 115 excl. btw alleen op verzoek, debiteurenbeheer maandelijks opzegbaar zonder opstartkosten, klachten zoals de klachtenregeling, rechtbank Overijssel. Geen rechtsvorm, geen bedragen van de verzekering (alleen "wat de verzekering uitkeert", anders max. € 2.500). Eigen facturen: wettelijke handelsrente (was 2% per maand).
+    - **Privacy** beschrijft de echte verwerkingen: formulieren via de eigen worker (Cloudflare), e-mail via Resend, interne melding via Telegram, CaseControl, PDOK-adreszoeker, Turnstile, sessionStorage; bewaartermijnen (dossiers 2 jaar, financieel 7 jaar, contact 1 jaar, klachten 2 jaar, sollicitaties 4 weken of 1 jaar met toestemming); rechten binnen een maand, geen kopie ID nodig.
+    - **Cookies**: de site gebruikt geen analytische of marketingcookies; alleen Turnstile, een mogelijk beveiligingscookie van Cloudflare en de sessionStorage van het indienformulier. Daarom geen cookiebanner.
+    - **Afgestemd op de site:** FAQ deelbetaling ("nooit meer dan er binnenkwam"), /hoe-werkt-het "Betaalt aan u", /tarieven linkt naar `#artikel-6`, overal "privacyverklaring" (was "privacybeleid"), `wik.ts`-commentaar met de nieuwe artikelnummers.
+    - **Telefoonnummer** 085 212 73 88 overal via `site.ts` (`phone`, `phoneHref`, `phoneIntl` voor JSON-LD, `whatsappHref`); hardcoded nummers in JSON-LD en in de description van /contact-opnemen vervangen.
+    - **Onevenheden:** `.btn` zonder pijlbol had rechts 8px en links 24px; nu centraal symmetrisch. Script `scripts/dev/uitlijning.mjs` controleert alle pagina's op 390/768/1440 px (alleen de bewuste uitlijning van de procestabs op de home blijft over).
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 

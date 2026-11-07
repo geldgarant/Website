@@ -44,7 +44,7 @@ test.describe("homepage interacties", () => {
     test("telefoonlinks wijzen naar het juiste nummer", async ({ page }) => {
         await page.goto("/")
         const hrefs = await page.$$eval('a[href^="tel:"]', (as) => [...new Set(as.map((a) => a.getAttribute("href")))])
-        expect(hrefs).toEqual(["tel:+31852127914"])
+        expect(hrefs).toEqual(["tel:+31852127388"])
     })
 
     test("voorbeelddossier: stappen zijn met muis en pijltjestoetsen te kiezen", async ({ page }) => {
@@ -259,17 +259,36 @@ test.describe("klachtenregeling", () => {
 })
 
 test.describe("juridische documenten", () => {
-    test("elke documentpagina linkt naar een bestaande pdf, ook per pagina", async ({ page, request }) => {
+    test("elk document heeft de volledige tekst, werkende ankers en een bestaande pdf", async ({ page, request }) => {
         for (const slug of ["algemene-voorwaarden", "privacy-beleid", "cookie-beleid"]) {
             await page.goto(`/juridisch/${slug}`)
-            const pdf = await page.getByRole("link", { name: /Pdf openen/ }).getAttribute("href")
-            expect(pdf).toMatch(/^\/juridisch\/[a-z-]+\.pdf$/)
+            // elke link in de inhoudsopgave wijst naar een kop die bestaat
+            const doelen = await page
+                .locator("#tekst nav.toc a, #tekst .toc-mob a")
+                .evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).hash.slice(1)))
+            expect(doelen.length).toBeGreaterThan(5)
+            for (const id of doelen) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1)
+            // geen niet-ingevulde plaatshouders
+            expect(await page.locator("article.juridisch").innerText()).not.toMatch(/\{\{|\}\}/)
+            const pdf = await page.locator("a[download]").first().getAttribute("href")
             const res = await request.get(pdf!)
             expect(res.ok()).toBe(true)
             expect(res.headers()["content-type"]).toContain("pdf")
-            const toc = page.locator(".toc a")
-            expect(await toc.count()).toBeGreaterThan(5)
-            await expect(toc.first()).toHaveAttribute("href", /\.pdf#page=\d+$/)
         }
+    })
+
+    test("de AV volgen de staffel en de tarieven van de site", async ({ page }) => {
+        await page.goto("/juridisch/algemene-voorwaarden")
+        const tekst = await page.locator("article.juridisch").innerText()
+        expect(tekst).toContain("15%")
+        expect(tekst).toMatch(/minimum van €\s?40/)
+        expect(tekst).toMatch(/maximum van €\s?6\.775/)
+        expect(tekst).toMatch(/minimum van €\s?45/)
+        expect(tekst).toMatch(/€\s?115 exclusief btw/)
+        expect(tekst).not.toMatch(/eenmanszaak|B\.V\./)
+        await expect(page.locator("#artikel-6")).toHaveCount(1)
+        await expect(page.locator("#lid-6-4")).toHaveCount(1)
+        await page.goto("/tarieven")
+        await expect(page.locator('a[href="/juridisch/algemene-voorwaarden#artikel-6"]')).toHaveCount(1)
     })
 })

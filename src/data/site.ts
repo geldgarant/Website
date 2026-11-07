@@ -1,9 +1,10 @@
 // Alle bedrijfsgegevens op één plek. Nieuw telefoonnummer? Alleen hier aanpassen.
 export const site = {
     name: "GeldGarant",
-    phone: "085\u00a0212\u00a079\u00a014", // vaste spaties: nummer breekt nooit af
-    phoneHref: "tel:+31852127914",
-    whatsappHref: "https://wa.me/31852127914",
+    phone: "085\u00a0212\u00a073\u00a088", // vaste spaties: nummer breekt nooit af
+    phoneHref: "tel:+31852127388",
+    phoneIntl: "+31852127388", // voor JSON-LD
+    whatsappHref: "https://wa.me/31852127388",
     email: "info@geldgarant.com",
     klachtenEmail: "klachten@geldgarant.com",
     street: "Keulenstraat 1",
