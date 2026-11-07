@@ -79,3 +79,9 @@ hypotheses gescheiden.
 
 - Voorbeeldbrieven met invulhulp trekken zoekverkeer van ondernemers in de fase vóór incasso en leveren links op.
 - Bedrijfsprofiel + Trustoo-vermelding verbeteren zichtbaarheid op "incassobureau Deventer".
+
+### E6. Productiecrawl na batch 2 (7 nov 2026, ±23:20)
+
+- 70 URL's (64 + 6 voorbeeldbrieven), alle 200, canonicals correct, geen noindex, één H1, geen titels > 65, alle
+  pagina's met JSON-LD. Enige nieuwe afwijking: description `/voorbeeldbrieven` 174 tekens (ingekort in batch 2b).
+  Ongewijzigd: dunne functionele pagina's en 6 zwak gelinkte pagina's (zie E1). CSV: `docs/seo/crawl-2026-11-07.csv`.

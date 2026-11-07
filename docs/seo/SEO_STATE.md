@@ -1,15 +1,15 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-07 23:00 (Europe/Amsterdam)
+last_updated: 2026-11-07 23:30 (Europe/Amsterdam)
 current_branch: main
 latest_commit: zie `git log -1` (batch 2: voorbeeldbrieven + quick wins)
 current_phase: 3/5 afgerond voor deze batch; volgende 5 (interne links) en 2 (keyword-url-map)
 current_task: geen lopende wijziging
 status: batch 2 gepusht naar main (= productie via Workers Builds)
-next_action: 1) Controleer productie: `NODE_USE_ENV_PROXY=1 node scripts/seo/crawl.mjs` (verwacht 70 URL's, geen titels > 65, /vordering-indienen met JSON-LD) en open /voorbeeldbrieven/sommatie live. 2) Vraag/controleer gebruikersacties hieronder (TXT, Always Use HTTPS, Web Analytics). 3) Taak 6 uit het masterplan: interne links naar /incasso/incassobureau-inschakelen, /hulp-nodig-bij-geldproblemen en de 4 zwak gelinkte kennisbankartikelen (vanuit /incasso, branches, verwante artikelen), plus links naar /voorbeeldbrieven vanaf /incasso en /kennisbank. 4) docs/seo/keyword-url-map.csv maken (fase 2).
+next_action: 1) Productiecrawl na batch 2b: alleen nog dunne functionele pagina's en zwakke inlinks verwacht. 2) Vraag/controleer gebruikersacties hieronder (TXT, Always Use HTTPS, Web Analytics). 3) Taak 6 uit het masterplan: interne links naar /incasso/incassobureau-inschakelen, /hulp-nodig-bij-geldproblemen en de 4 zwak gelinkte kennisbankartikelen (vanuit /incasso, branches, verwante artikelen), plus links naar /voorbeeldbrieven vanaf /incasso en /kennisbank. 4) docs/seo/keyword-url-map.csv maken (fase 2).
 blocked_by: Search Console (TXT-record door gebruiker), Always Use HTTPS (gebruiker), Web Analytics (gebruiker of token)
-production_state: geldgarant.com live; batch 2 gepusht 7 nov ±23:00
+production_state: batch 2 live en gecontroleerd (crawl 70 URL's: alle 200, canonicals goed, geen lange titels, JSON-LD overal); hub-description ingekort in batch 2b
 preview_url: https://website.geldgarant.workers.dev (staging, zelfde Worker)
 ```
 
