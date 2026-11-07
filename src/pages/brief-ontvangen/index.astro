@@ -30,16 +30,18 @@ const url = "https://geldgarant.com/brief-ontvangen"
 const vb = {
     dossier: site.dossierVoorbeeld,
     opdrachtgever: "Installatiebedrijf Voorbeeld",
+    debiteur: ["Bouwbedrijf Voorbeeld", "T.a.v. de directie", "Voorbeeldweg 12", "1234 AB\u00a0\u00a0VOORBEELDSTAD"],
     factuur: "2026-118",
     factuurDatum: "2 oktober 2026",
     hoofdsom: 840,
     renteVan: "2026-10-16",
     renteTot: "2026-11-06",
     briefDatum: "6 november 2026",
-    uiterlijk: "20 november 2026",
+    uiterlijk: "17 november 2026",
 }
+// Zelfde opbouw als de echte aanmaning (brieven/aanmaning-1-b2b.html): zakelijke debiteur, dus wettelijke handelsrente.
 const vbKosten = wikKosten(vb.hoofdsom)
-const vbRente = wettelijkeRente(vb.hoofdsom, "consument", vb.renteVan, vb.renteTot).rente
+const vbRente = wettelijkeRente(vb.hoofdsom, "handel", vb.renteVan, vb.renteTot).rente
 const vbTotaal = Math.round((vb.hoofdsom + vbKosten + vbRente) * 100) / 100
 
 const uitleg = [
@@ -61,7 +63,7 @@ const uitleg = [
     },
     {
         kop: "Hoe u betaalt",
-        tekst: "Online met uw dossiernummer, of door over te maken met uw dossiernummer als betalingskenmerk.",
+        tekst: "Online met iDEAL via de QR-code of geldgarant.com/betalen, of door over te maken met uw dossiernummer als kenmerk.",
     },
     {
         kop: "Hoe u ons bereikt",
@@ -189,7 +191,7 @@ const jsonLd = [
                             <h2 class="betaal-titel" id="betaal-titel" tabindex="-1">
                                 Direct betalen
                             </h2>
-                            <p class="betaal-sub">Met het dossiernummer uit onze brief of e-mail</p>
+                            <p class="betaal-sub">Met {site.betaalMethode}, in de vertrouwde omgeving van uw eigen bank</p>
                         </div>
                     </div>
 
@@ -211,59 +213,73 @@ const jsonLd = [
                             autocomplete="off"
                             placeholder="0,00"
                             maxlength={14}
+                            prefix="€"
                         />
                         <p class="melding" role="alert" data-betaal-melding hidden></p>
                         <button type="submit" class="btn betaal-knop" data-betaal-knop>
-                            <span data-betaal-tekst>Nu betalen</span>
+                            <span data-betaal-tekst>Betalen met {site.betaalMethode}</span>
                             <span class="btn-dot">
                                 <Icon name="arrow" size={18} />
                             </span>
                         </button>
+                        <p class="sr-only" role="status" data-betaal-status></p>
                     </form>
 
-                    <div class="portaal" data-portaal hidden>
-                        <p class="portaal-kop" tabindex="-1" data-portaal-kop>
-                            Nog één stap
+                    <ol role="list" class="betaal-stappen" aria-label="Zo werkt direct betalen">
+                        <li>
+                            <span class="betaal-nr" aria-hidden="true">
+                                1
+                            </span>
+                            Vul uw dossiernummer en het bedrag in
+                        </li>
+                        <li>
+                            <span class="betaal-nr" aria-hidden="true">
+                                2
+                            </span>
+                            Betaal met {site.betaalMethode} in uw eigen bank-app
+                        </li>
+                        <li>
+                            <span class="betaal-nr" aria-hidden="true">
+                                3
+                            </span>
+                            Wij boeken de betaling automatisch op uw dossier
+                        </li>
+                    </ol>
+
+                    <div class="betaal-alt" data-betaal-alt hidden>
+                        <p class="betaal-alt-kop" tabindex="-1" data-betaal-alt-kop>
+                            Online betalen lukt op dit moment niet
                         </p>
-                        <p class="portaal-tekst">
-                            U gaat naar ons beveiligde betaalportaal. Kies daar <strong>Maak een betaling</strong> en vul dit in:
+                        <p class="betaal-alt-tekst">
+                            Probeer het over een paar minuten opnieuw. U kunt het bedrag ook nu overmaken, met deze gegevens:
                         </p>
-                        <dl class="portaal-gegevens">
+                        <dl class="betaal-alt-gegevens">
                             <div>
-                                <dt>Dossiernummer</dt>
-                                <dd>
-                                    <span class="num" data-portaal-waarde="dossier"></span>
-                                    <button type="button" class="kopieer" data-kopieer="dossier">
-                                        Kopieer<span class="sr-only"> dossiernummer</span>
-                                    </button>
-                                </dd>
+                                <dt>IBAN</dt>
+                                <dd class="num">{iban}</dd>
+                            </div>
+                            <div>
+                                <dt>Ten name van</dt>
+                                <dd>{ibanNaam}</dd>
+                            </div>
+                            <div>
+                                <dt>Kenmerk</dt>
+                                <dd class="num" data-alt-waarde="dossier"></dd>
                             </div>
                             <div>
                                 <dt>Bedrag</dt>
-                                <dd>
-                                    <span class="num" data-portaal-waarde="bedrag"></span>
-                                    <button type="button" class="kopieer" data-kopieer="bedrag">
-                                        Kopieer<span class="sr-only"> bedrag</span>
-                                    </button>
-                                </dd>
+                                <dd class="num" data-alt-waarde="bedrag"></dd>
                             </div>
                         </dl>
-                        <p class="sr-only" role="status" data-kopieer-status></p>
-                        <a class="btn betaal-knop" href={site.debtorPortalBetalen} rel="noopener" data-portaal-link>
-                            Naar het betaalportaal
-                            <span class="btn-dot">
-                                <Icon name="arrow-up-right" size={18} />
-                            </span>
-                        </a>
-                        <button type="button" class="terug" data-terug>
-                            Gegevens aanpassen
+                        <button type="button" class="btn btn-dark betaal-knop" data-opnieuw>
+                            Opnieuw proberen
                         </button>
                     </div>
 
                     <ul role="list" class="betaal-vertrouwen">
                         <li>
                             <Icon name="shield" size={16} />
-                            Betalen met {site.betaalMethode}
+                            Beveiligd betalen met {site.betaalMethode}
                         </li>
                         <li>
                             <Icon name="check" size={16} />
@@ -337,46 +353,96 @@ const jsonLd = [
                                 {site.street}
                                 <br />
                                 {`${site.postcode} ${site.city}`}
+                                <br />
+                                {site.phone}
                             </p>
                         </div>
-                        <dl class="brief-meta">
+                        <div class="brief-kop">
+                            <p class="brief-adres">
+                                <span class="brief-retour">
+                                    Retour: GeldGarant, {site.street}, {site.city}
+                                </span>
+                                {vb.debiteur.map((r) => (
+                                    <>
+                                        {r}
+                                        <br />
+                                    </>
+                                ))}
+                            </p>
+                            <dl class="brief-meta">
+                                <div>
+                                    <dt>Datum</dt>
+                                    <dd>{vb.briefDatum}</dd>
+                                </div>
+                                <div>
+                                    <dt>Dossiernummer</dt>
+                                    <dd class="num">
+                                        {vb.dossier}
+                                        <span class="m" aria-hidden="true">
+                                            1
+                                        </span>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt>Namens</dt>
+                                    <dd>
+                                        {vb.opdrachtgever}
+                                        <span class="m" aria-hidden="true">
+                                            2
+                                        </span>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt>Betalen uiterlijk</dt>
+                                    <dd>
+                                        {vb.uiterlijk}
+                                        <span class="m" aria-hidden="true">
+                                            4
+                                        </span>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div>
+                            <p class="brief-eyebrow">Aanmaning</p>
+                            <p class="brief-titel">Uw betaling aan {vb.opdrachtgever} staat nog open</p>
+                        </div>
+                        <p>Geachte directie,</p>
+                        <p>
+                            {vb.opdrachtgever} heeft GeldGarant gevraagd de betaling van de factuur hieronder te regelen. De
+                            betaaltermijn is verstreken en wij hebben nog geen betaling ontvangen.
+                        </p>
+                        <dl class="brief-band">
                             <div>
-                                <dt>
-                                    Dossiernummer
+                                <dt>Totaal te betalen</dt>
+                                <dd class="num">
+                                    {euro(vbTotaal)}
                                     <span class="m" aria-hidden="true">
-                                        1
+                                        3
                                     </span>
-                                </dt>
+                                </dd>
+                            </div>
+                            <div>
+                                <dt>Uiterlijk op</dt>
+                                <dd>{vb.uiterlijk}</dd>
+                            </div>
+                            <div>
+                                <dt>Betalingskenmerk</dt>
                                 <dd class="num">{vb.dossier}</dd>
                             </div>
-                            <div>
-                                <dt>
-                                    Namens
-                                    <span class="m" aria-hidden="true">
-                                        2
-                                    </span>
-                                </dt>
-                                <dd>{vb.opdrachtgever}</dd>
-                            </div>
-                            <div>
-                                <dt>Datum</dt>
-                                <dd>{vb.briefDatum}</dd>
-                            </div>
                         </dl>
-                        <p>Geachte heer De Vries,</p>
-                        <p>
-                            Factuur {vb.factuur} van {vb.factuurDatum} is nog niet betaald. {vb.opdrachtgever} heeft ons gevraagd
-                            dit bedrag te innen. Hieronder ziet u waaruit het bestaat.
-                        </p>
+                        <p class="brief-h">Specificatie</p>
                         <table class="spec">
                             <caption class="sr-only">Specificatie van het voorbeeldbedrag</caption>
                             <tbody>
                                 <tr>
-                                    <th scope="row">Hoofdsom (factuur {vb.factuur})</th>
+                                    <th scope="row">
+                                        Factuur {vb.factuur} van {vb.factuurDatum}
+                                    </th>
                                     <td class="num">{euro(vb.hoofdsom)}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Wettelijke rente tot {vb.briefDatum}</th>
+                                    <th scope="row">Wettelijke handelsrente tot en met {vb.briefDatum}</th>
                                     <td class="num">{euro(vbRente)}</td>
                                 </tr>
                                 <tr>
@@ -384,40 +450,51 @@ const jsonLd = [
                                     <td class="num">{euro(vbKosten)}</td>
                                 </tr>
                                 <tr class="spec-totaal">
-                                    <th scope="row">
-                                        Totaal te betalen
-                                        <span class="m" aria-hidden="true">
-                                            3
-                                        </span>
-                                    </th>
+                                    <th scope="row">Totaal te betalen</th>
                                     <td class="num">{euro(vbTotaal)}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>
-                            Wij vragen u dit bedrag uiterlijk <mark>{vb.uiterlijk}</mark>
-                            <span class="m" aria-hidden="true">
-                                4
-                            </span>{" "}
-                            te betalen. Dat kan online op geldgarant.com/brief-ontvangen, of door over te maken met uw
-                            dossiernummer als kenmerk
+                        <p class="brief-h">
+                            Zo betaalt u
                             <span class="m" aria-hidden="true">
                                 5
                             </span>
-                            .
                         </p>
+                        <div class="brief-betaal">
+                            <div class="brief-betaal-ideal">
+                                <img src="/brief/qr-betalen.png" alt="" width="58" height="58" loading="lazy" />
+                                <p>
+                                    <strong>Online met {site.betaalMethode}</strong>
+                                    <br />
+                                    geldgarant.com/betalen
+                                </p>
+                            </div>
+                            <p>
+                                <strong>Overmaken</strong>
+                                <br />
+                                <span class="num">{iban}</span>
+                                <br />
+                                Kenmerk <span class="num">{vb.dossier}</span>
+                            </p>
+                        </div>
                         <p>
-                            Kunt u niet in één keer betalen, of bent u het er niet mee eens? Neem dan contact met ons op
+                            Kunt u niet in één keer betalen, of bent u het er niet mee eens? Neem dan vóór {vb.uiterlijk} contact
+                            met ons op
                             <span class="m" aria-hidden="true">
                                 6
                             </span>
                             . Wij denken graag met u mee.
                         </p>
-                        <p class="brief-groet">Met vriendelijke groet, GeldGarant</p>
+                        <p class="brief-groet">
+                            Met vriendelijke groet,
+                            <br />
+                            <strong>GeldGarant</strong>, afdeling incasso
+                        </p>
                     </div>
                     <figcaption>
-                        Voorbeeld met verzonnen namen. De bedragen zijn een rekenvoorbeeld bij een hoofdsom van{" "}
-                        {euro(vb.hoofdsom)}. Uw eigen brief kan er iets anders uitzien.
+                        Zo ziet onze aanmaning eruit, met verzonnen namen en een rekenvoorbeeld bij een hoofdsom van{" "}
+                        {euro(vb.hoofdsom)}. In uw eigen brief staan uw gegevens en uw bedragen, op dezelfde plek.
                     </figcaption>
                 </figure>
 
@@ -1085,76 +1162,94 @@ const jsonLd = [
     .betaal-vertrouwen :global(svg) {
         color: var(--green);
     }
-    .portaal-kop {
+    .betaal-knop .btn-dot {
+        transition: transform 0.2s ease;
+    }
+    .betaal-knop[aria-busy="true"] .btn-dot :global(svg) {
+        display: none;
+    }
+    .betaal-knop[aria-busy="true"] .btn-dot::after {
+        content: "";
+        width: 16px;
+        height: 16px;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: draai 0.8s linear infinite;
+    }
+    @keyframes draai {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .betaal-knop[aria-busy="true"] .btn-dot::after {
+            animation-duration: 2.4s;
+        }
+    }
+    .betaal-stappen {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+        font-size: var(--fs-xs);
+        line-height: 1.45;
+        color: var(--text);
+    }
+    .betaal-stappen li {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+    }
+    .betaal-nr {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+    .betaal-alt-kop {
         font-family: var(--font-display);
         font-size: 1.25rem;
         font-weight: 600;
         color: var(--ink);
         outline: none;
     }
-    .portaal-tekst {
+    .betaal-alt-tekst {
         margin-top: 6px;
         font-size: var(--fs-sm);
         line-height: 1.6;
         color: var(--text);
     }
-    .portaal-gegevens {
-        display: grid;
-        gap: 8px;
-        margin: 16px 0 18px;
-    }
-    .portaal-gegevens > div {
+    .betaal-alt-gegevens {
         display: grid;
         gap: 2px;
-        padding: 10px 10px 10px 16px;
+        margin: 14px 0 18px;
+        padding: 6px 16px;
         border-radius: var(--r-md);
         background: var(--surface);
     }
-    .portaal-gegevens dt {
-        font-size: var(--fs-xs);
-        color: var(--muted);
-    }
-    .portaal-gegevens dd {
+    .betaal-alt-gegevens > div {
         display: flex;
-        align-items: center;
         justify-content: space-between;
         gap: 12px;
-        font-size: 1.0625rem;
-        font-weight: 600;
-        color: var(--ink);
-    }
-    .kopieer {
-        min-height: 44px;
-        padding: 0 14px;
-        border: 1px solid var(--line);
-        border-radius: var(--r-pill);
-        background: #fff;
-        font: inherit;
-        font-size: var(--fs-xs);
-        font-weight: 600;
-        color: var(--ink);
-        cursor: pointer;
-    }
-    .kopieer:focus-visible,
-    .terug:focus-visible {
-        outline: 2.5px solid var(--blue);
-        outline-offset: 2px;
-    }
-    .terug {
-        display: block;
-        min-height: 44px;
-        margin: 8px auto 0;
-        padding: 0 12px;
-        border: 0;
-        background: none;
-        font: inherit;
+        padding: 8px 0;
         font-size: var(--fs-sm);
+    }
+    .betaal-alt-gegevens > div + div {
+        border-top: 1px solid var(--line);
+    }
+    .betaal-alt-gegevens dt {
+        color: var(--muted);
+    }
+    .betaal-alt-gegevens dd {
         font-weight: 600;
         color: var(--ink);
-        text-decoration: underline;
-        text-decoration-color: var(--blue);
-        text-underline-offset: 3px;
-        cursor: pointer;
+        text-align: right;
     }
 
     .kop {
@@ -1231,21 +1326,116 @@ const jsonLd = [
         color: var(--muted);
         text-align: right;
     }
+    .brief-kop {
+        display: grid;
+        gap: 14px;
+    }
+    @media (min-width: 640px) {
+        .brief-kop {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+            gap: 24px;
+            align-items: start;
+        }
+    }
+    .brief-adres {
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+    }
+    .brief-retour {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.6875rem;
+        color: var(--muted);
+    }
     .brief-meta {
         display: grid;
-        gap: 4px;
-        font-size: var(--fs-sm);
+        font-size: var(--fs-xs);
     }
     .brief-meta > div {
-        display: grid;
-        grid-template-columns: 9.5rem minmax(0, 1fr);
+        display: flex;
+        justify-content: space-between;
         gap: 12px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .brief-meta > div:last-child {
+        border-bottom: 0;
     }
     .brief-meta dt {
         color: var(--muted);
     }
     .brief-meta dd {
         font-weight: 600;
+        text-align: right;
+    }
+    .brief-eyebrow {
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--blue-ink);
+    }
+    .brief-titel {
+        margin-top: 2px;
+        font-family: var(--font-display);
+        font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem);
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+    .brief-band {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+        border-radius: var(--r-sm, 8px);
+        background: var(--ink);
+        color: #fff;
+        overflow: hidden;
+    }
+    .brief-band > div {
+        padding: 10px 14px;
+        box-shadow: -1px 0 0 rgba(255, 255, 255, 0.14);
+    }
+    .brief-band dt {
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #b9c3dc;
+    }
+    .brief-band dd {
+        font-weight: 700;
+        line-height: 1.4;
+    }
+    .brief-band .m {
+        background: #fff;
+        color: var(--blue-ink);
+    }
+    .brief-h {
+        margin-bottom: -6px;
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .brief-betaal {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 10px;
+        font-size: var(--fs-xs);
+        line-height: 1.55;
+    }
+    .brief-betaal > * {
+        padding: 10px 12px;
+        border-radius: var(--r-sm, 8px);
+        background: var(--surface);
+    }
+    .brief-betaal-ideal {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: inset 2px 0 0 var(--blue);
+    }
+    .brief-betaal-ideal img {
+        flex-shrink: 0;
+        width: 58px;
+        height: 58px;
     }
     .spec {
         width: 100%;
@@ -1269,10 +1459,6 @@ const jsonLd = [
     .spec-totaal td {
         border-bottom: 0;
         font-weight: 700;
-    }
-    .brief mark {
-        background: linear-gradient(transparent 55%, #dfe7ff 55%);
-        color: inherit;
     }
     .brief-groet {
         margin-top: 4px;

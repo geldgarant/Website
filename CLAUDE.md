@@ -95,6 +95,7 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 ## /brief-ontvangen (7 nov 2026)
 
 - Debiteurenpagina: `src/pages/brief-ontvangen/index.astro`, logica `src/lib/debiteur.ts` (getest), DOM `src/scripts/brief.ts`. Rustige toon, B1, geen druk; geen StickyCta maar een eigen actiebalk.
-- Direct betalen loopt via CaseControl (dossiernummer + bedrag, minimaal € 5). Koppelplek `site.betaalLinkApi`: leeg = portaalstap (`site.debtorPortalBetalen`), gezet = betaallink via onze worker (`docs/worker-betaallink.md`). IBAN in `site.derdengelden` (nu leeg).
+- Direct betalen: formulier (dossiernummer + bedrag) → `POST /api/betalen` in onze eigen worker (`worker/betalen.ts`, getest in `tests/unit/betalen-worker.test.ts`) → CaseControl `/pay` → direct door naar iDEAL; CaseControl boekt de betaling op het dossier. Mislukt het, dan tonen we de overmaakgegevens (geen omweg via het portaal). `GET /api/betalen` controleert de koppeling. De worker draait alleen voor `/api/*` (`run_worker_first` in `wrangler.jsonc`). Kort adres in brieven: `/betalen` (302 naar de betaalkaart).
+- Brieven voor CaseControl: `brieven/` (README). Bron in `brieven/src`, `python3 brieven/tools/bouw.py` maakt de plakklare versie (alleen inline stijlen, logo/QR als data-URI; CaseControl laadt geen externe afbeeldingen), `brieven/tools/render-cc.php` rendert met dezelfde motor en marges (20 mm). De voorbeeldbrief op /brief-ontvangen volgt `aanmaning-1-b2b.html`.
 - Reacties van debiteuren gaan via `/api/contact` (onderwerp `bestaand_dossier`). Link of QR in brieven: `/brief-ontvangen?dossier=…&bedrag=…`, regeling: `?reden=regeling#regelen`.
 - Niets toezeggen wat niet bevestigd is (betaalmethodes, verwerkingstijd, afzenderadres van e-mails).

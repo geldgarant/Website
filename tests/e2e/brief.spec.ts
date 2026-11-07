@@ -21,43 +21,72 @@ async function mockApi(
 }
 
 test.describe("brief ontvangen", () => {
-    test("betalen: voorinvullen uit de link en stap naar het portaal met de gegevens", async ({ page }) => {
-        await page.goto("/brief-ontvangen?dossier=2026-00412&bedrag=967,93")
-        await expect(page.locator("#b-dossier")).toHaveValue("2026-00412")
-        await expect(page.locator("#b-bedrag")).toHaveValue("967,93")
-        await page.getByRole("button", { name: "Nu betalen" }).click()
-        const portaal = page.locator("[data-portaal]")
-        await expect(portaal).toBeVisible()
-        await expect(portaal.locator('[data-portaal-waarde="dossier"]')).toHaveText("2026-00412")
-        await expect(portaal.locator('[data-portaal-waarde="bedrag"]')).toHaveText(/967,93/)
-        await expect(portaal.getByRole("link", { name: /Naar het betaalportaal/ })).toHaveAttribute(
-            "href",
-            "https://geldgarant.debtorportal.com/sign-in",
+    test("betalen: voorinvullen uit de link en direct door naar iDEAL", async ({ page }) => {
+        const verzoeken: Record<string, unknown>[] = []
+        await page.route("**/api/betalen", async (route) => {
+            verzoeken.push(JSON.parse(route.request().postData() ?? "{}"))
+            await route.fulfill({
+                contentType: "application/json",
+                body: JSON.stringify({ ok: true, url: "https://ideal.test/betaal/abc" }),
+            })
+        })
+        await page.route("https://ideal.test/**", (route) =>
+            route.fulfill({ contentType: "text/html", body: "<title>iDEAL</title>" }),
         )
-        await portaal.getByRole("button", { name: "Gegevens aanpassen" }).click()
+        await page.goto("/brief-ontvangen?dossier=26-1008&bedrag=967,93")
+        await expect(page.locator("#b-dossier")).toHaveValue("26-1008")
+        await expect(page.locator("#b-bedrag")).toHaveValue("967,93")
+        await page.getByRole("button", { name: "Betalen met iDEAL" }).click()
+        await page.waitForURL("https://ideal.test/betaal/abc")
+        expect(verzoeken).toEqual([{ dossiernummer: "26-1008", bedrag: 967.93 }])
+    })
+
+    test("betalen: onbekend dossiernummer en storing worden netjes opgevangen", async ({ page }) => {
+        let antwoord = { status: 404, body: { ok: false, error: "niet-gevonden" } }
+        await page.route("**/api/betalen", (route) =>
+            route.fulfill({ status: antwoord.status, contentType: "application/json", body: JSON.stringify(antwoord.body) }),
+        )
+        await page.goto("/brief-ontvangen?dossier=26-9999&bedrag=50")
+        const knop = page.getByRole("button", { name: "Betalen met iDEAL" })
+        await knop.click()
+        await expect(page.locator("[data-betaal-melding]")).toHaveText(/26-9999 niet/)
         await expect(page.locator("#b-dossier")).toBeFocused()
+
+        antwoord = { status: 502, body: { ok: false, error: "onbereikbaar" } }
+        await knop.click()
+        const alt = page.locator("[data-betaal-alt]")
+        await expect(alt).toBeVisible()
+        await expect(alt).toContainText("NL57 BUNQ 2188 2124 36")
+        await expect(alt.locator('[data-alt-waarde="dossier"]')).toHaveText("26-9999")
+        await alt.getByRole("button", { name: "Opnieuw proberen" }).click()
+        await expect(knop).toBeFocused()
     })
 
     test("betalen: controleert dossiernummer en minimumbedrag", async ({ page }) => {
+        let geroepen = false
+        await page.route("**/api/betalen", (route) => {
+            geroepen = true
+            return route.abort()
+        })
         await page.goto("/brief-ontvangen")
-        await page.getByRole("button", { name: "Nu betalen" }).click()
+        await page.getByRole("button", { name: "Betalen met iDEAL" }).click()
         await expect(page.locator('[data-betaal] [data-fout="dossier"]')).toHaveText(/dossiernummer/)
         await expect(page.locator("#b-dossier")).toBeFocused()
-        await page.fill("#b-dossier", "2026-00412")
+        await page.fill("#b-dossier", "26-1008")
         await page.fill("#b-bedrag", "3")
-        await page.getByRole("button", { name: "Nu betalen" }).click()
+        await page.getByRole("button", { name: "Betalen met iDEAL" }).click()
         await expect(page.locator('[data-betaal] [data-fout="bedrag"]')).toHaveText(/vanaf € 5/)
-        await expect(page.locator("[data-portaal]")).toBeHidden()
+        expect(geroepen).toBe(false)
     })
 
     test("snelkeuze 'Ik heb al betaald' zet het formulier goed en verstuurt naar /api/contact", async ({ page }) => {
         const verzoeken = await mockApi(page)
-        await page.goto("/brief-ontvangen?dossier=2026-00412")
+        await page.goto("/brief-ontvangen?dossier=26-1008")
         await page.locator('.snel a[data-kies-reden="betaald"]').click()
         await expect(page.locator('input[name="reden"][value="betaald"]')).toBeChecked()
         await expect(page.locator("#r-betaaldop")).toBeVisible()
         await expect(page.locator("#r-maand")).toBeHidden()
-        await expect(page.locator("#r-dossier")).toHaveValue("2026-00412")
+        await expect(page.locator("#r-dossier")).toHaveValue("26-1008")
         await page.getByRole("button", { name: "Versturen" }).click()
         await expect(page.locator('[data-reactie] [data-fout="betaald_op"]')).not.toBeEmpty()
         expect(verzoeken).toHaveLength(0)
@@ -75,7 +104,7 @@ test.describe("brief ontvangen", () => {
         expect(headers["x-request-nonce"]).toBe(body.nonce)
         expect(body.onderwerp).toEqual({ key: "bestaand_dossier", label: "Bestaand dossier" })
         const details = body.details as Record<string, string>
-        expect(details.dossiernummer).toBe("2026-00412")
+        expect(details.dossiernummer).toBe("26-1008")
         expect(details.toelichting).toContain("Betaald op: 03-11-2026")
         expect((body.contact as Record<string, string>).bedrijfsnaam).toBe("J. de Vries")
     })

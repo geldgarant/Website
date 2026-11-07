@@ -1,18 +1,43 @@
 # Brieven (CaseControl-templates)
 
-CaseControl maakt brieven met **dompdf** (de oude sommatie meldt "dompdf 3.1.6"). Daarom zijn deze templates gewone HTML
-met CSS die dompdf goed ondersteunt: tabellen, absolute en vaste posities, geen flexbox of grid. Zet in CaseControl
-alleen de inhoud van het bestand in de template editor: geen DOCTYPE, `html`, `head` of `body`.
+CaseControl maakt brieven met **dompdf 3.1** (gemeten in hun PDF van 7 nov 2026): A4, **marges 20 mm rondom**,
+standaardlettertype Roboto, **externe afbeeldingen laden niet** (de QR-code van api.qrserver.com in de oude sommatie bleef
+leeg). De editor bewaart alleen inline stijlen, dus geen `<style>`-blok, geen klassen, geen flexbox of grid.
 
-| Bestand                                | Wat                                                               |
-| -------------------------------------- | ----------------------------------------------------------------- |
-| `sommatie-b2b.html`                    | GG \| BRIEF \| B2B \| Sommatie aangetekend (versie 2, 7 nov 2026) |
-| `voorbeeld/sommatie-b2b.json`          | Voorbeelddata (dossier 26-1008) voor de voorbeeld-PDF             |
-| `voorbeeld/sommatie-b2b-voorbeeld.pdf` | Zo ziet de brief eruit in dompdf                                  |
-| `tools/render.php`                     | Maakt de voorbeeld-PDF met dezelfde motor als CaseControl         |
+## Aanmaning 1 (B2B), versie 1, 7 nov 2026
 
-Lettertypes en logo staan op de site: `public/brief/` (Inter, Poppins als TTF; `logo.png`). In het template heet die
-map `[[ASSETS]]`: tot de livegang `https://website.geldgarant.workers.dev/brief`, daarna `https://geldgarant.com/brief`.
+| Bestand                                   | Wat                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| `aanmaning-1-b2b.html`                    | **Plakklaar** voor CaseControl: GG \| BRIEF \| B2B \| Aanmaning 1        |
+| `src/aanmaning-1-b2b.html`                | Leesbare bron (stijlen als `%%naam%%`, afbeeldingen als `[[LOGO_DATA]]`) |
+| `tools/bouw.py`                           | Bouwt de plakklare versie: stijlen inline, logo en QR als data-URI       |
+| `tools/render-cc.php`                     | Voorbeeld-PDF met dezelfde motor en marges als CaseControl               |
+| `voorbeeld/aanmaning-1-b2b.json`          | Voorbeeldwaarden per CaseControl-variabele (dossier 26-1008)             |
+| `voorbeeld/aanmaning-1-b2b-voorbeeld.pdf` | Resultaat                                                                |
+| `assets/logo-brief.png`, `qr-betalen.png` | Logo (900 px, 16 kleuren) en QR-code naar https://geldgarant.com/betalen |
+
+Werkwijze: bron aanpassen → `python3 brieven/tools/bouw.py` →
+`DOMPDF_LIB=/pad/lib php brieven/tools/render-cc.php brieven/aanmaning-1-b2b.html brieven/voorbeeld/aanmaning-1-b2b.json uit.pdf`
+→ PDF bekijken → de hele inhoud van `aanmaning-1-b2b.html` in de CaseControl-editor plakken (codeweergave).
+
+Variabelen (uit de lijst van CaseControl en de oude sommatie): `debtor.name`, `debtor.correspondence_attention_of_merged`,
+`debtor.street`, `debtor.house_no`, `debtor.house_no_suffix`, `debtor.zipcode`, `debtor.city`,
+`debtor.correspondence_salutation_merged`, `creditor.name`, `case.case_number`, `case.total_amount_due`, `case.interest`,
+`case.penalty_amount_incl_vat`, `misc.case_original_claims`, `misc.today`, `misc.today_plus_7_business_days`,
+`org_visiting_address.*`, `org_communication.telephone`, `org_communication.email`,
+`org_registration.chamber_of_commerce_number`, `org_registration.business_license_number`, `org_escrow_bank_account.*`.
+
+Let op bij gebruik:
+
+- **Telefoonnummer in CaseControl bijwerken** (Organisatie → communicatie): de oude PDF toont nog 085 083 5230.
+- Rentepercentage staat vast in de tekst (10,40% sinds 1 juli 2026): bijwerken per 1 januari en 1 juli.
+- Betaaltermijn: 7 werkdagen (`misc.today_plus_7_business_days`). Langer: `misc.today_plus_14_business_days`.
+- Postcode komt uit CaseControl zoals ingevoerd (vaak zonder spatie); de plaats staat via de opmaak in hoofdletters.
+- Alleen voor debiteuren in Nederland (geen landregel). Voor particulieren is een aparte 14-dagenbrief nodig.
+
+## Sommatie (versie 2, eerdere opzet)
+
+De sommatie hieronder gebruikt nog `[[TOKENS]]` en eigen lettertypes; die wordt omgezet naar dezelfde opbouw als de aanmaning.
 
 ## Raster (vensterenvelop)
 

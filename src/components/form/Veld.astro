@@ -16,6 +16,8 @@ interface Props {
     placeholder?: string
     maxlength?: number
     breed?: boolean
+    /** Vast teken vóór de invoer, bv. "€" (alleen visueel; het label noemt de eenheid). */
+    prefix?: string
 }
 const {
     id,
@@ -30,6 +32,7 @@ const {
     placeholder,
     maxlength = 200,
     breed = false,
+    prefix,
 } = Astro.props
 const describedby = [hint ? `${id}-hint` : null, `${id}-fout`].filter(Boolean).join(" ")
 ---
@@ -39,18 +42,36 @@ const describedby = [hint ? `${id}-hint` : null, `${id}-fout`].filter(Boolean).j
         {label}
         {optioneel && <span class="veld-opt">optioneel</span>}
     </label>
-    <input
-        id={id}
-        name={name}
-        type={type}
-        required={required}
-        autocomplete={autocomplete}
-        inputmode={inputmode}
-        placeholder={placeholder}
-        maxlength={type === "date" ? undefined : maxlength}
-        aria-describedby={describedby}
-        data-bind={name}
-    />
+    {prefix ? (
+        <div class="veld-prefix">
+            <span aria-hidden="true">{prefix}</span>
+            <input
+                id={id}
+                name={name}
+                type={type}
+                required={required}
+                autocomplete={autocomplete}
+                inputmode={inputmode}
+                placeholder={placeholder}
+                maxlength={type === "date" ? undefined : maxlength}
+                aria-describedby={describedby}
+                data-bind={name}
+            />
+        </div>
+    ) : (
+        <input
+            id={id}
+            name={name}
+            type={type}
+            required={required}
+            autocomplete={autocomplete}
+            inputmode={inputmode}
+            placeholder={placeholder}
+            maxlength={type === "date" ? undefined : maxlength}
+            aria-describedby={describedby}
+            data-bind={name}
+        />
+    )}
     {hint && (
         <p class="veld-hint" id={`${id}-hint`}>
             {hint}

@@ -36,3 +36,6 @@
 /vordering                    /vordering-indienen                    301
 /incasso-starten              /vordering-indienen                    301
 /home                         /                                      301
+
+# Korte adres in brieven (QR-code en tekst): direct naar de betaalkaart
+/betalen                      /brief-ontvangen#betalen               302

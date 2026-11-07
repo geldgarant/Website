@@ -4,9 +4,8 @@
 //
 // Betalen loopt via CaseControl. Het debiteurenportaal (geldgarant.debtorportal.com) maakt een betaallink met
 // POST https://api.casecontrol.app/api/portal/debtor/v1/geldgarant/pay  { caseNumber, amount }  →  { url }
-// (nagelopen in de portaalcode, 7 nov 2026; minimaal € 5, geen inlog nodig). Zolang site.betaalLinkApi leeg is,
-// sturen we de bezoeker naar het portaal met de gegevens om over te nemen. Staat de worker-route aan, dan vraagt
-// vraagBetaallink() de link op via onze eigen worker en gaat de bezoeker direct door naar de betaalpagina.
+// (nagelopen in de portaalcode, 7 nov 2026; minimaal € 5, geen inlog nodig). vraagBetaallink() doet dat via onze
+// eigen worker (worker/betalen.ts, POST /api/betalen); de bezoeker gaat daarna direct door naar iDEAL.
 import { parseBedrag, normTelefoon, isEmail, isTelefoon, bouwContactPayload, leegContact, ApiFout } from "./intake"
 import type { Fouten, ContactState } from "./intake"
 

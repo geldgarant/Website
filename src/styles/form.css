@@ -51,6 +51,22 @@
 .veld textarea::placeholder {
     color: #6b7390;
 }
+.veld-prefix {
+    position: relative;
+}
+.veld-prefix > span {
+    position: absolute;
+    inset: 0 auto 0 15px;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    color: var(--ink);
+    pointer-events: none;
+}
+.veld-prefix input {
+    padding-left: 34px;
+    font-variant-numeric: tabular-nums;
+}
 .veld-hint {
     font-size: var(--fs-xs);
     color: var(--muted);

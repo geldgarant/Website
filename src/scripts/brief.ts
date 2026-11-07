@@ -1,7 +1,7 @@
 // DOM-logica voor /brief-ontvangen:
-// 1. Betaalkaart: voorinvullen uit ?dossier=&bedrag= (link of QR-code in brief/e-mail), valideren, en dan
-//    - met site.betaalLinkApi: betaallink opvragen via onze worker en direct doorsturen naar de betaalpagina;
-//    - zonder (nu): de stap naar het CaseControl-portaal tonen met de gegevens om over te nemen.
+// 1. Betaalkaart: voorinvullen uit ?dossier=&bedrag= (link of QR-code in brief/e-mail), valideren, betaallink
+//    opvragen via onze worker (/api/betalen → CaseControl) en direct doorsturen naar iDEAL. Lukt dat niet, dan
+//    tonen we de gegevens om over te maken (nooit een omweg via het portaal).
 // 2. Rekenhulp regeling en "Neem dit voorstel over".
 // 3. Reactieformulier (regeling, al betaald, niet eens, anders) naar /api/contact.
 // 4. Snelkeuzes die het formulier op de juiste reden zetten, en de mobiele actiebalk.
@@ -79,33 +79,33 @@ function initBetalen(form: HTMLFormElement) {
     const knop = $<HTMLButtonElement>("[data-betaal-knop]", form)!
     const knopTekst = $("[data-betaal-tekst]", form)!
 
-    const portaal = $<HTMLElement>("[data-portaal]", kaart)!
-    function toonPortaal() {
-        $("[data-portaal-waarde='dossier']", portaal)!.textContent = normDossier(state.dossier)
-        $("[data-portaal-waarde='bedrag']", portaal)!.textContent = euro(parseBedrag(state.bedrag))
+    const status = $<HTMLElement>("[data-betaal-status]", form)!
+    const standaardTekst = knopTekst.textContent ?? ""
+    const alt = $<HTMLElement>("[data-betaal-alt]", kaart)!
+    const stappen = $<HTMLElement>(".betaal-stappen", kaart)
+    function klaar() {
+        bezig = false
+        knop.removeAttribute("aria-busy")
+        knopTekst.textContent = standaardTekst
+    }
+    function toonAlternatief() {
+        $("[data-alt-waarde='dossier']", alt)!.textContent = normDossier(state.dossier)
+        $("[data-alt-waarde='bedrag']", alt)!.textContent = euro(parseBedrag(state.bedrag))
         form.hidden = true
-        portaal.hidden = false
-        $<HTMLElement>("[data-portaal-kop]", portaal)!.focus()
+        if (stappen) stappen.hidden = true
+        alt.hidden = false
+        $<HTMLElement>("[data-betaal-alt-kop]", alt)!.focus()
     }
-    $("[data-terug]", portaal)!.addEventListener("click", () => {
-        portaal.hidden = true
+    $("[data-opnieuw]", alt)!.addEventListener("click", () => {
+        alt.hidden = true
         form.hidden = false
-        dossierEl.focus()
+        if (stappen) stappen.hidden = false
+        knop.focus()
     })
-    const status = $<HTMLElement>("[data-kopieer-status]", portaal)!
-    for (const b of $$<HTMLButtonElement>("[data-kopieer]", portaal)) {
-        b.addEventListener("click", async () => {
-            const wat = b.dataset.kopieer === "dossier" ? normDossier(state.dossier) : bedragVeld(parseBedrag(state.bedrag))
-            try {
-                await navigator.clipboard.writeText(wat)
-                b.firstChild!.textContent = "Gekopieerd"
-                status.textContent = `${b.dataset.kopieer === "dossier" ? "Dossiernummer" : "Bedrag"} gekopieerd`
-                setTimeout(() => (b.firstChild!.textContent = "Kopieer"), 2000)
-            } catch {
-                status.textContent = "Kopiëren lukte niet. Neem het nummer over."
-            }
-        })
-    }
+    // terug vanaf iDEAL met de terugknop van de browser (bfcache): knop weer bruikbaar maken
+    addEventListener("pageshow", (e) => {
+        if (e.persisted) klaar()
+    })
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault()
@@ -115,27 +115,30 @@ function initBetalen(form: HTMLFormElement) {
         state.dossier = dossierEl.value
         state.bedrag = bedragEl.value
         if (!toonFouten(form, valideerBetaling(state), true)) return
-        if (!site.betaalLinkApi) return toonPortaal()
+        if (!site.betaalLinkApi) return toonAlternatief()
 
         bezig = true
         knop.setAttribute("aria-busy", "true")
-        knopTekst.textContent = "Betaalpagina openen"
+        knopTekst.textContent = `U gaat naar ${site.betaalMethode}`
+        status.textContent = `Even geduld, de betaalpagina van ${site.betaalMethode} wordt geopend.`
         try {
             const url = await vraagBetaallink(site.betaalLinkApi, state)
             location.assign(url)
+            // bezig blijven tot de browser de nieuwe pagina laadt
         } catch (err) {
+            klaar()
+            status.textContent = ""
             if (err instanceof ApiFout && err.status === 404) {
-                meld(`We vinden dit dossiernummer niet. Controleer het nummer in de brief, of bel ons op ${site.phone}.`)
+                meld(
+                    `We vinden dossiernummer ${normDossier(state.dossier)} niet. Controleer het nummer in de brief, of bel ons op ${site.phone}.`,
+                )
                 dossierEl.setAttribute("aria-invalid", "true")
                 dossierEl.focus()
+            } else if (err instanceof ApiFout && err.status === 400) {
+                meld("Controleer het dossiernummer en het bedrag, en probeer het opnieuw.")
             } else {
-                // koppeling even niet bereikbaar: de bezoeker kan altijd nog via het portaal betalen
-                toonPortaal()
+                toonAlternatief()
             }
-        } finally {
-            bezig = false
-            knop.removeAttribute("aria-busy")
-            knopTekst.textContent = "Nu betalen"
         }
     })
 

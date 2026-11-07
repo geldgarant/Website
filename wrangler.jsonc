@@ -1,13 +1,21 @@
-// Cloudflare Workers (static assets): serveert de Astro-build uit ./dist
+// Cloudflare Workers: statische Astro-build uit ./dist plus een kleine worker (worker/index.ts) voor /api/*.
+// Alleen /api/* start de worker (run_worker_first); alle andere verzoeken serveert Cloudflare rechtstreeks uit ./dist.
 {
     "name": "website",
+    "main": "worker/index.ts",
     "compatibility_date": "2026-11-01",
     "workers_dev": true,
     "preview_urls": true,
     "assets": {
         "directory": "./dist",
+        "binding": "ASSETS",
+        "run_worker_first": ["/api/*"],
         "not_found_handling": "404-page",
         // /pagina/ → 307 naar /pagina; één URL per pagina, zoals op de huidige Framer-site
         "html_handling": "drop-trailing-slash",
+    },
+    "vars": {
+        // subdomein van het CaseControl-debiteurenportaal (geldgarant.debtorportal.com)
+        "CASECONTROL_PORTAL": "geldgarant",
     },
 }

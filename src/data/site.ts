@@ -23,12 +23,11 @@ export const site = {
     btw: null as string | null,
     portalLogin: "https://geldgarant.dossierportal.nl",
     debtorPortal: "https://geldgarant.debtorportal.com",
-    // Inlogscherm van het debiteurenportaal; daar staat de knop "Maak een betaling" (dossiernummer + bedrag, zonder inlog)
+    // Debiteurenportaal van CaseControl (niet meer nodig om te betalen; blijft als reserve, zie docs/HANDOFF.md §6b)
     debtorPortalBetalen: "https://geldgarant.debtorportal.com/sign-in",
-    // KOPPELPLEK direct betalen op /brief-ontvangen. Leeg = de bezoeker gaat naar het portaal met de gegevens om over
-    // te nemen. Staat de worker-route POST /api/betaallink live (projectdocument claude/intake-worker-betaallink.js),
-    // zet dan hier "https://api.geldgarant.com/api/betaallink": de bezoeker gaat dan direct naar de betaalpagina.
-    betaalLinkApi: null as string | null,
+    // Direct betalen op /brief-ontvangen: onze eigen worker (worker/betalen.ts) vraagt bij CaseControl een
+    // iDEAL-betaallink op met dossiernummer + bedrag en stuurt de bezoeker meteen door. null = online betalen uit.
+    betaalLinkApi: "/api/betalen" as string | null,
     // Derdengeldenrekening (bevestigd door GeldGarant, 7 nov 2026). Kenmerk bij overmaken = dossiernummer.
     derdengelden: {
         iban: "NL57 BUNQ 2188 2124 36" as string | null,
