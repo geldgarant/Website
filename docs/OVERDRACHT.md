@@ -2,7 +2,7 @@
 
 Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt alle eerdere overdrachten (ook `claude/website-overdracht-*.md` en `claude/website-START-HIER.md` in het claude.ai-project, die dezelfde inhoud hebben). Details staan in de repo: `CLAUDE.md`, `docs/HANDOFF.md` (§6b), `brieven/README.md`, `docs/SITEMAP.md`, `docs/LIVEGANG.md`.
 
-**LIVE sinds 7 nov 2026 ±11:40: https://geldgarant.com draait op de Worker "website"** (www → 301 naar geldgarant.com). Stand: alles staat op `main`, staging blijft https://website.geldgarant.workers.dev, laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Cloudflare 7 nov: Turnstile-hostname en origin voor staging toegevoegd (zie §5.5).
+**LIVE sinds 7 nov 2026 ±11:40: https://geldgarant.com draait op de Worker "website"** (www → 301 naar geldgarant.com). Stand: alles staat op `main`, staging blijft https://website.geldgarant.workers.dev, laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Formulieren (contact, vordering, sollicitatie) getest en werkend (zie §5.5).
 
 ---
 
@@ -10,7 +10,7 @@ Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt a
 
 > Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Draai `bash scripts/dev/dompdf-lib.sh` (dompdf voor de brieven). Controleer of de Framer-connector actief is (anders RefreshMcpTools). Lees docs/OVERDRACHT.md, daarna CLAUDE.md, docs/HANDOFF.md (§0 en §6b), brieven/README.md, docs/SITEMAP.md en docs/LIVEGANG.md.
 >
-> Volgende taak: mijn feedback op de sommatie en de 14-dagenbrief verwerken (OVERDRACHT §7), de proefbrieven in CaseControl (laadt de dynamische QR?), de open punten in §5 en de livegang. Werkwijze per pagina: kort plan, bouwen, verifiëren, pushen, screenshots sturen. Kwaliteit en creativiteit voorop. Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
+> Volgende taak: mijn feedback op de sommatie en de 14-dagenbrief verwerken (OVERDRACHT §7), de proefbrieven in CaseControl (laadt de dynamische QR?), de open punten in §5 en de eerste week na de livegang (Search Console, 404's). Werkwijze per pagina: kort plan, bouwen, verifiëren, pushen, screenshots sturen. Kwaliteit en creativiteit voorop. Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
 
 **Meenemen naar een nieuw claude.ai-project** (projectkennis): dit bestand (`docs/OVERDRACHT.md`), en als je ze nog nodig hebt de intake-workerbestanden `claude/intake-worker-index.js`, `claude/intake-worker-setup.md`, `claude/intake-worker-sollicitatie.js`, `claude/intake-worker-sollicitatie-installeren.md`, plus `GeldGarant_CaseControl_Context.md`. De CaseControl-variabelenlijst en de oude sommatie staan nu in de repo (`brieven/casecontrol-variabelen.md`, `brieven/oud/`). Vervallen: `claude/intake-worker-betaallink.md`, `claude/website-handoff.md`, `claude/website-sitemap.md`.
 
@@ -86,7 +86,7 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
 
 **Ontwerp**: Poppins 500/600, Inter Variable, Newsreader cursief accentwoord (`<span class="accent">`, één per kop); `--ink #061126`, `--blue #3069FE`, `--blue-ink #1F4FD6`, `--surface #F3F4F7`; in CaseControl-brieven accent `#3f68f5`. Knoppen `.btn` + `.btn-dot`.
 
-**Intake-worker** (`geldgarant-intake-api`, https://api.geldgarant.com): `/api/incasso-*`, `/api/contact` (ook debiteurreacties, onderwerp `bestaand_dossier`), `/api/location/search`, `/api/bestand`, `/api/health`; nog te installeren `POST /api/sollicitatie`. Turnstile sitekey `0x4AAAAAACzginGi5pgJr1Ux`. Betalen loopt níet via deze worker.
+**Intake-worker** (`geldgarant-intake-api`, https://api.geldgarant.com): `/api/incasso-*`, `/api/contact` (ook debiteurreacties, onderwerp `bestaand_dossier`), `/api/location/search`, `/api/bestand`, `/api/health`, `POST /api/sollicitatie` (uitgerold 7 nov). Turnstile sitekey `0x4AAAAAACzginGi5pgJr1Ux`. Betalen loopt níet via deze worker.
 
 ---
 
