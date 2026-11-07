@@ -1,0 +1,27 @@
+# DNS-zone geldgarant.com, export 7 nov 2026 11:20 (vóór de livegang). Terugdraaien: zie docs/LIVEGANG.md.
+# Kolommen: type, naam, prioriteit (MX), inhoud, proxy, ttl (1 = auto). api.geldgarant.com is een Worker custom domain (geen record).
+A	*.geldgarant.com		213.249.67.10	proxied	1
+A	geldgarant.com		31.43.161.6	dns-only	300
+A	geldgarant.com		31.43.160.6	dns-only	300
+AAAA	*.geldgarant.com		2a01:448:2001::10	proxied	1
+CNAME	email.dossiers.geldgarant.com		eu.mailgun.org	dns-only	1
+CNAME	images.geldgarant.com		public.r2.dev	proxied	1
+CNAME	mail.geldgarant.com		send.forge.rmta.net	dns-only	1
+CNAME	www.geldgarant.com		sites.framer.app	dns-only	300
+MX	dossiers.geldgarant.com	10	mxb.eu.mailgun.org	dns-only	1
+MX	dossiers.geldgarant.com	10	mxa.eu.mailgun.org	dns-only	1
+MX	geldgarant.com	10	alt4.aspmx.l.google.com	dns-only	1
+MX	geldgarant.com	10	alt3.aspmx.l.google.com	dns-only	1
+MX	geldgarant.com	5	lt2.aspmx.l.google.com	dns-only	1
+MX	geldgarant.com	5	alt1.aspmx.l.google.com	dns-only	1
+MX	geldgarant.com	1	aspmx.l.google.com	dns-only	1
+MX	send.geldgarant.com	10	feedback-smtp.eu-west-1.amazonses.com	dns-only	1
+TXT	_dmarc.dossiers.geldgarant.com		"v=DMARC1; p=none; pct=100; fo=1; ri=3600; rua=…; ruf=…"	dns-only	1
+TXT	_dmarc.geldgarant.com		"v=DMARC1; p=none;"	dns-only	1
+TXT	dossiers.geldgarant.com		"v=spf1 include:mailgun.org ~all"	dns-only	1
+TXT	email._domainkey.dossiers.geldgarant.com		"k=rsa; p=…"	dns-only	1
+TXT	geldgarant.com		"v=spf1 a mx include:mailgun.org include:_spf.google.com ~all"	dns-only	1
+TXT	geldgarant.com		"google-site-verification=_Y0Q2jXF3Vgtj0ydot77QNi2uDX_c4WWnDcYBPkisEM"	dns-only	1
+TXT	google._domainkey.geldgarant.com		"v=DKIM1; k=rsa; p=…"	dns-only	1
+TXT	resend._domainkey.geldgarant.com		"p=…"	dns-only	1
+TXT	send.geldgarant.com		"v=spf1 include:amazonses.com ~all"	dns-only	1
