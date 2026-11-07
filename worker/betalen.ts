@@ -45,7 +45,9 @@ export async function handleBetalen(request: Request, env: BetaalEnv, f: typeof 
             ])
             const d = (await info.json().catch(() => ({}))) as { paymentLinkEnabled?: boolean }
             const werkt = info.ok && d.paymentLinkEnabled === true && pay.status === 404
-            return antwoord({ ok: werkt, betaallink: d.paymentLinkEnabled === true, pay: pay.status }, werkt ? 200 : 503)
+            // antwoord van /pay op het testnummer (bevat geen persoonsgegevens), handig bij een storing
+            const melding = werkt ? undefined : (await pay.text().catch(() => "")).slice(0, 300)
+            return antwoord({ ok: werkt, betaallink: d.paymentLinkEnabled === true, pay: pay.status, melding }, werkt ? 200 : 503)
         } catch {
             return antwoord({ ok: false, error: "onbereikbaar" }, 503)
         }
