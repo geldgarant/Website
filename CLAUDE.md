@@ -89,5 +89,12 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - OG-beelden worden na de build gemaakt door `scripts/og.mjs` uit de H1 van elke pagina. Een pagina zonder H1 krijgt geen beeld en laat `check:seo` falen.
 - Knoppen: een `.btn` zonder `.btn-dot` krijgt automatisch aan beide kanten 24px (global.css). Controle op scheve knoppen: `CHROME_PATH=/usr/bin/google-chrome npx tsx scripts/dev/uitlijning.mjs` (preview op 4399).
 - Livegang: `docs/LIVEGANG.md`; controle oude URL's en redirects: `node scripts/livegang-check.mjs` (`BASIS=` voor staging). Toetsenbordcontrole: `node scripts/dev/focus.mjs`.
-- Register-link: `site.incassoRegisterHref` wijst rechtstreeks naar de inschrijving van GeldGarant bij Justis; `site.incassoRegisterOverzichtHref` naar het hele register. "Brief ontvangen?" linkt via `site.briefHref`.
+- Register-link: `site.incassoRegisterHref` wijst rechtstreeks naar de inschrijving van GeldGarant bij Justis; `site.incassoRegisterOverzichtHref` naar het hele register. "Brief ontvangen?" linkt via `site.briefHref` (= `/brief-ontvangen`).
 - Telefoon: `site.phone` (085 212 73 88), `site.phoneHref`, en voor JSON-LD `site.phoneIntl`. Klachten-e-mail: `site.klachtenEmail`.
+
+## /brief-ontvangen (7 nov 2026)
+
+- Debiteurenpagina: `src/pages/brief-ontvangen/index.astro`, logica `src/lib/debiteur.ts` (getest), DOM `src/scripts/brief.ts`. Rustige toon, B1, geen druk; geen StickyCta maar een eigen actiebalk.
+- Direct betalen loopt via CaseControl (dossiernummer + bedrag, minimaal € 5). Koppelplek `site.betaalLinkApi`: leeg = portaalstap (`site.debtorPortalBetalen`), gezet = betaallink via onze worker (`docs/worker-betaallink.md`). IBAN in `site.derdengelden` (nu leeg).
+- Reacties van debiteuren gaan via `/api/contact` (onderwerp `bestaand_dossier`). Link of QR in brieven: `/brief-ontvangen?dossier=…&bedrag=…`, regeling: `?reden=regeling#regelen`.
+- Niets toezeggen wat niet bevestigd is (betaalmethodes, verwerkingstijd, afzenderadres van e-mails).

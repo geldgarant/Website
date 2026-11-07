@@ -130,7 +130,10 @@ const situaties = [
         label: "Ik heb een brief van GeldGarant",
         kop: "Neem contact met ons op",
         tekst: "Hoe eerder u reageert, hoe meer mogelijkheden er zijn. Kunt u niet alles in één keer betalen? Vertel ons wat u per maand kunt missen, dan kijken we samen wat haalbaar is.",
-        links: [{ href: "#brief", label: "Wat u kunt doen" }],
+        links: [
+            { href: "/brief-ontvangen", label: "Betalen of regelen" },
+            { href: "#brief", label: "Wat u kunt doen" },
+        ],
     },
     {
         id: "veel",
@@ -159,7 +162,7 @@ const situaties = [
         tekst: "Laat de schuldeiser zo snel mogelijk weten waarom u het niet eens bent, liefst schriftelijk. Het Juridisch Loket kan u gratis adviseren en heeft voorbeeldbrieven.",
         links: [
             { href: "#juridisch", label: "Het Juridisch Loket" },
-            { href: "#brief", label: "Bezwaar bij GeldGarant" },
+            { href: "/brief-ontvangen?reden=oneens#regelen", label: "Bezwaar bij GeldGarant" },
         ],
     },
     {
@@ -178,20 +181,20 @@ const opties = [
     {
         icon: "euro",
         kop: "U kunt betalen",
-        tekst: "Betaal online via het betaalportaal. U logt in met de gegevens uit onze brief. Zo voorkomt u verdere kosten.",
-        actie: { href: site.debtorPortal, label: "Naar het betaalportaal", extern: true },
+        tekst: "Betaal direct online met het dossiernummer uit onze brief of e-mail. Zo voorkomt u verdere kosten.",
+        actie: { href: "/brief-ontvangen#betalen", label: "Direct betalen", extern: false },
     },
     {
         icon: "calendar",
         kop: "U wilt een regeling",
-        tekst: "Bel, mail of app ons. Vertel wat u per maand kunt missen. We kijken samen wat haalbaar is en leggen de afspraak schriftelijk vast.",
-        actie: { href: site.phoneHref, label: `Bel\u00a0${site.phone}`, extern: false },
+        tekst: "Vertel wat u per maand kunt missen. We kijken samen wat haalbaar is en leggen de afspraak schriftelijk vast.",
+        actie: { href: "/brief-ontvangen?reden=regeling#regelen", label: "Regeling aanvragen", extern: false },
     },
     {
         icon: "scale",
         kop: "U bent het niet eens",
-        tekst: "Laat ons weten waarom, het liefst per e-mail met uitleg. We leggen uw reactie voor aan onze opdrachtgever en laten u weten wat er gebeurt.",
-        actie: { href: `mailto:${site.email}`, label: "Mail uw reactie", extern: false },
+        tekst: "Laat ons weten waarom. We leggen uw reactie voor aan onze opdrachtgever en laten u weten wat er gebeurt.",
+        actie: { href: "/brief-ontvangen?reden=oneens#regelen", label: "Reactie geven", extern: false },
     },
 ] as const
 
@@ -457,8 +460,8 @@ const jsonLd = [
 
     <SlotCta
         lead="Heeft u een brief van ons ontvangen? Neem contact op. Hoe eerder u reageert, hoe meer mogelijkheden er zijn."
-        href={site.debtorPortal}
-        label="Naar het betaalportaal"
+        href={site.briefHref}
+        label="Betalen of regelen"
     >
         Samen zoeken we een <span class="accent">oplossing</span>
     </SlotCta>

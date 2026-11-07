@@ -1,0 +1,2013 @@
+---
+// /brief-ontvangen (stond al in header en footer van de Framer-site). Voor debiteuren: rustig, duidelijk, Wki-proof.
+// Hoofdvraag: "Ik heb een brief of e-mail van GeldGarant. Wat moet ik doen?"
+// Volgorde van de vragen: betalen (hero) → wat staat er in de brief (01) → hoe kan ik betalen (02)
+// → regeling, al betaald, niet eens (03) → is dit echt (04) → waar mag ik op rekenen (05) → hulp en 113 (06) → vragen.
+// Research 7 nov 2026: Breyta /rekening-betalen (kenmerk + bedrag via n8n en Pay.nl), Flanderijn /betalen (iDEAL/Wero,
+// regeling, bezwaar, phishingbanner), GGN /ik-wil-betalen (zelf regelen, "Is dit bericht echt?"), CaseControl-portaal
+// (betaallink met dossiernummer + bedrag, zonder inlog; zie src/lib/debiteur.ts).
+// Wki: Regeling kwaliteit incassodienstverlening (Stcrt. 2024, 10329) art. 3 (B1, geen druk), art. 4 (manieren van
+// betalen, regeling, schuldhulp, 113), art. 5 (contact, bereikbaar, fysieke afspraak); Besluit art. 3.1 (specificatie)
+// en 6.1 (klachten).
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Veld from "../../components/form/Veld.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { briefFaq } from "../../data/faq"
+import { wikKosten, euro } from "../../lib/wik"
+import { wettelijkeRente } from "../../lib/rente"
+import { REDENEN, BETAAL_MIN, bedragVeld } from "../../lib/debiteur"
+
+const title = "Brief van GeldGarant ontvangen? Direct betalen of regelen | GeldGarant"
+const description =
+    "Brief of e-mail van GeldGarant? Betaal direct met uw dossiernummer, vraag een betalingsregeling aan of laat weten dat u al betaalde of het niet eens bent."
+const url = "https://geldgarant.com/brief-ontvangen"
+
+// Rekenvoorbeeld voor de voorbeeldbrief (gelabeld als voorbeeld). Kosten en rente komen uit dezelfde code als de rekenhulpen.
+const vb = {
+    dossier: "2026-00412",
+    opdrachtgever: "Installatiebedrijf Voorbeeld",
+    factuur: "2026-118",
+    factuurDatum: "2 oktober 2026",
+    hoofdsom: 840,
+    renteVan: "2026-10-16",
+    renteTot: "2026-11-06",
+    briefDatum: "6 november 2026",
+    uiterlijk: "20 november 2026",
+}
+const vbKosten = wikKosten(vb.hoofdsom)
+const vbRente = wettelijkeRente(vb.hoofdsom, "consument", vb.renteVan, vb.renteTot).rente
+const vbTotaal = Math.round((vb.hoofdsom + vbKosten + vbRente) * 100) / 100
+
+const uitleg = [
+    {
+        kop: "Uw dossiernummer",
+        tekst: "Uw vaste nummer bij ons. Noem het altijd: bij betalen, bellen, mailen of appen.",
+    },
+    {
+        kop: "Namens wie wij schrijven",
+        tekst: "Het bedrijf dat u een factuur stuurde. Dat heeft ons gevraagd het openstaande bedrag te innen.",
+    },
+    {
+        kop: "Het bedrag, uitgesplitst",
+        tekst: "Hoofdsom, rente en incassokosten apart. De incassokosten zijn wettelijk begrensd en hangen af van de hoofdsom.",
+    },
+    {
+        kop: "De uiterste betaaldatum",
+        tekst: "Lukt het niet voor die datum? Laat het ons dan vóór die datum weten. Dan zoeken we samen naar een oplossing.",
+    },
+    {
+        kop: "Hoe u betaalt",
+        tekst: "Online met uw dossiernummer, of door over te maken met uw dossiernummer als betalingskenmerk.",
+    },
+    {
+        kop: "Hoe u ons bereikt",
+        tekst: "Telefoon, e-mail en WhatsApp. Op werkdagen spreekt u een medewerker, die u verder helpt.",
+    },
+] as const
+
+const iban = site.derdengelden.iban
+const ibanNaam = site.derdengelden.tenaamstelling ?? site.name
+const route = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.street}, ${site.postcode} ${site.city}`)}`
+
+const echt = [
+    {
+        icon: "shield",
+        kop: "Wij staan in het openbare register",
+        tekst: `GeldGarant is geregistreerd bij Justis onder nummer ${site.incassoRegister}. Dat kunt u zelf controleren.`,
+        link: { href: site.incassoRegisterHref, label: "Bekijk onze inschrijving", extern: true },
+    },
+    {
+        icon: "doc",
+        kop: "Uw gegevens en de specificatie kloppen",
+        tekst: "In onze brief staan uw dossiernummer, de naam van onze opdrachtgever en een specificatie van het bedrag. Ontbreekt iets of klopt het niet? Neem dan eerst contact met ons op.",
+    },
+    {
+        icon: "euro",
+        kop: "U betaalt nooit via een omweg",
+        tekst: "Start een online betaling het liefst hier op geldgarant.com. Wij vragen nooit om te betalen met een cadeaukaart, crypto of via een tussenpersoon.",
+    },
+    {
+        icon: "key",
+        kop: "Wij vragen nooit om uw inlogcodes",
+        tekst: "Niet die van uw bank, niet uw pincode en niet de code uit een sms. Vraagt iemand daarom namens GeldGarant? Stop dan en bel ons via het nummer op deze website.",
+    },
+] as const
+
+const rechten = [
+    {
+        icon: "doc",
+        kop: "Een duidelijke specificatie",
+        tekst: "U ziet welk deel hoofdsom, rente en kosten is. Vraag gerust om een volledig overzicht van uw dossier.",
+    },
+    {
+        icon: "chat",
+        kop: "Duidelijke taal",
+        tekst: "Wij schrijven en spreken eenvoudig Nederlands. Is iets onduidelijk, dan leggen we het uit.",
+    },
+    {
+        icon: "phone",
+        kop: "Een medewerker aan de lijn",
+        tekst: `Op ${site.hours} spreekt u een medewerker, of we bellen u terug. Op e-mail krijgt u een antwoord van een mens.`,
+    },
+    {
+        icon: "building",
+        kop: "Een afspraak op kantoor",
+        tekst: `Liever persoonlijk? Maak een afspraak op ons kantoor in ${site.city}, om iets te bespreken, stukken te laten zien of te betalen.`,
+    },
+    {
+        icon: "scale",
+        kop: "Geen druk of dreigementen",
+        tekst: "Wij noemen alleen stappen die echt kunnen volgen, en blijven altijd zakelijk en correct.",
+    },
+    {
+        icon: "check",
+        kop: "Een klacht, eerlijk behandeld",
+        tekst: "Door een andere medewerker dan uw dossierbehandelaar. Komen we er samen niet uit, dan kunt u naar IncassoKlacht.",
+    },
+] as const
+
+const reken = { open: vbTotaal, maand: 100 }
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Brief van GeldGarant ontvangen?",
+        url,
+        description,
+        about: { "@type": "Organization", name: site.name, telephone: site.phoneIntl, email: site.email },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Brief ontvangen", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: briefFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO + BETALEN -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Brief ontvangen" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Brief van ons ontvangen?
+                        <br />
+                        Zo <span class="accent">regelt</span> u het
+                    </h1>
+                    <p class="lead">
+                        Betaal direct met het dossiernummer uit onze brief of e-mail. Kunt u niet alles in één keer betalen, heeft
+                        u al betaald of bent u het er niet mee eens? Ook dat regelt u hier.
+                    </p>
+                </div>
+
+                <div class="betaal" id="betalen">
+                    <div class="betaal-kop">
+                        <span class="betaal-icon" aria-hidden="true">
+                            <Icon name="euro" size={22} />
+                        </span>
+                        <div>
+                            <h2 class="betaal-titel" id="betaal-titel" tabindex="-1">
+                                Direct betalen
+                            </h2>
+                            <p class="betaal-sub">Met het dossiernummer uit onze brief of e-mail</p>
+                        </div>
+                    </div>
+
+                    <form class="betaal-form" novalidate data-betaal aria-labelledby="betaal-titel">
+                        <Veld
+                            id="b-dossier"
+                            name="dossier"
+                            label="Dossiernummer"
+                            hint="Staat bovenaan in onze brief of e-mail."
+                            autocomplete="off"
+                            maxlength={30}
+                        />
+                        <Veld
+                            id="b-bedrag"
+                            name="bedrag"
+                            label="Bedrag in euro"
+                            hint={`Het totaal uit de brief, of een deel als u in delen betaalt (vanaf € ${BETAAL_MIN}).`}
+                            inputmode="decimal"
+                            autocomplete="off"
+                            placeholder="0,00"
+                            maxlength={14}
+                        />
+                        <p class="melding" role="alert" data-betaal-melding hidden></p>
+                        <button type="submit" class="btn betaal-knop" data-betaal-knop>
+                            <span data-betaal-tekst>Nu betalen</span>
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </button>
+                    </form>
+
+                    <div class="portaal" data-portaal hidden>
+                        <p class="portaal-kop" tabindex="-1" data-portaal-kop>
+                            Nog één stap
+                        </p>
+                        <p class="portaal-tekst">
+                            U gaat naar ons beveiligde betaalportaal. Kies daar <strong>Maak een betaling</strong> en vul dit in:
+                        </p>
+                        <dl class="portaal-gegevens">
+                            <div>
+                                <dt>Dossiernummer</dt>
+                                <dd>
+                                    <span class="num" data-portaal-waarde="dossier"></span>
+                                    <button type="button" class="kopieer" data-kopieer="dossier">
+                                        Kopieer<span class="sr-only"> dossiernummer</span>
+                                    </button>
+                                </dd>
+                            </div>
+                            <div>
+                                <dt>Bedrag</dt>
+                                <dd>
+                                    <span class="num" data-portaal-waarde="bedrag"></span>
+                                    <button type="button" class="kopieer" data-kopieer="bedrag">
+                                        Kopieer<span class="sr-only"> bedrag</span>
+                                    </button>
+                                </dd>
+                            </div>
+                        </dl>
+                        <p class="sr-only" role="status" data-kopieer-status></p>
+                        <a class="btn betaal-knop" href={site.debtorPortalBetalen} rel="noopener" data-portaal-link>
+                            Naar het betaalportaal
+                            <span class="btn-dot">
+                                <Icon name="arrow-up-right" size={18} />
+                            </span>
+                        </a>
+                        <button type="button" class="terug" data-terug>
+                            Gegevens aanpassen
+                        </button>
+                    </div>
+
+                    <ul role="list" class="betaal-vertrouwen">
+                        <li>
+                            <Icon name="shield" size={16} />
+                            Beveiligde betaalomgeving
+                        </li>
+                        <li>
+                            <Icon name="check" size={16} />
+                            Geregistreerd bij Justis, nr.{"\u00a0"}
+                            {site.incassoRegister}
+                        </li>
+                    </ul>
+                </div>
+                <ul role="list" class="snel" aria-label="Wat wilt u doen?">
+                    <li>
+                        <a href="#regelen" data-kies-reden="regeling">
+                            <span class="snel-icon" aria-hidden="true">
+                                <Icon name="calendar" size={20} />
+                            </span>
+                            In termijnen betalen
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#regelen" data-kies-reden="betaald">
+                            <span class="snel-icon" aria-hidden="true">
+                                <Icon name="check" size={20} />
+                            </span>
+                            Ik heb al betaald
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#regelen" data-kies-reden="oneens">
+                            <span class="snel-icon" aria-hidden="true">
+                                <Icon name="scale" size={20} />
+                            </span>
+                            Ik ben het niet eens
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#echt">
+                            <span class="snel-icon" aria-hidden="true">
+                                <Icon name="shield" size={20} />
+                            </span>
+                            Is deze brief echt?
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 DE BRIEF UITGELEGD -->
+    <section class="section bg-surface" id="uitleg" aria-labelledby="uitleg-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Uw brief
+                </p>
+                <h2 class="h2" id="uitleg-title">
+                    Wat er in onze brief <span class="accent">staat</span>
+                </h2>
+                <p class="lead">
+                    Elke brief van ons bevat dezelfde onderdelen. Zo vindt u snel wat u nodig heeft, ook in een e-mail of sms.
+                </p>
+            </div>
+
+            <div class="brief-grid">
+                <figure class="brief" aria-labelledby="brief-label">
+                    <p class="brief-label" id="brief-label">
+                        Voorbeeldbrief
+                    </p>
+                    <div class="brief-papier">
+                        <div class="brief-top">
+                            <img src="/brand/full-logo-light.svg" alt="GeldGarant" width="150" height="24" class="brief-logo" />
+                            <p class="brief-afz">
+                                {site.street}
+                                <br />
+                                {`${site.postcode} ${site.city}`}
+                            </p>
+                        </div>
+                        <dl class="brief-meta">
+                            <div>
+                                <dt>
+                                    Dossiernummer
+                                    <span class="m" aria-hidden="true">
+                                        1
+                                    </span>
+                                </dt>
+                                <dd class="num">{vb.dossier}</dd>
+                            </div>
+                            <div>
+                                <dt>
+                                    Namens
+                                    <span class="m" aria-hidden="true">
+                                        2
+                                    </span>
+                                </dt>
+                                <dd>{vb.opdrachtgever}</dd>
+                            </div>
+                            <div>
+                                <dt>Datum</dt>
+                                <dd>{vb.briefDatum}</dd>
+                            </div>
+                        </dl>
+                        <p>Geachte heer De Vries,</p>
+                        <p>
+                            Factuur {vb.factuur} van {vb.factuurDatum} is nog niet betaald. {vb.opdrachtgever} heeft ons gevraagd
+                            dit bedrag te innen. Hieronder ziet u waaruit het bestaat.
+                        </p>
+                        <table class="spec">
+                            <caption class="sr-only">Specificatie van het voorbeeldbedrag</caption>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Hoofdsom (factuur {vb.factuur})</th>
+                                    <td class="num">{euro(vb.hoofdsom)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Wettelijke rente tot {vb.briefDatum}</th>
+                                    <td class="num">{euro(vbRente)}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Incassokosten (wettelijke staffel)</th>
+                                    <td class="num">{euro(vbKosten)}</td>
+                                </tr>
+                                <tr class="spec-totaal">
+                                    <th scope="row">
+                                        Totaal te betalen
+                                        <span class="m" aria-hidden="true">
+                                            3
+                                        </span>
+                                    </th>
+                                    <td class="num">{euro(vbTotaal)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            Wij vragen u dit bedrag uiterlijk <mark>{vb.uiterlijk}</mark>
+                            <span class="m" aria-hidden="true">
+                                4
+                            </span>{" "}
+                            te betalen. Dat kan online op geldgarant.com/brief-ontvangen, of door over te maken met uw
+                            dossiernummer als kenmerk
+                            <span class="m" aria-hidden="true">
+                                5
+                            </span>
+                            .
+                        </p>
+                        <p>
+                            Kunt u niet in één keer betalen, of bent u het er niet mee eens? Neem dan contact met ons op
+                            <span class="m" aria-hidden="true">
+                                6
+                            </span>
+                            . Wij denken graag met u mee.
+                        </p>
+                        <p class="brief-groet">Met vriendelijke groet, GeldGarant</p>
+                    </div>
+                    <figcaption>
+                        Voorbeeld met verzonnen namen. De bedragen zijn een rekenvoorbeeld bij een hoofdsom van{" "}
+                        {euro(vb.hoofdsom)}. Uw eigen brief kan er iets anders uitzien.
+                    </figcaption>
+                </figure>
+
+                <ol role="list" class="uitleg">
+                    {uitleg.map((u, i) => (
+                        <li>
+                            <span class="m m-groot" aria-hidden="true">
+                                {i + 1}
+                            </span>
+                            <div>
+                                <h3 class="uitleg-kop">{u.kop}</h3>
+                                <p>{u.tekst}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 ZO BETAALT U -->
+    <section class="section" aria-labelledby="manieren-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Betalen
+                </p>
+                <h2 class="h2" id="manieren-title">
+                    Drie manieren om te <span class="accent">betalen</span>
+                </h2>
+                <p class="lead">
+                    Kies wat u het prettigst vindt. Vermeld altijd uw dossiernummer, dan komt uw betaling goed terecht.
+                </p>
+            </div>
+            <ul role="list" class="manieren">
+                <li class="manier manier-hoofd">
+                    <span class="manier-icon" aria-hidden="true">
+                        <Icon name="bolt" size={22} />
+                    </span>
+                    <h3 class="h3">Online, direct</h3>
+                    <p>Met uw dossiernummer en het bedrag. U rondt de betaling af in een beveiligde betaalomgeving.</p>
+                    <a class="btn manier-btn" href="#betalen" data-naar-betalen>
+                        Direct betalen
+                        <span class="btn-dot">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </a>
+                </li>
+                <li class="manier">
+                    <span class="manier-icon" aria-hidden="true">
+                        <Icon name="bank" size={22} />
+                    </span>
+                    <h3 class="h3">Overmaken</h3>
+                    {iban ? (
+                        <>
+                            <p>Via uw eigen bank, naar onze derdengeldenrekening.</p>
+                            <dl class="bank">
+                                <div>
+                                    <dt>IBAN</dt>
+                                    <dd class="num">{iban}</dd>
+                                </div>
+                                <div>
+                                    <dt>Ten name van</dt>
+                                    <dd>{ibanNaam}</dd>
+                                </div>
+                                <div>
+                                    <dt>Kenmerk</dt>
+                                    <dd>Uw dossiernummer</dd>
+                                </div>
+                            </dl>
+                        </>
+                    ) : (
+                        <p>
+                            Via uw eigen bank. Het rekeningnummer staat in onze brief. Gebruik uw dossiernummer als
+                            betalingskenmerk, zonder kenmerk kunnen we uw betaling niet koppelen.
+                        </p>
+                    )}
+                    <a class="textlink manier-link manier-onder" href="#uitleg">
+                        Waar staat wat in de brief?
+                    </a>
+                </li>
+                <li class="manier">
+                    <span class="manier-icon" aria-hidden="true">
+                        <Icon name="building" size={22} />
+                    </span>
+                    <h3 class="h3">Op ons kantoor</h3>
+                    <p>
+                        Liever persoonlijk? Maak een afspraak op ons kantoor aan de {site.street} in {site.city}. Dan bespreken we
+                        alles aan tafel.
+                    </p>
+                    <div class="manier-acties">
+                        <a class="btn btn-ghost manier-btn" href={site.phoneHref}>
+                            Bel{"\u00a0"}voor{"\u00a0"}een{"\u00a0"}afspraak
+                        </a>
+                        <a class="textlink manier-link" href={route} target="_blank" rel="noopener">
+                            Route
+                            <Icon name="arrow-up-right" size={15} />
+                            <span class="sr-only">(opent in nieuw venster)</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <p class="noot">
+                <Icon name="clock" size={16} />
+                <span>
+                    Een overboeking kan een paar werkdagen onderweg zijn. Kruist uw betaling een brief van ons?{" "}
+                    <a class="textlink" href="#regelen" data-kies-reden="betaald">
+                        Geef uw betaling door
+                    </a>
+                    , dan kijken we het na.
+                </span>
+            </p>
+        </div>
+    </section>
+
+    <!-- 03 REGELEN -->
+    <section class="section bg-surface" id="regelen" aria-labelledby="regelen-title">
+        <div class="wrap regelen">
+            <div class="regelen-kop kop">
+                <p class="eyebrow">
+                    <span class="idx">03</span> Regelen
+                </p>
+                <h2 class="h2" id="regelen-title">
+                    Niet alles in één keer? Of al <span class="accent">betaald</span>?
+                </h2>
+                <p class="lead">
+                    Vraag een betalingsregeling aan, geef een betaling door of laat weten dat u het niet eens bent. U krijgt
+                    meestal binnen 1 werkdag antwoord.
+                </p>
+            </div>
+
+            <div class="regelen-zij">
+                <div class="reken" data-reken>
+                    <h3 class="reken-kop">Rekenhulp regeling</h3>
+                    <div class="reken-velden">
+                        <div class="veld">
+                            <label for="r-open">Openstaand bedrag</label>
+                            <input
+                                id="r-open"
+                                type="text"
+                                inputmode="decimal"
+                                autocomplete="off"
+                                value={bedragVeld(reken.open)}
+                                data-reken-open
+                            />
+                        </div>
+                        <div class="veld">
+                            <label for="r-per">Per maand</label>
+                            <input
+                                id="r-per"
+                                type="text"
+                                inputmode="decimal"
+                                autocomplete="off"
+                                value={String(reken.maand)}
+                                data-reken-per
+                            />
+                        </div>
+                    </div>
+                    <p class="reken-uit" aria-live="polite" data-reken-uit>
+                        Vul twee bedragen in.
+                    </p>
+                    <button type="button" class="btn btn-dark reken-neem" data-reken-neem>
+                        Neem dit voorstel over
+                    </button>
+                    <p class="reken-noot">Indicatie. In onze schriftelijke bevestiging staan het exacte bedrag en het schema.</p>
+                </div>
+
+                <ol role="list" class="stappen">
+                    <li>
+                        <span class="stap-nr" aria-hidden="true">
+                            1
+                        </span>
+                        <div>
+                            <h3 class="stap-kop">U stuurt uw voorstel of reactie</h3>
+                            <p>Met uw dossiernummer. Heeft u een schuldhulpverlener? Dan overleggen we met hem of haar.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="stap-nr" aria-hidden="true">
+                            2
+                        </span>
+                        <div>
+                            <h3 class="stap-kop">Wij bekijken het met onze opdrachtgever</h3>
+                            <p>Bent u het niet eens, dan leggen we uw reactie voor en zoeken we het uit.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="stap-nr" aria-hidden="true">
+                            3
+                        </span>
+                        <div>
+                            <h3 class="stap-kop">U krijgt het zwart op wit</h3>
+                            <p>Een regeling leggen we altijd schriftelijk vast, zodat u weet waar u aan toe bent.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="regelen-form">
+                <form class="kaart" novalidate data-reactie aria-labelledby="reactie-kop">
+                    <h3 class="form-kop" id="reactie-kop" tabindex="-1">
+                        Wat wilt u regelen?
+                    </h3>
+
+                    <fieldset class="keuzes">
+                        <legend class="sr-only">Kies wat u wilt regelen</legend>
+                        <div class="chips">
+                            {REDENEN.map((r) => (
+                                <label>
+                                    <input type="radio" name="reden" value={r.key} data-bind="reden" />
+                                    <span>{r.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                        <p class="veld-fout" data-fout="reden"></p>
+                    </fieldset>
+
+                    <div class="velden">
+                        <Veld id="r-dossier" name="dossier" label="Dossiernummer" autocomplete="off" maxlength={30} />
+                        <Veld id="r-naam" name="naam" label="Naam" autocomplete="name" maxlength={120} />
+                    </div>
+
+                    <div class="extra velden" data-alleen="regeling" hidden>
+                        <Veld
+                            id="r-maand"
+                            name="per_maand"
+                            label="Ik kan per maand betalen"
+                            inputmode="decimal"
+                            placeholder="Bijvoorbeeld 100"
+                            maxlength={12}
+                        />
+                        <Veld id="r-ingang" name="ingang" label="Eerste betaling op" type="date" optioneel />
+                        <label class="vink breed">
+                            <input type="checkbox" data-bind="schuldhulp" />
+                            <span>Ik heb een schuldhulpverlener of bewindvoerder</span>
+                        </label>
+                    </div>
+                    <div class="extra velden" data-alleen="betaald" hidden>
+                        <Veld id="r-betaaldop" name="betaald_op" label="Betaald op" type="date" />
+                        <Veld
+                            id="r-betaaldbedrag"
+                            name="betaald_bedrag"
+                            label="Bedrag"
+                            inputmode="decimal"
+                            placeholder="0,00"
+                            maxlength={12}
+                        />
+                    </div>
+
+                    <div class="velden">
+                        <Veld id="r-email" name="email" label="E-mail" type="email" autocomplete="email" />
+                        <Veld id="r-telefoon" name="telefoon" label="Telefoon" type="tel" autocomplete="tel" optioneel />
+                    </div>
+
+                    <fieldset class="voorkeur">
+                        <legend class="veld-label">Hoe wilt u antwoord?</legend>
+                        <div class="mini-seg">
+                            <label>
+                                <input type="radio" name="voorkeur" value="email" data-bind="voorkeur" checked />
+                                <span>E-mail</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="voorkeur" value="telefoon" data-bind="voorkeur" />
+                                <span>Bellen</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="voorkeur" value="whatsapp" data-bind="voorkeur" />
+                                <span>WhatsApp</span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <div class="veld" data-veld="toelichting">
+                        <label for="r-toelichting">
+                            <span data-label-voor="standaard">
+                                Toelichting <span class="veld-opt">optioneel</span>
+                            </span>
+                            <span data-label-voor="oneens" hidden>
+                                Waarom bent u het niet eens?
+                            </span>
+                            <span data-label-voor="anders" hidden>
+                                Uw vraag
+                            </span>
+                        </label>
+                        <textarea
+                            id="r-toelichting"
+                            name="toelichting"
+                            rows="4"
+                            maxlength="1500"
+                            aria-describedby="r-toelichting-fout"
+                            data-bind="toelichting"
+                        ></textarea>
+                        <p class="veld-fout" id="r-toelichting-fout" data-fout="toelichting"></p>
+                    </div>
+
+                    <div class="turnstile" data-turnstile></div>
+                    <p class="melding" role="alert" data-melding hidden></p>
+
+                    <div class="form-voet">
+                        <button type="submit" class="btn" data-verstuur>
+                            <span data-verstuur-tekst>Versturen</span>
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </button>
+                        <p class="form-noot">
+                            We gebruiken uw gegevens alleen voor uw dossier. Lees onze{" "}
+                            <a class="textlink" href="/juridisch/privacy-beleid">
+                                privacyverklaring
+                            </a>
+                            .
+                        </p>
+                    </div>
+                </form>
+
+                <div class="kaart verzonden" data-verzonden hidden>
+                    <span class="verzonden-icon" aria-hidden="true">
+                        <Icon name="check" size={28} />
+                    </span>
+                    <h3 class="h2 verzonden-kop" tabindex="-1" data-verzonden-kop>
+                        Bericht <span class="accent">ontvangen</span>
+                    </h3>
+                    <p class="lead">
+                        U krijgt een bevestiging per e-mail onder referentie <strong class="num" data-verzonden-ref></strong>. We
+                        nemen meestal binnen 1 werkdag contact met u op.
+                    </p>
+                    <p class="verzonden-noot" data-verzonden-noot hidden></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 04 IS DIT ECHT -->
+    <section class="section" id="echt" aria-labelledby="echt-title">
+        <div class="wrap echt">
+            <div class="kop echt-kop">
+                <p class="eyebrow">
+                    <span class="idx">04</span> Veilig
+                </p>
+                <h2 class="h2" id="echt-title">
+                    Is deze brief echt van <span class="accent">ons</span>?
+                </h2>
+                <p class="lead">
+                    Oplichters sturen soms nepberichten uit naam van incassobureaus. Met deze vier punten weet u snel of een
+                    bericht echt van GeldGarant komt.
+                </p>
+                <div class="twijfel bg-ink">
+                    <p class="twijfel-kop">Twijfelt u?</p>
+                    <p>
+                        Bel ons via het nummer op deze website, niet via een nummer uit het bericht. Noem het dossiernummer, dan
+                        zeggen wij u direct of het bericht van ons komt.
+                    </p>
+                    <a class="btn btn-light" href={site.phoneHref}>
+                        Bel{"\u00a0"}
+                        {site.phone}
+                    </a>
+                </div>
+            </div>
+            <ul role="list" class="checks">
+                {echt.map((c) => (
+                    <li class="check">
+                        <span class="check-icon" aria-hidden="true">
+                            <Icon name={c.icon} size={20} />
+                        </span>
+                        <div>
+                            <h3 class="check-kop">{c.kop}</h3>
+                            <p>{c.tekst}</p>
+                            {"link" in c && c.link && (
+                                <a class="textlink check-link" href={c.link.href} target="_blank" rel="noopener">
+                                    {c.link.label}
+                                    <Icon name="arrow-up-right" size={15} />
+                                    <span class="sr-only">(opent in nieuw venster)</span>
+                                </a>
+                            )}
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 05 UW RECHTEN -->
+    <section class="section bg-surface" aria-labelledby="rechten-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Uw rechten
+                </p>
+                <h2 class="h2" id="rechten-title">
+                    Waar u op mag <span class="accent">rekenen</span>
+                </h2>
+                <p class="lead">
+                    Incassobureaus moeten zich houden aan de Wet kwaliteit incassodienstverlening. Dit mag u van ons verwachten,
+                    ook als u het niet met ons eens bent.
+                </p>
+            </div>
+            <ul role="list" class="rechten" data-scroller tabindex="0" aria-label="Uw rechten">
+                {rechten.map((r) => (
+                    <li class="recht">
+                        <span class="recht-icon" aria-hidden="true">
+                            <Icon name={r.icon} size={20} />
+                        </span>
+                        <h3 class="recht-kop">{r.kop}</h3>
+                        <p>{r.tekst}</p>
+                    </li>
+                ))}
+            </ul>
+            <p class="rechten-links">
+                <a class="textlink" href="/klachtenregelement">
+                    Onze klachtenregeling
+                </a>
+                <a class="textlink" href="/wki">
+                    Meer over de Wki en onze registratie
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <!-- 06 HULP -->
+    <section class="section" aria-labelledby="hulp-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">06</span> Hulp
+                </p>
+                <h2 class="h2" id="hulp-title">
+                    Geldzorgen? Er is <span class="accent">hulp</span>
+                </h2>
+            </div>
+            <div class="hulp">
+                <div class="hulp-kaart">
+                    <span class="hulp-icon" aria-hidden="true">
+                        <Icon name="user" size={22} />
+                    </span>
+                    <h3 class="hulp-kop">Meer rekeningen dan u kunt betalen?</h3>
+                    <p>
+                        U hoeft het niet alleen op te lossen. Uw gemeente biedt gratis schuldhulp, en via Geldfit vindt u anoniem
+                        de hulp die bij u past.
+                    </p>
+                    <div class="hulp-acties">
+                        <a class="btn btn-dark" href="tel:08008115">
+                            Geldfit{"\u00a0"}0800{"\u00a0"}8115
+                        </a>
+                        <a class="textlink hulp-link" href="/hulp-nodig-bij-geldproblemen">
+                            Alle hulp op een rij
+                        </a>
+                    </div>
+                </div>
+                <div class="hulp-kaart hulp-113">
+                    <span class="hulp-icon" aria-hidden="true">
+                        <Icon name="heart" size={22} />
+                    </span>
+                    <h3 class="hulp-kop">Zware gedachten door geldzorgen?</h3>
+                    <p>
+                        Denkt u aan zelfdoding, of maakt u zich zorgen om iemand anders? Praat erover met 113 Zelfmoordpreventie.
+                        Gratis en anoniem, dag en nacht.
+                    </p>
+                    <div class="hulp-acties">
+                        <a class="btn btn-dark" href="tel:113">
+                            Bel{"\u00a0"}113
+                        </a>
+                        <a class="btn btn-ghost" href="tel:08000113">
+                            Bel{"\u00a0"}gratis{"\u00a0"}0800{"\u00a0"}0113
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={briefFaq} idx="07">
+        <Fragment slot="title">
+            Vragen over uw <span class="accent">brief</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        lead={`Bel, mail of app ons met uw dossiernummer. Op ${site.hours} helpen we u direct verder.`}
+        href="#betalen"
+        label="Direct betalen"
+    >
+        Samen vinden we een <span class="accent">oplossing</span>
+    </SlotCta>
+
+    <!-- mobiele actiebalk (eigen variant: de StickyCta is voor opdrachtgevers) -->
+    <div class="actiebalk" data-actiebalk inert>
+        <a class="btn actiebalk-main" href="#betalen" data-naar-betalen>
+            Direct betalen
+            <span class="btn-dot">
+                <Icon name="arrow" size={18} />
+            </span>
+        </a>
+        <a class="actiebalk-bel" href={site.phoneHref} aria-label={`Bel ${site.phone}`}>
+            <Icon name="phone" />
+        </a>
+    </div>
+</Base>
+
+<script>
+    import "../../scripts/brief"
+</script>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(32px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: start;
+    }
+    /* mobiel: kop, betaalkaart, snelkeuzes; desktop: kop en snelkeuzes links, betaalkaart rechts */
+    .hero-copy {
+        grid-area: copy;
+    }
+    .betaal {
+        grid-area: betaal;
+    }
+    .snel {
+        grid-area: snel;
+    }
+    .hero-grid {
+        grid-template-areas:
+            "copy"
+            "betaal"
+            "snel";
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            grid-template-areas:
+                "copy betaal"
+                "snel betaal";
+            grid-template-rows: auto 1fr;
+            row-gap: 0;
+        }
+    }
+    .hero h1 {
+        font-size: clamp(2.125rem, 1.2rem + 3.4vw, 3.875rem);
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 34em;
+    }
+    .snel {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-content: start;
+        gap: 8px;
+        max-width: 36rem;
+    }
+    @media (min-width: 1024px) {
+        .snel {
+            margin-top: 32px;
+        }
+    }
+    .snel a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 60px;
+        height: 100%;
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        background: #fff;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
+        text-decoration: none;
+        transition:
+            border-color 0.2s var(--ease),
+            box-shadow 0.2s var(--ease);
+    }
+    .snel a:hover {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px var(--blue-soft);
+    }
+    .snel-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+
+    /* betaalkaart */
+    .betaal {
+        padding: clamp(20px, 3vw, 32px);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        background: #fff;
+        box-shadow: var(--shadow-card);
+        scroll-margin-top: calc(var(--header-h) + 24px);
+    }
+    .betaal-kop {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .betaal-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+    }
+    .betaal-titel {
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: var(--ink);
+        outline: none;
+    }
+    .betaal-sub {
+        margin-top: 2px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .betaal-knop {
+        width: 100%;
+        justify-content: space-between;
+        min-height: 56px;
+        margin-top: 4px;
+    }
+    .betaal-knop[aria-busy="true"] {
+        opacity: 0.7;
+        cursor: progress;
+    }
+    .betaal-vertrouwen {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .betaal-vertrouwen li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .betaal-vertrouwen :global(svg) {
+        color: var(--green);
+    }
+    .portaal-kop {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--ink);
+        outline: none;
+    }
+    .portaal-tekst {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .portaal-gegevens {
+        display: grid;
+        gap: 8px;
+        margin: 16px 0 18px;
+    }
+    .portaal-gegevens > div {
+        display: grid;
+        gap: 2px;
+        padding: 10px 10px 10px 16px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .portaal-gegevens dt {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .portaal-gegevens dd {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .kopieer {
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        background: #fff;
+        font: inherit;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+        cursor: pointer;
+    }
+    .kopieer:focus-visible,
+    .terug:focus-visible {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .terug {
+        display: block;
+        min-height: 44px;
+        margin: 8px auto 0;
+        padding: 0 12px;
+        border: 0;
+        background: none;
+        font: inherit;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--ink);
+        text-decoration: underline;
+        text-decoration-color: var(--blue);
+        text-underline-offset: 3px;
+        cursor: pointer;
+    }
+
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+    #uitleg,
+    #regelen,
+    #echt {
+        scroll-margin-top: 16px;
+    }
+
+    /* ---------- 01 BRIEF ---------- */
+    .brief-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+    @media (min-width: 1024px) {
+        .brief-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            gap: 56px;
+            align-items: start;
+        }
+    }
+    .brief {
+        margin: 0;
+    }
+    .brief-label {
+        display: inline-block;
+        margin-bottom: 10px;
+        padding: 4px 12px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .brief-papier {
+        display: grid;
+        gap: 14px;
+        padding: clamp(20px, 3.4vw, 44px);
+        border-radius: var(--r-md);
+        background: #fff;
+        box-shadow:
+            0 1px 2px rgba(6, 17, 38, 0.06),
+            0 24px 48px -28px rgba(6, 17, 38, 0.35);
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        color: var(--ink);
+    }
+    .brief-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+    }
+    .brief-logo {
+        width: 132px;
+        height: auto;
+    }
+    .brief-afz {
+        font-size: var(--fs-xs);
+        line-height: 1.5;
+        color: var(--muted);
+        text-align: right;
+    }
+    .brief-meta {
+        display: grid;
+        gap: 4px;
+        font-size: var(--fs-sm);
+    }
+    .brief-meta > div {
+        display: grid;
+        grid-template-columns: 9.5rem minmax(0, 1fr);
+        gap: 12px;
+    }
+    .brief-meta dt {
+        color: var(--muted);
+    }
+    .brief-meta dd {
+        font-weight: 600;
+    }
+    .spec {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-sm);
+    }
+    .spec th,
+    .spec td {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line);
+        font-weight: 400;
+        text-align: left;
+        vertical-align: top;
+    }
+    .spec td {
+        padding-left: 12px;
+        text-align: right;
+        white-space: nowrap;
+    }
+    .spec-totaal th,
+    .spec-totaal td {
+        border-bottom: 0;
+        font-weight: 700;
+    }
+    .brief mark {
+        background: linear-gradient(transparent 55%, #dfe7ff 55%);
+        color: inherit;
+    }
+    .brief-groet {
+        margin-top: 4px;
+    }
+    .m {
+        display: inline-grid;
+        place-items: center;
+        min-width: 20px;
+        height: 20px;
+        margin-left: 3px;
+        padding: 0 5px;
+        border-radius: var(--r-pill);
+        background: var(--blue);
+        color: #fff;
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        line-height: 1;
+        vertical-align: 2px;
+    }
+    .brief figcaption {
+        margin-top: 12px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .uitleg {
+        display: grid;
+        gap: 10px;
+    }
+    .uitleg li {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: var(--r-lg);
+        background: #fff;
+    }
+    .m-groot {
+        min-width: 32px;
+        height: 32px;
+        margin: 0;
+        font-size: var(--fs-xs);
+        vertical-align: baseline;
+    }
+    .uitleg-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .uitleg p {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+
+    /* ---------- 02 MANIEREN ---------- */
+    .manieren {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .manieren {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .manier {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .manier p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .manier-hoofd {
+        background: var(--ink);
+    }
+    .manier-hoofd .h3 {
+        color: #fff;
+    }
+    .manier-hoofd p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+    .manier-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 8px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .manier-btn {
+        align-self: flex-start;
+        margin-top: auto;
+    }
+    .manier .btn-ghost {
+        --btn-bg: #fff;
+    }
+    .manier-onder {
+        align-self: flex-start;
+        margin-top: auto;
+    }
+    .manier-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 18px;
+        margin-top: auto;
+    }
+    .manier-acties .manier-btn {
+        margin-top: 0;
+    }
+    .manier-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+    .bank {
+        display: grid;
+        gap: 2px;
+        margin-top: auto;
+        padding: 12px 16px;
+        border-radius: var(--r-md);
+        background: #fff;
+        font-size: var(--fs-sm);
+    }
+    .bank > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0;
+    }
+    .bank dt {
+        color: var(--muted);
+    }
+    .bank dd {
+        font-weight: 600;
+        color: var(--ink);
+        text-align: right;
+    }
+    .noot {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 24px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .noot :global(svg) {
+        flex-shrink: 0;
+        margin-top: 3px;
+        color: var(--blue);
+    }
+
+    /* ---------- 03 REGELEN ---------- */
+    .regelen {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "kop"
+            "form"
+            "zij";
+        gap: 0 clamp(32px, 5vw, 72px);
+    }
+    @media (min-width: 1024px) {
+        .regelen {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            grid-template-areas:
+                "kop form"
+                "zij form";
+            align-items: start;
+        }
+    }
+    .regelen-kop {
+        grid-area: kop;
+    }
+    .regelen-zij {
+        grid-area: zij;
+        display: grid;
+        gap: 16px;
+        margin-top: 24px;
+    }
+    @media (min-width: 1024px) {
+        .regelen-zij {
+            margin-top: 0;
+        }
+    }
+    .regelen-form {
+        grid-area: form;
+        min-width: 0;
+    }
+    .reken {
+        padding: clamp(20px, 2.6vw, 28px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .reken-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .reken-velden {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 12px;
+        margin-top: 14px;
+    }
+    .reken-uit {
+        padding: 14px 16px;
+        border-radius: var(--r-md);
+        background: var(--blue-soft);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        color: var(--ink);
+    }
+    .reken-uit :global(strong) {
+        font-weight: 700;
+    }
+    .reken-neem {
+        width: 100%;
+        margin-top: 12px;
+    }
+    .reken-noot {
+        margin-top: 10px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .stappen {
+        display: grid;
+        gap: 4px;
+    }
+    .stappen li {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 14px;
+        padding: 14px 4px;
+    }
+    .stap-nr {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 700;
+    }
+    .stap-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        line-height: 1.35;
+        color: var(--ink);
+    }
+    .stappen p {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+
+    .kaart {
+        padding: clamp(20px, 3.4vw, 40px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+    }
+    .form-kop {
+        margin-bottom: 18px;
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        outline: none;
+    }
+    .velden {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0 16px;
+    }
+    @media (min-width: 640px) {
+        .velden {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+    }
+    .velden .breed {
+        grid-column: 1 / -1;
+    }
+    .keuzes,
+    .voorkeur {
+        min-width: 0;
+        margin: 0 0 18px;
+        padding: 0;
+        border: 0;
+    }
+    .voorkeur legend {
+        margin-bottom: 10px;
+        padding: 0;
+    }
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .chips label,
+    .mini-seg label {
+        position: relative;
+    }
+    .chips input,
+    .mini-seg input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .chips span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-pill);
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease,
+            color 0.15s ease;
+    }
+    .chips label:hover span {
+        border-color: #b9c0d0;
+    }
+    .chips input:checked + span {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: #fff;
+    }
+    .chips input:focus-visible + span,
+    .mini-seg input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .mini-seg {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .mini-seg span {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .mini-seg input:checked + span {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.12);
+    }
+    .vink {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 44px;
+        margin-bottom: 16px;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+        cursor: pointer;
+    }
+    .vink input {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: var(--blue);
+    }
+    .vink:has(input:focus-visible) {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+        border-radius: 6px;
+    }
+    .regelen-form :global(.veld textarea) {
+        min-height: 110px;
+    }
+    .turnstile:empty {
+        display: none;
+    }
+    .turnstile {
+        margin-bottom: 12px;
+    }
+    :global(.melding) {
+        margin: 0 0 16px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+        background: #fdecea;
+        color: #8a1c12;
+    }
+    :global(.melding[data-soort="let-op"]) {
+        background: #fff4e0;
+        color: #6b4500;
+    }
+    .form-voet {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+    }
+    .form-voet .btn[aria-busy="true"] {
+        opacity: 0.7;
+        cursor: progress;
+    }
+    .form-noot {
+        flex: 1;
+        min-width: 220px;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    @media (max-width: 519px) {
+        .form-voet .btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+    .verzonden-icon {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .verzonden-kop {
+        margin-top: 20px;
+        outline: none;
+    }
+    .verzonden .lead {
+        margin-top: 14px;
+    }
+    .verzonden-noot {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        background: #fff4e0;
+        color: #6b4500;
+        font-size: var(--fs-sm);
+    }
+
+    /* ---------- 04 ECHT ---------- */
+    .echt {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px clamp(32px, 5vw, 72px);
+    }
+    @media (min-width: 1024px) {
+        .echt {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            align-items: start;
+        }
+    }
+    .echt-kop {
+        margin-bottom: 0;
+    }
+    .twijfel {
+        margin-top: 28px;
+        padding: clamp(20px, 2.6vw, 28px);
+        border-radius: var(--r-xl);
+    }
+    .twijfel-kop {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .twijfel p:not(.twijfel-kop) {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .twijfel .btn {
+        margin-top: 18px;
+    }
+    .checks {
+        display: grid;
+        gap: 12px;
+    }
+    .check {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 16px;
+        padding: clamp(18px, 2.4vw, 26px);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+    }
+    .check-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .check-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
+    }
+    .check p {
+        margin-top: 6px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .check-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+
+    /* ---------- 05 RECHTEN ---------- */
+    .rechten {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 80%);
+        gap: 12px;
+        margin-inline: calc(var(--gutter) * -1);
+        padding-inline: var(--gutter);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--gutter);
+        scrollbar-width: none;
+    }
+    .rechten > li {
+        scroll-snap-align: start;
+    }
+    @media (min-width: 720px) {
+        .rechten {
+            grid-auto-flow: row;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-inline: 0;
+            padding-inline: 0;
+            overflow: visible;
+        }
+    }
+    @media (min-width: 1100px) {
+        .rechten {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .recht {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: clamp(22px, 2.6vw, 30px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .recht-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 6px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .recht-kop {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .recht p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .rechten-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 28px;
+        margin-top: 24px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+    .rechten-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    /* ---------- 06 HULP ---------- */
+    .hulp {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .hulp {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .hulp-kaart {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(24px, 3.4vw, 44px);
+        border-radius: var(--r-xl);
+        background: var(--surface);
+    }
+    .hulp-113 {
+        background: var(--blue-soft);
+    }
+    .hulp-icon {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 6px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .hulp-kop {
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        color: var(--ink);
+    }
+    .hulp-kaart p {
+        max-width: 34em;
+        line-height: 1.65;
+        color: var(--text);
+    }
+    .hulp-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 18px;
+        margin-top: auto;
+        padding-top: 10px;
+    }
+    .hulp-acties .btn-ghost {
+        --btn-bg: #fff;
+    }
+    .hulp-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+
+    /* ---------- mobiele actiebalk ---------- */
+    .actiebalk {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        z-index: 40;
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        border-radius: var(--r-pill);
+        background: rgba(6, 17, 38, 0.94);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 16px 32px -12px rgba(6, 17, 38, 0.5);
+        transform: translateY(calc(100% + 24px));
+        transition: transform 0.35s var(--ease);
+    }
+    .actiebalk.is-visible {
+        transform: none;
+    }
+    :global(html.menu-open) .actiebalk {
+        display: none;
+    }
+    @media (min-width: 1080px) {
+        .actiebalk {
+            display: none;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .actiebalk {
+            transition: none;
+        }
+    }
+    .actiebalk-main {
+        flex: 1;
+        min-height: 48px;
+        padding-left: 20px;
+        padding-block: 4px;
+    }
+    .actiebalk-main .btn-dot {
+        width: 36px;
+        height: 36px;
+        margin-left: auto;
+    }
+    .actiebalk-bel {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 56px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+    }
+</style>

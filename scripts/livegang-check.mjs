@@ -67,6 +67,7 @@ const PAGINAS = [
     "/branches",
     "/tarieven",
     "/klachtenregelement",
+    "/brief-ontvangen", // stond in header en footer van de Framer-site
     "/juridisch",
     "/juridisch/algemene-voorwaarden",
     "/juridisch/privacy-beleid",
@@ -81,7 +82,6 @@ const PAGINAS = [
 const REDIRECTS = {
     "/faq": [301, "/#veelgestelde-vragen"],
     "/sitemap.xml": [301, "/sitemap-index.xml"],
-    "/brief-ontvangen": [302, "/hulp-nodig-bij-geldproblemen#brief"],
     "/privacy": [301, "/juridisch/privacy-beleid"],
     "/klachtenregeling": [301, "/klachtenregelement"],
     "/incasso/": [307, "/incasso"], // drop-trailing-slash van Workers (status kan 307 of 308 zijn)

@@ -102,19 +102,19 @@ Elke pagina krijgt één hoofdvraag van de bezoeker. Elke sectie op die pagina b
 
 ### Fase C: content, SEO en debiteur
 
-| URL                                          | Opmerking                                                                                                                                                                                                       |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/kennisbank` + 27 artikelen ✓ (6 nov)       | Gebouwd als content collection (`src/content/kennisbank`), slugs gelijk aan Framer, alle artikelen herschreven.                                                                                                 |
-| `/brief-ontvangen`                           | **Later** (besluit gebruiker): direct betalen en regelingen vragen een koppeling met CaseControl (debiteurenportaal `site.debtorPortal`). Eerst uitzoeken wat CaseControl biedt (betaallink, portaal-deeplink). |
-| `/hulp-nodig-bij-geldproblemen` ✓ (7 nov)    | Voor debiteuren: situatiekiezer, negen instanties, brief van GeldGarant, 113                                                                                                                                    |
-| `/werken-bij` + 3 vacatures ✓ (7 nov)        | Slugs behouden; template `werken-bij/[slug].astro`, inhoud `src/data/vacatures.ts`, JobPosting-schema                                                                                                           |
-| **Optioneel nieuw:** `/incassobureau/<stad>` | Lokale SEO zoals Breyta's `/steden`. Alleen met echte, unieke inhoud per stad; anders zijn het "doorway pages", en daar straft Google voor.                                                                     |
-| **Optioneel nieuw:** `/reviews`              | Pas als er echte reviews zijn                                                                                                                                                                                   |
+| URL                                          | Opmerking                                                                                                                                                                                               |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/kennisbank` + 27 artikelen ✓ (6 nov)       | Gebouwd als content collection (`src/content/kennisbank`), slugs gelijk aan Framer, alle artikelen herschreven.                                                                                         |
+| `/brief-ontvangen` ✓ (7 nov)                 | Direct betalen via CaseControl (dossiernummer + bedrag), voorbeeldbrief, regeling/al betaald/niet eens via `/api/contact`, echtheid, rechten. Plus `/bedankt` en `/mislukt` (noindex). Zie HANDOFF §6b. |
+| `/hulp-nodig-bij-geldproblemen` ✓ (7 nov)    | Voor debiteuren: situatiekiezer, negen instanties, brief van GeldGarant, 113                                                                                                                            |
+| `/werken-bij` + 3 vacatures ✓ (7 nov)        | Slugs behouden; template `werken-bij/[slug].astro`, inhoud `src/data/vacatures.ts`, JobPosting-schema                                                                                                   |
+| **Optioneel nieuw:** `/incassobureau/<stad>` | Lokale SEO zoals Breyta's `/steden`. Alleen met echte, unieke inhoud per stad; anders zijn het "doorway pages", en daar straft Google voor.                                                             |
+| **Optioneel nieuw:** `/reviews`              | Pas als er echte reviews zijn                                                                                                                                                                           |
 
 ### Fase D: juridisch en techniek
 
 - ✓ (7 nov) `/klachtenregelement`, `/juridisch` (nieuw overzicht), `/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid`, `/juridisch/cookie-beleid`.
-- ✓ (7 nov) Redirects in `public/_redirects`: `/faq` → `/#veelgestelde-vragen` (301), `/brief-ontvangen` tijdelijk 302, gangbare varianten. OG-beeld per pagina (`scripts/og.mjs`).
+- ✓ (7 nov) Redirects in `public/_redirects`: `/faq` → `/#veelgestelde-vragen` (301), gangbare varianten. OG-beeld per pagina (`scripts/og.mjs`). De tijdelijke 302 van `/brief-ontvangen` is weg (pagina bestaat).
 - ✓ 404-pagina, sitemap en robots (eerder).
 - Overweeg een verwerkersovereenkomst, zoals Breyta: zakelijke opdrachtgevers vragen daarom.
 - Bedankpagina's per formulier: niet nodig, de formulieren tonen een succespaneel met referentie.

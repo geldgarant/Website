@@ -12,10 +12,11 @@ module.exports = {
             },
         },
         assert: {
-            // 404.html staat bewust op noindex (SEO-score zakt dan per definitie); alle andere pagina's moeten 95+ halen
+            // 404.html en de terugkeerpagina's na betaling staan bewust op noindex (SEO-score zakt dan per definitie);
+            // alle andere pagina's moeten 95+ halen
             assertMatrix: [
                 {
-                    matchingUrlPattern: "^(?!.*/404\\.html).*$",
+                    matchingUrlPattern: "^(?!.*(/404\\.html|/brief-ontvangen/(bedankt|mislukt))).*$",
                     assertions: {
                         "categories:performance": ["error", { minScore: 0.95 }],
                         "categories:accessibility": ["error", { minScore: 0.95 }],

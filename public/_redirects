@@ -10,9 +10,6 @@
 # Framer-pagina die verdwijnt (stond op noindex)
 /faq                          /#veelgestelde-vragen                  301
 
-# Tijdelijk: de debiteurenpagina komt later, met de CaseControl-koppeling (dan deze regel weghalen)
-/brief-ontvangen              /hulp-nodig-bij-geldproblemen#brief    302
-
 # Juridisch
 /juridisch/privacyverklaring  /juridisch/privacy-beleid              301
 /juridisch/cookieverklaring   /juridisch/cookie-beleid               301

@@ -364,3 +364,40 @@ export const branchesFaq = [
         a: "Ja. Bij particulieren sturen we altijd eerst de wettelijke 14-dagenbrief en gelden strengere regels voor kosten en rente. Bij bedrijven gelden de wettelijke handelsrente en zakelijke termijnen. Wij passen de aanpak per debiteur aan.",
     },
 ] as const
+
+// Vragen op /brief-ontvangen (debiteuren). Toon: rustig, B1, geen druk (art. 3 Regeling kwaliteit incassodienstverlening).
+// Toezeggingen alleen als ze elders bevestigd zijn: regeling schriftelijk, overleg met schuldhulpverlener (Anas, 7 nov 2026).
+export const briefFaq = [
+    {
+        q: "Is deze brief echt van GeldGarant?",
+        a: "GeldGarant staat in het openbare register van Justis onder nummer 00273. Twijfelt u aan een brief, e-mail of sms? Bel ons via het nummer op deze website, niet via een nummer uit het bericht, en noem uw dossiernummer. Dan zeggen wij u of het bericht van ons komt.",
+    },
+    {
+        q: "Waarom moet ik incassokosten betalen?",
+        a: "Als een factuur na de vervaldatum niet is betaald, mag de schuldeiser incassokosten rekenen. De wet begrenst hoe hoog die mogen zijn: ze hangen af van het bedrag van de factuur. Bent u particulier, dan mogen ze pas na een aanmaning met 14 dagen betaaltermijn. In onze brief staat precies welk bedrag waarvoor is.",
+    },
+    {
+        q: "Kan ik uitstel krijgen of in termijnen betalen?",
+        a: "Vaak wel. Vraag het aan voor de datum in onze brief, via het formulier op deze pagina of telefonisch. We bekijken uw voorstel samen met onze opdrachtgever. Een afspraak leggen we altijd schriftelijk vast, zodat u weet waar u aan toe bent.",
+    },
+    {
+        q: "Wat gebeurt er als ik niet reageer?",
+        a: "Dan blijft het bedrag openstaan en loopt de rente door. Onze opdrachtgever kan daarna besluiten de zaak aan de rechter voor te leggen; dan komen er kosten bij. Zover hoeft het niet te komen. Neem contact op, ook als u nu niet kunt betalen.",
+    },
+    {
+        q: "Ik heb al betaald. Wat nu?",
+        a: "Dan hebben uw betaling en onze brief elkaar waarschijnlijk gekruist. Een overboeking kan een paar werkdagen onderweg zijn. Geef uw betaling door met de datum en het bedrag, via het formulier op deze pagina. Wij zoeken het uit en laten het u weten.",
+    },
+    {
+        q: "Ik heb de brief niet meer of weet mijn dossiernummer niet.",
+        a: "Bel of mail ons met uw naam en adres. Dan zoeken wij uw dossier op en geven we u de gegevens opnieuw.",
+    },
+    {
+        q: "De brief is niet voor mij bedoeld. Wat moet ik doen?",
+        a: "Laat het ons zo snel mogelijk weten, met de naam en het adres op de brief. Wij controleren het en passen onze gegevens aan.",
+    },
+    {
+        q: "Wat doen jullie met mijn gegevens?",
+        a: "Wij gebruiken uw gegevens alleen om dit dossier af te handelen en bewaren ze niet langer dan nodig. Hoe we dat doen en welke rechten u heeft, leest u in onze privacyverklaring.",
+    },
+] as const
