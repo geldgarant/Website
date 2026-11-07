@@ -29,8 +29,18 @@ export const site = {
     // te nemen. Staat de worker-route POST /api/betaallink live (projectdocument claude/intake-worker-betaallink.js),
     // zet dan hier "https://api.geldgarant.com/api/betaallink": de bezoeker gaat dan direct naar de betaalpagina.
     betaalLinkApi: null as string | null,
-    // Derdengeldenrekening voor overmaken. Leeg = "staat in onze brief". Aanvullen zodra GeldGarant ze bevestigt.
-    derdengelden: { iban: null as string | null, tenaamstelling: null as string | null },
+    // Derdengeldenrekening (bevestigd door GeldGarant, 7 nov 2026). Kenmerk bij overmaken = dossiernummer.
+    derdengelden: {
+        iban: "NL57 BUNQ 2188 2124 36" as string | null,
+        tenaamstelling: "Stichting Beheer Derdengelden GeldGarant" as string | null,
+        bic: "BUNQNL2AXXX",
+    },
+    // Online betalen gaat via iDEAL (bevestigd 7 nov 2026)
+    betaalMethode: "iDEAL",
+    // Afzender van e-mails over dossiers (CaseControl-mailbox), genoemd bij "Is deze brief echt?"
+    dossierMail: "info@dossiers.geldgarant.com",
+    // Formaat van een dossiernummer in CaseControl: jaar-volgnummer (zoals 26-1008). Dit voorbeeld is fictief.
+    dossierVoorbeeld: "26-0412",
 }
 
 export const nav = [

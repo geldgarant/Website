@@ -28,7 +28,7 @@ const url = "https://geldgarant.com/brief-ontvangen"
 
 // Rekenvoorbeeld voor de voorbeeldbrief (gelabeld als voorbeeld). Kosten en rente komen uit dezelfde code als de rekenhulpen.
 const vb = {
-    dossier: "2026-00412",
+    dossier: site.dossierVoorbeeld,
     opdrachtgever: "Installatiebedrijf Voorbeeld",
     factuur: "2026-118",
     factuurDatum: "2 oktober 2026",
@@ -81,14 +81,19 @@ const echt = [
         link: { href: site.incassoRegisterHref, label: "Bekijk onze inschrijving", extern: true },
     },
     {
+        icon: "mail",
+        kop: "Onze e-mails komen van een vast adres",
+        tekst: `E-mails over uw dossier komen van ${site.dossierMail}. Twijfelt u aan een afzender, stuur het bericht dan door naar ons en wij kijken mee.`,
+    },
+    {
         icon: "doc",
         kop: "Uw gegevens en de specificatie kloppen",
         tekst: "In onze brief staan uw dossiernummer, de naam van onze opdrachtgever en een specificatie van het bedrag. Ontbreekt iets of klopt het niet? Neem dan eerst contact met ons op.",
     },
     {
         icon: "euro",
-        kop: "U betaalt nooit via een omweg",
-        tekst: "Start een online betaling het liefst hier op geldgarant.com. Wij vragen nooit om te betalen met een cadeaukaart, crypto of via een tussenpersoon.",
+        kop: "U betaalt alleen aan onze derdengeldenrekening",
+        tekst: `Online met ${site.betaalMethode} hier op geldgarant.com, of door over te maken naar ${site.derdengelden.tenaamstelling} (${site.derdengelden.iban}). Wij vragen nooit om te betalen met een cadeaukaart, crypto of via een tussenpersoon.`,
     },
     {
         icon: "key",
@@ -193,7 +198,7 @@ const jsonLd = [
                             id="b-dossier"
                             name="dossier"
                             label="Dossiernummer"
-                            hint="Staat bovenaan in onze brief of e-mail."
+                            hint={`Staat bovenaan in onze brief of e-mail, bijvoorbeeld ${site.dossierVoorbeeld}.`}
                             autocomplete="off"
                             maxlength={30}
                         />
@@ -258,7 +263,7 @@ const jsonLd = [
                     <ul role="list" class="betaal-vertrouwen">
                         <li>
                             <Icon name="shield" size={16} />
-                            Beveiligde betaalomgeving
+                            Betalen met {site.betaalMethode}
                         </li>
                         <li>
                             <Icon name="check" size={16} />
@@ -453,7 +458,10 @@ const jsonLd = [
                         <Icon name="bolt" size={22} />
                     </span>
                     <h3 class="h3">Online, direct</h3>
-                    <p>Met uw dossiernummer en het bedrag. U rondt de betaling af in een beveiligde betaalomgeving.</p>
+                    <p>
+                        Met uw dossiernummer en het bedrag. U betaalt met {site.betaalMethode}, in de vertrouwde omgeving van uw
+                        eigen bank.
+                    </p>
                     <a class="btn manier-btn" href="#betalen" data-naar-betalen>
                         Direct betalen
                         <span class="btn-dot">
@@ -477,6 +485,10 @@ const jsonLd = [
                                 <div>
                                     <dt>Ten name van</dt>
                                     <dd>{ibanNaam}</dd>
+                                </div>
+                                <div>
+                                    <dt>BIC</dt>
+                                    <dd class="num">{site.derdengelden.bic}</dd>
                                 </div>
                                 <div>
                                     <dt>Kenmerk</dt>
@@ -756,7 +768,7 @@ const jsonLd = [
                     Is deze brief echt van <span class="accent">ons</span>?
                 </h2>
                 <p class="lead">
-                    Oplichters sturen soms nepberichten uit naam van incassobureaus. Met deze vier punten weet u snel of een
+                    Oplichters sturen soms nepberichten uit naam van incassobureaus. Met deze vijf punten weet u snel of een
                     bericht echt van GeldGarant komt.
                 </p>
                 <div class="twijfel bg-ink">

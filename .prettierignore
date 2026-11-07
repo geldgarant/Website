@@ -6,3 +6,6 @@ package-lock.json
 test-results
 playwright-report
 .lighthouseci
+# CaseControl-brieftemplates: opmaak bewust zoals dompdf hem rendert
+brieven/*.html
+brieven/voorbeeld
