@@ -1,5 +1,5 @@
 ---
-title: "Incasso voor zzp'ers: zo krijgt u uw geld zonder gedoe"
+title: "Factuur niet betaald als zzp'er: zo krijgt u uw geld zonder gedoe"
 seoTitle: "Factuur niet betaald als zzp'er? Zo pakt u het aan | GeldGarant"
 description: "Klant betaalt niet en u bent zzp'er? Zo volgt u zakelijk op, dit kost incasso, en zo beschermt u zich bij de volgende opdracht."
 onderwerp: situatie

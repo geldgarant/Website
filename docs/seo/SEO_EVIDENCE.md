@@ -152,3 +152,15 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
       "incasso bouw" 38 (21,8), "incasso groothandel" 33 (13,9), "incasso zorg" 20 (13,9).
 - Beperking: de data meet de oude Framer-pagina's op dezelfde URL's; effect van de nieuwe site pas over 2 tot 4 weken
   zichtbaar.
+
+### E10. Productiecrawl na batch 3 en titelscheiding (8 nov 2026, ±01:30, via 4G)
+
+- `node scripts/seo/crawl.mjs`: 70 URL's, alle 200, geen afwijkingen behalve de 3 dunne functionele pagina's;
+  `weinigInlinks` leeg. Varianten: `http://geldgarant.com/` → 301 naar https (Always Use HTTPS werkt);
+  `http://www.` → 301 naar `https://www.` → 301 naar root (twee stappen, acceptabel).
+- Verbinding: op het wifi van de huidige locatie van de gebruiker opent geldgarant.com niet (TCP naar 188.114.96.0/97.0
+  faalt), andere sites wel; via 4G wel. Apart uitzoeken (niet-SEO).
+- Titels gescheiden (masterplan 7b, akkoord gebruiker 8 nov), lengtes 54 tot 63 tekens: `/branches/incasso-zzp`,
+  `/branches/incasso-verhuur`, `/tarieven`, en kennisbank `huurachterstand-incasseren`, `wki-proof-werken-2026`,
+  `wat-kost-incasso-uitbesteden`; H1 van kennisbank `incasso-zzp` en `huurachterstand-incasseren`. Check, lint, unit,
+  html, seo groen; e2e van de geraakte pagina's 99 groen.

@@ -1,6 +1,6 @@
 ---
 title: "Wat kost incasso uitbesteden? Kosten en no cure no pay uitgelegd"
-seoTitle: "Wat kost een incassobureau? Tarieven uitgelegd | GeldGarant"
+seoTitle: "Incassotarieven vergeleken: no cure no pay en meer | GeldGarant"
 description: "Wat kost een incassobureau? Hoe de wettelijke staffel werkt, wie de incassokosten betaalt, wat no cure no pay echt betekent en waar u op let bij tarieven."
 onderwerp: kosten
 lead: "Bij de meeste incassobureaus betaalt de debiteur de rekening, niet u. Maar de verschillen zitten in de kleine letters: succesfees, abonnementen en kosten als het misgaat. Zo vergelijkt u eerlijk."

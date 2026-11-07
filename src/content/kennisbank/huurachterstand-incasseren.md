@@ -1,6 +1,6 @@
 ---
-title: "Huurachterstand: zo incasseert u als verhuurder"
-seoTitle: "Huurachterstand incasseren als verhuurder | GeldGarant"
+title: "Huurachterstand: wat u als verhuurder per stap doet"
+seoTitle: "Huurachterstand: stappen, borg en ontruiming | GeldGarant"
 description: "Huurder betaalt niet? Wat u vanaf de eerste maand doet, wanneer de 14-dagenbrief nodig is, de regels voor de borg en wanneer ontruiming kan."
 onderwerp: situatie
 lead: "Een huurachterstand groeit elke maand. Wie snel handelt, heeft de meeste kans dat de huurder betaalt of een regeling treft. Wie wacht, staat na een half jaar voor een groot bedrag en een lange procedure. Dit is de aanpak voor woon- en bedrijfsruimte."

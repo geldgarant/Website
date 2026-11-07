@@ -178,7 +178,7 @@ export const brancheData: Branche[] = [
         icon: "key",
         voor: "verhuurders",
         bij: "bij verhuur",
-        title: "Incasso huurachterstand voor verhuurders | GeldGarant",
+        title: "Incasso voor verhuurders: huurachterstand innen | GeldGarant",
         description:
             "Huurachterstand bij een huurder? GeldGarant int voor verhuurders van woningen, bedrijfsruimte en materieel. Correct, volgens de regels en met oog voor de huurder.",
         h1: ["Incasso voor ", "verhuurders"],
@@ -675,7 +675,7 @@ export const brancheData: Branche[] = [
         icon: "person",
         voor: "zzp’ers",
         bij: "voor zzp’ers",
-        title: "Incasso voor zzp’ers | Factuur niet betaald? | GeldGarant",
+        title: "Incassobureau voor zzp’ers | Ook voor één factuur | GeldGarant",
         description:
             "Klant betaalt uw factuur niet? GeldGarant int voor zzp’ers, ook bij één factuur. Geen abonnement, geen opstartkosten en bij volledige betaling betaalt u niets.",
         h1: ["Incasso voor ", "zzp’ers"],

@@ -25,7 +25,7 @@ lokale aanwezigheid en vermeldingen.
 | 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                |
 | 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | klaar (batch 3, E7)            |
 | 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | kaart klaar (E8), SERP deels   |
-| 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | open                           |
+| 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | klaar (batch 4, E10)           |
 | 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | open                           |
 | 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | profiel bestaat; toegang nodig |
 | 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | open                           |
@@ -83,7 +83,7 @@ Systeemkaart (kort; details in `CLAUDE.md`, `docs/HANDOFF.md`, `docs/OVERDRACHT.
   `/kennisbank/wki-proof-werken-2026`, `/branches/incasso-zzp` ↔ `/kennisbank/incasso-zzp`, `/branches/incasso-verhuur`
   ↔ `/kennisbank/huurachterstand-incasseren`, `/tarieven` ↔ `/kennisbank/wat-kost-incasso-uitbesteden`.
   Voorstel: branchepagina's richten op "incassobureau voor …" (commercieel), kennisbank houdt de probleemvraag;
-  kennisbanktitel Wki richten op "Wki-proof werken als schuldeiser". Pas na akkoord of na GSC-data wijzigen.
+  kennisbanktitel Wki richten op "Wki-proof werken als schuldeiser". Doorgevoerd in batch 4 (akkoord gebruiker, E10).
 
 ## Fase 3. Technische SEO
 

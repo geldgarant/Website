@@ -1,7 +1,7 @@
 ---
 title: "De Wki in 2026: wat de wet van uw incassobureau vraagt"
-seoTitle: "Wet kwaliteit incassodienstverlening (Wki) 2026 | GeldGarant"
-description: "Wat de Wet kwaliteit incassodienstverlening regelt, de eisen aan incassobureaus, wat er sinds 1 oktober 2026 verandert en hoe u een bureau controleert."
+seoTitle: "Wki 2026: zo controleert u een incassobureau | GeldGarant"
+description: "Wat de Wki in 2026 van uw incassobureau vraagt, wat er sinds 1 oktober 2026 verandert en hoe u zelf controleert of een bureau aan de eisen voldoet."
 onderwerp: regels
 lead: "Sinds 1 april 2024 moet elk incassobureau dat voor anderen int, geregistreerd zijn bij Justis en voldoen aan kwaliteitseisen. Sinds 1 oktober 2026 heeft dat ook directe gevolgen voor u als opdrachtgever: bij een bureau zonder registratie vervallen de incassokosten en rente."
 kort:
