@@ -11,7 +11,8 @@ import Feitenkaart from "../../components/Feitenkaart.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
 import { site } from "../../data/site"
-import { vacatures, procedure, werkenFaq, sollicitatieMail } from "../../data/vacatures"
+import Sollicitatie from "../../components/Sollicitatie.astro"
+import { vacatures, procedure, werkenFaq, salarisTekst } from "../../data/vacatures"
 
 const title = "Werken bij GeldGarant | Vacatures in Deventer"
 const description =
@@ -114,7 +115,7 @@ const jsonLd = [
                                 <Icon name="arrow" size={18} />
                             </span>
                         </a>
-                        <a class="btn btn-ghost" href="#open">
+                        <a class="btn btn-ghost" href="#open-sollicitatie">
                             Open sollicitatie
                         </a>
                     </div>
@@ -147,6 +148,12 @@ const jsonLd = [
                                 <Icon name="clock" size={14} />
                                 {v.uren}
                             </span>
+                            {v.salaris && (
+                                <span class="chip">
+                                    <Icon name="euro" size={14} />
+                                    {salarisTekst(v.salaris)}
+                                </span>
+                            )}
                             {v.employmentType.includes("INTERN") && <span class="chip chip-blue">Stage</span>}
                         </div>
                         <h3 class="h3">
@@ -177,13 +184,13 @@ const jsonLd = [
                     </div>
                     <h3 class="h3">Staat uw functie er niet bij?</h3>
                     <p class="vac-kort">
-                        Stuur ons uw cv en een korte motivatie. Vertel welk werk u zoekt en waar u goed in bent. Past er nu niets,
-                        dan nemen we contact op zodra dat wel zo is.
+                        Stuur ons uw cv en vertel welk werk u zoekt en waar u goed in bent. We kijken serieus of er een plek voor
+                        u is.
                     </p>
-                    <a class="btn btn-light" href={sollicitatieMail("open sollicitatie")}>
+                    <a class="btn btn-light" href="#open-sollicitatie">
                         Stuur een open sollicitatie
                         <span class="btn-dot">
-                            <Icon name="mail" size={16} />
+                            <Icon name="arrow" size={16} />
                         </span>
                     </a>
                 </li>
@@ -274,7 +281,28 @@ const jsonLd = [
         </div>
     </section>
 
-    <Faq items={werkenFaq} idx="05">
+    <!-- 05 OPEN SOLLICITATIE -->
+    <section class="section bg-surface open-sec" id="open-sollicitatie" aria-labelledby="open-title">
+        <div class="wrap open-grid">
+            <div class="open-copy">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Open sollicitatie
+                </p>
+                <h2 class="h2" id="open-title">
+                    Vertel ons wat u <span class="accent">zoekt</span>
+                </h2>
+                <p class="lead">
+                    Geen passende vacature, maar wel zin om bij ons te werken? Upload uw cv en vertel welk werk u zoekt. Past er
+                    nu niets, dan bewaren we uw gegevens alleen met uw toestemming.
+                </p>
+            </div>
+            <div class="open-kaart">
+                <Sollicitatie functie="Open sollicitatie" id="open" />
+            </div>
+        </div>
+    </section>
+
+    <Faq items={werkenFaq} idx="06">
         <Fragment slot="title">
             Vragen over <span class="accent">solliciteren</span>
         </Fragment>
@@ -465,6 +493,33 @@ const jsonLd = [
             width: 100%;
             justify-content: space-between;
         }
+    }
+
+    /* ---------- 05 OPEN SOLLICITATIE ---------- */
+    #open-sollicitatie {
+        scroll-margin-top: 16px;
+    }
+    .open-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(28px, 4vw, 72px);
+    }
+    @media (min-width: 1024px) {
+        .open-grid {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            align-items: start;
+        }
+    }
+    .open-copy .h2 {
+        margin-top: 14px;
+    }
+    .open-copy .lead {
+        margin-top: 20px;
+    }
+    .open-kaart {
+        padding: clamp(22px, 3.5vw, 40px);
+        border-radius: var(--r-xl);
+        background: #fff;
     }
 
     /* ---------- 02 DAG ---------- */

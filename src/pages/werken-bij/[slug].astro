@@ -9,8 +9,9 @@ import Icon from "../../components/Icon.astro"
 import Crumbs from "../../components/Crumbs.astro"
 import Feitenkaart from "../../components/Feitenkaart.astro"
 import SlotCta from "../../components/SlotCta.astro"
+import Sollicitatie from "../../components/Sollicitatie.astro"
 import { site } from "../../data/site"
-import { vacatures, procedure, sollicitatieMail, type Vacature } from "../../data/vacatures"
+import { vacatures, procedure, salarisTekst, type Vacature } from "../../data/vacatures"
 
 export function getStaticPaths() {
     return vacatures.map((v) => ({ params: { slug: v.slug }, props: { v } }))
@@ -20,8 +21,8 @@ interface Props {
 }
 const { v } = Astro.props
 const url = `https://geldgarant.com/werken-bij/${v.slug}`
-const mail = sollicitatieMail(v.titel)
 const andere = vacatures.filter((x) => x.slug !== v.slug)
+const kern = v.salaris ? [`${salarisTekst(v.salaris)} bruto per maand`, ...v.kernpunten] : v.kernpunten
 
 const lijst = (items: readonly string[]) => `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`
 const jsonLd = [
@@ -32,7 +33,21 @@ const jsonLd = [
         description: `<p>${v.lead}</p><h3>Wat u gaat doen</h3>${lijst(v.taken)}<h3>Wie wij zoeken</h3>${lijst(v.profiel)}`,
         datePosted: v.datePosted,
         employmentType: v.employmentType,
-        directApply: false,
+        directApply: true,
+        ...(v.salaris
+            ? {
+                  baseSalary: {
+                      "@type": "MonetaryAmount",
+                      currency: "EUR",
+                      value: {
+                          "@type": "QuantitativeValue",
+                          minValue: v.salaris.min,
+                          maxValue: v.salaris.max,
+                          unitText: "MONTH",
+                      },
+                  },
+              }
+            : {}),
         hiringOrganization: {
             "@type": "Organization",
             name: site.name,
@@ -78,7 +93,7 @@ const jsonLd = [
                     </h1>
                     <p class="lead">{v.lead}</p>
                     <ul role="list" class="kern">
-                        {v.kernpunten.map((k) => (
+                        {kern.map((k) => (
                             <li>
                                 <Icon name="check" size={18} />
                                 {k}
@@ -86,7 +101,7 @@ const jsonLd = [
                         ))}
                     </ul>
                     <div class="hero-actions">
-                        <a class="btn" href={mail}>
+                        <a class="btn" href="#solliciteren">
                             Solliciteer direct
                             <span class="btn-dot">
                                 <Icon name="arrow" size={18} />
@@ -192,11 +207,11 @@ const jsonLd = [
                     <h2 class="zij-kop" id="zij-title">
                         Interesse?
                     </h2>
-                    <p>Stuur uw cv en een korte motivatie. Liever eerst iets vragen? Bel of mail ons gerust.</p>
-                    <a class="btn btn-light" href={mail}>
+                    <p>Upload uw cv, het kost u twee minuten. Liever eerst iets vragen? Bel of mail ons gerust.</p>
+                    <a class="btn btn-light" href="#solliciteren">
                         Solliciteer direct
                         <span class="btn-dot">
-                            <Icon name="mail" size={16} />
+                            <Icon name="arrow" size={16} />
                         </span>
                     </a>
                     <ul role="list" class="zij-contact">
@@ -218,12 +233,43 @@ const jsonLd = [
         </div>
     </div>
 
-    <!-- 05 ANDERE VACATURES -->
+    <!-- 05 SOLLICITEREN -->
+    <section class="section sol-sec" id="solliciteren" aria-labelledby="sol-title">
+        <div class="wrap sol-grid">
+            <div class="sol-copy">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Solliciteer direct
+                </p>
+                <h2 class="h2" id="sol-title">
+                    Klaar in twee <span class="accent">minuten</span>
+                </h2>
+                <p class="lead">Uw cv en een paar zinnen over uzelf. Meer hebben we niet nodig om kennis te maken.</p>
+                <ul role="list" class="sol-punten">
+                    <li>
+                        <Icon name="check" size={16} />U krijgt direct een bevestiging per e-mail
+                    </li>
+                    <li>
+                        <Icon name="check" size={16} />
+                        We lezen elke sollicitatie zelf
+                    </li>
+                    <li>
+                        <Icon name="check" size={16} />
+                        Uw gegevens zijn binnen vier weken na afloop weg
+                    </li>
+                </ul>
+            </div>
+            <div class="sol-kaart">
+                <Sollicitatie functie={v.titel} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 06 ANDERE VACATURES -->
     <section class="section" aria-labelledby="andere-title">
         <div class="wrap">
             <div class="kop">
                 <p class="eyebrow">
-                    <span class="idx">05</span> Bekijk ook
+                    <span class="idx">06</span> Bekijk ook
                 </p>
                 <h2 class="h2" id="andere-title">
                     Andere <span class="accent">vacatures</span>
@@ -245,7 +291,7 @@ const jsonLd = [
                     </li>
                 ))}
                 <li>
-                    <a class="ander ander-open" href="/werken-bij#open">
+                    <a class="ander ander-open" href="/werken-bij#open-sollicitatie">
                         <span class="ander-meta">Geen passende functie?</span>
                         <span class="ander-titel">Open sollicitatie</span>
                         <span class="ander-kort">Vertel ons welk werk u zoekt en waar u goed in bent.</span>
@@ -259,8 +305,8 @@ const jsonLd = [
     </section>
 
     <SlotCta
-        lead={`Stuur uw cv en een korte motivatie naar ${site.email}. We nemen contact met u op.`}
-        href={mail}
+        lead="Upload uw cv en vertel kort waar u goed in bent. We nemen contact met u op."
+        href="#solliciteren"
         label="Solliciteer direct"
     >
         Klaar voor de <span class="accent">volgende</span> stap?
@@ -512,7 +558,54 @@ const jsonLd = [
         overflow-wrap: anywhere;
     }
 
-    /* ---------- 05 ANDERE ---------- */
+    /* ---------- 05 SOLLICITEREN ---------- */
+    #solliciteren {
+        scroll-margin-top: 16px;
+    }
+    .sol-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(28px, 4vw, 72px);
+    }
+    @media (min-width: 1024px) {
+        .sol-grid {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            align-items: start;
+        }
+    }
+    .sol-copy .h2 {
+        margin-top: 14px;
+    }
+    .sol-copy .lead {
+        margin-top: 20px;
+    }
+    .sol-punten {
+        display: grid;
+        gap: 10px;
+        margin-top: 24px;
+    }
+    .sol-punten li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .sol-punten :global(svg) {
+        flex-shrink: 0;
+        margin-top: 3px;
+        color: var(--green);
+    }
+    .sol-kaart {
+        padding: clamp(22px, 3.5vw, 40px);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        background: #fff;
+        box-shadow: var(--shadow-card);
+    }
+
+    /* ---------- 06 ANDERE ---------- */
     .andere {
         display: grid;
         grid-template-columns: minmax(0, 1fr);

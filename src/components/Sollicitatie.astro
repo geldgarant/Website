@@ -1,0 +1,302 @@
+---
+// Sollicitatieformulier met cv-upload. Gebruikt op elke vacature (#solliciteren) en op /werken-bij (open sollicitatie).
+// Logica: src/scripts/sollicitatie.ts, contract: src/lib/sollicitatie.ts (POST /api/sollicitatie op de intake-worker).
+// Mislukt het versturen, dan blijft e-mail als terugvaloptie zichtbaar (mailto met het onderwerp al ingevuld).
+import Veld from "./form/Veld.astro"
+import Icon from "./Icon.astro"
+import { site } from "../data/site"
+import { sollicitatieMail } from "../data/vacatures"
+import { CV_ACCEPT } from "../lib/sollicitatie"
+
+interface Props {
+    functie: string
+    id?: string
+}
+const { functie, id = "sol" } = Astro.props
+---
+
+<div class="sol" data-sollicitatie data-functie={functie}>
+    <form class="sol-form" novalidate aria-label={`Solliciteren: ${functie}`}>
+        <div class="sol-rij">
+            <Veld id={`${id}-naam`} name="naam" label="Naam" autocomplete="name" required maxlength={120} />
+            <Veld id={`${id}-email`} name="email" label="E-mailadres" type="email" autocomplete="email" required />
+        </div>
+        <Veld
+            id={`${id}-telefoon`}
+            name="telefoon"
+            label="Telefoonnummer"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+            maxlength={30}
+        />
+
+        <div class="veld" data-veld="cv">
+            <span class="veld-label" id={`${id}-cv-label`}>
+                Uw cv
+            </span>
+            <label class="drop" data-drop>
+                <input
+                    id={`${id}-cv`}
+                    class="drop-input"
+                    type="file"
+                    name="cv"
+                    accept={CV_ACCEPT}
+                    aria-labelledby={`${id}-cv-label ${id}-cv-tekst`}
+                    aria-describedby={`${id}-cv-fout`}
+                    data-cv
+                />
+                <span class="drop-icon" aria-hidden="true">
+                    <Icon name="doc" size={22} />
+                </span>
+                <span class="drop-tekst" id={`${id}-cv-tekst`} data-cv-tekst>
+                    <strong>Kies een bestand</strong> of sleep het hierheen
+                    <span class="drop-hint">PDF of Word, maximaal 10 MB</span>
+                </span>
+            </label>
+            <p class="veld-fout" id={`${id}-cv-fout`} data-fout="cv"></p>
+        </div>
+
+        <div class="veld" data-veld="motivatie">
+            <label for={`${id}-motivatie`}>
+                Korte motivatie <span class="veld-opt">optioneel</span>
+            </label>
+            <textarea
+                id={`${id}-motivatie`}
+                name="motivatie"
+                rows="4"
+                maxlength="2000"
+                aria-describedby={`${id}-motivatie-hint ${id}-motivatie-fout`}
+                placeholder="Waar bent u goed in, en waarom past deze functie bij u?"
+            ></textarea>
+            <p class="veld-hint" id={`${id}-motivatie-hint`}>
+                Een paar zinnen is genoeg.
+            </p>
+            <p class="veld-fout" id={`${id}-motivatie-fout`} data-fout="motivatie"></p>
+        </div>
+
+        <div class="akkoord" data-veld="akkoord">
+            <label class="check">
+                <input type="checkbox" name="akkoord" aria-describedby={`${id}-akkoord-fout`} />
+                <span>
+                    GeldGarant mag mijn gegevens gebruiken voor deze sollicitatie en verwijdert ze binnen vier weken na afloop.
+                    Lees ook de{" "}
+                    <a class="textlink" href="/juridisch/privacy-beleid">
+                        privacyverklaring
+                    </a>
+                    .
+                </span>
+            </label>
+            <p class="veld-fout" id={`${id}-akkoord-fout`} data-fout="akkoord"></p>
+        </div>
+
+        <div class="turnstile" data-turnstile></div>
+        <p class="sol-melding" role="alert" hidden data-melding></p>
+
+        <div class="sol-acties">
+            <button class="btn" type="submit" data-verstuur>
+                <span data-verstuur-tekst>Verstuur sollicitatie</span>
+                <span class="btn-dot">
+                    <Icon name="arrow" size={18} />
+                </span>
+            </button>
+            <p class="sol-alt">
+                Liever per e-mail?{" "}
+                <a class="textlink" href={sollicitatieMail(functie)}>
+                    Mail uw cv
+                </a>
+            </p>
+        </div>
+    </form>
+
+    <div class="sol-klaar" hidden data-klaar>
+        <span class="klaar-icon" aria-hidden="true">
+            <Icon name="check" size={24} />
+        </span>
+        <h3 class="klaar-kop" tabindex="-1" data-klaar-kop>
+            Bedankt, we hebben uw sollicitatie
+        </h3>
+        <p>
+            Uw referentie is <strong data-klaar-ref></strong>. U krijgt een bevestiging per e-mail. We nemen contact met u op over
+            de volgende stap.
+        </p>
+        <p class="klaar-noot" hidden data-klaar-noot></p>
+        <p class="klaar-vraag">
+            Vragen? Bel{" "}
+            <a class="textlink" href={site.phoneHref}>
+                {site.phone}
+            </a>
+            .
+        </p>
+    </div>
+</div>
+
+<script>
+    import "../scripts/sollicitatie"
+</script>
+
+<style>
+    .sol-rij {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        column-gap: 16px;
+    }
+    @media (min-width: 640px) {
+        .sol-rij {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .drop {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 76px;
+        padding: 16px 18px;
+        border: 1.5px dashed #b9c1d6;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background-color 0.15s ease;
+    }
+    .drop:hover,
+    .drop.is-over {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+    }
+    .drop:has(.drop-input:focus-visible) {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(48, 105, 254, 0.14);
+    }
+    .drop.is-gekozen {
+        border-style: solid;
+        border-color: var(--green);
+        background: var(--green-bg);
+    }
+    .drop.is-fout {
+        border-color: #c4291c;
+    }
+    .drop-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+    }
+    .drop-icon {
+        display: grid;
+        flex-shrink: 0;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .is-gekozen .drop-icon {
+        color: var(--green);
+    }
+    .drop-tekst {
+        display: grid;
+        gap: 2px;
+        min-width: 0;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        overflow-wrap: anywhere;
+    }
+    .drop-tekst strong {
+        color: var(--ink);
+    }
+    .drop-hint {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .akkoord {
+        margin-bottom: 16px;
+    }
+    .check {
+        display: grid;
+        grid-template-columns: 22px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        font-size: var(--fs-sm);
+        line-height: 1.65;
+        color: var(--text);
+        cursor: pointer;
+    }
+    .check a {
+        display: inline-block;
+        min-height: 24px;
+    }
+    .check input {
+        width: 22px;
+        height: 22px;
+        margin: 0;
+        accent-color: var(--blue);
+    }
+    .turnstile:empty {
+        display: none;
+    }
+    .turnstile {
+        margin-bottom: 16px;
+    }
+    .sol-melding {
+        margin-bottom: 16px;
+        padding: 12px 14px;
+        border-radius: var(--r-md);
+        background: #fdecea;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: #8a1c12;
+    }
+    .sol-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 20px;
+    }
+    @media (max-width: 519px) {
+        .sol-acties .btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+    .sol-alt {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .btn[aria-busy="true"] {
+        opacity: 0.75;
+        pointer-events: none;
+    }
+    .sol-klaar {
+        display: grid;
+        gap: 12px;
+        padding: 8px 0;
+    }
+    .klaar-icon {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .klaar-kop {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .klaar-kop:focus {
+        outline: none;
+    }
+    .sol-klaar p {
+        line-height: 1.6;
+        color: var(--text);
+    }
+</style>

@@ -2,7 +2,9 @@
 // Let op: de slug "call-center-medewerker" blijft, maar het woord "callcenter" staat nergens in zichtbare tekst (besluit Anas).
 // Feiten uit de huidige vacatures op geldgarant.com (nov 2026): 32–40 uur, 25 vakantiedagen en 8% vakantiegeld bij
 // fulltime, stage mbo niveau 4 en minimaal 3 dagen. Opleidingsniveau en VOG: eisen uit de Wki (zie /wki).
-// Nog niet bevestigd door GeldGarant: salarisindicatie en stagevergoeding (daarom niet genoemd).
+// Salarisindicatie (akkoord Anas, 7 nov 2026) bruto per maand bij 40 uur, onderbouwd met wageindicator.nl
+// (incasseerders: aanvang € 2.744 tot € 3.364), nationaleberoepengids.nl en Breyta (tot € 3.600). Minimumloon
+// per 1 juli 2026: € 14,99 per uur, ruim € 2.598 per maand bij 40 uur. Stagevergoeding: nog niet bevestigd.
 import { site } from "./site"
 
 export interface Vacature {
@@ -15,7 +17,8 @@ export interface Vacature {
     kort: string
     lead: string
     kernpunten: readonly string[]
-    feiten: readonly { icon: "pin" | "clock" | "doc" | "calendar" | "user" | "check"; k: string; v: string }[]
+    feiten: readonly { icon: "pin" | "clock" | "doc" | "calendar" | "user" | "check" | "euro"; k: string; v: string }[]
+    salaris?: { min: number; max: number }
     uren: string
     taken: readonly string[]
     profiel: readonly string[]
@@ -24,28 +27,35 @@ export interface Vacature {
     datePosted: string
 }
 
-const biedenBaan = [
-    {
-        icon: "doc",
-        kop: "Opleiding in het vak",
-        tekst: "U hoeft het vak nog niet te kennen. U leert het bij ons, met een vaste collega naast u en elk jaar de bijscholing die de wet vraagt.",
-    },
-    {
-        icon: "calendar",
-        kop: "25 vakantiedagen en 8% vakantiegeld",
-        tekst: "Bij een fulltime dienstverband. Werkt u minder uren, dan naar rato.",
-    },
-    {
-        icon: "euro",
-        kop: "Een marktconform salaris",
-        tekst: "Passend bij uw ervaring en rol. We bespreken het open in het eerste gesprek.",
-    },
-    {
-        icon: "user",
-        kop: "Korte lijnen",
-        tekst: "Geen lagen tussen u en de beslissing. Ziet u iets dat beter kan, dan kunt u het meteen aankaarten.",
-    },
-] as const
+export const geld = (n: number) => `€\u00a0${n.toLocaleString("nl-NL")}`
+export const salarisTekst = (s: { min: number; max: number }) => `${geld(s.min)} tot ${geld(s.max)}`
+
+const biedenBaan = (s: { min: number; max: number }) =>
+    [
+        {
+            icon: "doc",
+            kop: "Opleiding in het vak",
+            tekst: "U hoeft het vak nog niet te kennen. U leert het bij ons, met een vaste collega naast u en elk jaar de bijscholing die de wet vraagt.",
+        },
+        {
+            icon: "calendar",
+            kop: "25 vakantiedagen en 8% vakantiegeld",
+            tekst: "Bij een fulltime dienstverband, plus de vrijheid om ze op te nemen wanneer het u uitkomt.",
+        },
+        {
+            icon: "euro",
+            kop: `${salarisTekst(s)} bruto`,
+            tekst: "Per maand bij 40 uur, afhankelijk van uw ervaring. Werkt u minder uren, dan naar rato.",
+        },
+        {
+            icon: "user",
+            kop: "Korte lijnen",
+            tekst: "Geen lagen tussen u en de beslissing. Ziet u iets dat beter kan, dan kunt u het meteen aankaarten.",
+        },
+    ] as const
+
+const SAL_INCASSO = { min: 2750, max: 3400 }
+const SAL_KLANTCONTACT = { min: 2650, max: 3100 }
 
 export const vacatures: readonly Vacature[] = [
     {
@@ -64,6 +74,7 @@ export const vacatures: readonly Vacature[] = [
         ],
         feiten: [
             { icon: "pin", k: "Standplaats", v: `Kantoor ${site.city}` },
+            { icon: "euro", k: "Salaris", v: `${salarisTekst(SAL_INCASSO)} bruto` },
             { icon: "clock", k: "Uren", v: "32 tot 40 per week" },
             { icon: "doc", k: "Opleiding", v: "Minimaal mbo niveau 3" },
             { icon: "check", k: "Ervaring", v: "Niet vereist, wij leiden u op" },
@@ -86,7 +97,8 @@ export const vacatures: readonly Vacature[] = [
             "U spreekt en schrijft goed Nederlands.",
             "U kunt een Verklaring Omtrent het Gedrag (VOG) aanvragen.",
         ],
-        bieden: biedenBaan,
+        salaris: SAL_INCASSO,
+        bieden: biedenBaan(SAL_INCASSO),
         employmentType: ["FULL_TIME", "PART_TIME"],
         datePosted: "2026-11-07",
     },
@@ -102,6 +114,7 @@ export const vacatures: readonly Vacature[] = [
         kernpunten: ["Elke dag echte gesprekken", "Telefoon, e-mail en WhatsApp", "Opleiding in het vak"],
         feiten: [
             { icon: "pin", k: "Standplaats", v: `Kantoor ${site.city}` },
+            { icon: "euro", k: "Salaris", v: `${salarisTekst(SAL_KLANTCONTACT)} bruto` },
             { icon: "clock", k: "Uren", v: "32 tot 40 per week" },
             { icon: "doc", k: "Opleiding", v: "Minimaal mbo niveau 3" },
             { icon: "check", k: "Ervaring", v: "Klantcontact is een pre" },
@@ -123,7 +136,8 @@ export const vacatures: readonly Vacature[] = [
             "U spreekt en schrijft goed Nederlands.",
             "U kunt een Verklaring Omtrent het Gedrag (VOG) aanvragen.",
         ],
-        bieden: biedenBaan,
+        salaris: SAL_KLANTCONTACT,
+        bieden: biedenBaan(SAL_KLANTCONTACT),
         employmentType: ["FULL_TIME", "PART_TIME"],
         datePosted: "2026-11-07",
     },
@@ -191,7 +205,7 @@ export const sollicitatieMail = (functie: string) =>
 export const procedure = [
     {
         kop: "U reageert",
-        tekst: "Stuur uw cv en een korte motivatie per e-mail. Vertel vooral waar u goed in bent.",
+        tekst: "Upload uw cv met het formulier en vertel in een paar zinnen waar u goed in bent. Binnen twee minuten gedaan.",
     },
     {
         kop: "Kennismaking",
@@ -226,7 +240,7 @@ export const werkenFaq = [
     },
     {
         q: "Ik zie geen vacature die past. Kan ik toch reageren?",
-        a: "Ja. Stuur een open sollicitatie met uw cv en een korte motivatie. Vertel welk werk u zoekt en waar u goed in bent. Past er nu niets, dan nemen we contact op zodra dat wel zo is.",
+        a: "Ja. Stuur een open sollicitatie met uw cv en vertel welk werk u zoekt en waar u goed in bent. Past er nu niets en mogen we uw gegevens langer bewaren, dan nemen we contact op zodra er wel een plek is.",
     },
     {
         q: "Wat gebeurt er met mijn gegevens?",

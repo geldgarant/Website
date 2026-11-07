@@ -226,7 +226,8 @@ test.describe("werken bij", () => {
         await page.goto("/werken-bij/incasso-medewerker")
         const ld = await page.locator('script[type="application/ld+json"]').allTextContents()
         expect(ld.join(" ")).toContain('"JobPosting"')
-        await expect(page.locator('a[href^="mailto:"][href*="Sollicitatie"]').first()).toBeVisible()
+        expect(ld.join(" ")).toContain('"baseSalary"')
+        await expect(page.locator("#solliciteren form")).toBeVisible()
     })
 })
 
