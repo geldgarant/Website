@@ -96,12 +96,15 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
 2. Telegram-melding intake-worker met minimale persoonsgegevens.
 3. Verwerkersovereenkomsten: Cloudflare, Resend, Telegram, CaseControl.
 4. WhatsApp Business op 085 212 73 88.
-5. Intake-worker (Cloudflare, nagelopen 7 nov in de ingebouwde browser):
-    - gedaan: `website.geldgarant.workers.dev` bij de Turnstile-widget `geldgarant-incassoform` en in `INTAKE_ALLOWED_ORIGINS` (gecontroleerd via `/api/health`); `geldgarant.com` en `www` stonden er al;
-    - open: route `POST /api/sollicitatie` uitrollen (de editor van Cloudflare laat geen geautomatiseerd plakken toe; code = `docs/projectkennis/intake-worker-index.js` + route + `intake-worker-sollicitatie.js`, sha256 `48dcfd59…`); daarna 15 ongebruikte geheimen van de vorige bouwer verwijderen (Airtable, Supabase, Trigger.dev, CaseControl-client, `PORTAL_PROVISION_SYNC_SECRET`; akkoord Anas);
-    - Telegram bewust uit (akkoord Anas): token staat er, `TELEGRAM_CHAT_ID` niet;
-    - opvallend: elke 15 minuten roept een externe partij `POST /api/internal/portal-provisioning/run` aan (Trigger.dev-job van de vorige bouwer). De route bestaat niet meer, maar die partij heeft nog sleutels: CaseControl-API-client (`CASECONTROL_CLIENT_SECRET`) laten vernieuwen bij CaseControl en de bouwer vragen de job te stoppen;
-    - Resend: alleen `resend._domainkey` staat in de DNS, de records op `send.` (MX/SPF) ontbreken. In Resend nakijken of het domein geverifieerd is en of de API-key van het eigen account is; daarna één echte test via `/contact-opnemen` op staging.
+5. Intake-worker (Cloudflare, 7 nov, ingebouwde browser): **klaar**.
+    - Turnstile-widget `geldgarant-incassoform` en `INTAKE_ALLOWED_ORIGINS` kennen nu ook `website.geldgarant.workers.dev` (naast geldgarant.com en www);
+    - route `POST /api/sollicitatie` uitgerold (code = `docs/projectkennis/intake-worker-index.js` + route + `intake-worker-sollicitatie.js`, sha256 `48dcfd59…`, byte voor byte gecontroleerd via de API);
+    - 16 ongebruikte geheimen van de vorige bouwer verwijderd; over: `INTAKE_ALLOWED_ORIGINS`, `INTAKE_SESSION_SECRET`, `RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TURNSTILE_ALLOWED_HOSTNAMES` (ongebruikt, onschuldig), `TURNSTILE_SECRET_KEY`;
+    - Resend: MX en SPF op `send.` toegevoegd door Anas, DKIM stond er al;
+    - test contactformulier op staging geslaagd (GG-CONT-2026-87121, geen Resend-fouten in de logs); vordering en sollicitatie test Anas in zijn eigen browser (Turnstile weigert de geautomatiseerde browser, fout 600010);
+    - Telegram bewust uit (akkoord Anas);
+    - de Trigger.dev-job van de vorige bouwer roept nog elke 15 min `/api/internal/portal-provisioning/run` aan (geeft 404). Bouwer vragen te stoppen en de CaseControl-API-client bij CaseControl vernieuwen;
+    - de Cloudflare-editor accepteert geen geautomatiseerd plakken; dashboard-API-mutaties worden door de botcheck geblokkeerd (alleen de UI werkt). Lezen via `/api/v4/...` met `x-cross-site-security: dash` werkt wel.
 6. Compliance-claims /over-ons 03 en /wki 02 bevestigen.
 7. Buitenlandpagina: landenlijst en tariefaanpak.
 8. Foto's kantoor/team zonder namen; later echte reviews en cijfers.
@@ -115,7 +118,7 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
     - 14-dagenbrief: incassokostensjabloon pas na de 14 dagen aanzetten (`case.total_amount_due` mag dan nog geen kosten bevatten); controleren dat `case.penalty_amount_incl_vat` al het staffelbedrag geeft;
     - eerste variabelenlijst (`case.*`, `creditor.*`) opvragen: is er een variabele voor hoofdsom of rentepercentage? (Betaallink: `case.online_payment_link`, nu gebruikt.)
     - signing secret van de webhook vernieuwen (was zichtbaar in een screenshot).
-12. Livegang volgens `docs/LIVEGANG.md` (DNS bij Cloudflare; A-records en www-CNAME naar Worker "website"; MX/TXT ongemoeid).
+12. Livegang volgens `docs/LIVEGANG.md` (DNS bij Cloudflare; A-records en www-CNAME naar Worker "website"; MX/TXT ongemoeid). **Akkoord Anas 7 nov**: direct na geslaagde formuliertests. Pre-flight op staging geslaagd (64 oude URL's + 5 bestanden 200, 6 redirects, canonical, telefoon). DNS-backup: `docs/dns-backup-2026-11-07.tsv` (let op: wildcard `*.geldgarant.com` → 213.249.67.10 blijft staan).
 
 ---
 
