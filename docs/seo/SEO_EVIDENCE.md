@@ -38,7 +38,9 @@ hypotheses gescheiden.
 - `curl -I http://geldgarant.com/` → `200 OK`, `cf-cache-status: HIT` (echte Cloudflare-respons, geen proxy-artefact).
   `http://www.geldgarant.com/` → 200. `https://www.geldgarant.com/` → 301 naar `https://geldgarant.com/` (goed).
 - Gevolg: http-duplicaten bereikbaar; canonical wijst wel naar https, dus beperkt risico, maar onnodig.
-- Oplossing: Cloudflare → SSL/TLS → Edge Certificates → **Always Use HTTPS** aan (gebruiker; omkeerbaar).
+- Let op: de livegangcontrole van 7 nov (OVERDRACHT §5.12) meldde "http → https" wel goed. Mogelijk verschil door de
+  uitgaande proxy van deze werkomgeving. **Eerst bevestigen** in een gewone browser (http://geldgarant.com typen).
+- Oplossing als het klopt: Cloudflare → SSL/TLS → Edge Certificates → **Always Use HTTPS** aan (gebruiker; omkeerbaar).
 
 ### E3. Search Console (7 nov 2026)
 

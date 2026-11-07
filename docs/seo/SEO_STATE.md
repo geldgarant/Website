@@ -53,7 +53,8 @@ Zie `SEO_EVIDENCE.md`, lokaal batch 2.
 
 1. Cloudflare DNS: TXT `@` = `google-site-verification=IBklbLEvZbA3XR53hRmVoH-RuAY1GPVcEVf8zSlH5k0` (dan kan Claude in
    Search Console verifiëren en de sitemap indienen; vereist het browserpaneel met Google-login).
-2. Cloudflare SSL/TLS → Edge Certificates → Always Use HTTPS aan (http:// geeft nu 200, E2).
+2. Typ http://geldgarant.com in een gewone browser. Blijft het http (geen slotje), zet dan in Cloudflare SSL/TLS →
+   Edge Certificates → Always Use HTTPS aan (vanuit de werkomgeving gaf http:// 200, E2; livegangcontrole zei van niet).
 3. Cloudflare → Web Analytics → geldgarant.com toevoegen; liefst "handmatig" en het token doorgeven (Claude zet de
    beacon in `Base.astro` en past de CSP aan).
 4. Bedrijfsprofiel: screenshots of export van categorie, adres, uren en website-URL.
