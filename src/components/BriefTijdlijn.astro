@@ -1,0 +1,146 @@
+---
+// Volgorde van de brieven bij een onbetaalde factuur. Op /voorbeeldbrieven en elke briefpagina; `actief` markeert de huidige.
+interface Props {
+    actief?: string
+    id?: string
+}
+const { actief, id = "volgorde-title" } = Astro.props
+const stappen = [
+    { n: 1, naam: "Betalingsherinnering", href: "/voorbeeldbrieven/betalingsherinnering", wie: "Iedere klant" },
+    { n: 2, naam: "Aanmaning", href: "/voorbeeldbrieven/aanmaning", wie: "Iedere klant" },
+    { n: 3, naam: "14-dagenbrief", href: "/incasso/wik-brief#briefmaker", wie: "Particulier, verplicht", slug: "14-dagenbrief" },
+    { n: 3, naam: "Ingebrekestelling", href: "/voorbeeldbrieven/ingebrekestelling", wie: "Als verzuim niet vaststaat" },
+    { n: 4, naam: "Sommatie", href: "/voorbeeldbrieven/sommatie", wie: "Laatste brief voor de rechter" },
+]
+const slugVan = (href: string) => href.split("/").pop()!.split("#")[0]
+---
+
+<nav class="tl" aria-labelledby={id}>
+    <p class="tl-kop" id={id}>
+        De volgorde bij een onbetaalde factuur
+    </p>
+    <ol role="list">
+        {stappen.map((s) => {
+            const isActief = actief === (s.slug ?? slugVan(s.href))
+            return (
+                <li class:list={{ actief: isActief }}>
+                    <span class="tl-n" aria-hidden="true">
+                        {s.n}
+                    </span>
+                    {isActief ? (
+                        <span class="tl-naam" aria-current="page">
+                            {s.naam}
+                        </span>
+                    ) : (
+                        <a class="tl-naam" href={s.href}>
+                            {s.naam}
+                        </a>
+                    )}
+                    <span class="tl-wie">{s.wie}</span>
+                </li>
+            )
+        })}
+    </ol>
+    <p class="tl-noot">
+        Op elk moment:{" "}
+        {actief === "betalingsregeling" ? (
+            <span aria-current="page">een betalingsregeling vastleggen</span>
+        ) : (
+            <a class="textlink" href="/voorbeeldbrieven/betalingsregeling">
+                een betalingsregeling vastleggen
+            </a>
+        )}
+        .
+    </p>
+</nav>
+
+<style>
+    .tl {
+        padding: clamp(20px, 3vw, 28px);
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    .tl-kop {
+        font-family: var(--font-display);
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 16px;
+    }
+    ol {
+        display: grid;
+        gap: 4px;
+    }
+    li {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        column-gap: 12px;
+        align-items: center;
+        position: relative;
+        min-height: 52px;
+        padding: 8px 10px;
+        border-radius: var(--r-md);
+    }
+    li:has(a):hover {
+        background: rgba(255, 255, 255, 0.6);
+    }
+    li.actief {
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.1);
+    }
+    .tl-n {
+        grid-row: span 2;
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid var(--line);
+        font-weight: 600;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+    }
+    li.actief .tl-n {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+    }
+    .tl-naam {
+        font-weight: 600;
+        color: var(--ink);
+        min-height: 24px;
+    }
+    a.tl-naam {
+        text-decoration: underline;
+        text-decoration-color: var(--blue);
+        text-underline-offset: 3px;
+    }
+    a.tl-naam::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+    }
+    a.tl-naam:focus-visible {
+        outline: none;
+    }
+    li:has(a:focus-visible) {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    a.tl-naam:hover {
+        color: var(--blue-ink);
+    }
+    .tl-wie {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .tl-noot {
+        margin-top: 14px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+    }
+    .tl-noot [aria-current] {
+        font-weight: 600;
+    }
+</style>

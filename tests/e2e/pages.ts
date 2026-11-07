@@ -3,6 +3,7 @@ import path from "node:path"
 import { branches } from "../../src/data/site"
 import { vacatures } from "../../src/data/vacatures"
 import { VOLGORDE } from "../../src/data/juridisch"
+import { voorbeeldbrieven } from "../../src/data/voorbeeldbrieven"
 
 // Alle statische routes uit src/pages. Nieuwe pagina's worden automatisch meegetest.
 const root = path.resolve("src/pages")
@@ -29,6 +30,7 @@ export const routes = walk(root)
     .concat(branches.map((b) => `/branches/${b.slug}`)) // dynamische routes uit [slug].astro
     .concat(vacatures.map((v) => `/werken-bij/${v.slug}`))
     .concat(VOLGORDE.map((s) => `/juridisch/${s}`))
+    .concat(voorbeeldbrieven.map((b) => b.href))
     .concat(
         fs
             .readdirSync(path.resolve("src/content/kennisbank"))

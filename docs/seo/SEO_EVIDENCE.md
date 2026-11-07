@@ -69,6 +69,12 @@ hypotheses gescheiden.
 - 7 nov 2026: `tests/unit/briefmaker.test.ts` (14) en `tests/unit/docx.test.ts` (3) groen. Word-bestanden van alle 6
   brieven geopend met python-docx en LibreOffice (pdf-render bekeken: sommatie 1 pagina, regeling 2 pagina's).
 
+- 7 nov 2026, batch 2: `npm run check` 0 fouten, eslint en prettier schoon, 111 unit-tests, `check:html` 0 fouten,
+  `check:seo` 73 pagina's zonder problemen, volledige e2e 993 groen (vóór quick wins), daarna gerichte e2e 72 groen
+  (briefmaker, vordering-indienen, brief-ontvangen, buitenland, 14-dagenbrief), `audit:deps` 0 kwetsbaarheden.
+  Browserproef briefmaker sommatie: alle velden ingevuld → 0 plaatshouders, Word-download `sommatie-2026-118.docx`
+  geopend met python-docx. Screenshots 1440/390 van hub, betalingsregeling en briefmaker bekeken.
+
 ## Hypotheses (niet gemeten)
 
 - Voorbeeldbrieven met invulhulp trekken zoekverkeer van ondernemers in de fase vóór incasso en leveren links op.

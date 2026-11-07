@@ -68,11 +68,11 @@ Spreek ook een duidelijke betaaltermijn af. Zonder afspraak geldt bij zakelijke 
 
 Stuur binnen een paar dagen na de vervaldatum een korte, vriendelijke herinnering. Ga uit van een vergissing: veel facturen blijven liggen omdat ze in de verkeerde mailbox belanden of op goedkeuring wachten.
 
-Een goede herinnering bevat het factuurnummer, het bedrag, de vervaldatum, een kopie van de factuur en een nieuwe korte termijn, bijvoorbeeld zeven dagen. Bel bij grotere bedragen ook even: een telefoontje levert vaak meteen een betaaldatum op.
+Een goede herinnering bevat het factuurnummer, het bedrag, de vervaldatum, een kopie van de factuur en een nieuwe korte termijn, bijvoorbeeld zeven dagen. Bel bij grotere bedragen ook even: een telefoontje levert vaak meteen een betaaldatum op. Gebruik gerust onze [voorbeeld van een betalingsherinnering](/voorbeeldbrieven/betalingsherinnering) om in te vullen.
 
 ## Stap 2: de aanmaning
 
-Is er na de herinnering niet betaald, dan stuurt u een aanmaning. De toon is zakelijker. U noemt de openstaande factuur, een laatste betaaltermijn en wat er gebeurt als de klant ook die termijn laat verlopen: overdracht aan een incassobureau, met incassokosten en rente.
+Is er na de herinnering niet betaald, dan stuurt u een aanmaning. De toon is zakelijker. U noemt de openstaande factuur, een laatste betaaltermijn en wat er gebeurt als de klant ook die termijn laat verlopen: overdracht aan een incassobureau, met incassokosten en rente. Een [voorbeeld van een aanmaning](/voorbeeldbrieven/aanmaning) rekent de incassokosten voor u uit.
 
 > **Tip:** Schrijf in de aanmaning dat u betaling eist van het openstaande bedrag. Zo stuit u meteen de verjaring. Lees meer in het artikel over [verjaring van facturen](/kennisbank/verjaringstermijnen-vorderingen).
 
@@ -80,7 +80,7 @@ Is er na de herinnering niet betaald, dan stuurt u een aanmaning. De toon is zak
 
 Is uw klant een particulier, dan mag u pas incassokosten rekenen nadat u een 14-dagenbrief heeft gestuurd. Die brief moet aan vaste eisen voldoen: de klant krijgt 14 dagen om zonder extra kosten te betalen, en u noemt het exacte bedrag aan incassokosten dat volgt als hij dat niet doet. De termijn begint de dag na ontvangst van de brief.
 
-Op onze pagina over [de 14-dagenbrief](/incasso/wik-brief) rekent u uit op welke dag de termijn verloopt en staat een voorbeeld met alle verplichte onderdelen.
+Op onze pagina over [de 14-dagenbrief](/incasso/wik-brief) rekent u uit op welke dag de termijn verloopt en maakt u de brief zelf, met alle verplichte onderdelen.
 
 Bij een zakelijke klant is de 14-dagenbrief niet verplicht. U mag incassokosten rekenen zodra de klant in verzuim is. Een laatste brief met een duidelijke termijn maakt uw positie wel sterker.
 

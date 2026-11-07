@@ -99,3 +99,17 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Brieven voor CaseControl: `brieven/` (README): aanmaning 1 B2B, sommatie B2B, 14-dagenbrief B2C. De QR in de brieven is dynamisch: `worker/qr.ts` (`GET /api/qr?d=&data=`) maakt een PNG van `{{case.online_payment_link}}`, met terugval naar `/brief-ontvangen?dossier=…#betalen`. Bron in `brieven/src`, `python3 brieven/tools/bouw.py` maakt de plakklare versie (alleen inline stijlen, logo als data-URI; of CaseControl externe afbeeldingen zoals de QR laadt, moet een proefbrief uitwijzen), `brieven/tools/render-cc.php` rendert met dezelfde motor en marges (20 mm). De voorbeeldbrief op /brief-ontvangen volgt `aanmaning-1-b2b.html`.
 - Reacties van debiteuren gaan via `/api/contact` (onderwerp `bestaand_dossier`). Link of QR in brieven: `/brief-ontvangen?dossier=…&bedrag=…`, regeling: `?reden=regeling#regelen`.
 - Niets toezeggen wat niet bevestigd is (betaalmethodes, verwerkingstijd, afzenderadres van e-mails).
+
+## SEO-traject (vanaf 7 nov 2026)
+
+- Hervatten altijd via `docs/seo/SEO_STATE.md` (`next_action`), daarna `docs/seo/SEO_MASTERPLAN.md` en `docs/seo/SEO_EVIDENCE.md`. Werkwijze volgens de SEO-masterprompt van de gebruiker (fasen 0 tot 10, checkpoint na elke batch, geen verzonnen data).
+- Crawl: `NODE_USE_ENV_PROXY=1 node scripts/seo/crawl.mjs [basis]` (productie standaard, of `http://localhost:4399`); schrijft `docs/seo/crawl-<datum>.csv` en print afwijkingen.
+- SEO-skills in `.claude/skills`: `seo-*` en `seo-claude` (AgriciDaniel/claude-seo), `ai-seo`, `link-building`, `site-architecture`, `copywriting`, `analytics`, `conversion-tracking`, `free-tools`, `mk-schema`, `mk-seo-audit` (coreyhaines31/marketingskills). Bij overlap gaan `seo` (addyosmani) en de projectregels voor.
+- Doelgroepen gescheiden houden: debiteurenverkeer (`/brief-ontvangen`, `/betalen`) is geen acquisitie.
+
+## Voorbeeldbrieven (7 nov 2026)
+
+- `/voorbeeldbrieven` (hub) en `/voorbeeldbrieven/<slug>` voor betalingsherinnering, aanmaning, ingebrekestelling, sommatie, betalingsregeling. Inhoud: `src/data/voorbeeldbrieven.ts`. De 14-dagenbrief staat bewust op `/incasso/wik-brief#briefmaker` (geen kannibalisatie).
+- Briefmaker: `src/components/Briefmaker.astro` (formulier is een `<div>`, geen `<form>`: er wordt niets verstuurd), DOM `src/scripts/briefmaker.ts`, tekst `src/lib/briefmaker.ts` (getest), HTML `src/lib/briefHtml.ts`, Word `src/lib/docx.ts` (eigen zip, geen afhankelijkheden; getest en geopend in LibreOffice). Pdf = `window.print()` met `#bm-print`. Lege velden = plaatshouder `[...]`, gemarkeerd.
+- Juridische keuzes: 14-dagenbrief zonder vaste einddatum; particulier: aanmaning en ingebrekestelling zonder incassokosten, sommatie alleen met vinkje "14-dagenbrief verstuurd". Wijzig je de brieftekst, draai dan `tests/unit/briefmaker.test.ts`.
+- Proef in de browser: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/briefmaker-proef.mjs /voorbeeldbrieven/sommatie` (preview op 4399).

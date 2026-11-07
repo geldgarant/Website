@@ -4,6 +4,8 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 ## 0. Start hier (volgende sessie)
 
+> **Sinds 7 nov 2026 (avond) loopt het SEO-traject.** Startpunt is `docs/seo/SEO_STATE.md` (`next_action`); de rest van dit bestand is achtergrond. Let op bij testen: een afgebroken Playwright-run laat soms een preview op poort 4399 achter (`fuser -k 4399/tcp`), en `npm run qa` duurt nu ± 12 min (993 e2e-tests).
+
 1. Koppel de repo (`add_repo` geldgarant/Website, push), kloon naar `/home/claude/geldgarant-site`, `npm ci`.
 2. Lees `CLAUDE.md`, dit bestand en `docs/SITEMAP.md`.
 3. Stand 7 nov (nacht): fase D af, plus nieuwe juridische documenten en het nieuwe nummer (zie §6 punt 17). Volgende stappen, in overleg met Anas:

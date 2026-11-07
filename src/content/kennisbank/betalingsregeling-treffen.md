@@ -66,6 +66,8 @@ Een regeling die alleen telefonisch is afgesproken, is achteraf lastig te bewijz
 | Een vervalbeding                             | Bij een gemiste termijn is het restant direct opeisbaar |
 | Een erkenning van de schuld                  | Stuit de verjaring en maakt een procedure eenvoudiger   |
 
+Met onze [voorbeeldbrief voor een betalingsregeling](/voorbeeldbrieven/betalingsregeling) maakt u zo een bevestiging met betaalschema en akkoordverklaring.
+
 > **Voorbeeld:** "U erkent ons een bedrag van € 3.180 verschuldigd te zijn. U betaalt dit in zes maandelijkse termijnen van € 530, telkens uiterlijk op de 25e van de maand, voor het eerst op 25 november 2026. Is een termijn niet uiterlijk op de vervaldag op onze rekening, dan is het volledige restant direct opeisbaar, zonder dat een aanmaning nodig is."
 
 ## Betalingsregeling met een particulier

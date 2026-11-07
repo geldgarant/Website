@@ -1,0 +1,370 @@
+---
+// Hub van de voorbeeldbrieven-bibliotheek. Zoekintentie: "voorbeeldbrief onbetaalde factuur", "incassobrief voorbeeld".
+// Volgorde: hero + volgorde → alle brieven (01) → welke brief heeft u nodig (02) → vragen (03) → afsluiter.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import BriefTijdlijn from "../../components/BriefTijdlijn.astro"
+import { voorbeeldbrieven, veertienDagenKaart } from "../../data/voorbeeldbrieven"
+
+const title = "Gratis voorbeeldbrieven onbetaalde factuur | GeldGarant"
+const description =
+    "Gratis voorbeeldbrieven voor een onbetaalde factuur: betalingsherinnering, aanmaning, 14-dagenbrief, ingebrekestelling, sommatie en betalingsregeling. Invullen en downloaden."
+const url = "https://geldgarant.com/voorbeeldbrieven"
+
+const kaarten = [...voorbeeldbrieven, veertienDagenKaart].sort((a, b) => (a.stap || 9) - (b.stap || 9))
+
+const keuze = [
+    { vraag: "De vervaldatum is net verstreken", brief: "Betalingsherinnering", href: "/voorbeeldbrieven/betalingsherinnering" },
+    { vraag: "De herinnering heeft niets opgeleverd", brief: "Aanmaning", href: "/voorbeeldbrieven/aanmaning" },
+    {
+        vraag: "Uw klant is een particulier en u wilt incassokosten kunnen rekenen",
+        brief: "14-dagenbrief",
+        href: "/incasso/wik-brief#briefmaker",
+    },
+    {
+        vraag: "Er is geen vaste betaaltermijn afgesproken",
+        brief: "Ingebrekestelling",
+        href: "/voorbeeldbrieven/ingebrekestelling",
+    },
+    { vraag: "U bent klaar om naar de rechter te gaan", brief: "Sommatie", href: "/voorbeeldbrieven/sommatie" },
+    {
+        vraag: "De klant wil wel, maar kan niet in één keer betalen",
+        brief: "Betalingsregeling",
+        href: "/voorbeeldbrieven/betalingsregeling",
+    },
+]
+
+const faq = [
+    {
+        q: "Zijn de voorbeeldbrieven echt gratis?",
+        a: "Ja. U hoeft geen account aan te maken en niets achter te laten. Wat u invult blijft op uw eigen apparaat; wij ontvangen het niet.",
+    },
+    {
+        q: "Mag ik de brieven aanpassen?",
+        a: "Ja. Download de brief als Word-bestand en pas hem aan in Word, Pages of Google Docs. Houd bij de 14-dagenbrief de verplichte onderdelen intact, anders vervalt uw recht op incassokosten.",
+    },
+    {
+        q: "Mag ik de brieven per e-mail versturen?",
+        a: "Ja. Herinnering, aanmaning, ingebrekestelling en sommatie mogen per e-mail. Zorg dat u kunt aantonen dat de klant de brief heeft ontvangen. Voor de 14-dagenbrief per e-mail moet u al per e-mail met de klant communiceren.",
+    },
+    {
+        q: "Is een voorbeeldbrief juridisch advies?",
+        a: "Nee. De brieven zijn zorgvuldig opgesteld op basis van de wet, maar uw situatie kan afwijken. Twijfelt u, bijvoorbeeld bij een betwiste factuur, neem dan contact met ons op.",
+    },
+    {
+        q: "Wanneer schakel ik beter een incassobureau in?",
+        a: "Als herinnering en aanmaning niets opleveren, of als u geen tijd heeft om termijnen bij te houden. Een incassobureau stuurt de brieven, belt de klant en zet op het juiste moment de volgende stap.",
+    },
+]
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Gratis voorbeeldbrieven onbetaalde factuur",
+        url,
+        description,
+        inLanguage: "nl-NL",
+        mainEntity: {
+            "@type": "ItemList",
+            itemListElement: kaarten.map((k, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                name: k.naam,
+                url: `https://geldgarant.com${k.href.split("#")[0]}`,
+            })),
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Voorbeeldbrieven", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Voorbeeldbrieven" }]} />
+            <div class="hero-grid">
+                <div>
+                    <p class="eyebrow">Gratis, zonder account</p>
+                    <h1 class="display">
+                        Voorbeeldbrieven voor een onbetaalde <span class="accent">factuur</span>
+                    </h1>
+                    <p class="lead">
+                        Van de eerste herinnering tot de sommatie. Vul de gegevens in, de brief past zich direct aan. Download hem
+                        als Word of pdf, of kopieer de tekst in uw e-mail. De incassokosten en termijnen rekenen we voor u uit.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#brieven-title">
+                            Kies een brief
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#keuze-title">
+                            Welke heb ik nodig?
+                        </a>
+                    </div>
+                </div>
+                <BriefTijdlijn />
+            </div>
+        </div>
+    </section>
+
+    <section class="section bg-surface" aria-labelledby="brieven-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Alle brieven
+                </p>
+                <h2 class="h2" id="brieven-title">
+                    Zes brieven, elk met een eigen <span class="accent">doel</span>
+                </h2>
+            </div>
+            <ul role="list" class="kaarten">
+                {kaarten.map((k) => (
+                    <li class="kaart">
+                        <span class="k-stap">{k.stap ? `Stap ${k.stap}` : "Op elk moment"}</span>
+                        <h3 class="h3">
+                            <a href={k.href}>{k.naam}</a>
+                        </h3>
+                        <p>{k.kaart}</p>
+                        <dl class="k-feiten">
+                            <div>
+                                <dt>Voor</dt>
+                                <dd>{k.voor}</dd>
+                            </div>
+                            <div>
+                                <dt>Verplicht</dt>
+                                <dd>{k.verplicht}</dd>
+                            </div>
+                        </dl>
+                        <span class="k-pijl" aria-hidden="true">
+                            <Icon name="arrow" size={18} />
+                        </span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <section class="section" aria-labelledby="keuze-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Welke brief
+                </p>
+                <h2 class="h2" id="keuze-title">
+                    Waar staat u <span class="accent">nu</span>
+                </h2>
+                <p class="lead">
+                    Stuur de brieven in volgorde. Wie ze door elkaar gebruikt, verliest overtuigingskracht: een laatste aanmaning
+                    waarna nog drie brieven volgen, neemt niemand serieus.
+                </p>
+            </div>
+            <ul role="list" class="keuze">
+                {keuze.map((k) => (
+                    <li>
+                        <span class="kz-vraag">{k.vraag}</span>
+                        <a class="kz-brief" href={k.href}>
+                            {k.brief}
+                            <Icon name="arrow" size={16} />
+                        </a>
+                    </li>
+                ))}
+            </ul>
+            <p class="meer">
+                Meer over het verschil tussen de brieven leest u in{" "}
+                <a class="textlink" href="/kennisbank/betalingsherinnering-aanmaning-wik-brief">
+                    herinnering, aanmaning of 14-dagenbrief: wat stuurt u wanneer?
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <Faq items={faq} idx="03">
+        <Fragment slot="title">
+            Vragen over de <span class="accent">voorbeeldbrieven</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta lead="Wij sturen de brieven, houden de termijnen bij en zetten op tijd de volgende stap. Volledig betaald? Dan betaalt u ons niets.">
+        Liever uit <span class="accent">handen</span> geven
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(48px, 6vw, 88px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(32px, 4vw, 64px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+        }
+    }
+    .hero h1 {
+        margin-top: 12px;
+        max-width: 13em;
+        font-size: clamp(2.375rem, 1.4rem + 3.8vw, 4.25rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 36em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 36px;
+    }
+    .kop {
+        max-width: 46rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .kop .lead {
+        margin-top: 16px;
+    }
+    .kaarten {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+        gap: 16px;
+    }
+    .kaart {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 28px;
+        border-radius: var(--r-lg);
+        background: var(--paper);
+        box-shadow: var(--shadow-card);
+        transition: transform 0.25s var(--ease);
+    }
+    .kaart:hover {
+        transform: translateY(-3px);
+    }
+    .kaart:has(a:focus-visible) {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 3px;
+    }
+    .kaart a {
+        color: var(--ink);
+        text-decoration: none;
+    }
+    .kaart a::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+    }
+    .kaart a:focus-visible {
+        outline: none;
+    }
+    .k-stap {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--blue-ink);
+    }
+    .kaart p {
+        color: var(--text);
+    }
+    .k-feiten {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 20px;
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        font-size: var(--fs-sm);
+    }
+    .k-feiten dt {
+        color: var(--muted);
+        font-size: var(--fs-xs);
+    }
+    .k-feiten dd {
+        margin: 0;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .k-pijl {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .kaart {
+            transition: none;
+        }
+        .kaart:hover {
+            transform: none;
+        }
+    }
+    .keuze {
+        display: grid;
+        border-top: 1px solid var(--line);
+    }
+    .keuze li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px 24px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .kz-vraag {
+        color: var(--text);
+        flex: 1 1 18rem;
+    }
+    .kz-brief {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-weight: 600;
+        color: var(--ink);
+        text-decoration: none;
+    }
+    .kz-brief:hover {
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+    }
+    .meer {
+        margin-top: 24px;
+        color: var(--text);
+    }
+</style>

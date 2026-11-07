@@ -56,13 +56,13 @@ De herinnering stuurt u kort na de vervaldatum. U gaat ervan uit dat de factuur 
 - een nieuwe korte termijn, bijvoorbeeld zeven dagen;
 - de factuur zelf als bijlage.
 
-Gebruik geen dreigende taal. Een vriendelijke herinnering levert bij de meeste klanten binnen een week betaling op.
+Gebruik geen dreigende taal. Een vriendelijke herinnering levert bij de meeste klanten binnen een week betaling op. Een [voorbeeld van een betalingsherinnering](/voorbeeldbrieven/betalingsherinnering) vult u bij ons direct in.
 
 ## De aanmaning
 
 Volgt er geen betaling, dan stuurt u een aanmaning. De toon is zakelijk en de boodschap is duidelijk: dit is de laatste termijn. Noem wat er gebeurt als ook die verloopt, zoals overdracht aan een incassobureau met incassokosten en wettelijke rente.
 
-Een aanmaning waarin u ondubbelzinnig betaling eist, stuit ook de verjaring. Dat is een tweede reden om hem schriftelijk te sturen.
+Een aanmaning waarin u ondubbelzinnig betaling eist, stuit ook de verjaring. Dat is een tweede reden om hem schriftelijk te sturen. Gebruik ons [voorbeeld van een aanmaning](/voorbeeldbrieven/aanmaning) als basis.
 
 > **Let op:** Kondig alleen gevolgen aan die u ook echt uitvoert. Een klant die merkt dat er na de "laatste aanmaning" niets gebeurt, betaalt de volgende keer nog later.
 
@@ -80,7 +80,7 @@ De Hoge Raad heeft bepaald dat de termijn pas begint op de dag na ontvangst. Rek
 
 > **Voorbeeld:** U verstuurt de brief per e-mail op maandag 2 november 2026. De klant ontvangt hem dezelfde dag. De termijn begint op dinsdag 3 november en loopt tot en met maandag 16 november. Vanaf 17 november mag u de aangekondigde incassokosten rekenen.
 
-De brief kan per post, en per e-mail als u met de klant al per e-mail communiceert. Een complete voorbeeldbrief met alle verplichte onderdelen en een rekenhulp vindt u op [onze pagina over de 14-dagenbrief](/incasso/wik-brief).
+De brief kan per post, en per e-mail als u met de klant al per e-mail communiceert. Op [onze pagina over de 14-dagenbrief](/incasso/wik-brief) maakt u de brief zelf, met alle verplichte onderdelen en de juiste incassokosten.
 
 ### Ook bij zakelijke klanten?
 
@@ -88,7 +88,7 @@ Bij een zakelijke klant is de 14-dagenbrief niet verplicht. U mag incassokosten 
 
 ## De sommatie
 
-De sommatie is de laatste brief voor een gerechtelijke procedure. Er staat in dat u zonder verdere aankondiging naar de rechter stapt als de debiteur niet binnen de gestelde termijn betaalt. Een incassobureau of deurwaarder stuurt deze brief meestal namens u, wat extra gewicht geeft.
+De sommatie is de laatste brief voor een gerechtelijke procedure. Er staat in dat u zonder verdere aankondiging naar de rechter stapt als de debiteur niet binnen de gestelde termijn betaalt. Een incassobureau of deurwaarder stuurt deze brief meestal namens u, wat extra gewicht geeft. Wilt u hem zelf sturen? Gebruik dan ons [voorbeeld van een sommatie](/voorbeeldbrieven/sommatie).
 
 ## Wanneer stuurt u wat?
 

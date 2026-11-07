@@ -1,71 +1,67 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-07 22:15 (Europe/Amsterdam)
+last_updated: 2026-11-07 23:00 (Europe/Amsterdam)
 current_branch: main
-latest_commit: zie `git log -1` (batch 1: SEO-basis, skills, crawler, briefmaker-kern)
-current_phase: 5 (voorbeeldbrieven) parallel aan 0/9 (meetketen, wacht op gebruiker)
-current_task: Voorbeeldbrieven-bibliotheek, pagina's bouwen
-status: in uitvoering; kern (lib + Word + tests) klaar, pagina's nog niet
-next_action: Bouw src/components/Briefmaker.astro + src/scripts/briefmaker.ts en de pagina's src/pages/voorbeeldbrieven/index.astro en [slug].astro (data uit src/data/voorbeeldbrieven.ts); daarna briefmaker op /incasso/wik-brief (#briefmaker), pages.ts in e2e uitbreiden, interne links, npm run qa, screenshots, commit, push.
-blocked_by: Search Console (TXT-record door gebruiker), Always Use HTTPS (gebruiker), Web Analytics (Cloudflare-dashboard)
-production_state: geldgarant.com live sinds 7 nov 2026 (Worker website, commit 4b4b775 + batch 1 zonder zichtbare wijziging)
+latest_commit: zie `git log -1` (batch 2: voorbeeldbrieven + quick wins)
+current_phase: 3/5 afgerond voor deze batch; volgende 5 (interne links) en 2 (keyword-url-map)
+current_task: geen lopende wijziging
+status: batch 2 gepusht naar main (= productie via Workers Builds)
+next_action: 1) Controleer productie: `NODE_USE_ENV_PROXY=1 node scripts/seo/crawl.mjs` (verwacht 70 URL's, geen titels > 65, /vordering-indienen met JSON-LD) en open /voorbeeldbrieven/sommatie live. 2) Vraag/controleer gebruikersacties hieronder (TXT, Always Use HTTPS, Web Analytics). 3) Taak 6 uit het masterplan: interne links naar /incasso/incassobureau-inschakelen, /hulp-nodig-bij-geldproblemen en de 4 zwak gelinkte kennisbankartikelen (vanuit /incasso, branches, verwante artikelen), plus links naar /voorbeeldbrieven vanaf /incasso en /kennisbank. 4) docs/seo/keyword-url-map.csv maken (fase 2).
+blocked_by: Search Console (TXT-record door gebruiker), Always Use HTTPS (gebruiker), Web Analytics (gebruiker of token)
+production_state: geldgarant.com live; batch 2 gepusht 7 nov ±23:00
 preview_url: https://website.geldgarant.workers.dev (staging, zelfde Worker)
 ```
 
 ## Afgerond sinds vorig checkpoint
 
-- SEO-masterprompt verwerkt: `docs/seo/SEO_MASTERPLAN.md`, `SEO_STATE.md`, `SEO_EVIDENCE.md`.
-- Skills repo-lokaal: claude-seo (seo-audit, seo-technical, seo-schema, seo-local, seo-geo, seo-backlinks, seo-plan,
-  seo-page, seo-content, seo-content-brief, seo-cluster, seo-sitemap, seo-claude) en marketingskills (ai-seo,
-  link-building, site-architecture, copywriting, analytics, conversion-tracking, free-tools, mk-schema, mk-seo-audit).
-  Geregistreerd in `.claude/skills/THIRD_PARTY.md` en `scripts/update-skills.sh`.
-- Crawler `scripts/seo/crawl.mjs` + productiecrawl (E1).
-- Briefmaker-kern: `src/lib/briefmaker.ts` (6 brieven), `src/lib/briefHtml.ts`, `src/lib/docx.ts` (Word zonder
-  afhankelijkheden), `src/data/voorbeeldbrieven.ts` (paginatekst 5 brieven + kaart 14-dagenbrief), tests.
-- WAF-regel blokkeert `/api/internal/` (aanroepen oude bouwer), eerder vandaag.
+- Voorbeeldbrieven-bibliotheek live: `/voorbeeldbrieven` + 5 briefpagina's, briefmaker (live voorbeeld, Word, pdf,
+  kopiëren) ook op `/incasso/wik-brief#briefmaker`. Tijdlijn-component `src/components/BriefTijdlijn.astro`.
+- Interne links: footer "Gratis voorbeeldbrieven", kennisbank `openstaande-factuur-stappenplan`,
+  `betalingsherinnering-aanmaning-wik-brief`, `betalingsregeling-treffen` linken naar de brieven.
+- Titels ingekort (`/brief-ontvangen`, `/incasso/incasso-in-het-buitenland`), JSON-LD op `/vordering-indienen`.
+- E2E: briefmakertests in `tests/e2e/interacties.spec.ts`; nieuwe routes in `tests/e2e/pages.ts`; visuele snapshots
+  bijgewerkt (footer kreeg een link) en toegevoegd voor de nieuwe pagina's.
 
 ## Besluiten
 
-- 14-dagenbrief krijgt geen eigen `/voorbeeldbrieven/`-pagina: `/incasso/wik-brief` is de voorkeurs-URL (geen
-  kannibalisatie); daar komt de briefmaker bij, anker `#briefmaker`.
-- Geen stadspagina's (dunne inhoud); lokaal via Bedrijfsprofiel en vermeldingen.
-- Word-bestand client-side (eigen zip, `stored`), pdf via `window.print()` met printstijl; geen afhankelijkheden.
-- Brieven zonder vaste einddatum bij de 14-dagenbrief (termijn vanaf dag na ontvangst); andere brieven wel met datum.
-- Particulier: aanmaning en ingebrekestelling noemen geen incassokosten; sommatie alleen met vinkje "14-dagenbrief
-  verstuurd en verlopen".
-- Productie-release = push naar `main` (bestaande projectwerkwijze).
+- 14-dagenbrief blijft op `/incasso/wik-brief` (geen kannibalisatie). Geen stadspagina's.
+- Briefmaker-formulier is een `<div>` (niets wordt verstuurd; html-validate eist anders een verzendknop).
+- Particulier: aanmaning/ingebrekestelling zonder incassokosten; sommatie alleen met vinkje.
+- Productie-release = push naar `main`.
 
-## Gewijzigde bestanden (batch 1)
+## Gewijzigde bestanden (batch 2)
 
-`docs/seo/*`, `scripts/seo/crawl.mjs`, `.claude/skills/{seo-*,mk-*,ai-seo,link-building,site-architecture,copywriting,analytics,conversion-tracking,free-tools}`,
-`.claude/skills/THIRD_PARTY.md`, `scripts/update-skills.sh`, `src/lib/{briefmaker,briefHtml,docx}.ts`,
-`src/data/voorbeeldbrieven.ts`, `tests/unit/{briefmaker,docx}.test.ts`.
+`src/components/{Briefmaker,BriefTijdlijn}.astro`, `src/scripts/briefmaker.ts`, `src/pages/voorbeeldbrieven/{index,[slug]}.astro`,
+`src/pages/incasso/wik-brief.astro`, `src/pages/vordering-indienen.astro`, `src/pages/brief-ontvangen/index.astro`,
+`src/pages/incasso/incasso-in-het-buitenland.astro`, `src/components/Footer.astro`, 3 kennisbankartikelen,
+`tests/e2e/{pages,interacties.spec}.ts`, snapshots, `scripts/dev/briefmaker-proef.mjs`, `CLAUDE.md`, `docs/*`.
 
 ## Tests
 
-- `npx vitest run tests/unit/briefmaker.test.ts tests/unit/docx.test.ts`: 17 groen.
-- Word-bestanden gerenderd met LibreOffice: correct (zie E-lokaal).
+Zie `SEO_EVIDENCE.md`, lokaal batch 2.
 
 ## Open risico's en controles
 
-- Brieftekst juridisch nagelopen door Claude op basis van BW 6:82/6:83/6:96 lid 6/6:119a, 3:317/3:318 en het
-  Besluit; geen advocaatcontrole. Pagina's labelen als voorbeeld, geen juridisch advies.
-- Web Analytics vereist CSP-aanpassing in `public/_headers`.
-- `/juridisch` (101 woorden) is een overzichtspagina; beoordelen of noindex of meer inhoud.
+- Brieftekst niet door een jurist nagelopen; pagina's zeggen "geen juridisch advies".
+- Web Analytics vereist CSP-aanpassing in `public/_headers` (script `https://static.cloudflareinsights.com`, connect
+  `https://cloudflareinsights.com`) en een update van cookie- en privacyverklaring (+ `node scripts/juridisch-pdf.mjs`).
+- `/juridisch` (101 woorden): overzichtspagina; beoordelen (meer inhoud of uit sitemap).
+- Lighthouse niet opnieuw gedraaid voor de nieuwe pagina's (`npm run lhci`, ± 40 min).
 
 ## Gebruikersacties (gebundeld)
 
-1. Cloudflare DNS: TXT `@` = `google-site-verification=IBklbLEvZbA3XR53hRmVoH-RuAY1GPVcEVf8zSlH5k0`.
-2. Cloudflare SSL/TLS → Edge Certificates → Always Use HTTPS aan.
-3. Cloudflare → Web Analytics → site geldgarant.com toevoegen, kies "handmatig" (JS-snippet) en geef het token door,
-   of automatische injectie (dan eerst CSP aanpassen; Claude doet dat).
-4. Bedrijfsprofiel: Claude als beheerder toevoegen is niet mogelijk; stuur een export of screenshots van categorie,
-   adres, uren, website-URL.
+1. Cloudflare DNS: TXT `@` = `google-site-verification=IBklbLEvZbA3XR53hRmVoH-RuAY1GPVcEVf8zSlH5k0` (dan kan Claude in
+   Search Console verifiëren en de sitemap indienen; vereist het browserpaneel met Google-login).
+2. Cloudflare SSL/TLS → Edge Certificates → Always Use HTTPS aan (http:// geeft nu 200, E2).
+3. Cloudflare → Web Analytics → geldgarant.com toevoegen; liefst "handmatig" en het token doorgeven (Claude zet de
+   beacon in `Base.astro` en past de CSP aan).
+4. Bedrijfsprofiel: screenshots of export van categorie, adres, uren en website-URL.
 
 ## Laatste werkstappen
 
-1. SEO-skill geladen, nulmeting en SERP-steekproef (E1, E4).
-2. Search Console geopend: geen toegang, verificatiewaarde opgehaald (E3).
-3. Briefmaker-kern + tests + Word-render.
-4. Masterprompt verwerkt in deze map, skills geïnstalleerd, productiecrawl gedraaid.
+1. Masterprompt verwerkt, skills, productiecrawl (batch 1, commit bfb1a58).
+2. Briefmaker-component, pagina's, wik-brief-sectie, interne links.
+3. html-validate-fouten opgelost (landmark, form zonder knop).
+4. QA: check, lint, format, unit, build, html, seo, e2e (993 + 72), audit.
+5. Snapshots bijgewerkt, docs bijgewerkt, commit + push.

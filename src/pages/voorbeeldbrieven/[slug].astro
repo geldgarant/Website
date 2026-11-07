@@ -1,0 +1,413 @@
+---
+// Briefpagina in de voorbeeldbrieven-bibliotheek. Zoekintentie: "<brief> voorbeeld" (sjabloon om in te vullen).
+// Volgorde: hero met feiten → briefmaker (direct bruikbaar) → wat moet erin (01) → wanneer en tips (02) → vragen (03)
+// → verder lezen → afsluiter. Inhoud: src/data/voorbeeldbrieven.ts; brieftekst: src/lib/briefmaker.ts.
+import { getCollection } from "astro:content"
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import Briefmaker from "../../components/Briefmaker.astro"
+import BriefTijdlijn from "../../components/BriefTijdlijn.astro"
+import { voorbeeldbrieven, veertienDagenKaart, type Voorbeeldbrief } from "../../data/voorbeeldbrieven"
+
+export function getStaticPaths() {
+    return voorbeeldbrieven.map((brief) => ({ params: { slug: brief.slug }, props: { brief } }))
+}
+
+const { brief } = Astro.props as { brief: Voorbeeldbrief }
+const url = `https://geldgarant.com${brief.href}`
+const artikelen = (await getCollection("kennisbank")).filter((a) => brief.verwant.includes(a.id))
+artikelen.sort((a, b) => brief.verwant.indexOf(a.id) - brief.verwant.indexOf(b.id))
+const andere = [...voorbeeldbrieven.filter((b) => b.slug !== brief.slug), veertienDagenKaart]
+    .sort((a, b) => (a.stap || 9) - (b.stap || 9))
+    .slice(0, 4)
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: brief.seoTitle.replace(/ \| GeldGarant$/, ""),
+        url,
+        description: brief.description,
+        inLanguage: "nl-NL",
+        isPartOf: { "@type": "WebSite", name: "GeldGarant", url: "https://geldgarant.com/" },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Voorbeeldbrieven", item: "https://geldgarant.com/voorbeeldbrieven" },
+            { "@type": "ListItem", position: 3, name: brief.naam, item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: brief.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={brief.seoTitle} description={brief.description} jsonLd={jsonLd}>
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs
+                items={[
+                    { label: "Home", href: "/" },
+                    { label: "Voorbeeldbrieven", href: "/voorbeeldbrieven" },
+                    { label: brief.naam },
+                ]}
+            />
+            <div class="hero-grid">
+                <div>
+                    <p class="eyebrow">Gratis voorbeeldbrief</p>
+                    <h1 class="display">
+                        {brief.h1[0]} <span class="accent">{brief.h1[1]}</span>
+                        {brief.h1[2] ? ` ${brief.h1[2]}` : ""}
+                    </h1>
+                    <p class="lead">{brief.lead}</p>
+                    <dl class="feiten">
+                        <div>
+                            <dt>Voor</dt>
+                            <dd>{brief.voor}</dd>
+                        </div>
+                        <div>
+                            <dt>Toon</dt>
+                            <dd>{brief.toon}</dd>
+                        </div>
+                        <div>
+                            <dt>Wettelijk verplicht</dt>
+                            <dd>{brief.verplicht}</dd>
+                        </div>
+                    </dl>
+                </div>
+                <BriefTijdlijn actief={brief.slug} />
+            </div>
+        </div>
+    </section>
+
+    <section class="section bg-surface maker" aria-labelledby="briefmaker-title">
+        <div class="wrap">
+            <div class="kop">
+                <h2 class="h2" id="briefmaker-title">
+                    Vul in, download, <span class="accent">verstuur</span>
+                </h2>
+                <p class="lead">
+                    De brief past zich aan terwijl u typt. Download hem daarna als Word-bestand, sla hem op als pdf of kopieer de
+                    tekst in uw e-mail.
+                </p>
+            </div>
+            <Briefmaker slug={brief.slug} soortKeuze={brief.soortKeuze} />
+        </div>
+    </section>
+
+    <section class="section" aria-labelledby="eisen-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Wat moet erin
+                </p>
+                <h2 class="h2" id="eisen-title">
+                    Dit hoort in een <span class="accent">goede</span> {brief.naam.toLowerCase()}
+                </h2>
+            </div>
+            <ol role="list" class="eisen">
+                {brief.eisen.map((e, i) => (
+                    <li>
+                        <span class="eis-n" aria-hidden="true">
+                            {i + 1}
+                        </span>
+                        <h3 class="h3">{e.kop}</h3>
+                        <p>{e.tekst}</p>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <section class="section section-tight" aria-labelledby="wanneer-title">
+        <div class="wrap wanneer">
+            <div>
+                <p class="eyebrow">
+                    <span class="idx">02</span> Wanneer
+                </p>
+                <h2 class="h2" id="wanneer-title">
+                    Het <span class="accent">juiste</span> moment
+                </h2>
+                {brief.wanneer.map((t) => (
+                    <p class="body">{t}</p>
+                ))}
+            </div>
+            <aside class="tips" aria-labelledby="tips-title">
+                <h3 class="h3" id="tips-title">
+                    Tips uit de praktijk
+                </h3>
+                <ul role="list">
+                    {brief.tips.map((t) => (
+                        <li>
+                            <span class="tip-icon" aria-hidden="true">
+                                <Icon name="check" size={16} />
+                            </span>
+                            {t}
+                        </li>
+                    ))}
+                </ul>
+                <a class="btn btn-dark" href="/vordering-indienen">
+                    Liever uit handen geven
+                    <span class="btn-dot">
+                        <Icon name="arrow" size={18} />
+                    </span>
+                </a>
+            </aside>
+        </div>
+    </section>
+
+    <Faq items={brief.faq} idx="03">
+        <Fragment slot="title">
+            Vragen over de <span class="accent">{brief.naam.toLowerCase()}</span>
+        </Fragment>
+    </Faq>
+
+    <section class="section" aria-labelledby="verder-title">
+        <div class="wrap">
+            <h2 class="h2" id="verder-title">
+                Verder <span class="accent">lezen</span>
+            </h2>
+            <div class="verder">
+                <div>
+                    <h3 class="verder-kop">Andere voorbeeldbrieven</h3>
+                    <ul role="list" class="lijst">
+                        {andere.map((b) => (
+                            <li>
+                                <a href={b.href}>
+                                    <span class="l-t">{b.naam}</span>
+                                    <span class="l-d">{b.kaart}</span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="verder-kop">Uit de kennisbank</h3>
+                    <ul role="list" class="lijst">
+                        {artikelen.map((a) => (
+                            <li>
+                                <a href={`/kennisbank/${a.id}`}>
+                                    <span class="l-t">{a.data.title}</span>
+                                    <span class="l-d">{a.data.description}</span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+            <div class="bronnen">
+                <h3 class="verder-kop">Bronnen</h3>
+                <ul role="list">
+                    {brief.bronnen.map((b) => (
+                        <li>
+                            <a class="textlink" href={b.href} rel="noopener">
+                                {b.t}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <p class="noot">
+                    Deze voorbeeldbrief is algemene informatie, geen juridisch advies. Twijfelt u over uw situatie? Bel ons
+                    gerust.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <SlotCta lead="Wij sturen de brieven, houden de termijnen bij en zetten op tijd de volgende stap. Volledig betaald? Dan betaalt u ons niets.">
+        Geen tijd voor <span class="accent">brieven</span>
+    </SlotCta>
+</Base>
+
+<style>
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(48px, 6vw, 88px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(32px, 4vw, 64px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: start;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+        }
+    }
+    .hero h1 {
+        margin-top: 12px;
+        max-width: 14em;
+        font-size: clamp(2.25rem, 1.4rem + 3.4vw, 4rem);
+        text-wrap: balance;
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 36em;
+    }
+    .feiten {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+    }
+    .feiten div {
+        padding: 10px 16px;
+        border-radius: var(--r-md);
+        border: 1px solid var(--line);
+    }
+    .feiten dt {
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .feiten dd {
+        margin: 0;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .kop {
+        max-width: 46rem;
+        margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .kop .lead {
+        margin-top: 16px;
+    }
+    .eisen {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+        gap: 16px;
+    }
+    .eisen li {
+        padding: 24px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    .eis-n {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        margin-bottom: 16px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        font-weight: 600;
+    }
+    .eisen p {
+        margin-top: 8px;
+        color: var(--text);
+    }
+    .wanneer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(32px, 5vw, 72px);
+        align-items: start;
+    }
+    @media (min-width: 1024px) {
+        .wanneer {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        }
+    }
+    .body {
+        margin-top: 20px;
+        max-width: 38em;
+        color: var(--text);
+    }
+    .tips {
+        padding: clamp(24px, 3vw, 36px);
+        border-radius: var(--r-lg);
+        border: 1px solid var(--line);
+    }
+    .tips ul {
+        display: grid;
+        gap: 14px;
+        margin: 18px 0 28px;
+    }
+    .tips li {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 12px;
+        color: var(--text);
+    }
+    .tip-icon {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        margin-top: 2px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .verder {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+        margin-top: clamp(24px, 3vw, 40px);
+    }
+    @media (min-width: 900px) {
+        .verder {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .verder-kop {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.0625rem;
+        color: var(--ink);
+        margin-bottom: 12px;
+    }
+    .lijst {
+        display: grid;
+        gap: 8px;
+    }
+    .lijst a {
+        display: grid;
+        gap: 4px;
+        min-height: 44px;
+        padding: 14px 18px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        text-decoration: none;
+        transition: background 0.2s var(--ease);
+    }
+    .lijst a:hover {
+        background: var(--surface-2);
+    }
+    .l-t {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .l-d {
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .bronnen {
+        margin-top: clamp(32px, 4vw, 48px);
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+    }
+    .bronnen ul {
+        display: grid;
+        gap: 6px;
+    }
+    .bronnen a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+    .noot {
+        margin-top: 16px;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+</style>

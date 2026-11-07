@@ -8,6 +8,7 @@ import Crumbs from "../../components/Crumbs.astro"
 import Veld from "../../components/form/Veld.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
+import Briefmaker from "../../components/Briefmaker.astro"
 import { wikKosten, euro } from "../../lib/wik"
 import { wikFaq } from "../../data/faq"
 
@@ -83,8 +84,8 @@ const jsonLd = [
                                 <Icon name="arrow" size={18} />
                             </span>
                         </a>
-                        <a class="btn btn-ghost" href="#eisen-title">
-                            Wat moet erin?
+                        <a class="btn btn-ghost" href="#briefmaker">
+                            Maak de brief zelf
                         </a>
                     </div>
                 </div>
@@ -212,12 +213,38 @@ const jsonLd = [
         </div>
     </section>
 
-    <!-- 02 DAARNA -->
+    <!-- 02 BRIEFMAKER -->
+    <section class="section" aria-labelledby="briefmaker-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Zelf maken
+                </p>
+                <h2 class="h2" id="briefmaker-title">
+                    Maak uw eigen <span class="accent">14-dagenbrief</span>
+                </h2>
+                <p class="lead">
+                    Vul de gegevens in. De briefmaker rekent de incassokosten volgens de staffel uit en zet alle verplichte
+                    onderdelen erin. Download als Word of pdf, of kopieer de tekst.
+                </p>
+            </div>
+            <Briefmaker slug="14-dagenbrief" />
+            <p class="bm-meer">
+                Andere brieven, zoals de herinnering, aanmaning en sommatie, vindt u bij onze{" "}
+                <a class="textlink" href="/voorbeeldbrieven">
+                    gratis voorbeeldbrieven
+                </a>
+                .
+            </p>
+        </div>
+    </section>
+
+    <!-- 03 DAARNA -->
     <section class="section" aria-labelledby="daarna-title">
         <div class="wrap">
             <div class="kop">
                 <p class="eyebrow">
-                    <span class="idx">02</span> Na de 14 dagen
+                    <span class="idx">03</span> Na de 14 dagen
                 </p>
                 <h2 class="h2" id="daarna-title">
                     Betaald, of de <span class="accent">volgende</span> stap
@@ -261,7 +288,7 @@ const jsonLd = [
         </div>
     </section>
 
-    <Faq items={wikFaq} idx="03">
+    <Faq items={wikFaq} idx="04">
         <Fragment slot="title">
             Vragen over de <span class="accent">14-dagenbrief</span>
         </Fragment>
@@ -298,6 +325,10 @@ const jsonLd = [
 </script>
 
 <style>
+    .bm-meer {
+        margin-top: 28px;
+        color: var(--text);
+    }
     .hero {
         padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
     }

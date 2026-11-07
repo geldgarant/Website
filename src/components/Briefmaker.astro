@@ -1,0 +1,454 @@
+---
+// Briefmaker: invulformulier links, live papiervoorbeeld rechts, met Word, pdf (afdrukken) en kopiëren.
+// Gebruikt op /voorbeeldbrieven/* en op /incasso/wik-brief (slug "14-dagenbrief").
+// De eerste render is servergerenderd met plaatshouders, zodat de volledige brieftekst crawlbaar is.
+// Logica: src/lib/briefmaker.ts (getest), HTML: src/lib/briefHtml.ts, Word: src/lib/docx.ts, DOM: src/scripts/briefmaker.ts.
+// Niets wordt verstuurd of opgeslagen: alles gebeurt in de browser.
+import Veld from "./form/Veld.astro"
+import Icon from "./Icon.astro"
+import { maakBrief, STANDAARD_TERMIJN, type BriefSlug } from "../lib/briefmaker"
+import { briefHtml } from "../lib/briefHtml"
+
+interface Props {
+    slug: BriefSlug
+    soortKeuze?: boolean
+    id?: string
+}
+const { slug, soortKeuze = false, id = "briefmaker" } = Astro.props
+const metTermijn = slug !== "14-dagenbrief" && slug !== "betalingsregeling"
+const regeling = slug === "betalingsregeling"
+const p = (n: string) => `bm-${n}`
+---
+
+<div class="bm" id={id} data-briefmaker={slug}>
+    <div class="bm-form" data-bm-form>
+        {soortKeuze && (
+            <fieldset class="bm-groep">
+                <legend class="bm-legend">Uw klant is</legend>
+                <div class="seg2">
+                    <label>
+                        <input type="radio" name="soort" value="zakelijk" checked />
+                        <span>Een bedrijf</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="soort" value="particulier" />
+                        <span>Een particulier</span>
+                    </label>
+                </div>
+            </fieldset>
+        )}
+
+        <fieldset class="bm-groep">
+            <legend class="bm-legend">Klant en factuur</legend>
+            <div class="bm-rij">
+                <Veld id={p("klant")} name="klant" label="Naam klant" autocomplete="off" breed />
+                <Veld
+                    id={p("aanhef")}
+                    name="aanhef"
+                    label="Aanhef"
+                    optioneel
+                    placeholder="heer Jansen"
+                    hint="Na 'Geachte'. Leeg: heer, mevrouw."
+                    autocomplete="off"
+                />
+                <Veld id={p("klantAdres")} name="klantAdres" label="Adres klant" optioneel autocomplete="off" />
+                <Veld id={p("factuur")} name="factuur" label="Factuurnummer" autocomplete="off" />
+                <Veld id={p("bedrag")} name="bedrag" label="Openstaand bedrag (euro)" inputmode="decimal" prefix="€" />
+                <Veld id={p("factuurdatum")} name="factuurdatum" label="Factuurdatum" type="date" />
+                {!regeling && <Veld id={p("vervaldatum")} name="vervaldatum" label="Vervaldatum" type="date" />}
+            </div>
+        </fieldset>
+
+        {regeling && (
+            <fieldset class="bm-groep">
+                <legend class="bm-legend">De regeling</legend>
+                <div class="bm-rij">
+                    <Veld
+                        id={p("termijnen")}
+                        name="termijnen"
+                        label="Aantal maandtermijnen"
+                        inputmode="numeric"
+                        placeholder="6"
+                        hint="2 tot 24"
+                        maxlength={2}
+                    />
+                    <Veld id={p("eerste")} name="eerste" label="Eerste termijn uiterlijk" type="date" />
+                </div>
+            </fieldset>
+        )}
+
+        <fieldset class="bm-groep">
+            <legend class="bm-legend">Uw gegevens</legend>
+            <div class="bm-rij">
+                <Veld id={p("afzender")} name="afzender" label="Bedrijfsnaam" autocomplete="organization" breed />
+                <Veld id={p("afzenderAdres")} name="afzenderAdres" label="Adres" optioneel autocomplete="off" />
+                <Veld id={p("plaats")} name="plaats" label="Plaats" autocomplete="address-level2" />
+                <Veld id={p("iban")} name="iban" label="IBAN" autocomplete="off" maxlength={34} />
+                <Veld id={p("ondertekenaar")} name="ondertekenaar" label="Uw naam" optioneel autocomplete="name" />
+            </div>
+        </fieldset>
+
+        <fieldset class="bm-groep">
+            <legend class="bm-legend">De brief</legend>
+            <div class="bm-rij">
+                <Veld id={p("datum")} name="datum" label="Datum van de brief" type="date" />
+                {metTermijn && (
+                    <Veld
+                        id={p("termijn")}
+                        name="termijn"
+                        label="Betaaltermijn in dagen"
+                        inputmode="numeric"
+                        placeholder={String(STANDAARD_TERMIJN[slug])}
+                        maxlength={2}
+                    />
+                )}
+            </div>
+            {slug === "aanmaning" && (
+                <label class="vink">
+                    <input type="checkbox" name="herinnering" checked />
+                    <span>Ik stuurde al een betalingsherinnering</span>
+                </label>
+            )}
+            {slug === "14-dagenbrief" && (
+                <label class="vink">
+                    <input type="checkbox" name="btw" />
+                    <span>Ik kan de btw niet verrekenen (btw over de incassokosten in de brief)</span>
+                </label>
+            )}
+            {slug === "sommatie" && (
+                <label class="vink alleen-part">
+                    <input type="checkbox" name="wikVerstuurd" />
+                    <span>Ik stuurde al een 14-dagenbrief en die termijn is verlopen (incassokosten meetellen)</span>
+                </label>
+            )}
+        </fieldset>
+        <p class="bm-privacy">
+            <Icon name="shield" size={16} />
+            <span>Wat u invult blijft op uw apparaat. Wij versturen of bewaren niets.</span>
+        </p>
+        <a class="btn btn-dark bm-naar" href={`#${id}-brief`}>
+            Bekijk de brief
+        </a>
+    </div>
+
+    <div class="bm-uit" id={`${id}-brief`}>
+        <div class="bm-acties" role="group" aria-label="Brief gebruiken">
+            <button type="button" class="btn" data-bm="word">
+                Download Word
+                <span class="btn-dot">
+                    <Icon name="doc" size={18} />
+                </span>
+            </button>
+            <button type="button" class="btn btn-ghost" data-bm="pdf">
+                Pdf of afdrukken
+            </button>
+            <button type="button" class="btn btn-ghost" data-bm="kopieer">
+                Kopieer tekst
+            </button>
+        </div>
+        <p class="bm-status" data-bm-status aria-live="polite">
+            Vul de gegevens in. Wat nog ontbreekt, staat gemarkeerd in de brief.
+        </p>
+        <figure class="bm-figuur">
+            <figcaption class="bm-label">Voorbeeldbrief, geen juridisch advies</figcaption>
+            <div class="papier" data-papier set:html={briefHtml(maakBrief(slug))} />
+        </figure>
+    </div>
+</div>
+
+<script>
+    import { startBriefmaker } from "../scripts/briefmaker"
+    document.querySelectorAll<HTMLElement>("[data-briefmaker]").forEach(startBriefmaker)
+</script>
+
+<style>
+    .bm {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(28px, 4vw, 48px);
+        align-items: start;
+    }
+    @media (min-width: 1080px) {
+        .bm {
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        }
+        .bm-uit {
+            position: sticky;
+            top: calc(var(--header-h) + 28px);
+        }
+    }
+    .bm-form {
+        display: grid;
+        gap: 20px;
+        padding: clamp(20px, 3vw, 32px);
+        border-radius: var(--r-lg);
+        background: var(--paper);
+        box-shadow: var(--shadow-card);
+    }
+    .bm-groep {
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    .bm-legend {
+        margin-bottom: 12px;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.0625rem;
+        color: var(--ink);
+    }
+    .bm-rij {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0 16px;
+    }
+    @media (min-width: 560px) {
+        .bm-rij {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .bm-rij :global(.veld.breed) {
+            grid-column: 1 / -1;
+        }
+    }
+    .seg2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+    }
+    .seg2 label {
+        position: relative;
+    }
+    .seg2 input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    .seg2 span {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .seg2 input:checked + span {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(6, 17, 38, 0.12);
+    }
+    .seg2 input:focus-visible + span {
+        outline: 2.5px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .vink {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        min-height: 44px;
+        padding-top: 10px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+        cursor: pointer;
+    }
+    .vink input {
+        flex: none;
+        width: 22px;
+        height: 22px;
+        margin: 0;
+        accent-color: var(--blue);
+    }
+    .alleen-part {
+        display: none;
+    }
+    .bm:has(input[name="soort"][value="particulier"]:checked) .alleen-part {
+        display: flex;
+    }
+    .bm-privacy {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: var(--fs-xs);
+        color: var(--muted);
+    }
+    .bm-privacy :global(svg) {
+        flex: none;
+        color: var(--green);
+    }
+    .bm-naar {
+        justify-self: start;
+    }
+    @media (min-width: 1080px) {
+        .bm-naar {
+            display: none;
+        }
+    }
+    .bm-acties {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .bm-acties .btn {
+        min-height: 48px;
+    }
+    .bm-status {
+        margin-top: 12px;
+        min-height: 1.5em;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+    }
+    .bm-status:global(.klaar) {
+        color: var(--green);
+    }
+    .bm-figuur {
+        margin: 16px 0 0;
+    }
+    .bm-label {
+        margin-bottom: 8px;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+    .papier {
+        padding: clamp(24px, 4vw, 48px) clamp(20px, 4vw, 52px);
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        background: #fff;
+        box-shadow: var(--shadow-card);
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: #1b2233;
+        overflow-wrap: anywhere;
+    }
+    @media (min-width: 1080px) {
+        .papier {
+            max-height: calc(100vh - var(--header-h) - 180px);
+            overflow: auto;
+        }
+    }
+    .papier :global(p) {
+        margin: 0 0 0.9em;
+    }
+    .papier :global(.p-adres),
+    .papier :global(.p-afz) {
+        margin-bottom: 1.6em;
+    }
+    .papier :global(.p-betreft) {
+        margin: 1.6em 0 1.4em;
+        color: var(--ink);
+    }
+    .papier :global(.p-slot) {
+        margin-top: 1.4em;
+        margin-bottom: 2.6em;
+    }
+    .papier :global(.p-akkoord) {
+        margin-top: 2em;
+        padding-top: 1em;
+        border-top: 1px dashed var(--line);
+    }
+    .papier :global(.ph) {
+        padding: 0 3px;
+        border-radius: 4px;
+        background: #fff3c4;
+        color: #6b4a00;
+    }
+    .papier :global(.p-spec) {
+        width: 100%;
+        margin: 0 0 1em;
+        border-collapse: collapse;
+    }
+    .papier :global(.p-spec caption) {
+        text-align: left;
+        font-weight: 700;
+        padding-bottom: 4px;
+    }
+    .papier :global(.p-spec th) {
+        text-align: left;
+        font-weight: 400;
+        padding: 3px 12px 3px 0;
+    }
+    .papier :global(.p-spec td) {
+        text-align: right;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        padding: 3px 0;
+    }
+    .papier :global(.p-tot th),
+    .papier :global(.p-tot td) {
+        font-weight: 700;
+        border-top: 1px solid var(--line);
+    }
+</style>
+
+<style is:global>
+    /* Afdrukken via de knop: alleen de brief (zie src/scripts/briefmaker.ts) */
+    #bm-print {
+        display: none;
+    }
+    @media print {
+        html.bm-print body > *:not(#bm-print) {
+            display: none !important;
+        }
+        html.bm-print #bm-print {
+            display: block;
+            font:
+                10.5pt/1.5 Arial,
+                Helvetica,
+                sans-serif;
+            color: #000;
+        }
+        html.bm-print #bm-print p {
+            margin: 0 0 0.9em;
+        }
+        html.bm-print #bm-print .p-adres,
+        html.bm-print #bm-print .p-afz {
+            margin-bottom: 1.8em;
+        }
+        html.bm-print #bm-print .p-betreft {
+            margin: 1.8em 0 1.4em;
+        }
+        html.bm-print #bm-print .p-slot {
+            margin: 1.4em 0 3em;
+        }
+        html.bm-print #bm-print .p-akkoord {
+            margin-top: 2.4em;
+        }
+        html.bm-print #bm-print table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 1em;
+        }
+        html.bm-print #bm-print caption {
+            text-align: left;
+            font-weight: 700;
+        }
+        html.bm-print #bm-print th {
+            text-align: left;
+            font-weight: 400;
+        }
+        html.bm-print #bm-print td {
+            text-align: right;
+        }
+        html.bm-print #bm-print .p-tot th,
+        html.bm-print #bm-print .p-tot td {
+            font-weight: 700;
+            border-top: 1px solid #000;
+        }
+        html.bm-print #bm-print .ph {
+            background: none;
+            color: inherit;
+        }
+        @page {
+            size: A4;
+            margin: 22mm 22mm 20mm;
+        }
+    }
+</style>

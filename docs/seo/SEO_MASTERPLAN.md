@@ -21,8 +21,8 @@ lokale aanwezigheid en vermeldingen.
 | 1   | HTTP → HTTPS-redirect (nu 200 op http://)               | 3    | middel | sterk  | hoog     | laag       | wacht op gebruiker (E2)        |
 | 2   | Search Console + sitemap + Bing                         | 0/9  | hoog   | sterk  | hoog     | laag       | wacht op TXT-record (E3)       |
 | 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | open                           |
-| 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | in uitvoering                  |
-| 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | open                           |
+| 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | live (batch 2), meten na GSC   |
+| 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                |
 | 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | open                           |
 | 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | deels (E4), kaart open         |
 | 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | open                           |
@@ -95,7 +95,7 @@ Systeemkaart (kort; details in `CLAUDE.md`, `docs/HANDOFF.md`, `docs/OVERDRACHT.
 
 ## Fase 5. Informatieve autoriteit en interne links
 
-- **Voorbeeldbrieven-bibliotheek (in uitvoering):** `/voorbeeldbrieven` + 5 briefpagina's met briefmaker (live voorbeeld,
+- **Voorbeeldbrieven-bibliotheek (klaar, batch 2):** `/voorbeeldbrieven` + 5 briefpagina's met briefmaker (live voorbeeld,
   Word zonder afhankelijkheden, pdf via afdrukken, kopiëren). 14-dagenbrief blijft op `/incasso/wik-brief` (briefmaker
   daar toevoegen) om kannibalisatie te voorkomen. Interne links vanuit kennisbank, `/incasso`, footer.
 - Interne links naar zwak gelinkte pagina's (E1).

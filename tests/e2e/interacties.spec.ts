@@ -292,3 +292,33 @@ test.describe("juridische documenten", () => {
         await expect(page.locator('a[href="/juridisch/algemene-voorwaarden#artikel-6"]')).toHaveCount(1)
     })
 })
+
+test.describe("briefmaker", () => {
+    test("brief past zich aan, sommatie telt kosten alleen mee als dat mag, en Word wordt gedownload", async ({ page }) => {
+        await page.goto("/voorbeeldbrieven/sommatie")
+        const bm = page.locator("[data-briefmaker]")
+        const papier = bm.locator("[data-papier]")
+        await expect(papier).toContainText("[factuurnummer]")
+        await bm.locator('input[name="factuur"]').fill("2026-118")
+        await bm.locator('input[name="bedrag"]').fill("1.250,00")
+        await expect(papier).toContainText("Sommatie tot betaling factuur 2026-118")
+        await expect(papier).toContainText("1.437,50")
+        await bm.locator('input[name="soort"][value="particulier"]').check({ force: true })
+        await expect(papier).not.toContainText("1.437,50")
+        await bm.locator('input[name="wikVerstuurd"]').check()
+        await expect(papier).toContainText("1.437,50")
+        const [dl] = await Promise.all([page.waitForEvent("download"), bm.locator('[data-bm="word"]').click()])
+        expect(dl.suggestedFilename()).toBe("sommatie-2026-118.docx")
+        await expect(bm.locator("[data-bm-status]")).toContainText("gedownload")
+    })
+
+    test("14-dagenbrief op /incasso/wik-brief noemt de exacte kosten", async ({ page }) => {
+        await page.goto("/incasso/wik-brief#briefmaker")
+        const bm = page.locator("[data-briefmaker]")
+        await bm.locator('input[name="bedrag"]').fill("1250")
+        await expect(bm.locator("[data-papier]")).toContainText("te rekenen vanaf de dag na ontvangst van deze brief")
+        await expect(bm.locator("[data-papier]")).toContainText("187,50")
+        await bm.locator('input[name="btw"]').check()
+        await expect(bm.locator("[data-papier]")).toContainText("39,38 btw")
+    })
+})

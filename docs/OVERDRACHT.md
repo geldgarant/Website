@@ -1,16 +1,16 @@
-# GeldGarant website: complete overdracht (7 nov 2026, 11:45, na de livegang)
+# GeldGarant website: complete overdracht (7 nov 2026, 23:00, SEO-traject gestart)
 
 Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt alle eerdere overdrachten (ook `claude/website-overdracht-*.md` en `claude/website-START-HIER.md` in het claude.ai-project, die dezelfde inhoud hebben). Details staan in de repo: `CLAUDE.md`, `docs/HANDOFF.md` (§6b), `brieven/README.md`, `docs/SITEMAP.md`, `docs/LIVEGANG.md`.
 
 **LIVE sinds 7 nov 2026 ±11:40: https://geldgarant.com draait op de Worker "website"** (www → 301 naar geldgarant.com). Stand: alles staat op `main`, staging blijft https://website.geldgarant.workers.dev, laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Formulieren (contact, vordering, sollicitatie) getest en werkend (zie §5.5).
 
+**SEO-traject (sinds 7 nov 2026, avond):** hervatten via `docs/seo/SEO_STATE.md`. Gedaan: SEO-masterplan, status en bewijs in `docs/seo/`, productiecrawl, SEO-skills, voorbeeldbrieven-bibliotheek (`/voorbeeldbrieven` + briefmaker op `/incasso/wik-brief`), titels ingekort, JSON-LD op `/vordering-indienen`. Wacht op Anas: TXT-record voor Search Console, "Always Use HTTPS", Web Analytics (zie SEO_STATE, Gebruikersacties).
+
 ---
 
 ## 1. Startprompt (plak dit in het nieuwe gesprek)
 
-> Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Draai `bash scripts/dev/dompdf-lib.sh` (dompdf voor de brieven). Controleer of de Framer-connector actief is (anders RefreshMcpTools). Lees docs/OVERDRACHT.md, daarna CLAUDE.md, docs/HANDOFF.md (§0 en §6b), brieven/README.md, docs/SITEMAP.md en docs/LIVEGANG.md.
->
-> Volgende taak: mijn feedback op de sommatie en de 14-dagenbrief verwerken (OVERDRACHT §7), de proefbrieven in CaseControl (laadt de dynamische QR?), de open punten in §5 en de eerste week na de livegang (Search Console, 404's). Werkwijze per pagina: kort plan, bouwen, verifiëren, pushen, screenshots sturen. Kwaliteit en creativiteit voorop. Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
+> Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Lees alle projectinstructies (CLAUDE.md, docs/OVERDRACHT.md) en daarna docs/seo/SEO_STATE.md, docs/seo/SEO_MASTERPLAN.md en docs/seo/SEO_EVIDENCE.md. Controleer branch, laatste commit en werkboom. Hervat exact bij next_action. Verifieer bestaand werk voordat je iets herhaalt. Werk autonoom verder volgens de SEO-masterprompt (zelfde regels als in docs/seo/SEO_MASTERPLAN.md). Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
 
 **Meenemen naar een nieuw claude.ai-project** (projectkennis): dit bestand (`docs/OVERDRACHT.md`), en als je ze nog nodig hebt de intake-workerbestanden `claude/intake-worker-index.js`, `claude/intake-worker-setup.md`, `claude/intake-worker-sollicitatie.js`, `claude/intake-worker-sollicitatie-installeren.md`, plus `GeldGarant_CaseControl_Context.md`. De CaseControl-variabelenlijst en de oude sommatie staan nu in de repo (`brieven/casecontrol-variabelen.md`, `brieven/oud/`). Vervallen: `claude/intake-worker-betaallink.md`, `claude/website-handoff.md`, `claude/website-sitemap.md`.
 
