@@ -1,8 +1,8 @@
-# GeldGarant website: complete overdracht (7 nov 2026, 11:00)
+# GeldGarant website: complete overdracht (7 nov 2026, 11:45, na de livegang)
 
 Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt alle eerdere overdrachten (ook `claude/website-overdracht-*.md` en `claude/website-START-HIER.md` in het claude.ai-project, die dezelfde inhoud hebben). Details staan in de repo: `CLAUDE.md`, `docs/HANDOFF.md` (§6b), `brieven/README.md`, `docs/SITEMAP.md`, `docs/LIVEGANG.md`.
 
-Stand: alles staat op `main` en op staging (https://website.geldgarant.workers.dev), laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Cloudflare 7 nov: Turnstile-hostname en origin voor staging toegevoegd (zie §5.5).
+**LIVE sinds 7 nov 2026 ±11:40: https://geldgarant.com draait op de Worker "website"** (www → 301 naar geldgarant.com). Stand: alles staat op `main`, staging blijft https://website.geldgarant.workers.dev, laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Cloudflare 7 nov: Turnstile-hostname en origin voor staging toegevoegd (zie §5.5).
 
 ---
 
@@ -118,7 +118,7 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/
     - 14-dagenbrief: incassokostensjabloon pas na de 14 dagen aanzetten (`case.total_amount_due` mag dan nog geen kosten bevatten); controleren dat `case.penalty_amount_incl_vat` al het staffelbedrag geeft;
     - eerste variabelenlijst (`case.*`, `creditor.*`) opvragen: is er een variabele voor hoofdsom of rentepercentage? (Betaallink: `case.online_payment_link`, nu gebruikt.)
     - signing secret van de webhook vernieuwen (was zichtbaar in een screenshot).
-12. Livegang volgens `docs/LIVEGANG.md` (DNS bij Cloudflare; A-records en www-CNAME naar Worker "website"; MX/TXT ongemoeid). **Akkoord Anas 7 nov**: direct na geslaagde formuliertests. Pre-flight op staging geslaagd (64 oude URL's + 5 bestanden 200, 6 redirects, canonical, telefoon). DNS-backup: `docs/dns-backup-2026-11-07.tsv` (let op: wildcard `*.geldgarant.com` → 213.249.67.10 blijft staan).
+12. **Livegang gedaan (7 nov, ±11:40)**: Anas koppelde het domein los in Framer; daarna in Cloudflare: A-records `geldgarant.com` (31.43.160.6/161.6) en CNAME `www` → `sites.framer.app` verwijderd, custom domains `geldgarant.com` en `www.geldgarant.com` op Worker "website", Redirect Rule "Redirect from WWW to root" (`https://www.*` → `https://${1}`, 301, querystring behouden). Controle op het echte domein: 64 oude URL's + 5 bestanden 200, 6 redirects, CSP en HSTS, `/api/betalen` ok, `/api/qr` ok, www → root, http → https, `api.geldgarant.com/api/health` ok. MX/TXT en de wildcard `*.geldgarant.com` ongemoeid. DNS-backup: `docs/dns-backup-2026-11-07.tsv`. Nog te doen: Search Console (sitemap `https://geldgarant.com/sitemap-index.xml` indienen, homepage + één artikel laten indexeren), eerste week dagelijks 404's in Search Console bekijken, Framer-site pas na een maand opzeggen (blijft de terugvaloptie), uptimecontrole instellen.
 
 ---
 

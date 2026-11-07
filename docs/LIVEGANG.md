@@ -1,5 +1,7 @@
 # Livegang: van Framer naar de nieuwe site
 
+> **Uitgevoerd op 7 nov 2026 rond 11:40.** Zie `docs/OVERDRACHT.md` §5.12 voor wat er is gedaan en gecontroleerd. Dit draaiboek blijft staan voor het terugdraaien en de controles in de eerste week.
+
 Draaiboek voor het omzetten van geldgarant.com van Framer naar de Cloudflare Worker "website". Alleen uitvoeren samen met Anas. Opgesteld 7 nov 2026; DNS-gegevens die dag nagelopen.
 
 ## Huidige situatie (7 nov 2026)
