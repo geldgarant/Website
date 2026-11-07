@@ -1,0 +1,795 @@
+---
+// /hulp-nodig-bij-geldproblemen (URL van de Framer-site). Voor debiteuren: rustige toon, geen verkoop.
+// Hoofdvraag: "Ik kom er niet uit. Waar kan ik terecht?"
+// Volgorde: u bent niet de enige + direct bellen (hero) → welke hulp past bij mijn situatie (01)
+// → wie zijn die instanties (02) → ik heb een brief van GeldGarant (03) → zware gedachten (04) → vragen → afsluiter.
+// Research nov 2026: Flanderijn /hulp-bij-schulden (tegels per instantie, 113 onderaan), Geldfit (contact in stappen).
+// Nagelopen (nov 2026): Geldfit 0800 8115, ma t/m vr 9.00–21.00 (geldfit.nl, Kamerstukken); Juridisch Loket
+// 0800 8020 gratis, werkdagen 9.00–17.00 (rijksoverheid.nl); 113 en 0800 0113 (113.nl); Schuldenwijzer met DigiD
+// (KBvG/SNG); Geldfit Zakelijk (kvk.nl/zwaar-weer); SchuldHulpMaatje gratis vrijwilligers. Links gecontroleerd op 200.
+import Base from "../layouts/Base.astro"
+import Icon from "../components/Icon.astro"
+import Crumbs from "../components/Crumbs.astro"
+import Feitenkaart from "../components/Feitenkaart.astro"
+import Faq from "../components/Faq.astro"
+import SlotCta from "../components/SlotCta.astro"
+import { site } from "../data/site"
+
+const title = "Hulp nodig bij geldproblemen? Hier vindt u hulp | GeldGarant"
+const description =
+    "Geldzorgen of schulden? Hier vindt u gratis en betrouwbare hulp: Geldfit, uw gemeente, Het Juridisch Loket, Nibud en meer. En wat u kunt doen met een brief van ons."
+const url = "https://geldgarant.com/hulp-nodig-bij-geldproblemen"
+const nb = (s: string) => s.replace(/ /g, "\u00a0")
+
+const snel = [
+    { icon: "user", k: "Geldfit", v: nb("Bel 0800 8115"), href: "tel:08008115" },
+    { icon: "building", k: "Gemeente", v: "Gratis schuldhulp" },
+    { icon: "scale", k: "Juridisch Loket", v: nb("Bel 0800 8020"), href: "tel:08008020" },
+    { icon: "doc", k: "Brief van ons", v: `Bel\u00a0${site.phone}`, href: site.phoneHref },
+] as const
+
+type Ins = {
+    id: string
+    naam: string
+    tags: readonly string[]
+    wat: string
+    hoe: string
+    href: string
+    linkLabel: string
+    tel?: { label: string; href: string }
+}
+const instanties: readonly Ins[] = [
+    {
+        id: "geldfit",
+        naam: "Geldfit",
+        tags: ["Gratis", "Anoniem"],
+        wat: "Het startpunt bij elke geldvraag. Doe online de Geldfit-test, of bel of app met iemand die met u meekijkt en u naar de juiste hulp bij u in de buurt brengt.",
+        hoe: "Op werkdagen van 9.00 tot 21.00 uur, ook via WhatsApp en chat.",
+        href: "https://www.geldfit.nl/",
+        linkLabel: "Naar geldfit.nl",
+        tel: { label: nb("Bel 0800 8115"), href: "tel:08008115" },
+    },
+    {
+        id: "gemeente",
+        naam: "Schuldhulp van uw gemeente",
+        tags: ["Gratis"],
+        wat: "Elke gemeente biedt schuldhulpverlening. In een eerste gesprek brengt u samen uw situatie in kaart. Waar nodig regelt de gemeente budgetbeheer of een schuldregeling met uw schuldeisers.",
+        hoe: "Zoek op de website van uw gemeente naar ‘schuldhulpverlening’, of laat Geldfit u doorverwijzen.",
+        href: "https://www.geldfit.nl/",
+        linkLabel: "Vind hulp via Geldfit",
+    },
+    {
+        id: "juridisch",
+        naam: "Het Juridisch Loket",
+        tags: ["Gratis bij laag inkomen"],
+        wat: "Voor juridische vragen over schulden, incasso, beslag of een aanmaning waar u het niet mee eens bent. Op de website staan ook voorbeeldbrieven.",
+        hoe: "Gratis bellen op werkdagen van 9.00 tot 17.00 uur, of langsgaan op een van de vestigingen.",
+        href: "https://www.juridischloket.nl/",
+        linkLabel: "Naar juridischloket.nl",
+        tel: { label: nb("Bel 0800 8020"), href: "tel:08008020" },
+    },
+    {
+        id: "schuldenwijzer",
+        naam: "Schuldenwijzer",
+        tags: ["Met DigiD"],
+        wat: "Log in met DigiD en zie welke beslagen en schulden er via gerechtsdeurwaarders lopen, en wat uw beslagvrije voet is. Handig als u wilt weten waar u staat.",
+        hoe: "Online, met uw DigiD.",
+        href: "https://www.schuldenwijzer.nl/",
+        linkLabel: "Naar schuldenwijzer.nl",
+    },
+    {
+        id: "nibud",
+        naam: "Nibud",
+        tags: ["Onafhankelijk"],
+        wat: "Rekenhulpen en tips om grip te krijgen op uw uitgaven. Ziet u wat een realistisch budget is voor uw situatie, dan weet u ook wat u kunt aanbieden in een regeling.",
+        hoe: "Online, met rekenhulpen en voorbeeldbegrotingen.",
+        href: "https://www.nibud.nl/",
+        linkLabel: "Naar nibud.nl",
+    },
+    {
+        id: "maatje",
+        naam: "SchuldHulpMaatje",
+        tags: ["Gratis", "Vrijwilligers"],
+        wat: "Een getrainde vrijwilliger komt bij u thuis, helpt u de papieren op orde te brengen en blijft naast u staan tot het weer loopt.",
+        hoe: "Actief in veel gemeenten. Kijk op de website of er een maatje bij u in de buurt is.",
+        href: "https://www.schuldhulpmaatje.nl/",
+        linkLabel: "Naar schuldhulpmaatje.nl",
+    },
+    {
+        id: "zakelijk",
+        naam: "Geldfit Zakelijk",
+        tags: ["Voor ondernemers", "Gratis"],
+        wat: "Bent u zzp’er of ondernemer en loopt het vast? Doe de gratis test en zie welke hulp er is, van advies tot een regeling met uw schuldeisers.",
+        hoe: "Online test en een gratis adviesgesprek.",
+        href: "https://www.geldfit.nl/zakelijk/",
+        linkLabel: "Naar Geldfit Zakelijk",
+    },
+    {
+        id: "kvk",
+        naam: "KVK Zwaar weer",
+        tags: ["Voor ondernemers"],
+        wat: "De Kamer van Koophandel helpt ondernemers die in de problemen komen, met een overzicht van regelingen en een adviesteam dat vrijblijvend meedenkt.",
+        hoe: "Online, of bel het KVK Adviesteam.",
+        href: "https://www.kvk.nl/zwaar-weer/",
+        linkLabel: "Naar kvk.nl",
+    },
+    {
+        id: "nvvk",
+        naam: "NVVK",
+        tags: ["Informatie"],
+        wat: "De vereniging voor schuldhulpverlening. Hier leest u hoe schuldhulp werkt, wat een schuldregeling is en wat u van een schuldhulpverlener mag verwachten.",
+        hoe: "Online.",
+        href: "https://www.nvvk.nl/",
+        linkLabel: "Naar nvvk.nl",
+    },
+]
+
+const situaties = [
+    {
+        id: "brief",
+        label: "Ik heb een brief van GeldGarant",
+        kop: "Neem contact met ons op",
+        tekst: "Hoe eerder u reageert, hoe meer mogelijkheden er zijn. Kunt u niet alles in één keer betalen? Vertel ons wat u per maand kunt missen, dan kijken we samen wat haalbaar is.",
+        links: [{ href: "#brief", label: "Wat u kunt doen" }],
+    },
+    {
+        id: "veel",
+        label: "Ik heb meerdere schulden",
+        kop: "Begin bij Geldfit of uw gemeente",
+        tekst: "Bij meerdere schulden is het slim om hulp te vragen die al uw schuldeisers samen bekijkt. Geldfit brengt u in contact met schuldhulp bij u in de buurt. Uw gemeente kan een schuldregeling voor u regelen.",
+        links: [
+            { href: "#geldfit", label: "Geldfit" },
+            { href: "#gemeente", label: "Uw gemeente" },
+        ],
+    },
+    {
+        id: "overzicht",
+        label: "Ik weet niet wat ik moet betalen",
+        kop: "Maak eerst een overzicht",
+        tekst: "Met Schuldenwijzer ziet u welke beslagen en schulden er via deurwaarders lopen. Met de rekenhulpen van het Nibud ziet u wat u maandelijks kunt missen.",
+        links: [
+            { href: "#schuldenwijzer", label: "Schuldenwijzer" },
+            { href: "#nibud", label: "Nibud" },
+        ],
+    },
+    {
+        id: "oneens",
+        label: "Ik ben het niet eens met een vordering",
+        kop: "Vraag juridisch advies",
+        tekst: "Laat de schuldeiser zo snel mogelijk weten waarom u het niet eens bent, liefst schriftelijk. Het Juridisch Loket kan u gratis adviseren en heeft voorbeeldbrieven.",
+        links: [
+            { href: "#juridisch", label: "Het Juridisch Loket" },
+            { href: "#brief", label: "Bezwaar bij GeldGarant" },
+        ],
+    },
+    {
+        id: "ondernemer",
+        label: "Ik ben ondernemer of zzp’er",
+        kop: "Er is hulp speciaal voor ondernemers",
+        tekst: "Geldfit Zakelijk en het Zwaar weer-loket van de KVK helpen ondernemers die vastlopen, met advies en waar nodig een regeling met schuldeisers.",
+        links: [
+            { href: "#zakelijk", label: "Geldfit Zakelijk" },
+            { href: "#kvk", label: "KVK Zwaar weer" },
+        ],
+    },
+] as const
+
+const opties = [
+    {
+        icon: "euro",
+        kop: "U kunt betalen",
+        tekst: "Betaal online via het betaalportaal. U logt in met de gegevens uit onze brief. Zo voorkomt u verdere kosten.",
+        actie: { href: site.debtorPortal, label: "Naar het betaalportaal", extern: true },
+    },
+    {
+        icon: "calendar",
+        kop: "U wilt een regeling",
+        tekst: "Bel, mail of app ons. Vertel wat u per maand kunt missen. We kijken samen wat haalbaar is en leggen de afspraak schriftelijk vast.",
+        actie: { href: site.phoneHref, label: `Bel\u00a0${site.phone}`, extern: false },
+    },
+    {
+        icon: "scale",
+        kop: "U bent het niet eens",
+        tekst: "Laat ons weten waarom, het liefst per e-mail met uitleg. We leggen uw reactie voor aan onze opdrachtgever en laten u weten wat er gebeurt.",
+        actie: { href: `mailto:${site.email}`, label: "Mail uw reactie", extern: false },
+    },
+] as const
+
+const hulpFaq = [
+    {
+        q: "Lopen de kosten op als ik niet reageer?",
+        a: "Ja. Over een openstaand bedrag loopt rente, en als een zaak naar de rechter gaat, komen daar kosten bij. Reageren loont dus altijd, ook als u nog niet kunt betalen.",
+    },
+    {
+        q: "Kan ik een betalingsregeling treffen?",
+        a: "Vaak wel. Neem contact met ons op en vertel wat u per maand kunt missen. We kijken samen wat haalbaar is. Een afspraak leggen we altijd schriftelijk vast, zodat u weet waar u aan toe bent.",
+    },
+    {
+        q: "Ik heb schuldhulp via de gemeente. Wat nu?",
+        a: "Geef ons de naam en gegevens van uw schuldhulpverlener door. Dan kunnen we met hen overleggen, zodat u niet alles zelf hoeft te regelen.",
+    },
+    {
+        q: "Mag er beslag gelegd worden op mijn hele inkomen?",
+        a: "Nee. Een deel van uw inkomen is beschermd: de beslagvrije voet. Dat bedrag houdt u altijd over om van te leven. In Schuldenwijzer ziet u wat uw beslagvrije voet is.",
+    },
+    {
+        q: "Is de hulp van deze organisaties echt gratis?",
+        a: "Geldfit, de schuldhulp van uw gemeente en SchuldHulpMaatje zijn gratis. Het Juridisch Loket geeft gratis advies als u een laag inkomen en weinig spaargeld heeft. De websites van Nibud en Schuldenwijzer kunt u gratis gebruiken.",
+    },
+    {
+        q: "Ik heb een klacht over GeldGarant. Waar kan ik terecht?",
+        a: "Laat het ons eerst weten, dan zoeken we samen naar een oplossing. Komen we er niet uit, dan kunt u naar een onafhankelijke geschillencommissie. Wij zijn daarvoor aangesloten bij NowID.",
+    },
+] as const
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Hulp bij geldzorgen en schulden",
+        url,
+        description,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Hulp bij geldzorgen", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: hulpFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Hulp bij geldzorgen" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Geldzorgen? Er is <span class="accent">hulp</span>
+                    </h1>
+                    <p class="lead">
+                        Rekeningen die zich opstapelen, of het overzicht dat weg is: het overkomt veel mensen, en u hoeft het niet
+                        alleen op te lossen. Hier vindt u gratis en betrouwbare hulp, en wat u kunt doen als u een brief van ons
+                        heeft.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#situatie">
+                            Welke hulp past bij mij?
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#brief">
+                            Brief van ons ontvangen?
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="Direct iemand spreken" id="snel-title" items={snel} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 KIEZER -->
+    <section class="section bg-surface" id="situatie" aria-labelledby="sit-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Waar begint u?
+                </p>
+                <h2 class="h2" id="sit-title">
+                    Kies wat bij u <span class="accent">past</span>
+                </h2>
+            </div>
+            <div class="kiezer">
+                <fieldset class="keuzes">
+                    <legend class="sr-only">Uw situatie</legend>
+                    {situaties.map((s, i) => (
+                        <label class="keuze">
+                            <input type="radio" name="situatie" value={s.id} checked={i === 0} />
+                            <span>{s.label}</span>
+                        </label>
+                    ))}
+                </fieldset>
+                <div class="advies bg-ink" aria-live="polite">
+                    {situaties.map((s) => (
+                        <div class="advies-p" data-p={s.id}>
+                            <p class="advies-label">Ons advies</p>
+                            <h3 class="advies-kop">{s.kop}</h3>
+                            <p class="advies-tekst">{s.tekst}</p>
+                            <div class="advies-links">
+                                {s.links.map((l) => (
+                                    <a class="btn btn-light" href={l.href}>
+                                        {l.label}
+                                        <span class="btn-dot">
+                                            <Icon name="arrow" size={16} />
+                                        </span>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 INSTANTIES -->
+    <section class="section" aria-labelledby="ins-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Instanties
+                </p>
+                <h2 class="h2" id="ins-title">
+                    Hier kunt u <span class="accent">terecht</span>
+                </h2>
+                <p class="lead">
+                    Onafhankelijke organisaties die u gratis of tegen een kleine vergoeding helpen. GeldGarant heeft geen band met
+                    deze organisaties en krijgt niets voor een verwijzing.
+                </p>
+            </div>
+            <ul role="list" class="ins">
+                {instanties.map((x) => (
+                    <li class="in" id={x.id}>
+                        <div class="in-tags">
+                            {x.tags.map((t) => (
+                                <span class="tag">{t}</span>
+                            ))}
+                        </div>
+                        <h3 class="h3">{x.naam}</h3>
+                        <p class="in-wat">{x.wat}</p>
+                        <p class="in-hoe">
+                            <Icon name="clock" size={15} />
+                            {x.hoe}
+                        </p>
+                        <div class="in-acties">
+                            {x.tel && (
+                                <a class="btn btn-dark" href={x.tel.href}>
+                                    {x.tel.label}
+                                </a>
+                            )}
+                            <a class="textlink in-link" href={x.href} target="_blank" rel="noopener">
+                                {x.linkLabel}
+                                <Icon name="arrow-up-right" size={15} />
+                                <span class="sr-only">(opent in nieuw venster)</span>
+                            </a>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 03 BRIEF VAN GELDGARANT -->
+    <section class="section bg-surface" id="brief" aria-labelledby="brief-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">03</span> Brief van GeldGarant
+                </p>
+                <h2 class="h2" id="brief-title">
+                    U heeft een brief van ons. <span class="accent">Wat nu?</span>
+                </h2>
+                <p class="lead">
+                    Wij innen facturen voor ondernemers. Dat doen we zakelijk en correct, en we zoeken eerst naar een oplossing
+                    die werkt. Neem gerust contact op: {site.hours}.
+                </p>
+            </div>
+            <ul role="list" class="opties">
+                {opties.map((o) => (
+                    <li class="optie">
+                        <span class="optie-icon" aria-hidden="true">
+                            <Icon name={o.icon} size={22} />
+                        </span>
+                        <h3 class="h3">{o.kop}</h3>
+                        <p>{o.tekst}</p>
+                        <a
+                            class="btn btn-ghost optie-btn"
+                            href={o.actie.href}
+                            target={o.actie.extern ? "_blank" : undefined}
+                            rel={o.actie.extern ? "noopener" : undefined}
+                        >
+                            {o.actie.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+            <p class="brief-noot">
+                <Icon name="chat" size={16} />
+                <span>
+                    Liever appen? Stuur een bericht via{" "}
+                    <a class="textlink" href={site.whatsappHref} target="_blank" rel="noopener">
+                        WhatsApp
+                    </a>
+                    . Vermeld altijd uw dossiernummer.
+                </span>
+            </p>
+        </div>
+    </section>
+
+    <!-- 04 113 -->
+    <section class="section zorg-sec" aria-labelledby="zorg-title">
+        <div class="wrap">
+            <div class="zorg">
+                <span class="zorg-icon" aria-hidden="true">
+                    <Icon name="heart" size={24} />
+                </span>
+                <div>
+                    <h2 class="zorg-kop" id="zorg-title">
+                        Zware gedachten door geldzorgen?
+                    </h2>
+                    <p>
+                        Geldzorgen kunnen zwaar op u drukken. Denkt u aan zelfdoding, of maakt u zich zorgen om iemand anders?
+                        Praat erover met 113 Zelfmoordpreventie. Gratis en anoniem, dag en nacht.
+                    </p>
+                    <div class="zorg-acties">
+                        <a class="btn btn-dark" href="tel:113">
+                            Bel{"\u00a0"}113
+                        </a>
+                        <a class="btn btn-ghost" href="tel:08000113">
+                            Bel{"\u00a0"}gratis{"\u00a0"}0800{"\u00a0"}0113
+                        </a>
+                        <a class="textlink in-link" href="https://www.113.nl/" target="_blank" rel="noopener">
+                            Chat via 113.nl
+                            <Icon name="arrow-up-right" size={15} />
+                            <span class="sr-only">(opent in nieuw venster)</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Faq items={hulpFaq} idx="05">
+        <Fragment slot="title">
+            Vragen die we vaak <span class="accent">horen</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        lead="Heeft u een brief van ons ontvangen? Neem contact op. Hoe eerder u reageert, hoe meer mogelijkheden er zijn."
+        href={site.debtorPortal}
+        label="Naar het betaalportaal"
+    >
+        Samen zoeken we een <span class="accent">oplossing</span>
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 12em;
+        font-size: clamp(2.25rem, 1.25rem + 3.8vw, 4.125rem);
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+    .kop .lead {
+        margin-top: 20px;
+    }
+    #situatie,
+    #brief {
+        scroll-margin-top: 16px;
+    }
+
+    /* ---------- 01 KIEZER ---------- */
+    .kiezer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    @media (min-width: 960px) {
+        .kiezer {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 24px;
+            align-items: stretch;
+        }
+    }
+    .keuzes {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+    }
+    .keuze {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 56px;
+        padding: 14px 18px;
+        border: 1.5px solid transparent;
+        border-radius: var(--r-md);
+        background: #fff;
+        font-weight: 500;
+        color: var(--ink);
+        cursor: pointer;
+        transition:
+            border-color 0.2s var(--ease),
+            box-shadow 0.2s var(--ease);
+    }
+    .keuze input {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: var(--blue);
+    }
+    .keuze:has(input:checked) {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px var(--blue-soft);
+    }
+    .keuze:has(input:focus-visible) {
+        outline: 3px solid var(--blue);
+        outline-offset: 2px;
+    }
+    .advies {
+        padding: clamp(24px, 4vw, 48px);
+        border-radius: var(--r-xl);
+    }
+    .advies-p {
+        display: none;
+    }
+    .kiezer:has(input[value="brief"]:checked) [data-p="brief"],
+    .kiezer:has(input[value="veel"]:checked) [data-p="veel"],
+    .kiezer:has(input[value="overzicht"]:checked) [data-p="overzicht"],
+    .kiezer:has(input[value="oneens"]:checked) [data-p="oneens"],
+    .kiezer:has(input[value="ondernemer"]:checked) [data-p="ondernemer"] {
+        display: block;
+    }
+    .advies-label {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--blue-on-dark);
+    }
+    .advies-kop {
+        margin-top: 12px;
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: #fff;
+    }
+    .advies-tekst {
+        margin-top: 16px;
+        max-width: 36em;
+        line-height: 1.65;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .advies-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+    }
+    @media (max-width: 519px) {
+        .advies-links .btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    /* ---------- 02 INSTANTIES ---------- */
+    .ins {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 720px) {
+        .ins {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    @media (min-width: 1100px) {
+        .ins {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .in {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 30px);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        scroll-margin-top: 110px;
+    }
+    .in:target {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px var(--blue-soft);
+    }
+    .in-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .tag {
+        padding: 4px 10px;
+        border-radius: var(--r-pill);
+        background: var(--green-bg);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--green);
+    }
+    .in-wat {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .in-hoe {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: var(--fs-xs);
+        line-height: 1.5;
+        color: var(--muted);
+    }
+    .in-hoe :global(svg) {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .in-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 18px;
+        margin-top: auto;
+        padding-top: 8px;
+    }
+    .in-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+
+    /* ---------- 03 BRIEF ---------- */
+    .opties {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 900px) {
+        .opties {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .optie {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .optie p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .optie-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 8px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+    .optie-btn {
+        align-self: flex-start;
+        margin-top: auto;
+        --btn-bg: var(--surface);
+    }
+    .brief-noot {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 24px;
+        font-size: var(--fs-sm);
+        color: var(--text);
+    }
+    .brief-noot :global(svg) {
+        flex-shrink: 0;
+        color: var(--blue);
+    }
+
+    /* ---------- 04 113 ---------- */
+    .zorg {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        padding: clamp(24px, 4vw, 48px);
+        border-radius: var(--r-xl);
+        background: var(--blue-soft);
+    }
+    @media (min-width: 720px) {
+        .zorg {
+            grid-template-columns: 56px minmax(0, 1fr);
+            gap: 28px;
+        }
+    }
+    .zorg-icon {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .zorg-kop {
+        font-family: var(--font-display);
+        font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .zorg p {
+        margin-top: 12px;
+        max-width: 44em;
+        line-height: 1.65;
+        color: var(--text);
+    }
+    .zorg-acties {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 18px;
+        margin-top: 24px;
+    }
+    .zorg-acties .btn-ghost {
+        --btn-bg: #fff;
+    }
+</style>

@@ -87,11 +87,20 @@ test.describe("hoe werkt het", () => {
 })
 
 test.describe("geen persoonsnamen op de site", () => {
-    for (const route of ["/", "/over-ons", "/contact-opnemen", "/hoe-werkt-het", "/kennisbank"]) {
+    for (const route of [
+        "/",
+        "/over-ons",
+        "/contact-opnemen",
+        "/hoe-werkt-het",
+        "/kennisbank",
+        "/werken-bij",
+        "/werken-bij/call-center-medewerker",
+        "/hulp-nodig-bij-geldproblemen",
+    ]) {
         test(`${route} noemt geen namen en geen callcenter`, async ({ page }) => {
             await page.goto(route)
             const tekst = (await page.locator("main, body").first().innerText()).toLowerCase()
-            for (const woord of ["anas", "ilyas", "callcenter", "keuzemenu"]) expect(tekst).not.toContain(woord)
+            for (const woord of ["anas", "ilyas", "callcenter", "call center", "keuzemenu"]) expect(tekst).not.toContain(woord)
         })
     }
 })
@@ -204,5 +213,30 @@ test.describe("kennisbank", () => {
             expect(r.overflow).toBe("visible")
             if (!r.los) expect(r.h).toBeLessThanOrEqual(r.ruimte)
         }
+    })
+})
+
+test.describe("werken bij", () => {
+    test("overzicht toont drie vacatures die naar de oude slugs linken", async ({ page }) => {
+        await page.goto("/werken-bij")
+        for (const slug of ["incasso-medewerker", "call-center-medewerker", "stage"])
+            await expect(page.locator(`#vacatures a[href="/werken-bij/${slug}"]`)).toHaveCount(1)
+    })
+    test("vacature heeft JobPosting en een sollicitatielink", async ({ page }) => {
+        await page.goto("/werken-bij/incasso-medewerker")
+        const ld = await page.locator('script[type="application/ld+json"]').allTextContents()
+        expect(ld.join(" ")).toContain('"JobPosting"')
+        await expect(page.locator('a[href^="mailto:"][href*="Sollicitatie"]').first()).toBeVisible()
+    })
+})
+
+test.describe("hulp bij geldproblemen", () => {
+    test("situatiekiezer toont per keuze het juiste advies", async ({ page }) => {
+        await page.goto("/hulp-nodig-bij-geldproblemen")
+        await expect(page.locator('[data-p="brief"]')).toBeVisible()
+        await expect(page.locator('[data-p="ondernemer"]')).toBeHidden()
+        await page.locator('input[value="ondernemer"]').check()
+        await expect(page.locator('[data-p="ondernemer"]')).toBeVisible()
+        await expect(page.locator('[data-p="brief"]')).toBeHidden()
     })
 })

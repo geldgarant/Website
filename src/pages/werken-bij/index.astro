@@ -1,0 +1,636 @@
+---
+// /werken-bij. Hoofdvraag: "Wil ik hier werken, en welke functie past bij mij?"
+// Volgorde: wie zijn jullie als werkgever (hero) → wat is er open (01) → hoe ziet het werk eruit (02)
+// → wat krijg ik (03) → hoe verloopt het (04) → vragen (05) → CTA.
+// Research nov 2026: Breyta /vacatures (kaarten met 3 kernpunten), Flanderijn /werken-bij (vakgebieden, stage).
+// De oude Framer-tekst ("Debtters", "8 jaar") kwam van een ander bureau en is bewust niet overgenomen.
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Feitenkaart from "../../components/Feitenkaart.astro"
+import Faq from "../../components/Faq.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { vacatures, procedure, werkenFaq, sollicitatieMail } from "../../data/vacatures"
+
+const title = "Werken bij GeldGarant | Vacatures in Deventer"
+const description =
+    "Werken bij een incassobureau in Deventer? Bekijk de vacatures voor incassomedewerker, medewerker klantcontact en stage. Ervaring niet vereist, wij leiden u op."
+const url = "https://geldgarant.com/werken-bij"
+
+const feiten = [
+    { icon: "pin", k: "Kantoor", v: `${site.street}, ${site.city}` },
+    { icon: "doc", k: "Open vacatures", v: `${vacatures.length}, plus open sollicitatie` },
+    { icon: "clock", k: "Uren", v: "32 tot 40 per week" },
+    { icon: "calendar", k: "Vakantie", v: "25 dagen en 8% vakantiegeld" },
+    { icon: "check", k: "Ervaring", v: "Niet vereist, wij leiden u op" },
+] as const
+
+const dag = [
+    { t: "09.00", kop: "De dag starten", tekst: "U loopt de nieuwe betalingen en reacties in uw dossiers na." },
+    { t: "09.30", kop: "Bellen", tekst: "U belt debiteuren van wie de termijn is verlopen en maakt twee betalingsafspraken." },
+    { t: "11.00", kop: "Verweer", tekst: "Een debiteur betwist een factuur. U vraagt de opdrachtgever om de pakbon." },
+    { t: "13.30", kop: "Een regeling", tekst: "U legt een regeling in zes termijnen vast en bevestigt die per e-mail." },
+    { t: "15.00", kop: "Opdrachtgever", tekst: "Een ondernemer belt over zijn dossier. U ziet direct waar het staat." },
+    { t: "16.30", kop: "Afronden", tekst: "Alles staat in het dossier. Morgen gaat u verder waar u bent gebleven." },
+] as const
+
+const bieden = [
+    {
+        icon: "doc",
+        kop: "U leert het vak",
+        tekst: "Ervaring in incasso is niet nodig. U leert het bij ons, met een vaste collega naast u en elk jaar de bijscholing die de wet vraagt.",
+    },
+    {
+        icon: "scale",
+        kop: "Werk met twee kanten",
+        tekst: "U helpt ondernemers aan hun geld en behandelt debiteuren correct. Vasthoudend in de zaak, respectvol naar de mens.",
+    },
+    {
+        icon: "calendar",
+        kop: "25 vakantiedagen en 8% vakantiegeld",
+        tekst: "Bij een fulltime dienstverband, en een marktconform salaris passend bij uw ervaring.",
+    },
+    {
+        icon: "user",
+        kop: "Korte lijnen",
+        tekst: "Een team op één kantoor. Ziet u iets dat beter kan, dan kaart u het meteen aan.",
+    },
+] as const
+
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Werken bij GeldGarant",
+        url,
+        description,
+        mainEntity: {
+            "@type": "ItemList",
+            itemListElement: vacatures.map((v, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                name: v.titel,
+                url: `${url}/${v.slug}`,
+            })),
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Werken bij", item: url },
+        ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: werkenFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+]
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Werken bij" }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="display">
+                        Werken bij <br /><span class="accent">GeldGarant</span>
+                    </h1>
+                    <p class="lead">
+                        Wij helpen ondernemers aan het geld waar ze recht op hebben, en we doen dat correct en volgens de wet.
+                        Daarvoor zoeken we mensen die helder communiceren, verantwoordelijkheid nemen en graag zien dat hun werk
+                        iets oplevert.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#vacatures">
+                            Bekijk de vacatures
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href="#open">
+                            Open sollicitatie
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="Werken bij ons in het kort" id="feiten-title" items={feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 VACATURES -->
+    <section class="section bg-surface" id="vacatures" aria-labelledby="vac-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">01</span> Vacatures
+                </p>
+                <h2 class="h2" id="vac-title">
+                    Open <span class="accent">vacatures</span>
+                </h2>
+            </div>
+            <ul role="list" class="vacs">
+                {vacatures.map((v, i) => (
+                    <li class="vac" data-reveal style={`--d:${i}`}>
+                        <div class="vac-meta">
+                            <span class="chip">
+                                <Icon name="pin" size={14} />
+                                {site.city}
+                            </span>
+                            <span class="chip">
+                                <Icon name="clock" size={14} />
+                                {v.uren}
+                            </span>
+                            {v.employmentType.includes("INTERN") && <span class="chip chip-blue">Stage</span>}
+                        </div>
+                        <h3 class="h3">
+                            <a class="vac-link" href={`/werken-bij/${v.slug}`}>
+                                {v.titel}
+                            </a>
+                        </h3>
+                        <p class="vac-kort">{v.kort}</p>
+                        <ul role="list" class="vac-punten">
+                            {v.kernpunten.map((k) => (
+                                <li>
+                                    <Icon name="check" size={16} />
+                                    {k}
+                                </li>
+                            ))}
+                        </ul>
+                        <span class="vac-cta" aria-hidden="true">
+                            Bekijk vacature
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={16} />
+                            </span>
+                        </span>
+                    </li>
+                ))}
+                <li class="vac vac-open bg-ink" id="open" data-reveal style={`--d:${vacatures.length}`}>
+                    <div class="vac-meta">
+                        <span class="chip chip-dark">Open sollicitatie</span>
+                    </div>
+                    <h3 class="h3">Staat uw functie er niet bij?</h3>
+                    <p class="vac-kort">
+                        Stuur ons uw cv en een korte motivatie. Vertel welk werk u zoekt en waar u goed in bent. Past er nu niets,
+                        dan nemen we contact op zodra dat wel zo is.
+                    </p>
+                    <a class="btn btn-light" href={sollicitatieMail("open sollicitatie")}>
+                        Stuur een open sollicitatie
+                        <span class="btn-dot">
+                            <Icon name="mail" size={16} />
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 02 VOORBEELDDAG -->
+    <section class="section" aria-labelledby="dag-title">
+        <div class="wrap dag-grid">
+            <div class="dag-copy">
+                <p class="eyebrow">
+                    <span class="idx">02</span> Het werk
+                </p>
+                <h2 class="h2" id="dag-title">
+                    Zo ziet een dag er <span class="accent">uit</span>
+                </h2>
+                <p class="lead">
+                    Incasso is vooral mensenwerk. U belt, luistert, zoekt een oplossing en legt alles netjes vast. Elk dossier is
+                    anders, en aan het eind van de dag ziet u wat u heeft bereikt.
+                </p>
+                <p class="dag-note">
+                    <Icon name="eye" size={16} />
+                    Voorbeeld van een dag als incassomedewerker. Geen echte dossiers.
+                </p>
+            </div>
+            <ol role="list" class="dag" aria-label="Voorbeeld van een werkdag">
+                {dag.map((d) => (
+                    <li>
+                        <span class="dag-t num">{d.t}</span>
+                        <div>
+                            <p class="dag-kop">{d.kop}</p>
+                            <p class="dag-tekst">{d.tekst}</p>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <!-- 03 WAT WIJ BIEDEN -->
+    <section class="section bg-surface" aria-labelledby="bieden-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">03</span> Wat wij bieden
+                </p>
+                <h2 class="h2" id="bieden-title">
+                    Wat u van ons kunt <span class="accent">verwachten</span>
+                </h2>
+            </div>
+            <ul role="list" class="bieden" data-scroller tabindex="0" aria-label="Wat wij bieden">
+                {bieden.map((b, i) => (
+                    <li class="bied" data-reveal style={`--d:${i}`}>
+                        <span class="bied-icon" aria-hidden="true">
+                            <Icon name={b.icon} size={22} />
+                        </span>
+                        <h3 class="h3">{b.kop}</h3>
+                        <p>{b.tekst}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </section>
+
+    <!-- 04 PROCEDURE -->
+    <section class="section" aria-labelledby="proc-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">04</span> Solliciteren
+                </p>
+                <h2 class="h2" id="proc-title">
+                    In vier stappen aan de <span class="accent">slag</span>
+                </h2>
+            </div>
+            <ol role="list" class="proc">
+                {procedure.map((p, i) => (
+                    <li class="stap" data-reveal style={`--d:${i}`}>
+                        <span class="stap-num num" aria-hidden="true">
+                            {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <h3 class="stap-kop">{p.kop}</h3>
+                        <p>{p.tekst}</p>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    </section>
+
+    <Faq items={werkenFaq} idx="05">
+        <Fragment slot="title">
+            Vragen over <span class="accent">solliciteren</span>
+        </Fragment>
+    </Faq>
+
+    <SlotCta
+        lead="Bekijk de vacatures of stuur een open sollicitatie. Vragen? Bel ons gerust."
+        href="#vacatures"
+        label="Bekijk de vacatures"
+    >
+        Kom ons team <span class="accent">versterken</span>
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 12em;
+        font-size: clamp(2.25rem, 1.25rem + 3.8vw, 4.125rem);
+    }
+    .hero .lead {
+        margin-top: 28px;
+        max-width: 34em;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+
+    /* ---------- 01 VACATURES ---------- */
+    #vacatures,
+    #open {
+        scroll-margin-top: 16px;
+    }
+    .vacs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 760px) {
+        .vacs {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .vac {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: clamp(24px, 3vw, 36px);
+        border-radius: var(--r-xl);
+        background: #fff;
+        transition: box-shadow 0.25s var(--ease);
+    }
+    .vac:not(.vac-open):hover {
+        box-shadow: var(--shadow-card);
+    }
+    .vac-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--text);
+    }
+    .chip :global(svg) {
+        color: var(--blue);
+    }
+    .chip-blue {
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+    }
+    .chip-dark {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+    .vac-link {
+        color: inherit;
+        text-decoration: none;
+    }
+    .vac-link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+    }
+    .vac-link:focus-visible {
+        outline: none;
+    }
+    .vac:has(.vac-link:focus-visible) {
+        outline: 3px solid var(--blue);
+        outline-offset: 3px;
+    }
+    .vac-kort {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .vac-punten {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    .vac-punten li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: var(--fs-sm);
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .vac-punten :global(svg) {
+        flex-shrink: 0;
+        margin-top: 3px;
+        color: var(--green);
+    }
+    .vac-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: auto;
+        font-weight: 600;
+        font-size: var(--fs-sm);
+        color: var(--blue-ink);
+    }
+    .vac-cta .btn-dot {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        transition: transform 0.25s var(--ease);
+    }
+    .vac:hover .vac-cta .btn-dot {
+        transform: translateX(3px);
+    }
+    .vac-open {
+        background: var(--ink);
+    }
+    .vac-open .vac-kort {
+        color: rgba(255, 255, 255, 0.78);
+    }
+    .vac-open .btn {
+        align-self: flex-start;
+        margin-top: auto;
+    }
+    @media (max-width: 519px) {
+        .vac-open .btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    /* ---------- 02 DAG ---------- */
+    .dag-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(32px, 5vw, 80px);
+    }
+    @media (min-width: 1024px) {
+        .dag-grid {
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            align-items: start;
+        }
+        .dag-copy {
+            position: sticky;
+            top: 120px;
+        }
+    }
+    .dag-copy .h2 {
+        margin-top: 14px;
+    }
+    .dag-copy .lead {
+        margin-top: 20px;
+    }
+    .dag-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 24px;
+        padding: 8px 14px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .dag {
+        display: grid;
+        padding: clamp(16px, 2.5vw, 28px);
+        border-radius: var(--r-xl);
+        background: var(--ink);
+    }
+    .dag li {
+        position: relative;
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 16px;
+        padding: 18px 8px;
+    }
+    .dag li + li {
+        border-top: 1px solid var(--line-dark);
+    }
+    .dag-t {
+        padding-top: 2px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--blue-on-dark);
+    }
+    .dag-kop {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.0625rem;
+        color: #fff;
+    }
+    .dag-tekst {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    /* ---------- 03 BIEDEN ---------- */
+    .bieden {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 82%);
+        gap: 12px;
+        margin-inline: calc(var(--gutter) * -1);
+        padding-inline: var(--gutter);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--gutter);
+        scrollbar-width: none;
+    }
+    .bieden > li {
+        scroll-snap-align: start;
+    }
+    @media (min-width: 700px) {
+        .bieden {
+            grid-auto-flow: row;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-inline: 0;
+            padding-inline: 0;
+            overflow: visible;
+        }
+    }
+    @media (min-width: 1100px) {
+        .bieden {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .bied {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: clamp(22px, 2.6vw, 32px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .bied p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .bied-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 8px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue);
+    }
+
+    /* ---------- 04 PROCEDURE ---------- */
+    .proc {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        counter-reset: stap;
+    }
+    @media (min-width: 700px) {
+        .proc {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    @media (min-width: 1100px) {
+        .proc {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .stap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: clamp(18px, 2.6vw, 30px);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+    }
+    .stap-num {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--blue-ink);
+    }
+    .stap-kop {
+        font-family: var(--font-display);
+        font-size: 1.1875rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+    }
+    .stap p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+</style>

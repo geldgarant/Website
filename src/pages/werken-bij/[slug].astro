@@ -1,0 +1,585 @@
+---
+// /werken-bij/<slug>: één template voor alle vacatures (inhoud in src/data/vacatures.ts).
+// Hoofdvraag: "Is deze functie iets voor mij, en hoe solliciteer ik?"
+// Volgorde: de functie in het kort (hero) → wat u doet (01) → wie u bent (02) → wat u krijgt (03)
+// → hoe het verloopt (04) → andere vacatures (05) → CTA. Zijkaart om te solliciteren loopt mee op desktop.
+// JobPosting-schema voor Google Jobs (geen salaris: nog niet bevestigd door GeldGarant).
+import Base from "../../layouts/Base.astro"
+import Icon from "../../components/Icon.astro"
+import Crumbs from "../../components/Crumbs.astro"
+import Feitenkaart from "../../components/Feitenkaart.astro"
+import SlotCta from "../../components/SlotCta.astro"
+import { site } from "../../data/site"
+import { vacatures, procedure, sollicitatieMail, type Vacature } from "../../data/vacatures"
+
+export function getStaticPaths() {
+    return vacatures.map((v) => ({ params: { slug: v.slug }, props: { v } }))
+}
+interface Props {
+    v: Vacature
+}
+const { v } = Astro.props
+const url = `https://geldgarant.com/werken-bij/${v.slug}`
+const mail = sollicitatieMail(v.titel)
+const andere = vacatures.filter((x) => x.slug !== v.slug)
+
+const lijst = (items: readonly string[]) => `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`
+const jsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        title: v.titel,
+        description: `<p>${v.lead}</p><h3>Wat u gaat doen</h3>${lijst(v.taken)}<h3>Wie wij zoeken</h3>${lijst(v.profiel)}`,
+        datePosted: v.datePosted,
+        employmentType: v.employmentType,
+        directApply: false,
+        hiringOrganization: {
+            "@type": "Organization",
+            name: site.name,
+            sameAs: "https://geldgarant.com",
+            logo: "https://geldgarant.com/brand/og-default.png",
+        },
+        jobLocation: {
+            "@type": "Place",
+            address: {
+                "@type": "PostalAddress",
+                streetAddress: site.street,
+                postalCode: site.postcode,
+                addressLocality: site.city,
+                addressCountry: "NL",
+            },
+        },
+        url,
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
+            { "@type": "ListItem", position: 2, name: "Werken bij", item: "https://geldgarant.com/werken-bij" },
+            { "@type": "ListItem", position: 3, name: v.titel, item: url },
+        ],
+    },
+]
+---
+
+<Base title={v.seoTitle} description={v.description} jsonLd={jsonLd} stickyCta={false}>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <Crumbs items={[{ label: "Home", href: "/" }, { label: "Werken bij", href: "/werken-bij" }, { label: v.titel }]} />
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow">Vacature</p>
+                    <h1 class="display">
+                        {v.h1[0]}
+                        <span class="accent">{v.h1[1]}</span>
+                        {v.h1[2]}
+                    </h1>
+                    <p class="lead">{v.lead}</p>
+                    <ul role="list" class="kern">
+                        {v.kernpunten.map((k) => (
+                            <li>
+                                <Icon name="check" size={18} />
+                                {k}
+                            </li>
+                        ))}
+                    </ul>
+                    <div class="hero-actions">
+                        <a class="btn" href={mail}>
+                            Solliciteer direct
+                            <span class="btn-dot">
+                                <Icon name="arrow" size={18} />
+                            </span>
+                        </a>
+                        <a class="btn btn-ghost" href={site.phoneHref}>
+                            Bel{"\u00a0"}met{"\u00a0"}vragen
+                        </a>
+                    </div>
+                </div>
+                <Feitenkaart titel="De functie in het kort" id="feiten-title" items={v.feiten} />
+            </div>
+        </div>
+    </section>
+
+    <!-- INHOUD + ZIJKAART -->
+    <div class="section bg-surface body">
+        <div class="wrap body-grid">
+            <div class="main">
+                <section class="blok" aria-labelledby="taken-title">
+                    <p class="eyebrow">
+                        <span class="idx">01</span> De functie
+                    </p>
+                    <h2 class="h2" id="taken-title">
+                        Wat u gaat <span class="accent">doen</span>
+                    </h2>
+                    <ul role="list" class="punten">
+                        {v.taken.map((t) => (
+                            <li>
+                                <span class="punt-icon" aria-hidden="true">
+                                    <Icon name="arrow" size={14} />
+                                </span>
+                                {t}
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+
+                <section class="blok" aria-labelledby="profiel-title">
+                    <p class="eyebrow">
+                        <span class="idx">02</span> Uw profiel
+                    </p>
+                    <h2 class="h2" id="profiel-title">
+                        Wie wij <span class="accent">zoeken</span>
+                    </h2>
+                    <ul role="list" class="punten">
+                        {v.profiel.map((t) => (
+                            <li>
+                                <span class="punt-icon punt-check" aria-hidden="true">
+                                    <Icon name="check" size={14} />
+                                </span>
+                                {t}
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+
+                <section class="blok" aria-labelledby="bieden-title">
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Wat wij bieden
+                    </p>
+                    <h2 class="h2" id="bieden-title">
+                        Wat u <span class="accent">krijgt</span>
+                    </h2>
+                    <ul role="list" class="bieden">
+                        {v.bieden.map((b) => (
+                            <li>
+                                <span class="bied-icon" aria-hidden="true">
+                                    <Icon name={b.icon} size={20} />
+                                </span>
+                                <h3 class="bied-kop">{b.kop}</h3>
+                                <p>{b.tekst}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+
+                <section class="blok" aria-labelledby="proc-title">
+                    <p class="eyebrow">
+                        <span class="idx">04</span> Solliciteren
+                    </p>
+                    <h2 class="h2" id="proc-title">
+                        Zo <span class="accent">verloopt</span> het
+                    </h2>
+                    <ol role="list" class="proc">
+                        {procedure.map((p, i) => (
+                            <li>
+                                <span class="proc-num num" aria-hidden="true">
+                                    {i + 1}
+                                </span>
+                                <div>
+                                    <h3 class="proc-kop">{p.kop}</h3>
+                                    <p>{p.tekst}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+            </div>
+
+            <aside class="zij" aria-labelledby="zij-title">
+                <div class="zij-kaart bg-ink">
+                    <h2 class="zij-kop" id="zij-title">
+                        Interesse?
+                    </h2>
+                    <p>Stuur uw cv en een korte motivatie. Liever eerst iets vragen? Bel of mail ons gerust.</p>
+                    <a class="btn btn-light" href={mail}>
+                        Solliciteer direct
+                        <span class="btn-dot">
+                            <Icon name="mail" size={16} />
+                        </span>
+                    </a>
+                    <ul role="list" class="zij-contact">
+                        <li>
+                            <Icon name="phone" size={16} />
+                            <a href={site.phoneHref}>{site.phone}</a>
+                        </li>
+                        <li>
+                            <Icon name="mail" size={16} />
+                            <a href={`mailto:${site.email}`}>{site.email}</a>
+                        </li>
+                        <li>
+                            <Icon name="clock" size={16} />
+                            <span>Bereikbaar {site.hours}</span>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- 05 ANDERE VACATURES -->
+    <section class="section" aria-labelledby="andere-title">
+        <div class="wrap">
+            <div class="kop">
+                <p class="eyebrow">
+                    <span class="idx">05</span> Bekijk ook
+                </p>
+                <h2 class="h2" id="andere-title">
+                    Andere <span class="accent">vacatures</span>
+                </h2>
+            </div>
+            <ul role="list" class="andere">
+                {andere.map((a) => (
+                    <li>
+                        <a class="ander" href={`/werken-bij/${a.slug}`}>
+                            <span class="ander-meta">
+                                {site.city} · {a.uren}
+                            </span>
+                            <span class="ander-titel">{a.titel}</span>
+                            <span class="ander-kort">{a.kort}</span>
+                            <span class="ander-pijl" aria-hidden="true">
+                                <Icon name="arrow" size={16} />
+                            </span>
+                        </a>
+                    </li>
+                ))}
+                <li>
+                    <a class="ander ander-open" href="/werken-bij#open">
+                        <span class="ander-meta">Geen passende functie?</span>
+                        <span class="ander-titel">Open sollicitatie</span>
+                        <span class="ander-kort">Vertel ons welk werk u zoekt en waar u goed in bent.</span>
+                        <span class="ander-pijl" aria-hidden="true">
+                            <Icon name="arrow" size={16} />
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <SlotCta
+        lead={`Stuur uw cv en een korte motivatie naar ${site.email}. We nemen contact met u op.`}
+        href={mail}
+        label="Solliciteer direct"
+    >
+        Klaar voor de <span class="accent">volgende</span> stap?
+    </SlotCta>
+</Base>
+
+<style>
+    /* ---------- HERO ---------- */
+    .hero {
+        padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(40px, 5vw, 72px);
+        margin-top: clamp(24px, 3vw, 40px);
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero h1 {
+        max-width: 12em;
+        margin-top: 14px;
+        font-size: clamp(2.25rem, 1.25rem + 3.8vw, 4.125rem);
+    }
+    .hero .lead {
+        margin-top: 24px;
+        max-width: 34em;
+    }
+    .kern {
+        display: grid;
+        gap: 10px;
+        margin-top: 28px;
+    }
+    .kern li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-weight: 500;
+        color: var(--ink);
+    }
+    .kern :global(svg) {
+        flex-shrink: 0;
+        margin-top: 3px;
+        color: var(--green);
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 36px;
+    }
+    @media (max-width: 519px) {
+        .hero-actions .btn {
+            width: 100%;
+        }
+    }
+    .kop {
+        max-width: 44rem;
+        margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .kop .h2 {
+        margin-top: 14px;
+    }
+
+    /* ---------- INHOUD ---------- */
+    .body-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+    @media (min-width: 1024px) {
+        .body-grid {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+            gap: 48px;
+            align-items: start;
+        }
+        .zij {
+            position: sticky;
+            top: 110px;
+        }
+    }
+    .main {
+        display: grid;
+        gap: 16px;
+    }
+    .blok {
+        padding: clamp(24px, 4vw, 48px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .blok .h2 {
+        margin-top: 12px;
+        font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+    }
+    .punten {
+        display: grid;
+        gap: 14px;
+        margin-top: 28px;
+    }
+    .punten li {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .punt-icon {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+    }
+    .punt-check {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+    .bieden {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        margin-top: 28px;
+    }
+    @media (min-width: 640px) {
+        .bieden {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .bieden li {
+        display: grid;
+        gap: 8px;
+        align-content: start;
+        padding: 20px;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+    }
+    .bied-icon {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        margin-bottom: 4px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+    }
+    .bied-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+    }
+    .bieden p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .proc {
+        display: grid;
+        gap: 0;
+        margin-top: 28px;
+    }
+    .proc li {
+        display: grid;
+        grid-template-columns: 36px minmax(0, 1fr);
+        gap: 16px;
+        padding-block: 16px;
+    }
+    .proc li + li {
+        border-top: 1px solid var(--line);
+    }
+    .proc-num {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 600;
+        font-size: var(--fs-sm);
+    }
+    .proc-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .proc p {
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+
+    /* ---------- ZIJKAART ---------- */
+    .zij-kaart {
+        display: grid;
+        gap: 16px;
+        padding: clamp(24px, 3vw, 32px);
+        border-radius: var(--r-xl);
+    }
+    .zij-kop {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: #fff;
+    }
+    .zij-kaart > p {
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.78);
+    }
+    .zij-kaart .btn {
+        justify-content: space-between;
+    }
+    .zij-contact {
+        display: grid;
+        gap: 4px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line-dark);
+    }
+    .zij-contact li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+        color: rgba(255, 255, 255, 0.82);
+    }
+    .zij-contact :global(svg) {
+        flex-shrink: 0;
+        color: var(--blue-on-dark);
+    }
+    .zij-contact a {
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.35);
+        text-underline-offset: 3px;
+        overflow-wrap: anywhere;
+    }
+
+    /* ---------- 05 ANDERE ---------- */
+    .andere {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 760px) {
+        .andere {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .ander {
+        position: relative;
+        display: grid;
+        gap: 8px;
+        height: 100%;
+        padding: 24px 24px 64px;
+        border-radius: var(--r-xl);
+        background: var(--surface);
+        color: var(--ink);
+        text-decoration: none;
+        transition: box-shadow 0.25s var(--ease);
+        align-content: start;
+    }
+    .ander:hover {
+        box-shadow: var(--shadow-card);
+    }
+    .ander-meta {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .ander-titel {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+    }
+    .ander-kort {
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+    .ander-pijl {
+        position: absolute;
+        left: 24px;
+        bottom: 20px;
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue-ink);
+        transition: transform 0.25s var(--ease);
+    }
+    .ander:hover .ander-pijl {
+        transform: translateX(3px);
+    }
+    .ander-open {
+        background: var(--ink);
+        color: #fff;
+    }
+    .ander-open .ander-meta {
+        color: rgba(255, 255, 255, 0.65);
+    }
+    .ander-open .ander-kort {
+        color: rgba(255, 255, 255, 0.78);
+    }
+</style>

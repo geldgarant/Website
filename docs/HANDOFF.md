@@ -1,4 +1,4 @@
-# GeldGarant website: overdracht (7 nov 2026, na fase C kennisbank)
+# GeldGarant website: overdracht (7 nov 2026, na /werken-bij en /hulp-nodig-bij-geldproblemen)
 
 Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document beschrijft waar het project staat, hoe alles werkt en wat de volgende sessie moet doen.
 
@@ -6,7 +6,7 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 
 1. Koppel de repo (`add_repo` geldgarant/Website, push), kloon naar `/home/claude/geldgarant-site`, `npm ci`.
 2. Lees `CLAUDE.md`, dit bestand en `docs/SITEMAP.md`.
-3. Volgende pagina's: `/werken-bij` + 3 vacatures (`/werken-bij/incasso-medewerker`, `/werken-bij/call-center-medewerker`, `/werken-bij/stage`; slugs behouden, inhoud lezen via Framer-fetch van geldgarant.com), daarna `/hulp-nodig-bij-geldproblemen` (debiteuren, rustige toon). Let op: de oude vacatureslug heet "call-center-medewerker"; de slug blijft, maar het woord "callcenter" mag niet in de zichtbare tekst (regel van Anas).
+3. Volgende stappen: `/brief-ontvangen` (pas als de CaseControl-betaallink of portaal-deeplink is uitgezocht), daarna fase D: juridische pagina's (`/juridisch/algemene-voorwaarden`, `/juridisch/privacy-beleid`, `/juridisch/cookie-beleid`, `/klachtenregelement`), redirects en OG-beelden. Eerst eventuele feedback op /werken-bij, de vacatures en /hulp-nodig-bij-geldproblemen verwerken.
 4. Werkwijze per pagina: §6. Verifiëren: `CHROME_PATH=/usr/bin/google-chrome npm run qa` (± 8 min, draai in de achtergrond en poll), daarna `npm run lhci` (± 40 min voor 54 pagina's, achtergrond). Preview vóór qa altijd stoppen (`pkill -f "astro preview"`), anders botst poort 4399.
 5. Push: `git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main`; Workers-check: `gh api repos/geldgarant/website/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | "\(.name): \(.status) \(.conclusion)"'`.
 
@@ -18,6 +18,8 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 - Branchepagina's: juridische uitspraken per branche (bronnen bovenin `src/data/branches.ts`).
 - Kennisbank: juridische inhoud laten nalezen (vooral vroegsignalering bij huurachterstand, AVG-rolverdeling, retentierecht bouw). Artikelen zijn 600–1.100 woorden; desgewenst de kortste uitbreiden voor SEO.
 - Periodiek bijwerken: wettelijke rente (1 jan/1 jul, `src/lib/rente.ts` + artikel `wettelijke-rente-2026.md`), griffierechten (1 jan, `griffierechten-2026.md`), beslagvrije voet (1 jan/1 jul, `beslagvrije-voet-2026.md`). Een herinnering is aangeboden, nog niet ingepland.
+- Werken bij: salarisindicatie (verhoogt reacties, en Google Jobs toont hem), stagevergoeding, of sollicitaties naar info@ mogen (nu `mailto:` met onderwerp "Sollicitatie <functie>"), en de AVG-zin "binnen vier weken verwijderen" in `werkenFaq`. Een formulier met cv-upload vraagt een nieuw endpoint in de intake-worker (de contactroute eist een bedrijfsnaam).
+- Hulp-pagina: klopt "geef de gegevens van uw schuldhulpverlener door, dan overleggen we met hen" (FAQ) en "een afspraak leggen we altijd schriftelijk vast"?
 - Cloudflare: `website.geldgarant.workers.dev` toevoegen aan `ALLOWED_ORIGINS` van de intake-worker en aan de Turnstile-widget (zie §6 punt 4).
 
 ## 1. Stand van zaken
@@ -37,7 +39,9 @@ Lees dit samen met `CLAUDE.md` (projectregels en ontwerpsysteem). Dit document b
 | `/hoe-werkt-het` (A5)                              | Gebouwd 6 nov 2026, qa + lhci 100 groen. Wacht op akkoord                                                      |
 | Fase B (wki, nowid, incasso-subpagina's, branches) | Gebouwd 6 nov 2026, qa + lhci groen                                                                            |
 | `/kennisbank` + 27 artikelen (C)                   | Gebouwd 6 nov 2026: content collection, herschreven en feitelijk nagelopen. Wacht op akkoord                   |
-| Overige pagina's                                   | Fase C/D (zie §6)                                                                                              |
+| `/werken-bij` + 3 vacatures                        | Gebouwd 7 nov 2026, slugs behouden, JobPosting-schema. Wacht op akkoord                                        |
+| `/hulp-nodig-bij-geldproblemen`                    | Gebouwd 7 nov 2026 (debiteuren, situatiekiezer, 9 instanties, 113). Wacht op akkoord                           |
+| Overige pagina's                                   | `/brief-ontvangen` (later) en fase D (zie §6)                                                                  |
 
 **Tarieven (bevestigd door Anas, 6 nov 2026):** de provisie is gelijk aan de WIK-staffel (`src/lib/wik.ts`); er is **geen succesfee**. De AV (art. 7.5, 10% succesfee) past Anas zelf nog aan. Debiteurenbeheer: € 99 / € 199 / € 349 per maand. AV-PDF: `https://framerusercontent.com/assets/gxmqPPJMbOPExmAFYa66PrGuLI.pdf`.
 
@@ -185,8 +189,20 @@ De volledige paginakaart, met wat er nu bestaat, wat Breyta heeft en de doelstru
     - Tests: `pages.ts` voegt de 27 artikelroutes toe; `interacties.spec.ts` "kennisbank" (zoeken, onderwerpknoppen, inhoudsopgave).
     - **Nieuw artikel toevoegen:** kopieer een bestaand `.md`-bestand, pas de frontmatter aan en zet de slug als bestandsnaam. Verder niets: overzicht, sitemap, tests en JSON-LD volgen vanzelf.
     - **Jaarlijks bijwerken:** griffierechten (1 januari), beslagvrije voet (1 januari en 1 juli), wettelijke rente (1 januari en 1 juli; ook `src/lib/rente.ts`). Pas `bijgewerkt` aan.
-13. **Volgende:** `/werken-bij` + 3 vacatures, `/hulp-nodig-bij-geldproblemen`, en **later** `/brief-ontvangen` met de CaseControl-koppeling (bewust uitgesteld tot de betaallink of het portaal is uitgezocht).
-14. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
+13. ~~**`/werken-bij`** + 3 vacatures~~ (fase C): gebouwd op 7 nov 2026.
+    - Research: Breyta /vacatures en /vacatures/incassomedewerker (hero met 3 kernpunten, zijkaart "Vragen?", procedure in 3 stappen), Flanderijn /werken-bij. De oude Framer-tekst ("Debtters", "8 jaar") kwam van een ander bureau en is bewust weggelaten; `incasso-medewerker` was in Framer een open sollicitatie en `call-center-medewerker` had dezelfde tekst.
+    - Inhoud: `src/data/vacatures.ts` (`vacatures` met slug, h1 als [voor, accent, na], seoTitle, description, feiten, taken, profiel, bieden, employmentType, datePosted; `procedure` (4 stappen), `werkenFaq`, `sollicitatieMail(functie)`). Feiten uit de Framer-CMS (32–40 uur, 25 dagen + 8%, stage mbo 4 en min. 3 dagen); opleidingsniveau en VOG uit de Wki. Geen salaris (niet bevestigd).
+    - `/werken-bij` (`src/pages/werken-bij/index.astro`): hero + Feitenkaart, 01 vacaturekaarten + navy open-sollicitatiekaart (`#open`), 02 voorbeelddag (gelabeld, navy tijdlijn, kop sticky op desktop), 03 bieden (veegrij < 700px), 04 procedure, 05 FAQ, SlotCta naar `#vacatures`. JSON-LD CollectionPage + ItemList, BreadcrumbList, FAQPage. `stickyCta={false}`.
+    - Vacature (`src/pages/werken-bij/[slug].astro`): hero met kernpunten + Feitenkaart, wit blokken op `--surface` (01 taken, 02 profiel, 03 bieden, 04 procedure) met meelopende navy zijkaart "Interesse?" (≥ 1024px sticky), 05 andere vacatures + open sollicitatie, SlotCta met `mailto`. JSON-LD **JobPosting** (Google Jobs) + BreadcrumbList.
+    - Slug `call-center-medewerker` heet zichtbaar "Medewerker klantcontact"; de e2e-test "geen persoonsnamen" controleert ook "callcenter" en "call center" op /werken-bij, die vacature en de hulp-pagina.
+    - `tests/e2e/pages.ts` voegt de vacatureroutes toe; `interacties.spec.ts` "werken bij" (slugs, JobPosting, mailto).
+14. ~~**`/hulp-nodig-bij-geldproblemen`**~~ (fase C): gebouwd op 7 nov 2026, `src/pages/hulp-nodig-bij-geldproblemen.astro`.
+    - Voor debiteuren: rustige toon, geen verkoop, `stickyCta={false}`. Nieuwe H1 "Geldzorgen? Er is hulp" (oude titel bewust niet overgenomen).
+    - Hero + Feitenkaart "Direct iemand spreken" (Geldfit, gemeente, Juridisch Loket, brief van ons; tel-links met vaste spaties). 01 situatiekiezer (radios + `:has()`, werkt zonder JS; vijf situaties → advies met ankers naar de instanties). 02 negen instanties (`#geldfit`, `#gemeente`, `#juridisch`, `#schuldenwijzer`, `#nibud`, `#maatje`, `#zakelijk`, `#kvk`, `#nvvk`; `:target` licht op). 03 "Brief van GeldGarant" (`#brief`): betalen via `site.debtorPortal`, regeling, het niet eens. 04 113 (113 en 0800 0113). FAQ `hulpFaq` (in de pagina). SlotCta naar het betaalportaal.
+    - Nagelopen nov 2026 (bronnen in het commentaar bovenin): Geldfit 0800 8115 ma–vr 9–21 u, Juridisch Loket 0800 8020 werkdagen 9–17 u, links met status 200 (juridischloket.nl blokkeert bots, staat wel op rijksoverheid.nl). **Telefoonnummers jaarlijks controleren.**
+    - e2e "hulp bij geldproblemen" test de kiezer.
+15. **Later:** `/brief-ontvangen` met de CaseControl-koppeling (bewust uitgesteld tot de betaallink of het portaal is uitgezocht).
+16. Fase D: juridisch, 404, redirects. Pas daarna, en met akkoord: het domein koppelen.
 
 ## 7. Geïnstalleerde skills (`.claude/skills/`, 34 stuks): wanneer welke
 
