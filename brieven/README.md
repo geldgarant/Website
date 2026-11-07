@@ -16,6 +16,8 @@ leeg). De editor bewaart alleen inline stijlen, dus geen `<style>`-blok, geen kl
 | `voorbeeld/aanmaning-1-b2b-voorbeeld.pdf` | Resultaat                                                                |
 | `assets/logo-brief.png`, `qr-betalen.png` | Logo (900 px, 16 kleuren) en QR-code naar https://geldgarant.com/betalen |
 
+dompdf ophalen (één keer per sessie): `bash scripts/dev/dompdf-lib.sh`. Variabelenlijst van CaseControl: `casecontrol-variabelen.md`; oude sommatie (code en PDF): `oud/`.
+
 Werkwijze: bron aanpassen → `python3 brieven/tools/bouw.py` →
 `DOMPDF_LIB=/pad/lib php brieven/tools/render-cc.php brieven/aanmaning-1-b2b.html brieven/voorbeeld/aanmaning-1-b2b.json uit.pdf`
 → PDF bekijken → de hele inhoud van `aanmaning-1-b2b.html` in de CaseControl-editor plakken (codeweergave).

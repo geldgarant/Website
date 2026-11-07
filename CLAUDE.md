@@ -1,6 +1,6 @@
 # GeldGarant website (geldgarant.com)
 
-Incassobureau voor ondernemers, landelijk, kantoor Deventer. Astro 7, statisch, gehost op Cloudflare Workers (static assets, `wrangler.jsonc`;
+Incassobureau voor ondernemers, landelijk, kantoor Deventer. Startpunt nieuwe sessie: `docs/OVERDRACHT.md`. Astro 7, statisch, gehost op Cloudflare Workers (static assets + worker voor `/api/*`, `wrangler.jsonc`;
 staging: website.geldgarant.workers.dev) naast de intake-worker (api.geldgarant.com). Overdracht: `docs/HANDOFF.md`. Benchmark: breyta.nl, maar beter op mobiel, prijstransparantie en bewijs.
 
 ## Harde regels
