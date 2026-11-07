@@ -23,11 +23,13 @@ describe("worker /api/betalen", () => {
         expect(r.headers.get("Cache-Control")).toBe("no-store")
     })
 
-    it("geeft 404 door als CaseControl het dossier niet kent", async () => {
-        const f = vi.fn(async () => json({}, 404))
-        const r = await handleBetalen(post({ dossiernummer: "26-9999", bedrag: 10 }), {}, f as typeof fetch)
-        expect(r.status).toBe(404)
-        expect(await r.json()).toMatchObject({ error: "niet-gevonden" })
+    it("geeft 404 als CaseControl het dossier niet kent (400 case-not-found of 404)", async () => {
+        for (const antw of [json({ errorCode: "case-not-found" }, 400), json({}, 404)]) {
+            const f = vi.fn(async () => antw)
+            const r = await handleBetalen(post({ dossiernummer: "26-9999", bedrag: 10 }), {}, f as typeof fetch)
+            expect(r.status).toBe(404)
+            expect(await r.json()).toMatchObject({ error: "niet-gevonden" })
+        }
     })
 
     it("weigert verzoeken van een andere site, zonder JSON of met ongeldige gegevens, zonder CaseControl te bellen", async () => {
@@ -59,10 +61,12 @@ describe("worker /api/betalen", () => {
 
     it("controle (GET) werkt als de betaallink aanstaat en /pay het testnummer niet kent", async () => {
         const f = vi.fn(async (url: string) =>
-            url.endsWith("/portalinfo/basic") ? json({ displayName: "GeldGarant", paymentLinkEnabled: true }) : json({}, 404),
+            url.endsWith("/portalinfo/basic")
+                ? json({ displayName: "GeldGarant", paymentLinkEnabled: true })
+                : json({ errorCode: "case-not-found" }, 400),
         )
         const r = await handleBetalen(new Request(BASIS), { CASECONTROL_PORTAL: "geldgarant" }, f as unknown as typeof fetch)
         expect(r.status).toBe(200)
-        expect(await r.json()).toEqual({ ok: true, betaallink: true, pay: 404 })
+        expect(await r.json()).toEqual({ ok: true, betaallink: true, pay: 400 })
     })
 })

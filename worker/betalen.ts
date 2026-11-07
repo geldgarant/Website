@@ -3,7 +3,8 @@
 //
 // Zelfde aanroep als het CaseControl-debiteurenportaal doet bij "Maak een betaling" (nagelopen 7 nov 2026):
 // POST https://api.casecontrol.app/api/portal/debtor/v1/<portaal>/pay  { caseNumber, amount }  →  { url }
-// Onbekend dossiernummer → 404. Na betaling boekt CaseControl de betaling zelf op het dossier.
+// Onbekend dossiernummer → 400 met {"errorCode":"case-not-found"} (gezien 7 nov 2026; het portaal rekent ook op 404).
+// Na betaling boekt CaseControl de betaling zelf op het dossier.
 // Er wordt niets opgeslagen of gelogd behalve foutcodes: alleen dossiernummer en bedrag gaan door.
 import { normDossier, isDossier, BETAAL_MIN, BETAAL_MAX } from "../src/lib/debiteur"
 
@@ -25,6 +26,17 @@ const antwoord = (data: unknown, status = 200) =>
         },
     })
 
+/** Kent CaseControl het dossier niet? (404, of 400 met errorCode "case-not-found") */
+async function nietGevonden(r: Response): Promise<boolean> {
+    if (r.status === 404) return true
+    if (r.status !== 400) return false
+    const d = (await r
+        .clone()
+        .json()
+        .catch(() => ({}))) as { errorCode?: unknown }
+    return d.errorCode === "case-not-found"
+}
+
 async function vraagLink(portaal: string, dossier: string, bedrag: number, f: typeof fetch) {
     return f(`${CC}/${portaal}/pay`, {
         method: "POST",
@@ -37,14 +49,14 @@ export async function handleBetalen(request: Request, env: BetaalEnv, f: typeof 
     const portaal = (env.CASECONTROL_PORTAL || "geldgarant").replace(/[^a-z0-9-]/gi, "")
 
     if (request.method === "GET") {
-        // Controle: is CaseControl bereikbaar, staat de betaallink aan en antwoordt /pay (verwacht 404 op het testnummer)?
+        // Controle: is CaseControl bereikbaar, staat de betaallink aan en antwoordt /pay (verwacht "niet gevonden" op het testnummer)?
         try {
             const [info, pay] = await Promise.all([
                 f(`${CC}/${portaal}/portalinfo/basic`, { headers: { Accept: "application/json" } }),
                 vraagLink(portaal, DOSSIER_TEST, BETAAL_MIN, f),
             ])
             const d = (await info.json().catch(() => ({}))) as { paymentLinkEnabled?: boolean }
-            const werkt = info.ok && d.paymentLinkEnabled === true && pay.status === 404
+            const werkt = info.ok && d.paymentLinkEnabled === true && (await nietGevonden(pay))
             // antwoord van /pay op het testnummer (bevat geen persoonsgegevens), handig bij een storing
             const melding = werkt ? undefined : (await pay.text().catch(() => "")).slice(0, 300)
             return antwoord({ ok: werkt, betaallink: d.paymentLinkEnabled === true, pay: pay.status, melding }, werkt ? 200 : 503)
@@ -84,7 +96,7 @@ export async function handleBetalen(request: Request, env: BetaalEnv, f: typeof 
         console.error("betalen: CaseControl onbereikbaar")
         return antwoord({ ok: false, error: "onbereikbaar" }, 502)
     }
-    if (r.status === 404) return antwoord({ ok: false, error: "niet-gevonden" }, 404)
+    if (await nietGevonden(r)) return antwoord({ ok: false, error: "niet-gevonden" }, 404)
     const d = (await r.json().catch(() => ({}))) as { url?: unknown }
     const url = typeof d.url === "string" ? d.url : ""
     if (!r.ok || !/^https:\/\/[^\s"<>]+$/.test(url)) {
