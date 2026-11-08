@@ -1,18 +1,22 @@
-# GeldGarant website: complete overdracht (7 nov 2026, 23:00, SEO-traject gestart)
+# GeldGarant website: complete overdracht (8 nov 2026, SEO fase 4 tot 7 afgerond)
 
-Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt alle eerdere overdrachten (ook `claude/website-overdracht-*.md` en `claude/website-START-HIER.md` in het claude.ai-project, die dezelfde inhoud hebben). Details staan in de repo: `CLAUDE.md`, `docs/HANDOFF.md` (§6b), `brieven/README.md`, `docs/SITEMAP.md`, `docs/LIVEGANG.md`.
+Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt alle eerdere overdrachten (ook die van 7 nov in Downloads en in het claude.ai-project). Details staan in de repo: `CLAUDE.md`, `docs/seo/SEO_STATE.md` (hervattingspunt SEO), `docs/seo/SEO_MASTERPLAN.md`, `docs/seo/SEO_EVIDENCE.md` (E1 tot E20), `docs/HANDOFF.md` (§6b), `brieven/README.md`, `docs/SITEMAP.md`, `docs/LIVEGANG.md`.
 
-**LIVE sinds 7 nov 2026 ±11:40: https://geldgarant.com draait op de Worker "website"** (www → 301 naar geldgarant.com). Stand: alles staat op `main`, staging blijft https://website.geldgarant.workers.dev, laatste Workers Build geslaagd, `npm run qa` groen (94 unit, 930 e2e). Betaalkoppeling gecontroleerd: `/api/betalen` geeft `ok: true`; `/api/qr` (dynamische QR voor de brieven) draait. Brieven: aanmaning 1 B2B (akkoord Anas), sommatie B2B en 14-dagenbrief B2C (nieuw, wachten op akkoord). Formulieren (contact, vordering, sollicitatie) getest en werkend (zie §5.5).
+**LIVE sinds 7 nov 2026: https://geldgarant.com** op Cloudflare Worker "website" (www → 301, http → 301 https). Alles staat op `main`; elke push naar `main` is een productie-release via Workers Builds. Staging: https://website.geldgarant.workers.dev. GitHub-CI (`.github/workflows/kwaliteit.yml`) is groen inclusief Lighthouse (steekproef van 16 pagina's, drempel 95).
 
-**SEO-traject (sinds 7 nov 2026, avond):** hervatten via `docs/seo/SEO_STATE.md`. Gedaan: SEO-masterplan, status en bewijs in `docs/seo/`, productiecrawl, SEO-skills, voorbeeldbrieven-bibliotheek (`/voorbeeldbrieven` + briefmaker op `/incasso/wik-brief`), titels ingekort, JSON-LD op `/vordering-indienen`. Wacht op Anas: TXT-record voor Search Console, "Always Use HTTPS", Web Analytics (zie SEO_STATE, Gebruikersacties).
+**SEO-stand (8 nov 2026):** Search Console gekoppeld en sitemap ingediend, 11 URL's ter indexering aangeboden, zes commerciële pagina's verbeterd op basis van GSC-data, kannibalisatie opgelost, interne links op orde, keyword-URL-kaart, Bedrijfsprofiel bijgewerkt, vermeldingen geïnventariseerd, Web Analytics hersteld, IndexNow actief, voorbeeldbrief huurachterstand nieuw. Hervatten: `docs/seo/SEO_STATE.md` → `next_action`.
 
 ---
 
 ## 1. Startprompt (plak dit in het nieuwe gesprek)
 
-> Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Lees alle projectinstructies (CLAUDE.md, docs/OVERDRACHT.md) en daarna docs/seo/SEO_STATE.md, docs/seo/SEO_MASTERPLAN.md en docs/seo/SEO_EVIDENCE.md. Controleer branch, laatste commit en werkboom. Hervat exact bij next_action. Verifieer bestaand werk voordat je iets herhaalt. Werk autonoom verder volgens de SEO-masterprompt (zelfde regels als in docs/seo/SEO_MASTERPLAN.md). Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
+**Variant A: Claude-desktopapp op de Windows-pc (aanbevolen, zo is er sinds 8 nov gewerkt)**
 
-**Meenemen naar een nieuw claude.ai-project** (projectkennis): dit bestand (`docs/OVERDRACHT.md`), en als je ze nog nodig hebt de intake-workerbestanden `claude/intake-worker-index.js`, `claude/intake-worker-setup.md`, `claude/intake-worker-sollicitatie.js`, `claude/intake-worker-sollicitatie-installeren.md`, plus `GeldGarant_CaseControl_Context.md`. De CaseControl-variabelenlijst en de oude sommatie staan nu in de repo (`brieven/casecontrol-variabelen.md`, `brieven/oud/`). Vervallen: `claude/intake-worker-betaallink.md`, `claude/website-handoff.md`, `claude/website-sitemap.md`.
+> Open de repository `C:\Users\Ilyas Chattat\code\geldgarant-website` (verplaats de sessie daarheen). Lees alle projectinstructies (CLAUDE.md, docs/OVERDRACHT.md) en daarna docs/seo/SEO_STATE.md, docs/seo/SEO_MASTERPLAN.md en docs/seo/SEO_EVIDENCE.md. Controleer branch, laatste commit en werkboom (`git pull` eerst). Hervat exact bij `next_action` in SEO_STATE. Verifieer bestaand werk voordat je iets herhaalt. Werk autonoom verder volgens de SEO-masterprompt (zelfde regels als in docs/seo/SEO_MASTERPLAN.md): SEO 100% optimaliseren, alles wat mogelijk is doen en duidelijk aangeven wat ik zelf moet doen. Gebruik het ingebouwde browserpaneel voor Search Console, Cloudflare en het Google Bedrijfsprofiel (ik ben daar ingelogd). Laat het weten als het contextvenster op 90% zit; werk dan alle md-bestanden bij en geef een volledige overdracht.
+
+**Variant B: claude.ai-project met cloudsandbox**
+
+> Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Lees daarna dezelfde bestanden als in variant A en hervat bij `next_action`. In de sandbox: `CHROME_PATH=/usr/bin/google-chrome`, `NODE_USE_ENV_PROXY=1` voor de crawler; externe sites (GSC, Cloudflare) zijn daar niet bereikbaar, dus die stappen bewaren voor de desktopapp.
 
 **Projectinstructie** (voor het nieuwe project): "Let me know when we are at 90% context window, then update all my md files we have touched and provide a verbose, detailed handoff that includes files, snippets, line numbers and flows".
 
@@ -20,10 +24,10 @@ Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt a
 
 ## 2. Bedrijf en besluiten
 
-- **GeldGarant**: incassobureau voor ondernemers, landelijk, kantoor Keulenstraat 1, 7418 ET Deventer. Eigenaren Anas Chattat en broer Ilyas; hun namen staan nooit op de site of in brieven.
-- **Gegevens**: KvK 90622375; Wki-registratie Justis 00273 (https://www.justis.nl/registers/incassoregister/geldgarant); NowID; geschillencommissie IncassoKlacht.
-- **Contact**: 085 212 73 88 (+31852127388); info@geldgarant.com; klachten@geldgarant.com; werkdagen 9.00–17.00; op werkdagen binnen het uur in behandeling.
-- **Derdengelden**: NL57 BUNQ 2188 2124 36, Stichting Beheer Derdengelden GeldGarant, BIC BUNQNL2AXXX. Kenmerk = dossiernummer (formaat jaar-volgnummer, bv. 26-1008). Online alleen iDEAL.
+- **GeldGarant**: incassobureau voor ondernemers, landelijk, kantoor Keulenstraat 1, 7418 ET Deventer. Eigenaren Anas Chattat en broer Ilyas; hun namen staan nooit op de site of in brieven (ook niet in review-reacties: ondertekening "team GeldGarant").
+- **Gegevens**: KvK 90622375; Wki-registratie Justis 00273 (https://www.justis.nl/registers/incassoregister/geldgarant); NowID (ledenlijst nr. 71); geschillencommissie IncassoKlacht.
+- **Contact**: 085 212 73 88 (+31852127388); info@geldgarant.com; klachten@geldgarant.com; werkdagen 9.00–17.00 (ook zo in het Bedrijfsprofiel); op werkdagen binnen het uur in behandeling.
+- **Derdengelden**: NL57 BUNQ 2188 2124 36, Stichting Beheer Derdengelden GeldGarant, BIC BUNQNL2AXXX. Kenmerk = dossiernummer (jaar-volgnummer, bv. 26-1008). Online alleen iDEAL.
 - **Dossiermail**: info@dossiers.geldgarant.com. **Portalen** (CaseControl): opdrachtgevers https://geldgarant.dossierportal.nl, debiteuren https://geldgarant.debtorportal.com (niet meer nodig om te betalen).
 - **Mail**: Google Workspace (MX), formulieren via Resend.
 
@@ -32,116 +36,134 @@ Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt a
 1. Geen persoonsnamen. Professioneel, gevestigd bureau.
 2. Geen "geen callcenter"/"geen keuzemenu"; "direct contact" en "vaste dossierbehandelaar" mogen.
 3. Niet te voorzichtig commercieel; kwaliteit, creativiteit, SEO en uitstraling voorop.
-4. Niets verzinnen (reviews, logo's, cijfers, certificaten). Voorbeelden altijd als voorbeeld labelen.
+4. Niets verzinnen (reviews, logo's, cijfers, certificaten). Voorbeelden altijd als voorbeeld labelen. Google-reviews niet op de site zonder opdracht.
 5. "Geregistreerd bij Justis", niet "Erkend". H1 home "Wij halen uw geld wél op". Rechtsvorm nooit noemen. Geen btw-id in de footer.
 6. Tarieven: WIK-staffel, geen succesfee; volledig betaald € 0; deels = incassokosten min. € 45, nooit meer dan ontvangen; niets binnen € 0; intrekken min. 10% en min. € 95; curator € 115 excl. btw op verzoek; debiteurenbeheer € 99 / € 199 / € 349 p/m, maandelijks opzegbaar.
-7. Landelijk positioneren. Kennisbank zonder datum en disclaimer.
+7. Landelijk positioneren, geen stadspagina's. Kennisbank zonder datum en disclaimer.
 8. Vacatures met salarisindicatie, cv-upload, gegevens na vier weken weg.
 9. Klachten door een andere medewerker dan de dossierbehandelaar.
 10. **Betalen**: zoals Breyta, direct naar iDEAL, nooit via het portaal.
-11. **Brieven**: alles opnieuw, in de stijl van de site, exact op het vensterraster, met echte CaseControl-variabelen. Begonnen met de eerste aanmaning.
+11. **Brieven**: in de stijl van de site, exact op het vensterraster, met echte CaseControl-variabelen.
+12. **SEO** (8 nov): debiteurenverkeer (`/brief-ontvangen`, `/betalen`) is geen acquisitie; titels per intentie (dienstpagina = commercieel, kennisbank = probleemvraag, voorbeeldbrieven = sjabloon); juridische claims alleen met primaire bron.
 
-**Samenwerken met Anas**: Nederlands, direct, praktisch; meerdere stappen per prompt; hij controleert met screenshots en ziet kleine onevenheden.
+**Samenwerken met Anas/Ilyas**: Nederlands, direct, praktisch; meerdere stappen per prompt; controle met screenshots; "doe alles wat kan en zeg wat ik zelf moet doen".
 
 ---
 
 ## 3. Werkomgeving
 
-- **Repo** https://github.com/geldgarant/Website (`main`). Klonen met `add_repo` (owner `geldgarant`, repo `Website`, access `push`), dan `git clone --depth 1 https://github.com/geldgarant/website /home/claude/geldgarant-site`, `npm ci`, symlink naar `/home/claude/website`, `register_repo_root`.
-- **Netwerk**: de shell bereikt alleen GitHub en npm. Externe sites (staging, CaseControl, concurrenten) via de **Framer-connector**: `open_project("R87P79buXWtsQbzZzCmY")` (alleen lezen), `exec` met `fetch()` (alleen GET met 2xx werkt; anders status 0) en `api.screenshot(url, { viewport })` (ook handig om een JSON-antwoord te lezen).
-- **Chrome**: `CHROME_PATH=/usr/bin/google-chrome`. Aanwezig: pdftoppm, pdfinfo, pdfplumber, qrcode (python), sharp.
-- **dompdf** (brieven): `bash scripts/dev/dompdf-lib.sh` → `/home/claude/brief/lib`.
-- **Preview**: `npm run build && npx astro preview --port 4399 --ignore-lock`; vóór e2e stoppen met `fuser -k 4399/tcp`.
-- **Controles**: `npm run qa` (~12 min, achtergrond); `npm run test:e2e` (930 tests); visueel `npx playwright test --grep "<pad>" --update-snapshots`; screenshots `node scripts/dev/shot.mjs /pad`; breedtes `scripts/dev/resoluties.mjs`; knoppen `npx tsx scripts/dev/uitlijning.mjs`; focus `scripts/dev/focus.mjs`; Lighthouse per pagina via `node_modules/lighthouse/cli/index.js`.
-- **Push en build**: `git push -q origin main`; `timeout 60 gh api repos/geldgarant/Website/commits/<sha>/check-runs --jq '.check_runs[] | {name, conclusion}'` → "Workers Builds: website" `success` (~2 min).
-- **Commits** eindigen met `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` en `Claude-Session: <sessie-url>`.
+**Windows-pc (desktopapp, sinds 8 nov)**
 
-**Valkuilen**: vaste spatie in Astro als `" "` (controleer `grep -nP "\xa0"`); CLS door het accentfont; `artikel.css` geldt globaal; html-validate-regels (label/for, twee `<aside>`, koppen niet met cijfer); formulierpagina's `stickyCta={false}`; **dompdf**: `height`/`width` op een td tellen zonder padding, geen `counter(pages)`, fixed herhaalt per pagina, absolute alleen op die pagina; **CaseControl `/pay`**: onbekend dossier = HTTP 400 `{"errorCode":"case-not-found"}`.
+- Repo: `C:\Users\Ilyas Chattat\code\geldgarant-website` (buiten OneDrive). Git, Node 26, `gh` (ingelogd als `geldgarant`), Poppler via winget. Commit-identiteit lokaal: Claude <noreply@anthropic.com>.
+- PATH in elke shell zetten: in Bash `export PATH="/c/Program Files/Git/cmd:/c/Program Files/nodejs:/c/Program Files/GitHub CLI:$PATH"`; in PowerShell `$env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")`.
+- Git Bash: `MSYS_NO_PATHCONV=1` bij scripts met paden als argument (anders wordt `/pad` een Windows-pad).
+- Playwright-Chromium geïnstalleerd (`npx playwright install chromium`), dus geen `CHROME_PATH`. Lighthouse lokaal start op deze pc geen Chrome (spawn UNKNOWN): Lighthouse draait in de CI.
+- Juridische pdf's: Poppler-bin op PATH (`.../WinGet/Packages/oschwartz10612.Poppler_.../poppler-25.07.0/Library/bin`), dan `node scripts/juridisch-pdf.mjs` met preview op 4399.
+- Visuele snapshots (`-linux.png`) niet op Windows bijwerken; de CI draait ze niet.
+- Browserpaneel (ingebouwd) is ingelogd bij Cloudflare (account f46669d1a19288f34d2b13818bd111c7, zone 277e66e28d934ba36ef029dddf4be3e2) en Google (account `/u/1` = Search Console + Bedrijfsprofiel). Cloudflare-API: lezen via `fetch("/api/v4/...", {headers: {"x-cross-site-security": "dash"}})` in het dashboard; wijzigen alleen via de UI (botcheck).
+- **Netwerk**: op het wifi van de huidige verblijfslocatie is geldgarant.com niet bereikbaar (zie §8, E20). Controleren kan dan via `curl --resolve geldgarant.com:443:188.114.96.1 https://geldgarant.com/...` of via 4G.
+
+**Cloudsandbox (claude.ai)**: zie variant B in §1; `CHROME_PATH=/usr/bin/google-chrome`, dompdf via `bash scripts/dev/dompdf-lib.sh`.
+
+**Controles**: `npm run qa` (check, lint, format, unit, build, html, seo, e2e, audit); gericht `npx playwright test --grep-invert "@visueel" --grep "<pad>"`; crawl `node scripts/seo/crawl.mjs [basis]`; screenshots met een kleine Playwright-scriptje (preview op 4399: `npm run build && npx astro preview --port 4399 --ignore-lock`; poort vrijmaken in PowerShell met `Get-NetTCPConnection -LocalPort 4399 | Stop-Process`).
+
+**Push en build**: `git push -q origin main`; Workers Build volgen: `gh api repos/geldgarant/Website/commits/<sha>/check-runs --jq '.check_runs[] | {name, status, conclusion}'` ("Workers Builds: website" ± 2 min, "controle" = CI ± 15 min). Na een deploy: `node scripts/seo/indexnow.mjs` (meldt alle URL's bij Bing e.a.).
+
+**Commits** eindigen met `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+**Valkuilen**: vaste spatie in Astro als `" "`; CLS door het accentfont (fallback Georgia ontbreekt op Linux/Android, zie de H1-fix op `/hulp-nodig-bij-geldproblemen`); `artikel.css` geldt globaal; html-validate-regels (label/for, twee `<aside>`, koppen niet met cijfer, `<section aria-label>` in plaats van `role="region"`); formulierpagina's `stickyCta={false}`; scrollgebieden focusbaar maken (axe scrollable-region-focusable); dompdf-eigenaardigheden (zie brieven/README).
 
 ---
 
 ## 4. Stand van de site
 
-Astro 7, statisch, Cloudflare Workers (static assets + worker alleen voor `/api/*`). 67 pagina's, Lighthouse mobiel ≥ 95, WCAG 2.2 AA, geen overloop 320–2560 px.
+Astro 7, statisch, Cloudflare Workers (static assets + worker voor `/api/*`). 74 pagina's (71 in de sitemap), Lighthouse mobiel ≥ 95 (CI-steekproef), WCAG 2.2 AA, geen overloop 320–2560 px.
 
-| Fase | Pagina's                                                                                                                                            |
-| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A    | home, `/incasso`, `/debiteurenbeheer`, `/tarieven`, `/vordering-indienen`, `/contact-opnemen`, `/over-ons`, `/hoe-werkt-het`                        |
-| B    | `/wki`, `/nowid`, `/incasso/*` (4), `/branches` + 10                                                                                                |
-| C    | `/kennisbank` + 27, `/werken-bij` + 3, `/hulp-nodig-bij-geldproblemen`                                                                              |
-| D    | `/klachtenregelement`, `/juridisch` + 3 (AV, privacy, cookies; pdf's via `scripts/juridisch-pdf.mjs`), redirects, OG-beelden, livegangvoorbereiding |
-| E    | `/brief-ontvangen` (+ `/bedankt`, `/mislukt`), `/betalen` (302), brieven voor CaseControl                                                           |
+| Fase | Pagina's                                                                                                                                                       |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A    | home, `/incasso`, `/debiteurenbeheer`, `/tarieven`, `/vordering-indienen`, `/contact-opnemen`, `/over-ons`, `/hoe-werkt-het`                                   |
+| B    | `/wki`, `/nowid`, `/incasso/*` (4), `/branches` + 10                                                                                                           |
+| C    | `/kennisbank` + 27, `/werken-bij` + 3, `/hulp-nodig-bij-geldproblemen`                                                                                         |
+| D    | `/klachtenregelement`, `/juridisch` + 3 (AV, privacy, cookies), redirects, OG-beelden                                                                          |
+| E    | `/brief-ontvangen` (+ `/bedankt`, `/mislukt`), `/betalen` (302), brieven voor CaseControl                                                                      |
+| SEO  | `/voorbeeldbrieven` + 6 (betalingsherinnering, aanmaning, ingebrekestelling, sommatie, betalingsregeling, huurachterstand), briefmaker op `/incasso/wik-brief` |
 
 **Belangrijke bestanden**
 
-| Bestand                                                                                | Rol                                                                                                                                           |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/data/site.ts`                                                                     | Alle bedrijfsgegevens, `betaalLinkApi` (`/api/betalen`), `derdengelden`, `betaalMethode`, `dossierMail`, `dossierVoorbeeld`. Nooit hardcoden. |
-| `worker/index.ts`, `worker/betalen.ts`, `wrangler.jsonc`                               | Worker voor `/api/*`: `POST /api/betalen` → CaseControl `/pay` → iDEAL; `GET` = controle                                                      |
-| `brieven/`                                                                             | CaseControl-brieven: README, `aanmaning-1-b2b.html`, `src/`, `tools/`, `voorbeeld/`, `assets/`, `casecontrol-variabelen.md`, `oud/`           |
-| `src/pages/brief-ontvangen/index.astro`, `src/scripts/brief.ts`, `src/lib/debiteur.ts` | Debiteurenpagina                                                                                                                              |
-| `src/lib/wik.ts`, `rente.ts`, `termijn.ts`, `werkdagen.ts`, `juridisch.ts`             | Staffel, rente (handelsrente 10,40% sinds 1-7-2026), termijnen, plaatshouders                                                                 |
-| `src/components/form/Veld.astro`                                                       | Formulierveld, met `prefix` (bv. "€")                                                                                                         |
-| `public/_redirects`, `public/_headers`, `public/brief/`                                | Redirects (getest), CSP, QR/fonts voor brieven                                                                                                |
+| Bestand                                                                     | Rol                                                                                                                    |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `src/data/site.ts`                                                          | Alle bedrijfsgegevens, `sameAs`, `cfBeaconToken` (Web Analytics), `betaalLinkApi`, `derdengelden`. Nooit hardcoden.    |
+| `src/data/branches.ts` + `src/pages/branches/[slug].astro`                  | Branchepagina's; velden `kennis` (kennisbanklink) en optioneel `aanpak` (label, kop, lead, stappen, brieven, linksKop) |
+| `src/data/voorbeeldbrieven.ts`, `src/lib/briefmaker.ts`, `Briefmaker.astro` | Voorbeeldbrieven en briefmaker (slugs incl. `huurachterstand`); getest in `tests/unit/briefmaker.test.ts`              |
+| `src/components/debiteuren/Afweging.astro`                                  | `/debiteurenbeheer` sectie 04: uitbesteden ja/nee, factoring vs incasso, start in 3 stappen                            |
+| `src/layouts/Base.astro`                                                    | Metadata, JSON-LD, Web Analytics-beacon (alleen op hostname geldgarant.com)                                            |
+| `public/_headers`, `public/_redirects`, `public/<indexnow-sleutel>.txt`     | CSP (incl. cloudflareinsights), redirects, IndexNow-sleutel                                                            |
+| `worker/index.ts`, `worker/betalen.ts`, `worker/qr.ts`, `wrangler.jsonc`    | Worker voor `/api/*` (betalen via CaseControl, dynamische QR)                                                          |
+| `scripts/seo/crawl.mjs`, `scripts/seo/indexnow.mjs`                         | Productiecrawl (`docs/seo/crawl-<datum>.csv`), IndexNow-melding                                                        |
+| `lighthouserc.cjs`, `.github/workflows/kwaliteit.yml`                       | Lighthouse: lokaal alle pagina's, in CI steekproef van 16; CI-timeout 60 min                                           |
+| `docs/seo/*`                                                                | SEO_STATE (hervatten), MASTERPLAN, EVIDENCE (E1–E20), `keyword-url-map.csv`, `backlink-opportunities.csv`, crawls      |
 
-**Ontwerp**: Poppins 500/600, Inter Variable, Newsreader cursief accentwoord (`<span class="accent">`, één per kop); `--ink #061126`, `--blue #3069FE`, `--blue-ink #1F4FD6`, `--surface #F3F4F7`; in CaseControl-brieven accent `#3f68f5`. Knoppen `.btn` + `.btn-dot`.
+**Ontwerp**: Poppins 500/600, Inter Variable, Newsreader cursief accentwoord (`<span class="accent">`, één per kop); `--ink #061126`, `--blue #3069FE`, `--blue-ink #1F4FD6`, `--surface #F3F4F7`. Knoppen `.btn` + `.btn-dot`.
 
-**Intake-worker** (`geldgarant-intake-api`, https://api.geldgarant.com): `/api/incasso-*`, `/api/contact` (ook debiteurreacties, onderwerp `bestaand_dossier`), `/api/location/search`, `/api/bestand`, `/api/health`, `POST /api/sollicitatie` (uitgerold 7 nov). Turnstile sitekey `0x4AAAAAACzginGi5pgJr1Ux`. Betalen loopt níet via deze worker.
+**Intake-worker** (`geldgarant-intake-api`, https://api.geldgarant.com): `/api/incasso-*`, `/api/contact`, `/api/location/search`, `/api/bestand`, `/api/health`, `POST /api/sollicitatie`. Turnstile sitekey `0x4AAAAAACzginGi5pgJr1Ux`.
 
 ---
 
-## 5. Open punten bij Anas
+## 5. Open punten bij Anas/Ilyas (gebruikersacties)
 
-1. Akkoord AV, privacy- en cookieverklaring (bij voorkeur jurist).
-2. Telegram-melding intake-worker met minimale persoonsgegevens.
-3. Verwerkersovereenkomsten: Cloudflare, Resend, Telegram, CaseControl.
-4. WhatsApp Business op 085 212 73 88.
-5. Intake-worker (Cloudflare, 7 nov, ingebouwde browser): **klaar**.
-    - Turnstile-widget `geldgarant-incassoform` en `INTAKE_ALLOWED_ORIGINS` kennen nu ook `website.geldgarant.workers.dev` (naast geldgarant.com en www);
-    - route `POST /api/sollicitatie` uitgerold (code = `docs/projectkennis/intake-worker-index.js` + route + `intake-worker-sollicitatie.js`, sha256 `48dcfd59…`, byte voor byte gecontroleerd via de API);
-    - 16 ongebruikte geheimen van de vorige bouwer verwijderd; over: `INTAKE_ALLOWED_ORIGINS`, `INTAKE_SESSION_SECRET`, `RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TURNSTILE_ALLOWED_HOSTNAMES` (ongebruikt, onschuldig), `TURNSTILE_SECRET_KEY`;
-    - Resend: MX en SPF op `send.` toegevoegd door Anas, DKIM stond er al;
-    - test contactformulier op staging geslaagd (GG-CONT-2026-87121, geen Resend-fouten in de logs); vordering en sollicitatie test Anas in zijn eigen browser (Turnstile weigert de geautomatiseerde browser, fout 600010);
-    - Telegram bewust uit (akkoord Anas);
-    - de Trigger.dev-job van de vorige bouwer roept nog elke 15 min `/api/internal/portal-provisioning/run` aan (geeft 404). Bouwer vragen te stoppen en de CaseControl-API-client bij CaseControl vernieuwen;
-    - de Cloudflare-editor accepteert geen geautomatiseerd plakken; dashboard-API-mutaties worden door de botcheck geblokkeerd (alleen de UI werkt). Lezen via `/api/v4/...` met `x-cross-site-security: dash` werkt wel.
-6. Compliance-claims /over-ons 03 en /wki 02 bevestigen.
-7. Buitenlandpagina: landenlijst en tariefaanpak.
-8. Foto's kantoor/team zonder namen; later echte reviews en cijfers.
-9. Losse prijzen debiteurenbeheer (€ 9,95 / € 3,95) bevestigen.
-10. Periodiek: wettelijke rente 1 jan/1 jul (site én de vaste 10,40% in de aanmaning), griffierechten, beslagvrije voet, hulpnummers.
-11. **Betalen en brieven**:
-    - antwoord van CaseControl op Anas' mail: mogen wij `/pay` vanaf onze server aanroepen (technisch werkt het);
-    - testbetaling van € 5 op een eigen testdossier via https://website.geldgarant.workers.dev/betalen: landt hij op het dossier, waar komt de bezoeker na iDEAL uit (terugkeer-URL; `/brief-ontvangen/bedankt` en `/mislukt` staan klaar);
-    - telefoonnummer in CaseControl (organisatie) naar 085 212 73 88 (brieven halen het daar; oud: 085 083 5230);
-    - aanmaning, sommatie en 14-dagenbrief in CaseControl plakken (codeweergave), proefbrief: logo zichtbaar, **laadt de dynamische QR** (anders `QR=statisch` bouwen)? Printen, vouwen, adres in het venster?
-    - 14-dagenbrief: incassokostensjabloon pas na de 14 dagen aanzetten (`case.total_amount_due` mag dan nog geen kosten bevatten); controleren dat `case.penalty_amount_incl_vat` al het staffelbedrag geeft;
-    - eerste variabelenlijst (`case.*`, `creditor.*`) opvragen: is er een variabele voor hoofdsom of rentepercentage? (Betaallink: `case.online_payment_link`, nu gebruikt.)
-    - signing secret van de webhook vernieuwen (was zichtbaar in een screenshot).
-12. **Livegang gedaan (7 nov, ±11:40)**: Anas koppelde het domein los in Framer; daarna in Cloudflare: A-records `geldgarant.com` (31.43.160.6/161.6) en CNAME `www` → `sites.framer.app` verwijderd, custom domains `geldgarant.com` en `www.geldgarant.com` op Worker "website", Redirect Rule "Redirect from WWW to root" (`https://www.*` → `https://${1}`, 301, querystring behouden). Controle op het echte domein: 64 oude URL's + 5 bestanden 200, 6 redirects, CSP en HSTS, `/api/betalen` ok, `/api/qr` ok, www → root, http → https, `api.geldgarant.com/api/health` ok. MX/TXT en de wildcard `*.geldgarant.com` ongemoeid. DNS-backup: `docs/dns-backup-2026-11-07.tsv`. Nog te doen: Search Console (sitemap `https://geldgarant.com/sitemap-index.xml` indienen, homepage + één artikel laten indexeren), eerste week dagelijks 404's in Search Console bekijken, Framer-site pas na een maand opzeggen (blijft de terugvaloptie), uptimecontrole instellen.
+**SEO en vermeldingen (8 nov)**
+
+1. **Justis-register**: telefoonnummer staat nog op 085 083 5230 → laten wijzigen naar 085 212 73 88.
+2. **KvK, LinkedIn, Instagram-bio**: website `https://geldgarant.com` en telefoon controleren; Instagram-bio zegt nog "No cure, no pay" (site: € 0 bij volledige betaling). Bevestigen of @geldgarant van GeldGarant is (dan in `site.sameAs`).
+3. **Google-reviews**: 15 oudere reviews beantwoorden (doet gebruiker zelf; neutraal bij debiteuren, geen namen, geen dossierdetails).
+4. **Bedrijfsprofiel**: servicegebied eventueel handmatig op "Nederland" (nu Deventer); controleren dat de beschrijving en openingstijden (9.00–17.00) door Google zijn goedgekeurd.
+5. **Netwerk verblijfslocatie**: beheerder vragen 188.114.96.0 en 188.114.97.0 toe te staan (router blokkeert adressen op .0; site én formulieren onbereikbaar op dat wifi).
+6. **Bing Webmaster Tools**: inloggen met een Microsoft-account en importeren uit Search Console (Claude kan daarna verder).
+7. **Trustoo / NowID-websitelink / Trustpilot**: besluiten of we deze vermeldingen actief willen (geen contact zonder opdracht).
+8. **Bankbeslag** (beslagvrije voet): status wetsvoorstel 35225 door jurist laten nalopen voordat we erover schrijven.
+
+**Juridisch en bedrijf (eerder)**
+
+9. Akkoord AV, privacy- en cookieverklaring (bij voorkeur jurist). Let op: privacy- en cookieverklaring op 8 nov aangepast voor Cloudflare Web Analytics (cookieloos), versie 2026-11-08.
+10. Verwerkersovereenkomsten: Cloudflare, Resend, Telegram, CaseControl.
+11. WhatsApp Business op 085 212 73 88 (daarna chat-link in het Bedrijfsprofiel opnieuw toevoegen).
+12. Compliance-claims /over-ons 03 en /wki 02 bevestigen; buitenlandpagina: landenlijst en tariefaanpak; foto's kantoor/team zonder namen; losse prijzen debiteurenbeheer (€ 9,95 / € 3,95) bevestigen.
+13. Periodiek: wettelijke rente 1 jan/1 jul (site én aanmaning), griffierechten, beslagvrije voet, hulpnummers.
+14. **Betalen en brieven**: antwoord CaseControl over `/pay` vanaf onze server; testbetaling € 5 op eigen testdossier (terugkeer-URL); telefoonnummer in CaseControl naar 085 212 73 88; aanmaning, sommatie en 14-dagenbrief in CaseControl plakken en proefbrief (laadt de dynamische QR?); 14-dagenbrief-kostensjabloon pas na 14 dagen; variabelenlijst `case.*`/`creditor.*` opvragen; webhook-secret vernieuwen.
+15. Intake-worker: Trigger.dev-job van de vorige bouwer roept nog `/api/internal/portal-provisioning/run` aan (404) → laten stoppen.
+16. Framer-site pas na een maand opzeggen (terugvaloptie); uptimecontrole instellen.
 
 ---
 
 ## 6. Direct betalen (gebouwd 7 nov)
 
-- **Flow**: betaalkaart `#betalen` op /brief-ontvangen (voorinvullen met `?dossier=&bedrag=`, kort adres `/betalen`) → "Betalen met iDEAL" → `POST /api/betalen` → worker → `POST https://api.casecontrol.app/api/portal/debtor/v1/geldgarant/pay {caseNumber, amount}` → `{url}` → `location.assign(url)` naar iDEAL. CaseControl boekt de betaling op het dossier. Zelfde aanroep als "Maak een betaling" in het debiteurenportaal (code nagelopen: `RequestPaymentLink`).
-- **Worker** (`worker/betalen.ts`): zelfde origin verplicht, JSON, max 500 bytes, `isDossier`, € 5 tot € 250.000. Onbekend dossier → 404 → melding "We vinden dossiernummer … niet". Andere fout → kaart met IBAN, tenaamstelling, kenmerk en bedrag, plus "Opnieuw proberen". Niets opgeslagen. `GET /api/betalen` controleert portalinfo + `/pay` met testnummer 00-0000; bij storing staat CaseControls antwoord in `melding`.
+- **Flow**: betaalkaart `#betalen` op /brief-ontvangen (voorinvullen met `?dossier=&bedrag=`, kort adres `/betalen`) → "Betalen met iDEAL" → `POST /api/betalen` → worker → `POST https://api.casecontrol.app/api/portal/debtor/v1/geldgarant/pay {caseNumber, amount}` → `{url}` → iDEAL. CaseControl boekt de betaling op het dossier.
+- **Worker** (`worker/betalen.ts`): zelfde origin, JSON, max 500 bytes, `isDossier`, € 5 tot € 250.000. Onbekend dossier → 404-melding; andere fout → overmaakgegevens + "Opnieuw proberen". Niets opgeslagen. `GET /api/betalen` controleert de koppeling.
 - **wrangler.jsonc**: `main: worker/index.ts`, `assets.binding: ASSETS`, `run_worker_first: ["/api/*"]`, var `CASECONTROL_PORTAL: geldgarant`. `site.betaalLinkApi = null` zet online betalen uit.
-- Bewust geen naam/e-mail zoals Breyta: CaseControl gebruikt ze niet.
 - Tests: `tests/unit/betalen-worker.test.ts`, `tests/e2e/brief.spec.ts`.
 
-## 7. Brieven voor CaseControl (gebouwd 7 nov, bijgewerkt 11:00)
+## 7. Brieven voor CaseControl (gebouwd 7 nov)
 
-Alles staat in `brieven/README.md` (raster, variabelen, werkwijze, QR). Kort:
+Alles in `brieven/README.md` (raster, variabelen, werkwijze, QR). Drie brieven: `aanmaning-1-b2b.html` (akkoord Anas), `sommatie-b2b.html`, `aanmaning-14-dagen-b2c.html`; dynamische QR via `worker/qr.ts`. Werkwijze: bron `brieven/src/<naam>.html` → `python3 brieven/tools/bouw.py` → render met `brieven/tools/render-cc.php` (dompdf, cloudsandbox). Volgende brieven: betalingsherinnering B2C na de 14 dagen, regelingsbevestiging, eventueel Engelstalige B2B-varianten.
 
-- **Zo maakt CaseControl een brief** (gemeten aan hun PDF, nagebouwd): dompdf 3.1.6, A4, marges 20 mm rondom, standaardfont Roboto, editor bewaart alleen inline stijlen. Eigen logo als data-URI.
-- **Drie brieven**, zelfde raster en opbouw (kop, venster links, referenties vanaf 133 mm, onderwerp na de vouw, navy balk, specificatie, pagina 2 betalen/regeling/niet eens/contact/klachten/hulp):
-    - `aanmaning-1-b2b.html`: akkoord Anas; termijn `misc.today_plus_7_business_days`;
-    - `sommatie-b2b.html`: "Laatste verzoek om te betalen voordat de rechter eraan te pas komt", verzonden aangetekend en per e-mail, termijn `misc.today_plus_5_business_days`, voortgangsbalk Aanmaning/Sommatie/Rechter, gevolgen feitelijk (dagvaarding na akkoord opdrachtgever, proceskosten, beslag na vonnis);
-    - `aanmaning-14-dagen-b2c.html`: "U kunt nog betalen zonder extra kosten", eisen art. 6:96 lid 6 BW (14 dagen vanaf de dag na ontvangst, exact kostenbedrag `case.penalty_amount_incl_vat`, gevolgen, geen kosten voor de brief), wettelijke rente 4%, hulpblok geldzorgen.
-- **Dynamische QR** (wens Anas): `<img src="https://website.geldgarant.workers.dev/api/qr?d={{case.case_number}}&data={{case.online_payment_link}}">`, route `worker/qr.ts` (PNG, eigen encoder, `uqr`), terugval naar `/brief-ontvangen?dossier=…#betalen`. QR en "Online met iDEAL" ook klikbaar in de PDF. Proefbrief moet uitwijzen of CaseControl externe afbeeldingen laadt; zo niet: `QR=statisch python3 brieven/tools/bouw.py`.
-- **Werkwijze**: bron `brieven/src/<naam>.html` → `python3 brieven/tools/bouw.py` → `npx tsx scripts/dev/qr-proef.mts "d=…&data=…" /tmp/qr.png` → `QR_PNG=/tmp/qr.png DOMPDF_LIB=/home/claude/brief/lib php brieven/tools/render-cc.php brieven/<naam>.html brieven/voorbeeld/<naam>.json brieven/voorbeeld/<naam>-voorbeeld.pdf`.
-- **Website**: de voorbeeldbrief op /brief-ontvangen volgt de aanmaning (met vaste QR naar /betalen, gelabeld als voorbeeld).
-- **Volgende brieven**: betalingsherinnering B2C na de 14 dagen, regelingsbevestiging, eventueel Engelstalige B2B-varianten (buitenland).
+---
 
-**Kritiek op de oude sommatie** (voor de nieuwe): oud telefoonnummer, gedachtestreepjes, "Geachte relatie", leeg veld "Grondslag", kapotte vinkjes ("v", "!"), QR-blok zonder QR, "zonder nadere aankondiging naar de juridische afdeling" (procedure vraagt akkoord opdrachtgever), loonbeslag bij een bedrijf, "worden niet door de rechter gematigd" (onjuist), geen rentepercentage of periode, adres niet op het vensterraster, te veel gekleurde vlakken.
+## 8. SEO-traject: wat er staat en wat er nog moet
+
+**Gedaan (7–8 nov 2026, details per bewijsnummer in `docs/seo/SEO_EVIDENCE.md`)**
+
+- **Meting**: Search Console (`sc-domain:geldgarant.com`, Google-account `/u/1`) geverifieerd via TXT; sitemap `https://geldgarant.com/sitemap-index.xml` ingediend en gelezen; 11 URL's ter indexering aangeboden op 8 nov (quotum 10/dag). Nulmeting GSC (16 maanden, Framer-tijd): 137 klikken, 28,9K vertoningen, gem. positie 43 (E9). Cloudflare Web Analytics hersteld (stond op "EU uitgesloten") met handmatige beacon (E20). IndexNow actief, 71 URL's gemeld (E20).
+- **Techniek**: Always Use HTTPS aan; productiecrawl schoon (70+ URL's 200, canonicals, JSON-LD overal); CI groen incl. Lighthouse; CLS-fix `/hulp-nodig-bij-geldproblemen`; a11y-fix briefmaker; homepage JSON-LD met `@id`, logo, `sameAs`.
+- **Inhoud en structuur**: interne links (geen pagina meer met < 2 inlinks, E7); keyword-URL-kaart `docs/seo/keyword-url-map.csv` (57 clusters, E8); kannibalisatie opgelost met titelscheiding zzp/verhuur/Wki/kosten (E10); commerciële pagina's verbeterd: `/debiteurenbeheer` (E11), `/branches/incasso-verhuur` (E12), `/branches/incasso-mkb` (E13), `/incasso/incassobureau-inschakelen` (E14), `/incasso` en `/tarieven` (E17); snelle winst e-commerce, stappenplan, beslagvrije voet (E16); voorbeeldbrief huurachterstand (E20).
+- **Lokaal en vermeldingen**: Google Bedrijfsprofiel bijgewerkt (beschrijving, 9.00–17.00, https, oude WhatsApp weg; E19), 4 nieuwe reviews beantwoord; vermeldingen geïnventariseerd in `docs/seo/backlink-opportunities.csv` (E18).
+
+**Nog te doen (volgorde; staat ook in SEO_STATE `next_action`)**
+
+1. **9 nov**: GSC-indexering aanvragen voor `/` (homepage toont in Google nog de oude Framer-titel) en `/voorbeeldbrieven/huurachterstand`; Web Analytics-dashboard controleren (komt er data binnen?).
+2. **± 15 nov**: GSC prestaties per pagina vergelijken met de nulmeting (E9): vertoningen, positie, CTR; titels/descriptions bijsturen op CTR; `keyword-url-map.csv` bijwerken; indexeringsrapport (nieuwe URL's geïndexeerd?).
+3. Na de gebruikersacties (§5): Bing Webmaster Tools inrichten; vermeldingen gelijktrekken; eventueel Trustoo/NowID-link.
+4. Inhoud (alleen met primaire bronnen): bankbeslag na juridische check; bewijsstukkenchecklist en beslisboom "kan ik deze vordering nog innen?" (masterplan fase 5); verdere kennisbankverbeteringen op basis van GSC-zoekvragen (bv. "wik brief" ±600 vertoningen pos 37–49, "lege bv" 323, "internationale incasso" 337).
+5. Fase 8 AI-zichtbaarheid: vaste vragenset (10 vragen) meten in ChatGPT Search, Perplexity en AI Overviews; vastleggen in SEO_EVIDENCE.
+6. Fase 9 meting: events voor aanvragen (Web Analytics kent geen custom events; beoordelen of een lichte teller in de worker zonder persoonsgegevens nodig is).
+
+**Werkregels SEO** (uit de masterprompt): geen verzonnen data of claims; elke wijziging met bewijs in SEO_EVIDENCE; na elke batch: QA, push, live controleren, CI controleren, IndexNow, SEO_STATE bijwerken; kannibalisatie controleren vóór een nieuwe URL of titel; gebruikersacties duidelijk benoemen.
