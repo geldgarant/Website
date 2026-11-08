@@ -19,6 +19,8 @@ import { site } from "../data/site"
 import { debiteurenFaq } from "../data/faq"
 import { PAKKETTEN } from "../lib/pakketten"
 
+const vanaf = Math.min(...PAKKETTEN.map((p) => p.prijs))
+
 const title = "Debiteurenbeheer uitbesteden vanaf € 99 per maand | GeldGarant"
 const description =
     "Debiteurenbeheer uitbesteden: wij volgen uw openstaande facturen op met herinneringen, sms en een telefoontje, in uw naam. Vast bedrag, maandelijks opzegbaar."
@@ -78,7 +80,8 @@ const jsonLd = [
                     </h1>
                     <p class="lead">
                         Besteed uw debiteurenbeheer uit aan GeldGarant. Wij volgen uw openstaande facturen op met een herinnering,
-                        een sms en een persoonlijk telefoontje. In uw eigen naam, voor een vast bedrag per maand.
+                        een sms en een persoonlijk telefoontje. In uw eigen naam, voor een vast bedrag per maand vanaf €&nbsp;
+                        {vanaf}.
                     </p>
                     <div class="hero-actions">
                         <a class="btn" href="#pakketten">
