@@ -8,7 +8,7 @@ current_phase: 6 (lokaal): Bedrijfsprofiel bijgewerkt (E19); 7 (vermeldingen): l
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) Bedrijfsprofiel: controleren dat beschrijving en openingstijden door Google zijn goedgekeurd; 15 oudere reviews beantwoorden (neutraal bij debiteuren); servicegebied eventueel handmatig naar Nederland (gebruiker). 2) Gebruiker: telefoon bij Justis wijzigen; KvK, LinkedIn, Instagram-bio gelijk trekken (backlink-opportunities.csv). 3) Over 1 tot 2 weken (±15 nov): GSC prestaties per pagina vs E9, keyword-url-map bijwerken; homepage-snippet controleren. 4) Kansen: Trustoo-profiel, NowID-websitelink (alleen met opdracht). 5) Inhoud: bankbeslag (primaire bron), voorbeeldbrief huurachterstand. 6) Web Analytics (gebruiker). 7) Niet-SEO: wifi-probleem huidige locatie (E10).
+next_action: 1) Bedrijfsprofiel: controleren dat beschrijving en openingstijden door Google zijn goedgekeurd; 15 oudere reviews beantwoordt de gebruiker zelf (besluit 8 nov); servicegebied eventueel handmatig naar Nederland (gebruiker). 2) Gebruiker: telefoon bij Justis wijzigen; KvK, LinkedIn, Instagram-bio gelijk trekken (backlink-opportunities.csv). 3) Over 1 tot 2 weken (±15 nov): GSC prestaties per pagina vs E9, keyword-url-map bijwerken; homepage-snippet controleren. 4) Kansen: Trustoo-profiel, NowID-websitelink (alleen met opdracht). 5) Inhoud: bankbeslag (primaire bron), voorbeeldbrief huurachterstand. 6) Web Analytics (gebruiker). 7) Niet-SEO: wifi-probleem huidige locatie (E10).
 ```
 
 ## Afgerond sinds vorig checkpoint (batch 3)
@@ -62,7 +62,7 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 ## Bedrijfsprofiel
 
 Bijgewerkt op 8 nov na akkoord (E19): beschrijving, chat-link verwijderd, https, openingstijden 9.00-17.00. Servicegebied
-niet gewijzigd. 4 nieuwe reviews beantwoord; 15 oudere nog open.
+niet gewijzigd. 4 nieuwe reviews beantwoord; de 15 oudere beantwoordt de gebruiker zelf.
 
 ## Gebruikersacties (gebundeld)
 
