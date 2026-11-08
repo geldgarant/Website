@@ -44,7 +44,7 @@ De Wet kwaliteit incassodienstverlening (Wki) is op 1 april 2024 in werking getr
 
 ## Voor wie geldt de Wki?
 
-De wet geldt voor incassodienstverleners: partijen die beroepsmatig vorderingen van anderen innen, en partijen die vorderingen opkopen om ze te innen. Advocaten en gerechtsdeurwaarders vallen er niet onder, want voor hen gelden eigen beroepsregels.
+De wet geldt voor incassodienstverleners: partijen die beroepsmatig vorderingen van anderen innen, en partijen die vorderingen opkopen om ze te innen. Advocaten en gerechtsdeurwaarders hoeven zich niet bij Justis te registreren (art. 4 lid 2 Wki), maar voor buitengerechtelijke incasso moeten zij wel aan de kwaliteitseisen van de wet voldoen.
 
 De Wki beschermt schuldenaren die natuurlijke personen zijn en in Nederland wonen. Dat zijn particulieren, maar ook zzp'ers, eenmanszaken en vennoten van een vof.
 

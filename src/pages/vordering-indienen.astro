@@ -10,6 +10,7 @@ import AdresVelden from "../components/form/AdresVelden.astro"
 import Foto from "../components/Foto.astro"
 import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
 import { site } from "../data/site"
+import { DEEL_MIN } from "../lib/wik"
 
 const title = "Vordering indienen | Binnen 1 uur in behandeling | GeldGarant"
 const description =
@@ -282,6 +283,41 @@ const jsonLd = [
                                 Klopt alles?
                             </h2>
                             <div class="overzicht" data-overzicht></div>
+                            <section class="kosten-kaart" aria-labelledby="kk-kop">
+                                <h3 class="kk-kop" id="kk-kop">
+                                    Wat kost het u?
+                                </h3>
+                                <ul role="list">
+                                    <li>
+                                        <strong>Betaalt de debiteur alles:</strong> u betaalt niets.
+                                    </li>
+                                    <li>
+                                        <strong>Komt er niets binnen:</strong> u betaalt niets.
+                                    </li>
+                                    <li>
+                                        <strong>Betaalt de debiteur een deel:</strong> eerst gaan de incassokosten van dat bedrag
+                                        af, minimaal € {DEEL_MIN} en nooit meer dan er binnenkwam. De rest is voor u.
+                                    </li>
+                                    <li>
+                                        <strong>Betaalt de debiteur rechtstreeks aan u:</strong> dan rekenen we af alsof het via
+                                        ons ging. Meld het ons binnen een week.
+                                    </li>
+                                    <li>
+                                        <strong>
+                                            Trekt u de opdracht in nadat we zijn begonnen, of regelt u het buiten ons om:
+                                        </strong>{" "}
+                                        de incassokosten volgens de staffel, minimaal 10% van de hoofdsom en ten minste € 95.
+                                    </li>
+                                </ul>
+                                <a
+                                    class="textlink"
+                                    href="/juridisch/algemene-voorwaarden#artikel-6"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    Alle kosten in de algemene voorwaarden
+                                </a>
+                            </section>
                             <label class="akkoord">
                                 <input
                                     id="v-akkoord"
@@ -1057,6 +1093,29 @@ const jsonLd = [
         overflow: hidden;
         border-radius: 50%;
         background: var(--surface);
+    }
+    .kosten-kaart {
+        margin: 18px 0 6px;
+        padding: 16px 18px;
+        border-radius: var(--r-md);
+        background: var(--surface);
+        font-size: var(--fs-sm);
+        line-height: 1.55;
+        color: var(--text);
+    }
+    .kk-kop {
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
+    .kosten-kaart ul {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 10px;
+        padding-left: 18px;
+        list-style: disc;
+    }
+    .kosten-kaart strong {
+        color: var(--ink);
     }
     .sam-trust {
         display: grid;

@@ -6,8 +6,8 @@ onderwerp: situatie
 lead: "In de bouw gaat het bij een onbetaalde factuur zelden alleen om geld. Er is discussie over meerwerk, over gebreken bij de oplevering of over een termijn die volgens de klant nog niet verschuldigd is. Wie de regels kent en vooraf goed vastlegt, staat veel sterker."
 kort:
     - "Meerwerk is het meest betwiste onderdeel. Laat het altijd vooraf schriftelijk akkoorderen, met de prijs."
-    - "Een werk geldt als opgeleverd als de opdrachtgever het goedkeurt, of niet binnen acht dagen na uitnodiging keurt."
-    - "Een particuliere opdrachtgever mag 5% van de aanneemsom inhouden of bij de notaris storten tot drie maanden na oplevering."
+    - "Een werk geldt als opgeleverd als de opdrachtgever het goedkeurt, of het na uw uitnodiging niet binnen een redelijke termijn keurt."
+    - "Bouwt u een woning voor een particulier, dan mag die 5% van de aanneemsom inhouden of bij de notaris storten tot drie maanden na oplevering."
     - "Kleine gebreken zijn geen reden om de hele termijn niet te betalen."
     - "Met het retentierecht mag u een werk onder u houden totdat de bijbehorende factuur betaald is."
 gepubliceerd: 2026-02-27
@@ -20,7 +20,7 @@ faq:
     - q: "Kan ik als onderaannemer de opdrachtgever van de hoofdaannemer aanspreken?"
       a: "In de regel niet. Uw overeenkomst is met de hoofdaannemer, dus hij is uw debiteur. Gaat de hoofdaannemer failliet, dan kunt u de opdrachtgever niet zomaar laten betalen. Afspraken over directe betaling of een G-rekening kunnen daar helpen."
     - q: "Wat is de 5%-regeling?"
-      a: "Bij een aannemingsovereenkomst met een particulier mag de opdrachtgever 5% van de aanneemsom bij de notaris in depot storten of inhouden, tot drie maanden na de oplevering. Zo heeft hij een stok achter de deur voor het herstel van gebreken. Daarna moet het bedrag worden betaald."
+      a: "Bij de bouw van een woning in opdracht van een particulier mag de opdrachtgever 5% van de aanneemsom bij de notaris in depot storten of inhouden, tot drie maanden na de oplevering. Zo heeft hij een stok achter de deur voor het herstel van gebreken. Daarna moet het bedrag worden betaald."
 bronnen:
     - t: "Burgerlijk Wetboek Boek 7, art. 7:755 (meerwerk), 7:758 (oplevering) en 7:768 (5%-regeling)"
       href: "https://wetten.overheid.nl/BWBR0005290/"
@@ -61,13 +61,13 @@ Werkt u met de UAV 2012, de standaardvoorwaarden voor de bouw, dan bevatten die 
 
 ## De oplevering
 
-Na het gereedkomen nodigt u de opdrachtgever uit om het werk op te nemen. Keurt hij het goed, dan is het opgeleverd. Reageert hij niet binnen acht dagen, of neemt hij het werk in gebruik, dan geldt het ook als opgeleverd (art. 7:758 BW). Vanaf dat moment is het werk voor risico van de opdrachtgever en is de eindafrekening verschuldigd.
+Na het gereedkomen nodigt u de opdrachtgever uit om het werk op te nemen. Keurt hij het goed, dan is het opgeleverd. Keurt hij het werk niet binnen een redelijke termijn, of neemt hij het in gebruik, dan geldt het ook als opgeleverd (art. 7:758 BW). Staat er in uw contract of in de algemene voorwaarden een vaste termijn, dan geldt die afspraak. Vanaf dat moment is het werk voor risico van de opdrachtgever en is de eindafrekening verschuldigd.
 
 Een opdrachtgever mag de oplevering niet weigeren vanwege kleine gebreken die snel te herstellen zijn. Die worden genoteerd op een opleverlijst en daarna hersteld.
 
 ### De 5%-regeling bij particulieren
 
-Is de opdrachtgever een particulier, dan mag hij 5% van de aanneemsom inhouden of bij een notaris in depot storten, tot drie maanden na de oplevering (art. 7:768 BW). Daarmee heeft hij zekerheid voor het herstel van gebreken. Na die drie maanden moet het bedrag worden betaald, tenzij er een terechte klacht ligt.
+Bouwt u een woning in opdracht van een particulier, dan mag die 5% van de aanneemsom inhouden of bij een notaris in depot storten, tot drie maanden na de oplevering (art. 7:768 BW). Deze regeling geldt alleen voor die woningbouw, niet voor elke klus bij een particulier. Wil een opdrachtgever om een andere reden betaling opschorten, dan gelden de gewone regels voor opschorting. Daarmee heeft hij zekerheid voor het herstel van gebreken. Na die drie maanden moet het bedrag worden betaald, tenzij er een terechte klacht ligt.
 
 ## Opschorten: wanneer stopt u met werken?
 

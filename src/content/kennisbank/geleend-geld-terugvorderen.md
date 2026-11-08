@@ -64,10 +64,12 @@ Komt er geen betaling, stuur dan een brief of e-mail waarin u terugbetaling eist
 
 - het geleende bedrag en wanneer u het overmaakte;
 - dat het om een lening ging;
-- een redelijke termijn om terug te betalen, bijvoorbeeld veertien dagen;
+- een ruime, concrete termijn om terug te betalen;
 - wat u doet als er niet op tijd betaald wordt.
 
-Is er geen terugbetaaldatum afgesproken, dan maakt deze brief de lening opeisbaar na het verlopen van de termijn. Tegelijk stuit hij de verjaring.
+Is er geen terugbetaaldatum afgesproken, dan moet de lener terugbetalen nadat u daarom heeft gevraagd; de wet geeft hem daarvoor wel enige tijd (Burgerlijk Wetboek Boek 7, titel Geldlening). Deze brief is dat verzoek. Tegelijk stuit hij de verjaring.
+
+> **Goed om te weten:** GeldGarant werkt voor ondernemers. Gaat het om een lening tussen particulieren, dan kan het Juridisch Loket u gratis op weg helpen.
 
 ## Stap 3: laat een schuldbekentenis tekenen
 

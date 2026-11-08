@@ -11,7 +11,7 @@ import Fasen from "../../components/incasso/Fasen.astro"
 import Klaar from "../../components/incasso/Klaar.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
-import FotoBand from "../../components/FotoBand.astro"
+import Foto from "../../components/Foto.astro"
 import fotoGesprek from "../../assets/fotos/gesprek-adviseur.jpg"
 import { site } from "../../data/site"
 import { incassoFaq } from "../../data/faq"
@@ -148,7 +148,15 @@ const verder = [
                 </div>
 
                 <aside class="feiten bg-ink" aria-labelledby="feiten-title">
-                    <img class="feiten-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                    <div class="feiten-foto">
+                        <Foto
+                            src={fotoGesprek}
+                            alt="Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever"
+                            sizes="(min-width: 1024px) 900px, 240vw"
+                            focus="62% 22%"
+                            eager
+                        />
+                    </div>
                     <h2 class="feiten-title" id="feiten-title">
                         Incasso bij GeldGarant
                     </h2>
@@ -173,14 +181,6 @@ const verder = [
             </div>
         </div>
     </section>
-
-    <FotoBand
-        groot={{
-            src: fotoGesprek,
-            alt: "Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever",
-            focus: "60% 30%",
-        }}
-    />
 
     <Fasen />
 
@@ -331,6 +331,18 @@ const verder = [
     }
     .feiten > :not(img) {
         position: relative;
+    }
+    /* foto bovenin de kaart, loopt over in navy (zelfde opbouw als de home-hero) */
+    .feiten-foto {
+        height: clamp(170px, 30vw, 210px);
+        margin: calc(-1 * clamp(24px, 3vw, 36px)) calc(-1 * clamp(24px, 3vw, 36px)) 18px;
+        overflow: hidden;
+    }
+    .feiten-foto::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(6, 17, 38, 0) 45%, var(--ink) 100%);
     }
     .feiten-mark {
         position: absolute;

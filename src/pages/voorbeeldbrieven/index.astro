@@ -15,6 +15,9 @@ const description =
 const url = "https://geldgarant.com/voorbeeldbrieven"
 
 const kaarten = [...voorbeeldbrieven, veertienDagenKaart].sort((a, b) => (a.stap || 9) - (b.stap || 9))
+const telwoord =
+    ["Nul", "Eén", "Twee", "Drie", "Vier", "Vijf", "Zes", "Zeven", "Acht", "Negen", "Tien"][kaarten.length] ??
+    String(kaarten.length)
 
 const keuze = [
     { vraag: "De vervaldatum is net verstreken", brief: "Betalingsherinnering", href: "/voorbeeldbrieven/betalingsherinnering" },
@@ -137,7 +140,7 @@ const jsonLd = [
                     <span class="idx">01</span> Alle brieven
                 </p>
                 <h2 class="h2" id="brieven-title">
-                    Zes brieven, elk met een eigen <span class="accent">doel</span>
+                    {telwoord} brieven, elk met een eigen <span class="accent">doel</span>
                 </h2>
             </div>
             <ul role="list" class="kaarten">

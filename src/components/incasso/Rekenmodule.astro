@@ -197,7 +197,9 @@ import { RENTE_BIJGEWERKT } from "../../lib/rente"
 
             root.querySelectorAll<HTMLElement>("[data-alleen]").forEach((el) => (el.hidden = el.dataset.alleen !== soort))
 
-            const kostenMogen = !consument || briefOk
+            // nog niet vervallen (einddatum op of vóór de vervaldatum): geen incassokosten en geen rente
+            const nietVervallen = Boolean(verval.value && tot.value && verval.value >= tot.value)
+            const kostenMogen = !nietVervallen && (!consument || briefOk)
             const kosten = h > 0 && kostenMogen ? wikKosten(h) : 0
             const btw = btwPlicht ? Math.round(kosten * BTW * 100) / 100 : 0
             const vanaf = verval.value ? plusDag(verval.value, 1) : ""
@@ -218,7 +220,11 @@ import { RENTE_BIJGEWERKT } from "../../lib/rente"
             uit("totaal").textContent = euro(h + kosten + btw + r.rente)
 
             const noot = uit("noot")
-            if (consument && !briefOk && h > 0) {
+            if (nietVervallen && h > 0) {
+                noot.hidden = false
+                noot.textContent =
+                    "Deze factuur is op de einddatum nog niet vervallen. Incassokosten en rente kunnen pas na de vervaldatum ingaan."
+            } else if (consument && !briefOk && h > 0) {
                 noot.hidden = false
                 noot.textContent =
                     "Bij een particulier mag u pas incassokosten rekenen nadat de 14-dagenbrief is verstuurd en de termijn is verlopen. Die brief sturen wij voor u."

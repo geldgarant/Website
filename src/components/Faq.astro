@@ -5,9 +5,10 @@ import { site } from "../data/site"
 import Foto from "./Foto.astro"
 import type { ImageMetadata } from "astro"
 // vier gezichten uit de eigen shoot (uitsneden in src/assets/fotos/gezichten)
-const gezichten = Object.values(
-    import.meta.glob<{ default: ImageMetadata }>("../assets/fotos/gezichten/*.jpg", { eager: true }),
-).map((m) => m.default)
+// studioportretten, volgorde via de bestandsnaam (1-man, 2-vrouw, 3-man, 4-vrouw)
+const gezichten = Object.entries(import.meta.glob<{ default: ImageMetadata }>("../assets/fotos/gezichten/*.jpg", { eager: true }))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, m]) => m.default)
 
 interface Props {
     items: readonly { q: string; a: string }[]

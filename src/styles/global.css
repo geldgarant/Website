@@ -143,6 +143,9 @@ ol {
 body {
     overflow-wrap: break-word;
 }
+h2[id$="-title"] {
+    scroll-margin-top: 56px;
+}
 dt,
 dd {
     -webkit-hyphens: auto;

@@ -11,8 +11,8 @@ import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
 import Foto from "../components/Foto.astro"
 import FotoBand from "../components/FotoBand.astro"
-import fotoWelkom from "../assets/fotos/welkom.jpg"
 import fotoCollegas from "../assets/fotos/collegas-tafel.jpg"
+import fotoLaptop from "../assets/fotos/collegas-laptop.jpg"
 import { site, branches } from "../data/site"
 import { overOnsFaq } from "../data/faq"
 
@@ -455,10 +455,10 @@ const jsonLd = [
                 <article class="plek">
                     <div class="photo-slot plek-foto">
                         <Foto
-                            src={fotoWelkom}
-                            alt="Medewerkers van GeldGarant ontvangen een bezoeker"
-                            sizes="(min-width: 640px) 1000px, 200vw"
-                            focus="30% 30%"
+                            src={fotoLaptop}
+                            alt="Twee medewerkers van GeldGarant bekijken samen een dossier"
+                            sizes="(min-width: 640px) 700px, 200vw"
+                            focus="66% 40%"
                         />
                     </div>
                     <div class="plek-body">

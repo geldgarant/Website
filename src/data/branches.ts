@@ -71,7 +71,7 @@ export const brancheData: Branche[] = [
             },
             {
                 t: "Na de oplevering wordt een deel ingehouden vanwege opleverpunten",
-                d: "Een particuliere opdrachtgever mag maximaal 5% inhouden tot de punten zijn opgelost. Wordt er meer ingehouden of blijven de punten liggen, dan vorderen we het restant.",
+                d: "Bij de bouw van een woning voor een particulier mag die maximaal 5% van de aanneemsom inhouden tot de punten zijn opgelost. Wordt er meer ingehouden of blijven de punten liggen, dan vorderen we het restant.",
             },
             {
                 t: "De hoofdaannemer betaalt u als onderaannemer niet door",
@@ -85,7 +85,7 @@ export const brancheData: Branche[] = [
             },
             {
                 t: "Bij een particulier geldt de 5%-regeling",
-                d: "Een consument mag bij de laatste termijn maximaal 5% van de aanneemsom inhouden of bij de notaris laten storten. Meer inhouden mag niet zonder goede reden.",
+                d: "Bouwt u een woning voor een consument, dan mag die maximaal 5% van de aanneemsom inhouden of bij de notaris laten storten. Meer inhouden mag niet zonder goede reden.",
             },
             {
                 t: "U mag het werk opschorten",
@@ -533,7 +533,7 @@ export const brancheData: Branche[] = [
             },
             {
                 t: "Een retour is aangekondigd, maar nooit aangekomen",
-                d: "We controleren of de klant binnen de bedenktijd heeft geretourneerd. Zo niet, of is er niets aangekomen, dan blijft de betaling verschuldigd.",
+                d: "We kijken naar twee stappen: heeft de klant binnen de bedenktijd laten weten dat hij de koop ontbindt, en is het pakket daarna op tijd teruggestuurd? Ontbreekt een van beide, dan blijft de betaling in beginsel verschuldigd.",
             },
             {
                 t: "U heeft tientallen openstaande bestellingen per maand",
@@ -591,7 +591,7 @@ export const brancheData: Branche[] = [
                 },
                 {
                     t: "Bezwaar? Dan het bewijs erbij",
-                    d: "Zegt de klant dat het pakket niet aankwam of dat hij retourneerde, dan leggen we het afleverbewijs of de track-and-trace voor en controleren we de bedenktijd.",
+                    d: "Zegt de klant dat het pakket niet aankwam of dat hij retourneerde, dan leggen we het afleverbewijs of de track-and-trace voor en controleren we of de koop op tijd is herroepen en het pakket op tijd is teruggestuurd.",
                 },
             ],
             brieven: [
