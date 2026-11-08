@@ -1,4 +1,8 @@
 import { test, expect } from "@playwright/test"
+import { readdirSync } from "node:fs"
+
+// Aantal kennisbankartikelen uit de contentmap, zodat een nieuw artikel de test niet breekt
+const ARTIKELEN = readdirSync("src/content/kennisbank").filter((f) => f.endsWith(".md")).length
 
 test.describe("homepage interacties", () => {
     test("mobiel menu opent, sluit met knop en Escape", async ({ page, isMobile }) => {
@@ -174,7 +178,7 @@ test.describe("kennisbank", () => {
         await page.goto("/kennisbank")
         const zichtbaar = page.locator("[data-kaart]:visible")
         const totaal = await zichtbaar.count()
-        expect(totaal).toBe(27)
+        expect(totaal).toBe(ARTIKELEN)
         await page.fill("#kb-zoek", "verjaring")
         await expect(page.locator("[data-zoek-status]")).toContainText("gevonden")
         expect(await zichtbaar.count()).toBeLessThan(totaal)

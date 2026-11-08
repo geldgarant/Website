@@ -52,7 +52,7 @@ export const brancheData: Branche[] = [
         description:
             "Onbetaalde termijn- of meerwerkfactuur in de bouw? GeldGarant int voor aannemers, onderaannemers en installateurs. Volledig betaald? Dan betaalt u niets.",
         h1: ["Incasso voor de ", "bouw", " en installatie"],
-        lead: "Termijnfacturen die blijven liggen, discussie over meerwerk of een opdrachtgever die na de oplevering stil wordt. Wij kennen de bouw en innen uw facturen zonder dat het project of de relatie eronder lijdt.",
+        lead: "Termijnfacturen die blijven liggen, discussie over meerwerk of een opdrachtgever die na de oplevering stil wordt. GeldGarant kent de bouw en int uw facturen zonder dat het project of de relatie eronder lijdt.",
         kort: "Termijnfacturen, meerwerk en eindafrekeningen voor aannemers en installateurs.",
         feiten: [
             { icon: "user", k: "Voor", v: "Aannemers, onderaannemers en installateurs" },
@@ -123,7 +123,7 @@ export const brancheData: Branche[] = [
         description:
             "Onbetaalde vrachtfacturen? Let op: vorderingen uit vervoer verjaren al na één jaar. GeldGarant int voor transportbedrijven, binnen- en buitenland.",
         h1: ["Incasso voor ", "transport", " en logistiek"],
-        lead: "Vrachtfacturen, wachturen en extra ritten: in transport staan de marges onder druk en telt elke openstaande factuur. Bovendien verjaren vorderingen uit vervoer al na één jaar. Wij zorgen dat uw geld op tijd binnenkomt.",
+        lead: "Vrachtfacturen, wachturen en extra ritten: in transport staan de marges onder druk en telt elke openstaande factuur. Bovendien verjaren vorderingen uit vervoer al na één jaar. GeldGarant zorgt dat uw geld op tijd binnenkomt.",
         kort: "Vrachtprijzen en wachturen innen, op tijd: vorderingen uit vervoer verjaren na één jaar.",
         feiten: [
             { icon: "user", k: "Voor", v: "Vervoerders, expediteurs en charters" },
@@ -194,7 +194,7 @@ export const brancheData: Branche[] = [
         description:
             "Huurachterstand bij een huurder? GeldGarant int voor verhuurders van woningen, bedrijfsruimte en materieel. Correct, volgens de regels en met oog voor de huurder.",
         h1: ["Incasso voor ", "verhuurders"],
-        lead: "Een huurachterstand loopt elke maand verder op. Hoe eerder u ingrijpt, hoe groter de kans dat de huurder het nog kan inhalen. Wij pakken het correct en vasthoudend aan, met een regeling waar dat kan.",
+        lead: "Een huurachterstand loopt elke maand verder op. Hoe eerder u ingrijpt, hoe groter de kans dat de huurder het nog kan inhalen. GeldGarant pakt het correct en vasthoudend aan, met een regeling waar dat kan.",
         kort: "Huurachterstanden bij woningen, bedrijfsruimte en materieel, correct en vroeg aangepakt.",
         feiten: [
             { icon: "user", k: "Voor", v: "Verhuurders van woningen, bedrijfsruimte en materieel" },
@@ -301,7 +301,7 @@ export const brancheData: Branche[] = [
         description:
             "Onbetaalde reparatie of onderhoud? GeldGarant int voor garages, autobedrijven en dealers, bij particulieren en bedrijven. Volledig betaald? Dan betaalt u niets.",
         h1: ["Incasso voor ", "automotive"],
-        lead: "Een auto die is opgehaald zonder te betalen, een reparatie waarover achteraf discussie ontstaat of een zakelijke klant met een rij openstaande werkorders. Wij innen voor garages, autobedrijven en dealers.",
+        lead: "Een auto die is opgehaald zonder te betalen, een reparatie waarover achteraf discussie ontstaat of een zakelijke klant met een rij openstaande werkorders. GeldGarant int voor garages, autobedrijven en dealers.",
         kort: "Reparaties, onderhoud en verkoop voor garages, autobedrijven en dealers.",
         feiten: [
             { icon: "user", k: "Voor", v: "Garages, autobedrijven, dealers en schadeherstel" },
@@ -372,7 +372,7 @@ export const brancheData: Branche[] = [
         description:
             "Afnemers die niet betalen? GeldGarant int voor groothandels en leveranciers, met handelsrente en oog voor uw vaste klanten. Volledig betaald? Dan betaalt u niets.",
         h1: ["Incasso voor ", "groothandels"],
-        lead: "Vaste afnemers, grote volumes en vaak lange betaaltermijnen. Eén klant die stopt met betalen, raakt direct uw werkkapitaal. Wij innen zakelijk en snel, en houden rekening met de relatie.",
+        lead: "Vaste afnemers, grote volumes en vaak lange betaaltermijnen. Eén klant die stopt met betalen, raakt direct uw werkkapitaal. GeldGarant int zakelijk en snel, en houdt rekening met de relatie.",
         kort: "Afnemers die achterlopen, met handelsrente en aandacht voor de klantrelatie.",
         feiten: [
             { icon: "user", k: "Voor", v: "Groothandels, leveranciers en producenten" },
@@ -443,7 +443,7 @@ export const brancheData: Branche[] = [
         description:
             "Onbetaalde uren of projectfacturen? GeldGarant int voor adviseurs, bureaus en andere dienstverleners. Zakelijk, correct en zonder kosten bij volledige betaling.",
         h1: ["Incasso voor ", "dienstverleners"],
-        lead: "Bij dienstverlening levert u kennis en tijd, geen product dat u terug kunt halen. Komt de factuur niet binnen, dan is het werk al gedaan. Wij innen voor adviseurs, bureaus en andere dienstverleners.",
+        lead: "Bij dienstverlening levert u kennis en tijd, geen product dat u terug kunt halen. Komt de factuur niet binnen, dan is het werk al gedaan. GeldGarant int voor adviseurs, bureaus en andere dienstverleners.",
         kort: "Uren, projecten en abonnementen voor adviseurs, bureaus en andere dienstverleners.",
         feiten: [
             { icon: "user", k: "Voor", v: "Adviseurs, bureaus, IT en zakelijke diensten" },
@@ -514,7 +514,7 @@ export const brancheData: Branche[] = [
         description:
             "Veel kleine onbetaalde bestellingen van consumenten? GeldGarant int voor webshops, volgens de regels voor consumenten. Volledig betaald? Dan betaalt u niets.",
         h1: ["Incasso voor ", "webshops"],
-        lead: "Veel bestellingen, kleine bedragen en vooral particuliere klanten. Een onbetaalde bestelling lijkt klein, maar ze tellen op. Wij innen ze efficiënt en volgens de strenge regels voor consumenten.",
+        lead: "Veel bestellingen, kleine bedragen en vooral particuliere klanten. Een onbetaalde bestelling lijkt klein, maar ze tellen op. GeldGarant int ze efficiënt en volgens de strenge regels voor consumenten.",
         kort: "Veel kleine onbetaalde bestellingen, volgens de regels voor consumenten.",
         feiten: [
             { icon: "user", k: "Voor", v: "Webshops en online platforms" },
@@ -609,7 +609,7 @@ export const brancheData: Branche[] = [
         description:
             "Onbetaalde patiëntfacturen? GeldGarant int voor tandartsen, fysiotherapeuten en andere zorgverleners. Zorgvuldig, zonder medische gegevens en volgens de regels.",
         h1: ["Incasso voor de ", "zorg"],
-        lead: "Patiënten die een factuur niet betalen, zijn bijna altijd particulieren. Dat vraagt om zorgvuldigheid en kennis van de regels. Wij innen voor praktijken en zorginstellingen, met respect voor de patiënt en zonder medische gegevens.",
+        lead: "Patiënten die een factuur niet betalen, zijn bijna altijd particulieren. Dat vraagt om zorgvuldigheid en kennis van de regels. GeldGarant int voor praktijken en zorginstellingen, met respect voor de patiënt en zonder medische gegevens.",
         kort: "Patiëntfacturen voor praktijken en zorginstellingen, zorgvuldig en zonder medische gegevens.",
         feiten: [
             { icon: "user", k: "Voor", v: "Tandartsen, fysiotherapeuten, praktijken en instellingen" },
@@ -680,7 +680,7 @@ export const brancheData: Branche[] = [
         description:
             "Onbetaalde facturen drukken op uw cashflow? GeldGarant int voor mkb-bedrijven in elke branche. Binnen 1 uur gestart en geen kosten bij volledige betaling.",
         h1: ["Incasso voor ", "mkb-bedrijven"],
-        lead: "In het mkb is cashflow alles. Een paar facturen die blijven liggen, kunnen al voelen in de salarisrun. Wij nemen het innen van u over, zodat u kunt doen waar u goed in bent.",
+        lead: "In het mkb is cashflow alles. Een paar facturen die blijven liggen, kunnen al voelen in de salarisrun. GeldGarant neemt het innen van u over, zodat u kunt doen waar u goed in bent.",
         kort: "Voor mkb-bedrijven in elke branche: snel gestart en geen kosten bij volledige betaling.",
         feiten: [
             { icon: "user", k: "Voor", v: "Mkb-bedrijven in elke branche" },
@@ -787,7 +787,7 @@ export const brancheData: Branche[] = [
         description:
             "Klant betaalt uw factuur niet? GeldGarant int voor zzp’ers, ook bij één factuur. Geen abonnement, geen opstartkosten en bij volledige betaling betaalt u niets.",
         h1: ["Incasso voor ", "zzp’ers"],
-        lead: "Als zzp’er voelt elke onbetaalde factuur direct. U wilt er geen tijd en energie meer in steken, en ook geen dure stappen zetten. Wij innen ook één factuur, zonder abonnement en zonder kosten als de klant volledig betaalt.",
+        lead: "Als zzp’er voelt elke onbetaalde factuur direct. U wilt er geen tijd en energie meer in steken, en ook geen dure stappen zetten. GeldGarant int ook één factuur, zonder abonnement en zonder kosten als de klant volledig betaalt.",
         kort: "Ook voor één factuur: geen abonnement en geen kosten bij volledige betaling.",
         feiten: [
             { icon: "user", k: "Voor", v: "Zelfstandigen en freelancers" },

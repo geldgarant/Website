@@ -412,3 +412,23 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   `verwant` in het Wki-artikel; illustratie building+check. Keyword-kaart: cluster "incassobureau kiezen".
 - **Homepage JSON-LD:** `identifier` (KvK 90622375, Incassoregister Justis 00273 met URL), `memberOf` NowID, `knowsAbout`.
 - **Wikidata:** concept in `docs/seo/WIKIDATA_CONCEPT.md`; niet gepubliceerd (akkoord en account gebruiker nodig).
+
+### E25. Bing-index, Copilot, debiteurenbeheer-kosten, branche-leads (8 nov 2026)
+
+- **Bing-index:** `site:geldgarant.com` geeft op Bing onzin (Microsoft-loginpagina's), maar gerichte zoekopdrachten tonen
+  minstens 10 geïndexeerde pagina's: home, /over-ons, /kennisbank en artikelen (avg, bv-uitgeschreven, algemene
+  voorwaarden, betalingsregeling, kantonrechter, huurachterstand, eisen factuur), /incasso/incassokosten-berekenen.
+  `url:https://geldgarant.com/tarieven` gaf niets. Bing kent de site dus gedeeltelijk; Bing Webmaster Tools blijft nodig
+  (sitemap indienen, IndexNow-403 oplossen).
+- **Copilot:** niet gemeten (vraagt inloggen).
+- **Debiteurenbeheer-kosten:** geen apart artikel (zou kannibaliseren met `/debiteurenbeheer`, dat in de keyword-kaart
+  "debiteurenbeheer kosten" heeft). In plaats daarvan de FAQ "Wat kost debiteurenbeheer uitbesteden?" met alle drie de
+  pakketprijzen uit `PAKKETTEN` (Start € 99, Groei € 199, Zakelijk € 349 p/m excl. btw). Provider op /debiteurenbeheer
+  gekoppeld aan `@id #organisatie`.
+- **Correctie:** in het prijs-schema op /tarieven stond "inclusief N nieuwe dossiers"; dossierlimieten zijn volgens
+  `src/lib/pakketten.ts` nog niet bevestigd. Vervangen door "vast bedrag per maand exclusief btw". Let op: het schema en de
+  pakketkaarten op /debiteurenbeheer (website-chat) noemen de dossierlimieten wel; bevestiging door de gebruiker nodig.
+- **Branchepagina's:** de hero-lead van alle 10 branches noemt nu GeldGarant als onderwerp ("GeldGarant int …" i.p.v.
+  "Wij innen …"); verder niets gewijzigd.
+- **CI-fout 5a5ce03:** e2e-test verwachtte exact 27 kennisbankartikelen; nu 28. Test telt nu de bestanden in
+  `src/content/kennisbank`.

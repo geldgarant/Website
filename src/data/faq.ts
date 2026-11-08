@@ -1,4 +1,5 @@
 import { site } from "./site"
+import { PAKKETTEN } from "../lib/pakketten"
 
 export const homeFaq = [
     {
@@ -72,7 +73,14 @@ export const incassoFaq = [
 export const debiteurenFaq = [
     {
         q: "Wat kost debiteurenbeheer uitbesteden?",
-        a: "Bij GeldGarant betaalt u een vast bedrag per maand, afhankelijk van het aantal vervallen facturen dat we opvolgen. De pakketten beginnen bij € 99 per maand exclusief btw, zonder opstartkosten en maandelijks opzegbaar. Met de rekenhulp op deze pagina ziet u welk pakket voor u het voordeligst is.",
+        a: `Bij GeldGarant betaalt u een vast bedrag per maand, afhankelijk van het aantal vervallen facturen dat we opvolgen: ${PAKKETTEN.map(
+            (p) => `${p.naam} € ${p.prijs}`,
+        )
+            .join(", ")
+            .replace(
+                /, ([^,]*)$/,
+                " of $1",
+            )} per maand, exclusief btw. Er zijn geen opstartkosten en elk pakket is maandelijks opzegbaar. Met de rekenhulp op deze pagina ziet u welk pakket voor u het voordeligst is.`,
     },
     {
         q: "Is debiteurenbeheer hetzelfde als factoring?",
