@@ -112,11 +112,15 @@ const jsonLd = [
         name: "Over GeldGarant",
         url,
         description,
+        about: { "@id": "https://geldgarant.com/#organisatie" },
     },
     {
         "@context": "https://schema.org",
         "@type": "ProfessionalService",
+        // Zelfde entiteit als op de homepage (GEO: één organisatie, overal dezelfde feiten)
+        "@id": "https://geldgarant.com/#organisatie",
         name: "GeldGarant",
+        sameAs: [...site.sameAs, site.incassoRegisterHref],
         url: "https://geldgarant.com",
         telephone: site.phoneIntl,
         email: site.email,
