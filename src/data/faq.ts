@@ -124,6 +124,14 @@ export const tarievenFaq = [
         a: "Aan de wettelijke incassokosten en de rente die de debiteur betaalt. Onze provisie is precies de wettelijke staffel. Een succesfee bovenop uw factuurbedrag rekenen we niet.",
     },
     {
+        q: "Werkt GeldGarant op basis van no cure, no pay?",
+        a: "Ja, en zonder kleine lettertjes. Betaalt de debiteur volledig, dan betaalt u niets en krijgt u uw hele factuurbedrag. Betaalt hij een deel, dan worden eerst de incassokosten verrekend met wat binnenkomt, met een minimum van € 45 en nooit meer dan er binnenkomt. Komt er niets binnen, dan betaalt u ook niets. Opstart- of dossierkosten rekenen we niet. Alleen als u de opdracht na de start zelf intrekt, betaalt u een vergoeding.",
+    },
+    {
+        q: "Wat als de debiteur failliet gaat?",
+        a: "Dan sluiten we het dossier zonder kosten voor u. Hetzelfde geldt bij overlijden of schuldsanering. Wilt u dat wij uw vordering bij de curator indienen, dan kost dat € 115 exclusief btw, alleen als u daarvoor kiest.",
+    },
+    {
         q: "Wat als de debiteur maar een deel betaalt?",
         a: "Wat binnenkomt gaat eerst naar de incassokosten, met een minimum van €45, maar nooit meer dan er binnenkwam. De rest maken we aan u over. U kunt het dossier dan sluiten of, met uw akkoord, doorpakken via de rechter.",
     },

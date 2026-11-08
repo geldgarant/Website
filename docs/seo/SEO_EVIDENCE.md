@@ -251,3 +251,18 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   (weinig acquisitiewaarde); bankbeslag niet uitgebreid zonder primaire bron (GSC: "beslagvrij bedrag bankbeslag 2026"
   66 pos 9,5 — kans, eerst bron nalopen).
 - Controles: check, lint, format, unit, build, html, seo groen; e2e branches + beide artikelen groen; screenshots.
+
+### E17. Fase 4 afgerond: /incasso en /tarieven (8 nov 2026)
+
+- `/incasso` (GSC E9: "incasso b2b" 232 vert. pos 63,6, "b2b incasso" 57, "incasso voor ondernemers" 86 pos 50,
+  "incasso uitbesteden" 38 pos 37). SERP-steekproef "incasso b2b zakelijke incasso uitbesteden": dezaak.nl
+  (incasso-vergelijker), incasso.nl, bobex.be, Trustoo. Toegevoegd: B2B/B2C in lead en tabelkoppen, rij "Afwijken van de
+  staffel" (bedrijf: kan via algemene voorwaarden; particulier: dwingend, art. 6:96 BW, zoals kennisbankartikel kosten),
+  description noemt zakelijke klant of particulier.
+- `/tarieven` (GSC: "incasso kosten" 80, "kosten incassobureau berekenen" 77, "incassobureau no cure no pay" pos 8,2).
+  SERP-steekproef "wat kost een incassobureau no cure no pay": mkbservicedesk.nl, trustoo.nl, knab.nl, rechtspraak.nl
+  (onduidelijke prijzen). Terugkerend: wat no cure no pay echt inhoudt, verborgen dossierkosten, faillissement.
+  Toegevoegd: FAQ's "Werkt GeldGarant op basis van no cure, no pay?" en "Wat als de debiteur failliet gaat?" (feiten uit
+  de lijsten "nooit" en "soms" op dezelfde pagina en de AV).
+- Controles: check, lint, format, unit, build, html, seo groen; e2e /incasso en /tarieven groen; tabel op 320/390/1440
+  zonder overloop.

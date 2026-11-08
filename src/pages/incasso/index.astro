@@ -16,7 +16,7 @@ import { incassoFaq } from "../../data/faq"
 
 const title = "Incasso uitbesteden voor ondernemers | GeldGarant"
 const description =
-    "Onbetaalde factuur? GeldGarant neemt de incasso over, van aanmaning tot alleen met uw akkoord de rechter. Volledig betaald? Dan betaalt u niets."
+    "Zakelijke klant of particulier die niet betaalt? GeldGarant neemt de incasso over, van aanmaning tot, met uw akkoord, de rechter. Volledig betaald? U betaalt niets."
 
 const url = "https://geldgarant.com/incasso"
 const jsonLd = [
@@ -80,6 +80,8 @@ const verschillen = [
     },
     { k: "Rente", b: "Wettelijke handelsrente", p: "Wettelijke rente" },
     { k: "Verjaring", b: "Meestal na 5 jaar", p: "Na 2 jaar bij een koop, anders meestal na 5 jaar" },
+    // art. 6:96 BW: bij consumenten is de staffel dwingend, bij bedrijven kan in de voorwaarden anders zijn afgesproken
+    { k: "Afwijken van de staffel", b: "Kan, als het in uw algemene voorwaarden staat", p: "Kan niet: de staffel is dwingend" },
 ]
 
 const verder = [
@@ -183,8 +185,8 @@ const verder = [
                     Bedrijf of <span class="accent">particulier</span>, wij doen beide
                 </h2>
                 <p class="lead">
-                    De wet beschermt consumenten extra. Daarom verloopt de start bij een particulier anders. Wij houden ons aan de
-                    regels, zodat uw incassokosten ook echt verhaalbaar zijn.
+                    Zakelijke incasso (B2B) en incasso bij particulieren (B2C) verlopen anders, omdat de wet consumenten extra
+                    beschermt. Wij houden ons aan de regels, zodat uw incassokosten ook echt verhaalbaar zijn.
                 </p>
             </div>
             <div class="vergelijk-wrap">
@@ -195,11 +197,11 @@ const verder = [
                             <td></td>
                             <th scope="col">
                                 <Icon name="building" size={18} />
-                                Bedrijf
+                                Bedrijf (B2B)
                             </th>
                             <th scope="col">
                                 <Icon name="person" size={18} />
-                                Particulier
+                                Particulier (B2C)
                             </th>
                         </tr>
                     </thead>
@@ -207,8 +209,8 @@ const verder = [
                         {verschillen.map((r) => (
                             <tr>
                                 <th scope="row">{r.k}</th>
-                                <td data-label="Bedrijf">{r.b}</td>
-                                <td data-label="Particulier">{r.p}</td>
+                                <td data-label="Bedrijf (B2B)">{r.b}</td>
+                                <td data-label="Particulier (B2C)">{r.p}</td>
                             </tr>
                         ))}
                     </tbody>
