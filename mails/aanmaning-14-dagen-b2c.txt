@@ -1,0 +1,2 @@
+Onderwerp: Uw factuur van {{creditor.name}}: u kunt nog betalen zonder extra kosten
+Preheader: Betaal {{case.total_amount_due}} binnen 14 dagen, dan betaalt u geen incassokosten. Dossier {{case.case_number}}.

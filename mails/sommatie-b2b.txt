@@ -1,0 +1,2 @@
+Onderwerp: Sommatie: laatste verzoek om te betalen (dossier {{case.case_number}})
+Preheader: Betaal {{case.total_amount_due}} uiterlijk op {{misc.today_plus_5_business_days}}. Daarna adviseren wij onze opdrachtgever naar de rechter te gaan.

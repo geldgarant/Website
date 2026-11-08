@@ -11,4 +11,7 @@ package-lock.json
 playwright-report
 test-results
 brieven/oud
+# CaseControl-e-mails: gegenereerd door mails/tools/bouw.py
+mails/*.html
+mails/voorbeeld
 docs/projectkennis

@@ -1,0 +1,2 @@
+Onderwerp: Aanmaning: uw betaling aan {{creditor.name}} staat open (dossier {{case.case_number}})
+Preheader: Betaal {{case.total_amount_due}} uiterlijk op {{misc.today_plus_7_business_days}}. Met iDEAL regelt u het direct vanuit deze e-mail.
