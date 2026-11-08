@@ -1,16 +1,16 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-08 03:40 (Europe/Amsterdam)
+last_updated: 2026-11-08 04:15 (Europe/Amsterdam)
 current_branch: main
-latest_commit: zie `git log -1` (batch 7: /branches/incasso-mkb checklist)
-current_phase: 4 (commerciële pagina's): /debiteurenbeheer (E11), verhuur (E12), mkb (E13) klaar
+latest_commit: zie `git log -1` (batch 8: inschakelen, weinig zin + FAQ)
+current_phase: 4 (commerciële pagina's): /debiteurenbeheer, verhuur, mkb, inschakelen klaar (E11 tot E14)
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) Fase 4 vervolg: /incasso/incassobureau-inschakelen (GSC: gecrawld niet geïndexeerd in Framer-tijd, nu geïndexeerd; SERP E4: KvK, Knab, MKB Servicedesk, dezaak, Trustoo): ontbrekende antwoorden, één CTA. 2) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce (pos 12), /kennisbank/openstaande-factuur-stappenplan (19), /kennisbank/beslagvrije-voet-2026 (9 tot 14). 3) Kans: voorbeeldbrief huurachterstand (eerst kannibalisatiecheck). 4) Na 8 nov: GSC-indexering mkb en verhuur aanvragen als quotum het toelaat; over 1 tot 2 weken prestaties. 5) Niet-SEO: wifi-probleem huidige locatie (E10). 6) CI-runs controleren (60-minutenlimiet).
+next_action: 1) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce ("incasso e-commerce" pos 12, "incasso webshops" 18), /kennisbank/openstaande-factuur-stappenplan ("openstaande facturen" 19), /kennisbank/beslagvrije-voet-2026 (9 tot 14): title/description/intro scherper op de zoekvraag, ontbrekende antwoorden. 2) Fase 4 rest: /incasso en /tarieven (SERP-vergelijking). 3) Kans: voorbeeldbrief huurachterstand (eerst kannibalisatiecheck). 4) GSC: mkb, inschakelen-wijziging ter indexering (quotum per dag); over 1 tot 2 weken prestaties meten. 5) Niet-SEO: wifi-probleem huidige locatie (E10). 6) CI: Lighthouse-duur controleren (60-minutenlimiet).
 blocked_by: Web Analytics (gebruiker of token)
-production_state: batch 6 (verhuur) live en gecontroleerd; batch 7 (mkb) gepusht
+production_state: batch 7 (mkb) live en gecontroleerd; batch 8 (inschakelen) gepusht
 preview_url: https://website.geldgarant.workers.dev (staging, zelfde Worker)
 ```
 
@@ -83,4 +83,5 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 8. CI-tijdslimiet 20 → 60 min (Lighthouse werd steeds afgebroken).
 9. /debiteurenbeheer: sectie afweging/factoring/start + 2 FAQ's (batch 5, E11), live; 6 URL's ter indexering.
 10. /branches/incasso-verhuur: sectie aanpak per fase + brieflinks + 2 FAQ's (batch 6, E12), live.
-11. /branches/incasso-mkb: checklist betrouwbaar incassobureau + FAQ (batch 7, E13).
+11. /branches/incasso-mkb: checklist betrouwbaar incassobureau + FAQ (batch 7, E13), live.
+12. /incasso/incassobureau-inschakelen: blok weinig zin + FAQ benodigdheden (batch 8, E14).

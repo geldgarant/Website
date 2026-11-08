@@ -1,7 +1,7 @@
 ---
 // B /incasso/incassobureau-inschakelen. Hoofdvraag: "Wanneer schakel ik een incassobureau in, en hoe?"
 // Volgorde: wanneer (hero + voorbeeldtijdlijn) → signalen (01) → is mijn factuur klaar (02, Klaar.astro)
-// → zelf, wij of de rechter (03) → hoe schakel ik in (04) → vragen (05) → CTA.
+// → zelf, wij of de rechter, en wanneer het weinig zin heeft (03) → hoe schakel ik in (04) → vragen (05) → CTA.
 import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
 import Crumbs from "../../components/Crumbs.astro"
@@ -50,6 +50,26 @@ const vergelijk = [
         zelf: "Een eerste herinnering",
         gg: "Onbetaalde facturen zonder inhoudelijk geschil",
         jur: "Betwiste vorderingen en beslag",
+    },
+]
+
+// Wanneer inschakelen weinig zin heeft (SERP-steekproef 8 nov 2026: faillissement en geschil komen steeds terug).
+// Feiten uit faq.ts (faillissement, curator € 115 excl. btw, verjaring) en de vergelijking hierboven.
+const weinigZin = [
+    {
+        t: "Uw klant is failliet",
+        d: "Via incasso valt dan meestal niets te halen. We sluiten het dossier zonder kosten voor u. Uw vordering bij de curator indienen kan op verzoek, voor € 115 exclusief btw.",
+        link: { t: "Klant failliet: wat nu?", href: "/kennisbank/debiteur-failliet-vordering-beschermen" },
+    },
+    {
+        t: "De factuur wordt inhoudelijk betwist",
+        d: "Gaat het om de kwaliteit van het werk of wat er precies is afgesproken, dan is het een juridisch geschil. Dan is een procedure meestal de weg. Die regelen wij met vaste partners, alleen met uw akkoord.",
+        link: { t: "Debiteur betwist de factuur", href: "/kennisbank/debiteur-betwist-factuur" },
+    },
+    {
+        t: "De vordering is mogelijk verjaard",
+        d: "Een vordering verjaart doorgaans na vijf jaar, bij een koop door een consument na twee jaar. Twijfelt u, dien de factuur dan toch in: we controleren de verjaring als eerste.",
+        link: { t: "Verjaringstermijnen", href: "/kennisbank/verjaringstermijnen-vorderingen" },
     },
 ]
 
@@ -206,6 +226,23 @@ const jsonLd = [
                 Is een procedure nodig, dan regelen wij die met vaste partners. Alleen met uw akkoord, en de kosten hoort u
                 vooraf.
             </p>
+
+            <div class="weinig">
+                <h3 class="weinig-kop" id="weinig-title">
+                    Wanneer heeft inschakelen weinig zin?
+                </h3>
+                <ul role="list" class="weinig-lijst" aria-labelledby="weinig-title">
+                    {weinigZin.map((w) => (
+                        <li>
+                            <h4 class="weinig-t">{w.t}</h4>
+                            <p>{w.d}</p>
+                            <a class="textlink weinig-link" href={w.link.href}>
+                                {w.link.t}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     </section>
 
@@ -249,6 +286,56 @@ const jsonLd = [
 </Base>
 
 <style>
+    .weinig {
+        margin-top: clamp(40px, 5vw, 64px);
+    }
+    .weinig-kop {
+        font-family: var(--font-display);
+        font-size: var(--fs-h3);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+    }
+    .weinig-lijst {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        margin-top: 20px;
+    }
+    @media (min-width: 900px) {
+        .weinig-lijst {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    .weinig-lijst li {
+        display: flex;
+        flex-direction: column;
+        padding: clamp(20px, 2.6vw, 28px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .weinig-t {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .weinig-lijst p {
+        margin-top: 8px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .weinig-link {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        min-height: 44px;
+        margin-top: auto;
+        padding-top: 8px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
     .hero {
         padding-block: clamp(20px, 3vw, 40px) clamp(56px, 7vw, 104px);
     }

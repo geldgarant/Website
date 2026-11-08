@@ -211,3 +211,17 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   afdracht, rechter alleen met akkoord) met links naar de inschrijving bij Justis, /wki en /tarieven; FAQ "Hoe controleer
   ik of een incassobureau betrouwbaar is?". Gegevens uit `site.ts`. Woorden in main 680 → 933.
 - Controles: check, lint, format, unit, build, html, seo groen; e2e alle branches 132 groen; screenshots 390/1440.
+
+### E14. Fase 4: /incasso/incassobureau-inschakelen (8 nov 2026)
+
+- GSC (E9): in de Framer-tijd "gecrawld, niet geïndexeerd"; URL-inspectie 8 nov: geïndexeerd, ter indexering aangeboden.
+- SERP-steekproef "incassobureau inschakelen wanneer en hoe" (WebSearch, niet gepersonaliseerd): dezaak.nl,
+  mkbservicedesk.nl, mijnzzp.nl, bobex.be, Atradius. Terugkerend: hoeveel herinneringen eerst, welke gegevens aanleveren,
+  kosten, en wanneer het geen zin heeft (faillissement).
+- Bestaand en goed: signalen, check "is mijn factuur klaar", vergelijking zelf/GeldGarant/advocaat, startstappen, FAQ
+  (wachttijd, eerst aanmaning, relatie, deurwaarder, kosten, oude factuur).
+- Toegevoegd: blok "Wanneer heeft inschakelen weinig zin?" (faillissement: kosteloos sluiten, curator op verzoek € 115
+  excl. btw; inhoudelijk geschil: procedure via vaste partners met akkoord; verjaring: wij controleren eerst), met links
+  naar 3 kennisbankartikelen; FAQ "Wat heb ik nodig om een incassobureau in te schakelen?" (volgt de velden van
+  /vordering-indienen). Woorden in main 808 → 990.
+- Controles: check, lint, format, unit, build, html, seo groen; e2e pagina groen; screenshots 390/1440 zonder overloop.

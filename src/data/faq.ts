@@ -298,6 +298,10 @@ export const inschakelenFaq = [
         a: "Bij GeldGarant niet als de debiteur volledig betaalt. Er zijn geen opstartkosten en geen abonnement. Betaalt de debiteur maar een deel, dan verrekenen we de incassokosten met wat binnenkomt, met een minimum van € 45.",
     },
     {
+        q: "Wat heb ik nodig om een incassobureau in te schakelen?",
+        a: "De naam en contactgegevens van uw klant, het openstaande bedrag en het rekeningnummer waarop u de uitbetaling wilt ontvangen. Factuurnummer, vervaldatum en bijlagen zoals de factuur, herinneringen of een opdrachtbevestiging zijn niet verplicht, maar maken het dossier sterker. Het formulier vult u in ongeveer drie minuten in.",
+    },
+    {
         q: "Kan ik een oude factuur nog laten innen?",
         a: "Meestal wel. Een vordering verjaart doorgaans na vijf jaar, bij een koop door een consument na twee jaar. Twijfelt u, dien de factuur dan in: we controleren de verjaring als eerste.",
     },
