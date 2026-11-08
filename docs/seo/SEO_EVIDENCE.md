@@ -329,3 +329,24 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   hulpverwijzing Geldfit; bedrijfsruimte met incassokosten en contractuele of handelsrente). Bronnen BW7 (art. 7:231),
   BW6, BIK, BW3. Links vanaf hub, `/branches/incasso-verhuur` en kennisbankartikel. Unit-tests (15) groen; e2e 204 groen;
   browserproef: 0 open plaatshouders, Word-download werkt.
+
+### E21. GEO fase A: robots.txt, prijs-schema, llms.txt (8 nov 2026)
+
+- **Besluit gebruiker:** `ai-input=yes` en `Google-Extended` toestaan; training blijft uit (`ai-train=no`).
+- **robots.txt in eigen beheer** (`public/robots.txt`, commit 3ca518a); Cloudflare "Managed robots.txt" door de
+  gebruiker uitgezet. Live gecontroleerd: alleen onze inhoud, geen Cloudflare-blok ervoor;
+  `Content-Signal: search=yes, ai-input=yes, ai-train=no`; Google-Extended niet geblokkeerd; alleen trainingscrawlers
+  (GPTBot, ClaudeBot, CCBot, Applebot-Extended, Bytespider e.a.) op Disallow. OAI-SearchBot, Claude-SearchBot,
+  PerplexityBot en Bingbot vallen onder `*` (toegestaan). UA-proef op /tarieven: 200 (zegt niets over geverifieerde
+  bot-IP's, wel dat er geen UA-blokkade is).
+- **Prijs-schema `/tarieven`:** Service "Incasso voor ondernemers" (Offer € 0, toelichting WIK) en Service
+  "Debiteurenbeheer" met OfferCatalog uit `PAKKETTEN` (€ 99/199/349 p/m), provider `@id #organisatie`. Live bevestigd.
+- **`/over-ons`:** feitenblok "GeldGarant in het kort" bestond al (Feitenkaart). Schema gekoppeld: ProfessionalService
+  met `@id #organisatie` + `sameAs`, AboutPage `about` (commit 46332f8).
+- **`/llms.txt`:** kernfeiten (Justis 00273, KvK, NowID, € 0 bij volledige betaling, pakketprijzen, start binnen het uur,
+  wekelijkse afdracht, contact) en de belangrijkste pagina's; alle links bestaan in de build. Geen Google-effect (Google
+  AI-optimalisatiegids); bedoeld voor andere systemen. `_headers`: charset=utf-8 voor llms.txt en robots.txt.
+- **IndexNow:** Yandex 202 (geaccepteerd). **Bing 403 `UserForbiddedToAccessSite`**, ook rechtstreeks op
+  bing.com/indexnow, terwijl het sleutelbestand live 200 geeft (ook met bingbot-UA). Oorzaak niet vastgesteld
+  (Cloudflare-logs: dashboard logde uit, GraphQL-API geblokkeerd door botcheck). Oplossing: site in Bing Webmaster
+  Tools verifiëren (import uit GSC), daarna opnieuw; anders Security Events op het sleutelpad bekijken.

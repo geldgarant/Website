@@ -12,7 +12,7 @@ generatieve AI-zoekfuncties is nog steeds SEO"). Geen verzonnen data, geen nep-v
 | Bot                  | Functie                                      | Status                   |
 | -------------------- | -------------------------------------------- | ------------------------ |
 | Googlebot            | Google Search, AI Overviews, AI Mode         | toegestaan               |
-| Google-Extended      | Gemini/Vertex training én grounding          | geblokkeerd              |
+| Google-Extended      | Gemini/Vertex training én grounding          | toegestaan (8 nov, E21)  |
 | OAI-SearchBot        | citeerbaarheid in ChatGPT Search             | toegestaan               |
 | GPTBot               | OpenAI-training                              | geblokkeerd              |
 | ChatGPT-User         | ophalen op verzoek van een gebruiker         | toegestaan               |
@@ -32,6 +32,9 @@ generatieve AI-zoekfuncties is nog steeds SEO"). Geen verzonnen data, geen nep-v
   GeldGarant" en `dateModified` (kennisbank), FAQPage, BreadcrumbList. **Ontbreekt: Service + Offer met prijzen op
   `/tarieven`.**
 - Meting: Cloudflare Web Analytics sinds 8 nov actief (referrers van chatgpt.com, perplexity.ai e.d. zichtbaar); GSC.
+
+**Stand 8 nov (E21):** eigen robots.txt met `ai-input=yes`, Google-Extended toegestaan, Cloudflare Managed robots.txt
+uit, prijs-schema op `/tarieven`, `/llms.txt` live. Werkstroom A is afgerond op Bing Webmaster Tools na.
 
 ## 2. Werkstromen (prioriteit: impact × haalbaarheid)
 
