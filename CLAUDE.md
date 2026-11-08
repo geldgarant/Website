@@ -132,3 +132,4 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Foto's alleen via `src/components/Foto.astro` (of `FotoBand.astro`) uit `src/assets/fotos/`: één eigen shoot, niet mengen met ander beeld; alt zonder namen en zonder plaats. Indeling per pagina: `docs/OVERDRACHT.md` §9.
 - Kennisbankkaarten krijgen `<KennisBeeld slug=… />`; een nieuw artikel heeft een regel nodig in `BEELDEN` (`src/lib/kennisbeeld.ts`).
 - Formuliervelden en adres-zoekhulp: alleen `src/styles/form.css`.
+- Hoofdmenu: `src/data/menu.ts` (panelen Diensten, Kennis, Over ons + directe links Hoe werkt het, Tarieven, Contact); opbouw en gedrag in `docs/OVERDRACHT.md` §9.
