@@ -18,6 +18,8 @@ Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt a
 
 > Koppel de repo geldgarant/Website met add_repo (push-toegang), kloon hem naar /home/claude/geldgarant-site en draai `npm ci`. Maak de symlink `ln -sfn /home/claude/geldgarant-site /home/claude/website` en registreer /home/claude/website met register_repo_root, zodat de skills uit .claude/skills laden. Lees daarna dezelfde bestanden als in variant A en hervat bij `next_action`. In de sandbox: `CHROME_PATH=/usr/bin/google-chrome`, `NODE_USE_ENV_PROXY=1` voor de crawler; externe sites (GSC, Cloudflare) zijn daar niet bereikbaar, dus die stappen bewaren voor de desktopapp.
 
+**Twee chats tegelijk (vanaf 8 nov 2026)**: de SEO-chat (desktopapp, `docs/seo/SEO_STATE.md`) en een website-chat (nieuwe functies, ontwerp, brieven, techniek). Afspraken: altijd `git pull --rebase` vóór je begint en vóór elke push; kleine commits; de website-chat wijzigt geen titles, descriptions, H1's of URL's zonder `docs/seo/keyword-url-map.csv` te checken en meldt zulke wijzigingen in `docs/seo/SEO_STATE.md` (sectie "Laatste werkstappen"); de SEO-chat laat ontwerp en functionaliteit aan de website-chat. Nieuwe pagina's: kannibalisatiecheck in de keyword-kaart en een rij toevoegen.
+
 **Projectinstructie** (voor het nieuwe project): "Let me know when we are at 90% context window, then update all my md files we have touched and provide a verbose, detailed handoff that includes files, snippets, line numbers and flows".
 
 ---
