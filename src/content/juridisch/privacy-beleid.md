@@ -6,10 +6,10 @@ description: Welke persoonsgegevens GeldGarant verwerkt, waarom, met wie we ze d
 lead: Welke persoonsgegevens we verwerken, waarom, met wie we ze delen en hoe lang we ze bewaren. Voor opdrachtgevers, debiteuren, sollicitanten en iedereen die onze website bezoekt.
 voor: Voor iedereen
 bestand: privacyverklaring.pdf
-versie: 2026-11-07
+versie: 2026-11-08
 kort:
     - We verwerken alleen de gegevens die we nodig hebben om vorderingen te innen, vragen te beantwoorden en sollicitaties te behandelen.
-    - We verkopen geen gegevens en gebruiken ze niet voor reclame of profilering. Op onze website meten we geen bezoekers.
+    - We verkopen geen gegevens en gebruiken ze niet voor reclame of profilering. Op onze website tellen we alleen anoniem hoe vaak pagina's worden bekeken, zonder cookies.
     - We delen gegevens alleen met partijen die we nodig hebben, zoals onze hosting, ons dossiersysteem en, alleen bij een procedure, een gerechtsdeurwaarder.
     - Incassodossiers bewaren we tot twee jaar na afsluiting, financiële gegevens zeven jaar en sollicitaties tot vier weken na afloop.
     - U kunt uw gegevens inzien, laten verbeteren of laten verwijderen. We reageren binnen een maand.
@@ -48,7 +48,7 @@ De meeste gegevens krijgen we van u zelf. Gegevens van debiteuren krijgen we van
 
 ## Onze website en formulieren
 
-- **Geen tracking.** Onze website gebruikt geen analytische cookies, geen advertentiecookies en geen social-mediaplugins. We meten geen bezoekers en bouwen geen profielen. Meer hierover leest u in onze cookieverklaring.
+- **Geen tracking.** Onze website gebruikt geen analytische cookies, geen advertentiecookies en geen social-mediaplugins. We bouwen geen profielen. Voor statistieken gebruiken we Cloudflare Web Analytics: dat telt paginabezoeken zonder cookies en zonder u op andere websites te volgen. Meer hierover leest u in onze cookieverklaring.
 - **Formulieren.** Wat u in een formulier invult, gaat versleuteld naar onze eigen server. Daar slaan we het op en sturen we het per e-mail naar ons team. Een korte interne melding van een nieuwe aanvraag zorgt ervoor dat we snel reageren.
 - **Bestanden.** Facturen en een cv die u uploadt, bewaren we bij uw aanvraag. Alleen medewerkers die ze nodig hebben, kunnen ze openen.
 - **Beveiliging tegen spam.** Zodra u een formulier invult, controleert Cloudflare Turnstile of er een mens achter het scherm zit. Turnstile verwerkt daarvoor technische gegevens, zoals uw IP-adres en browsergegevens, en gebruikt die alleen om misbruik te voorkomen.
@@ -59,17 +59,17 @@ De meeste gegevens krijgen we van u zelf. Gegevens van debiteuren krijgen we van
 
 We verkopen geen persoonsgegevens. We delen ze alleen als dat nodig is voor ons werk of als de wet dat vraagt.
 
-| Ontvanger                         | Waarvoor                                                                                           |
-| --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Cloudflare                        | Hosting van de website en de formulieren, opslag van aanvragen, beveiliging tegen spam (Turnstile) |
-| Resend                            | Het versturen van e-mails vanuit de formulieren                                                    |
-| Telegram                          | Interne melding aan ons team dat er een nieuwe aanvraag is                                         |
-| CaseControl                       | Ons dossiersysteem, het online dossier voor opdrachtgevers en het betaalportaal voor debiteuren    |
-| PDOK (Kadaster)                   | Het opzoeken van een adres bij het indienen van een vordering                                      |
-| Gerechtsdeurwaarders en advocaten | Alleen als er een gerechtelijke procedure nodig is en de opdrachtgever daarmee heeft ingestemd     |
-| Partners in het buitenland        | Alleen bij een vordering op een buitenlandse debiteur                                              |
-| IncassoKlacht                     | Alleen als een klacht aan de geschillencommissie wordt voorgelegd                                  |
-| Overheid en toezichthouders       | Alleen als de wet ons daartoe verplicht, bijvoorbeeld Dienst Justis of de Belastingdienst          |
+| Ontvanger                         | Waarvoor                                                                                                                                           |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloudflare                        | Hosting van de website en de formulieren, opslag van aanvragen, beveiliging tegen spam (Turnstile), anonieme bezoekersstatistieken (Web Analytics) |
+| Resend                            | Het versturen van e-mails vanuit de formulieren                                                                                                    |
+| Telegram                          | Interne melding aan ons team dat er een nieuwe aanvraag is                                                                                         |
+| CaseControl                       | Ons dossiersysteem, het online dossier voor opdrachtgevers en het betaalportaal voor debiteuren                                                    |
+| PDOK (Kadaster)                   | Het opzoeken van een adres bij het indienen van een vordering                                                                                      |
+| Gerechtsdeurwaarders en advocaten | Alleen als er een gerechtelijke procedure nodig is en de opdrachtgever daarmee heeft ingestemd                                                     |
+| Partners in het buitenland        | Alleen bij een vordering op een buitenlandse debiteur                                                                                              |
+| IncassoKlacht                     | Alleen als een klacht aan de geschillencommissie wordt voorgelegd                                                                                  |
+| Overheid en toezichthouders       | Alleen als de wet ons daartoe verplicht, bijvoorbeeld Dienst Justis of de Belastingdienst                                                          |
 
 Met partijen die gegevens in onze opdracht verwerken, sluiten we een verwerkersovereenkomst. Sommige leveranciers kunnen gegevens buiten de Europese Economische Ruimte verwerken. We zorgen er dan voor dat daar passende waarborgen voor gelden, zoals de modelcontractbepalingen van de Europese Commissie of het EU-VS Data Privacy Framework.
 

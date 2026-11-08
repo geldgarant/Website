@@ -5,6 +5,12 @@ export const site = {
     phoneHref: "tel:+31852127388",
     phoneIntl: "+31852127388", // voor JSON-LD
     whatsappHref: "https://wa.me/31852127388",
+    // Profielen van GeldGarant elders (JSON-LD sameAs). Alleen bevestigde profielen: LinkedIn staat in het eigen
+    // Google Bedrijfsprofiel (8 nov 2026). Instagram pas toevoegen na bevestiging dat het account van GeldGarant is.
+    sameAs: ["https://www.linkedin.com/company/geldgarant/"] as string[],
+    // Cloudflare Web Analytics (cookieloos), handmatige installatie sinds 8 nov 2026. Het token is publiek (staat in de
+    // HTML). Het script laadt alleen op geldgarant.com zelf (zie Base.astro). null = meting uit.
+    cfBeaconToken: "43a6812452f9495d84df429b599e52c2" as string | null,
     email: "info@geldgarant.com",
     klachtenEmail: "klachten@geldgarant.com",
     street: "Keulenstraat 1",

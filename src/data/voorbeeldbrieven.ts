@@ -33,6 +33,7 @@ export interface Voorbeeldbrief {
 
 const BW6 = { t: "Burgerlijk Wetboek Boek 6", href: "https://wetten.overheid.nl/BWBR0005289/" }
 const BW3 = { t: "Burgerlijk Wetboek Boek 3 (verjaring en stuiting)", href: "https://wetten.overheid.nl/BWBR0005291/" }
+const BW7 = { t: "Burgerlijk Wetboek Boek 7 (huur, art. 7:231)", href: "https://wetten.overheid.nl/BWBR0005290/" }
 const BIK = {
     t: "Besluit vergoeding voor buitengerechtelijke incassokosten",
     href: "https://wetten.overheid.nl/BWBR0031432/",
@@ -297,6 +298,71 @@ export const voorbeeldbrieven: Voorbeeldbrief[] = [
         ],
         bronnen: [BW3, BW6],
         verwant: ["betalingsregeling-treffen", "verjaringstermijnen-vorderingen", "debiteur-betwist-factuur"],
+    },
+    {
+        // Zoekintentie "aanmaning huurachterstand" / "voorbeeldbrief huurachterstand" (GSC, E9). Inhoud volgt het
+        // kennisbankartikel huurachterstand-incasseren; geen concurrentie met /branches/incasso-verhuur (dienst).
+        slug: "huurachterstand",
+        naam: "Aanmaning huurachterstand",
+        href: "/voorbeeldbrieven/huurachterstand",
+        stap: 0,
+        kaart: "Voor verhuurders: huur die niet binnenkomt, voor woon- of bedrijfsruimte.",
+        voor: "Verhuurders",
+        toon: "Zakelijk",
+        verplicht: "Nee",
+        seoTitle: "Aanmaning huurachterstand: gratis voorbeeldbrief | GeldGarant",
+        description:
+            "Gratis voorbeeldbrief bij huurachterstand voor woon- en bedrijfsruimte. Vul huurder, periode en bedrag in en download de aanmaning als Word of pdf.",
+        h1: ["Huurachterstand: aanmaning om", "direct", "in te vullen"],
+        lead: "Betaalt uw huurder de huur niet, dan helpt een snelle en duidelijke aanmaning. Vul de huurder, de periode en het bedrag in. Voor woonruimte past de brief zich aan de regels voor particulieren aan.",
+        soortKeuze: true,
+        wanneer: [
+            "Stuur de aanmaning zodra een huurtermijn niet binnen is en een herinnering of telefoontje niets oplevert. Hoe kleiner de achterstand, hoe groter de kans dat de huurder hem nog kan inhalen.",
+            "Huurt een particulier een woning, dan mag u pas incassokosten rekenen na een 14-dagenbrief. Kies daarom voor woonruimte: de brief noemt dan nog geen kosten en wijst de huurder op gratis hulp bij geldzorgen.",
+        ],
+        eisen: [
+            {
+                kop: "Welke huur en welk bedrag",
+                tekst: "De periode waarover de huur openstaat, het bedrag van de achterstand en de dag waarop de huur betaald had moeten zijn.",
+            },
+            {
+                kop: "Een concrete termijn",
+                tekst: "Een datum waarop de achterstand binnen moet zijn, en het verzoek om ook de lopende huur op tijd te betalen.",
+            },
+            {
+                kop: "De gevolgen",
+                tekst: "Bij bedrijfsruimte: overdracht aan een incassobureau, incassokosten en rente. Bij woonruimte eerst nog een 14-dagenbrief. Ontbinding van de huur kan alleen via de kantonrechter.",
+            },
+            {
+                kop: "Ruimte voor een regeling",
+                tekst: "Een uitnodiging om contact op te nemen als de huurder tijdelijk niet kan betalen.",
+            },
+        ],
+        tips: [
+            "Neem al bij de eerste gemiste maand contact op. Een kleine achterstand is veel makkelijker op te lossen dan drie maanden huur.",
+            "Verreken de waarborgsom niet tussentijds. Dat mag pas aan het einde van de huur.",
+            "Treft u een regeling, laat de lopende huur dan meetellen en leg de afspraak vast met de voorbeeldbrief betalingsregeling.",
+        ],
+        faq: [
+            {
+                q: "Mag ik incassokosten rekenen bij huurachterstand?",
+                a: "Bij bedrijfsruimte meestal wel: volgens de wettelijke staffel, of volgens wat in de huurovereenkomst staat. Huurt een particulier een woning, dan mag dat pas na een correcte 14-dagenbrief.",
+            },
+            {
+                q: "Mag ik de waarborgsom gebruiken voor de achterstand?",
+                a: "Niet zolang de huur loopt. De waarborgsom verrekent u pas aan het einde van de huurovereenkomst met wat er dan nog openstaat.",
+            },
+            {
+                q: "Wanneer kan ik de huur laten ontbinden?",
+                a: "Bij woonruimte alleen via de kantonrechter. Die weegt de achterstand af tegen de omstandigheden. Bij drie maanden achterstand of meer wordt ontbinding meestal toegewezen. Zelf de sloten vervangen of spullen buiten zetten is verboden.",
+            },
+            {
+                q: "Verjaart huurachterstand?",
+                a: "Ja. Elke huurtermijn verjaart apart, vijf jaar na de dag waarop hij betaald had moeten zijn. Een schriftelijke aanmaning waarin u betaling eist, stuit de verjaring.",
+            },
+        ],
+        bronnen: [BW7, BW6, BIK, BW3],
+        verwant: ["huurachterstand-incasseren", "betalingsregeling-treffen", "verjaringstermijnen-vorderingen"],
     },
 ]
 

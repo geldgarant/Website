@@ -49,7 +49,7 @@ Stuur binnen een paar dagen na de betaaldatum een herinnering en bel de huurder.
 
 ## Stap 2: de aanmaning en de 14-dagenbrief
 
-Is na de herinnering niet betaald, stuur dan een aanmaning met een concrete termijn. Een huurder van woonruimte is een particulier. Wilt u incassokosten rekenen, dan moet u eerst een 14-dagenbrief sturen. Daarin geeft u de huurder 14 dagen, vanaf de dag na ontvangst, om zonder extra kosten te betalen.
+Is na de herinnering niet betaald, stuur dan een aanmaning met een concrete termijn. Gebruik daarvoor gerust onze [voorbeeldbrief bij huurachterstand](/voorbeeldbrieven/huurachterstand), voor woon- en bedrijfsruimte. Een huurder van woonruimte is een particulier. Wilt u incassokosten rekenen, dan moet u eerst een 14-dagenbrief sturen. Daarin geeft u de huurder 14 dagen, vanaf de dag na ontvangst, om zonder extra kosten te betalen.
 
 Bij bedrijfsruimte is de huurder meestal een onderneming. Dan is de 14-dagenbrief niet verplicht en loopt de handelsrente vanaf de vervaldatum.
 

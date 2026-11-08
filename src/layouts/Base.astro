@@ -8,6 +8,7 @@ import "../styles/form.css"
 import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import StickyCta from "../components/StickyCta.astro"
+import { site } from "../data/site"
 
 interface Props {
     title: string
@@ -52,6 +53,16 @@ const ogImage = new URL(`/og/${ogPad}.png`, Astro.site)
         <script is:inline>
             document.documentElement.classList.add("js")
         </script>
+        {site.cfBeaconToken && <script is:inline define:vars={{ token: site.cfBeaconToken }}>
+            // Cloudflare Web Analytics: cookieloos, alleen op het echte domein (niet lokaal, niet op staging)
+            if (location.hostname === "geldgarant.com") {
+                const s = document.createElement("script")
+                s.defer = true
+                s.src = "https://static.cloudflareinsights.com/beacon.min.js"
+                s.setAttribute("data-cf-beacon", JSON.stringify({ token: token }))
+                document.head.appendChild(s)
+            }
+        </script>}
         {jsonLd.map((data) => (
             <script type="application/ld+json" set:html={JSON.stringify(data)} />
         ))}

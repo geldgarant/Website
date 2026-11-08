@@ -286,7 +286,7 @@ export const brancheData: Branche[] = [
                 },
             ],
             brieven: [
-                { t: "Voorbeeld aanmaning", href: "/voorbeeldbrieven/aanmaning" },
+                { t: "Voorbeeld aanmaning huurachterstand", href: "/voorbeeldbrieven/huurachterstand" },
                 { t: "14-dagenbrief maken", href: "/incasso/wik-brief#briefmaker" },
                 { t: "Voorbeeld betalingsregeling", href: "/voorbeeldbrieven/betalingsregeling" },
             ],

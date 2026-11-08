@@ -6,9 +6,9 @@ description: De website van GeldGarant volgt u niet. Geen analytische of adverte
 lead: Onze website volgt u niet. Geen analytische cookies, geen advertentiecookies en dus ook geen cookiebanner. Hieronder leest u precies wat er wel in uw browser komt, en waarom.
 voor: Voor websitebezoekers
 bestand: cookieverklaring.pdf
-versie: 2026-11-07
+versie: 2026-11-08
 kort:
-    - We gebruiken geen analytische cookies, geen advertentiecookies en geen social-mediaplugins. We meten geen bezoekers.
+    - We gebruiken geen analytische cookies, geen advertentiecookies en geen social-mediaplugins. Voor anonieme bezoekersstatistieken gebruiken we Cloudflare Web Analytics, zonder cookies.
     - Alleen bij het invullen van een formulier komt er iets in uw browser, om spam te weren en om te onthouden wat u al heeft ingevuld.
     - Dat is strikt noodzakelijk voor een veilige en werkende website. Daarom hoeven we geen toestemming te vragen en ziet u geen cookiebanner.
 ---
@@ -29,7 +29,7 @@ Deze gegevens gebruiken we niet om u te volgen of om een profiel van u te maken,
 
 ## Wat wij niet gebruiken
 
-- Geen analytische cookies of statistieken, zoals Google Analytics.
+- Geen analytische cookies, zoals Google Analytics. Onze bezoekersstatistieken (Cloudflare Web Analytics) werken zonder cookies, zonder profielen en zonder u op andere websites te volgen.
 - Geen advertentie- of trackingcookies.
 - Geen social-mediaplugins, ingesloten video's of chatwidgets van derden.
 

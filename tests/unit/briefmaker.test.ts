@@ -77,7 +77,8 @@ describe("maakBrief", () => {
         for (const slug of BRIEF_SLUGS) {
             const t = tekst(slug)
             expect(t).not.toMatch(/undefined|NaN|null/)
-            expect(t).toContain("[factuurnummer]")
+            // de huurbrief vraagt om een huurperiode in plaats van een factuurnummer
+            expect(t).toContain(slug === "huurachterstand" ? "[huurperiode]" : "[factuurnummer]")
         }
     })
 
@@ -146,5 +147,22 @@ describe("maakBrief", () => {
         expect(spec(b)[2][1]).toBe("€ 416,68")
         expect(nb(briefAlsTekst(b))).toContain("De laatste termijn is € 416,68.")
         expect(b.akkoord![0]).toBe("Voor akkoord: Jansen Bouw")
+    })
+    it("huurachterstand: woonruimte zonder kosten en met hulpverwijzing, bedrijfsruimte met kosten", () => {
+        const huur = { ...vol, factuur: "september en oktober 2026", bedrag: "1.900,00" }
+        const z = tekst("huurachterstand", huur)
+        expect(z).toContain("Betreft: Aanmaning huurachterstand september en oktober 2026")
+        expect(z).toContain("onder vermelding van huur september en oktober 2026")
+        expect(z).toContain("incassokosten verschuldigd van € 285,00")
+        expect(z).not.toContain("Geldfit")
+        const p = tekst("huurachterstand", { ...huur, soort: "particulier" })
+        expect(p).not.toContain("incassokosten verschuldigd")
+        expect(p).toContain("14 dagen")
+        expect(p).toContain("kantonrechter")
+        expect(p).toContain("Geldfit (0800 8115)")
+        expect(termijnDagen("huurachterstand", "")).toBe(14)
+        expect(plaatshouders(maakBrief("huurachterstand"))).toEqual(
+            expect.arrayContaining(["huurperiode", "naam huurder", "adres huurder"]),
+        )
     })
 })

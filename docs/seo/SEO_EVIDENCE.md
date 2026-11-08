@@ -302,3 +302,30 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   persoonlijke reacties in "u"-vorm, zonder medewerkersnamen en zonder dossierdetails, ondertekend "team GeldGarant".
   15 oudere reviews nog onbeantwoord. Let op: enkele reviews komen van debiteuren (bijv. over een openstaand dossier);
   reacties daarop neutraal houden.
+
+### E20. Netwerkblokkade, Web Analytics, IndexNow, voorbeeldbrief huurachterstand (8 nov 2026)
+
+- **Wifi-probleem (huidige locatie gebruiker):** alle proxied hostnamen in de zone (geldgarant.com, www, api) krijgen van
+  Cloudflare de IPv4-adressen 188.114.96.0 en 188.114.97.0. Op dat netwerk faalt TCP naar precies die twee adressen
+  (curl `--resolve` naar 188.114.96.1, 188.114.97.7 en 188.114.96.10 met SNI geldgarant.com gaf 200; ook 104.21.0.1).
+  Geen IPv6 op dat netwerk. Conclusie: router/firewall van het netwerk behandelt adressen op .0 als netwerkadres. Op het
+  gratis Cloudflare-plan kiezen we de IP's niet zelf. Oplossing ligt bij de netwerkbeheerder (188.114.96.0 en
+  188.114.97.0 toestaan); eventueel Cloudflare-support vragen. Raakt ook formulieren (api.geldgarant.com).
+- **Web Analytics:** site bestond sinds 1 apr 2026 (Framer-tijd) met "Enable, excluding visitor data in the EU" en
+  automatische injectie: daardoor geen data voor EU-bezoekers (1 paginaweergave in 24 uur). Omgezet naar handmatige
+  installatie (UI; API-mutaties geblokkeerd door botcheck). Beacon in `src/layouts/Base.astro` (token in
+  `site.cfBeaconToken`), laadt alleen op hostname geldgarant.com; CSP uitgebreid (script static.cloudflareinsights.com,
+  connect cloudflareinsights.com). Privacy- en cookieverklaring aangepast ("we meten geen bezoekers" klopte niet meer),
+  versie 2026-11-08, pdf's opnieuw gemaakt (Poppler via winget; script gebruikt nu `os.tmpdir()`).
+- **IndexNow:** sleutelbestand `public/5a95a251ff2a96453f3636db6038652f.txt`, script `scripts/seo/indexnow.mjs`
+  (alle URL's uit dist/sitemap-0.xml of opgegeven paden) naar api.indexnow.org (Bing, Yandex e.a.).
+- **Homepage JSON-LD:** `@id`, logo, image, description, `sameAs` (LinkedIn uit het eigen Bedrijfsprofiel + inschrijving
+  Justis). Instagram niet opgenomen (eigendom niet bevestigd).
+- **GSC:** indexering homepage aangevraagd → "Quotum overschreden" (11 aanvragen op 8 nov). Morgen opnieuw.
+- **Bankbeslag:** niet uitgewerkt. Primaire bronnen tonen alleen het wetsvoorstel 35225 (beslagvrij bedrag bij
+  bankbeslag); de status in 2026 kon niet worden vastgesteld. Laten nalopen door een jurist.
+- **Voorbeeldbrief huurachterstand:** nieuwe pagina `/voorbeeldbrieven/huurachterstand` (briefmaker-slug
+  `huurachterstand`; woonruimte = particulier zonder kosten, met 14-dagenbrief-aankondiging, kantonrechter en
+  hulpverwijzing Geldfit; bedrijfsruimte met incassokosten en contractuele of handelsrente). Bronnen BW7 (art. 7:231),
+  BW6, BIK, BW3. Links vanaf hub, `/branches/incasso-verhuur` en kennisbankartikel. Unit-tests (15) groen; e2e 204 groen;
+  browserproef: 0 open plaatshouders, Word-download werkt.

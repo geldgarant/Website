@@ -20,7 +20,7 @@ lokale aanwezigheid en vermeldingen.
 | --- | ------------------------------------------------------- | ---- | ------ | ------ | -------- | ---------- | ------------------------------- |
 | 1   | HTTP → HTTPS-redirect (nu 200 op http://)               | 3    | middel | sterk  | hoog     | laag       | aan (8 nov), hertest open       |
 | 2   | Search Console + sitemap + Bing                         | 0/9  | hoog   | sterk  | hoog     | laag       | GSC klaar (E9), Bing open       |
-| 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | open                            |
+| 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | aan (E20), data controleren     |
 | 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | live (batch 2), meten na GSC    |
 | 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                 |
 | 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | klaar (batch 3, E7)             |

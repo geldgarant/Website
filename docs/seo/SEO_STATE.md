@@ -1,14 +1,14 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-08 09:00 (Europe/Amsterdam)
+last_updated: 2026-11-08 10:30 (Europe/Amsterdam)
 current_branch: main
-latest_commit: zie `git log -1` (Bedrijfsprofiel bijgewerkt, reviews beantwoord)
+latest_commit: zie `git log -1` (batch 11: voorbeeldbrief huurachterstand, Web Analytics, IndexNow, JSON-LD)
 current_phase: 6 (lokaal): Bedrijfsprofiel bijgewerkt (E19); 7 (vermeldingen): lijst klaar (E18)
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) Bedrijfsprofiel: controleren dat beschrijving en openingstijden door Google zijn goedgekeurd; 15 oudere reviews beantwoordt de gebruiker zelf (besluit 8 nov); servicegebied eventueel handmatig naar Nederland (gebruiker). 2) Gebruiker: telefoon bij Justis wijzigen; KvK, LinkedIn, Instagram-bio gelijk trekken (backlink-opportunities.csv). 3) Over 1 tot 2 weken (±15 nov): GSC prestaties per pagina vs E9, keyword-url-map bijwerken; homepage-snippet controleren. 4) Kansen: Trustoo-profiel, NowID-websitelink (alleen met opdracht). 5) Inhoud: bankbeslag (primaire bron), voorbeeldbrief huurachterstand. 6) Web Analytics (gebruiker). 7) Niet-SEO: wifi-probleem huidige locatie (E10).
+next_action: 1) 9 nov: GSC indexering homepage aanvragen (quotum 8 nov op) + /voorbeeldbrieven/huurachterstand. 2) Na deploy: `node scripts/seo/indexnow.mjs` (alle URL's) en controleren dat Web Analytics data binnenkrijgt (dashboard, 24 uur). 3) Over 1 tot 2 weken (±15 nov): GSC prestaties per pagina vs E9, keyword-url-map bijwerken, titels/descriptions bijsturen op CTR. 4) Gebruiker: Justis-telefoon, KvK/LinkedIn/Instagram, oudere reviews, eventueel servicegebied; netwerkbeheerder op de huidige locatie vragen 188.114.96.0 en 188.114.97.0 toe te staan (E20). 5) Bankbeslag alleen na juridische check (E20). 6) Bing Webmaster Tools koppelen (gebruiker inloggen met Microsoft-account; importeren uit GSC).
 ```
 
 ## Afgerond sinds vorig checkpoint (batch 3)
@@ -69,8 +69,7 @@ niet gewijzigd. 4 nieuwe reviews beantwoord; de 15 oudere beantwoordt de gebruik
 1. ~~TXT-record Search Console~~ **gedaan 8 nov** (E9).
 2. ~~Always Use HTTPS~~ **aan sinds 8 nov** (Cloudflare-API `on`; http-redirect zelf nog niet getest door de
    verbindingsstoring vanaf de pc).
-3. Cloudflare → Web Analytics → geldgarant.com toevoegen; liefst "handmatig" en het token doorgeven (Claude zet de
-   beacon in `Base.astro` en past de CSP aan).
+3. ~~Web Analytics~~ gedaan door Claude (E20).
 4. ~~Bedrijfsprofiel: akkoord~~ gegeven en doorgevoerd (E19).
 5. Justis: telefoonnummer in het incassoregister wijzigen naar 085 212 73 88 (staat op 085 083 5230).
 6. KvK, LinkedIn, Instagram-bio: website en telefoon controleren (zie backlink-opportunities.csv).
@@ -95,3 +94,4 @@ niet gewijzigd. 4 nieuwe reviews beantwoord; de 15 oudere beantwoordt de gebruik
 16. /incasso B2B/B2C + staffelrij, /tarieven FAQ no cure no pay en faillissement (batch 10, E17), live.
 17. Productiecrawl, 5 extra URL's ter indexering, Bedrijfsprofiel en vermeldingen geïnventariseerd (E18).
 18. Bedrijfsprofiel bijgewerkt en 4 nieuwe reviews beantwoord (E19).
+19. Wifi-oorzaak gevonden (.0-adressen), Web Analytics gerepareerd (EU uitgesloten → handmatig), IndexNow, JSON-LD, voorbeeldbrief huurachterstand (E20).

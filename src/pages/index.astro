@@ -35,8 +35,14 @@ const jsonLd = [
     {
         "@context": "https://schema.org",
         "@type": "ProfessionalService",
+        "@id": "https://geldgarant.com/#organisatie",
         name: "GeldGarant",
         url: "https://geldgarant.com",
+        logo: "https://geldgarant.com/brand/icon-512.png",
+        image: "https://geldgarant.com/brand/og-default.png",
+        description:
+            "Incassobureau voor ondernemers, met kantoor in Deventer. Incasso en debiteurenbeheer; bij volledige betaling betaalt u niets.",
+        sameAs: [...site.sameAs, site.incassoRegisterHref],
         telephone: site.phoneIntl,
         email: site.email,
         areaServed: "NL",

@@ -11,6 +11,7 @@ export const BRIEF_SLUGS = [
     "ingebrekestelling",
     "sommatie",
     "betalingsregeling",
+    "huurachterstand",
 ] as const
 export type BriefSlug = (typeof BRIEF_SLUGS)[number]
 export type Soort = "zakelijk" | "particulier"
@@ -84,6 +85,7 @@ export const STANDAARD_TERMIJN: Record<BriefSlug, number> = {
     ingebrekestelling: 14,
     sommatie: 7,
     betalingsregeling: 0,
+    huurachterstand: 14,
 }
 
 const DAG = 86_400_000
@@ -170,7 +172,8 @@ export function maakBrief(slug: BriefSlug, invoer: Partial<Invoer> = {}): Brief 
     const kostenN = heeftBedrag ? wikKosten(bedragN) : Number.NaN
     const kosten = heeftBedrag ? euro(kostenN) : "[incassokosten]"
     const afzender = p(v.afzender, "uw bedrijfsnaam")
-    const klant = p(v.klant, "naam klant")
+    const huurder = slug === "huurachterstand"
+    const klant = p(v.klant, huurder ? "naam huurder" : "naam klant")
     const factuur = p(v.factuur, "factuurnummer")
     const factuurdatum = d(v.factuurdatum, "factuurdatum")
     const vervaldatum = d(v.vervaldatum, "vervaldatum")
@@ -178,12 +181,14 @@ export function maakBrief(slug: BriefSlug, invoer: Partial<Invoer> = {}): Brief 
     const dagen = termijnDagen(slug, v.termijn)
     const datumT = dagVan(v.datum)
     const einddatum = Number.isFinite(datumT) ? datumNl(isoVan(datumT + dagen * DAG)) : "[uiterste betaaldatum]"
-    const betaal = `op rekening ${iban} ten name van ${afzender}, onder vermelding van factuur ${factuur}`
+    // Bij huurachterstand staat in het veld "factuur" de huurperiode (bv. "september en oktober 2026")
+    const kenmerk = slug === "huurachterstand" ? `huur ${p(v.factuur, "huurperiode")}` : `factuur ${factuur}`
+    const betaal = `op rekening ${iban} ten name van ${afzender}, onder vermelding van ${kenmerk}`
     const zakelijk = v.soort === "zakelijk"
 
     const brief: Brief = {
         afzender: regels(afzender, v.afzenderAdres),
-        geadresseerde: regels(klant, v.klantAdres || "[adres klant]"),
+        geadresseerde: regels(klant, v.klantAdres || (huurder ? "[adres huurder]" : "[adres klant]")),
         plaatsDatum: `${p(v.plaats, "plaats")}, ${d(v.datum, "datum")}`,
         onderwerp: "",
         aanhef: v.aanhef.trim() ? `Geachte ${v.aanhef.trim()},` : "Geachte heer, mevrouw,",
@@ -270,6 +275,25 @@ export function maakBrief(slug: BriefSlug, invoer: Partial<Invoer> = {}): Brief 
                 `Wij sommeren u het totaalbedrag van ${totaal}, vermeerderd met ${rente}, binnen ${dagen} dagen na de datum van deze brief te betalen, dus uiterlijk op ${einddatum}, ${betaal}.`,
                 "Is het bedrag niet op tijd binnen, dan starten wij zonder verdere aankondiging een gerechtelijke procedure. De rechter kan u dan ook veroordelen in de kosten daarvan, zoals het griffierecht en de kosten van de deurwaarder.",
                 `Dit is de laatste mogelijkheid om een procedure te voorkomen. Wilt u een betalingsregeling bespreken? Neem dan vóór ${einddatum} contact met ons op.`,
+            ]
+            break
+        }
+
+        case "huurachterstand": {
+            // Huurder van woonruimte = particulier: geen kosten noemen vóór een 14-dagenbrief (art. 6:96 lid 6 BW);
+            // ontbinding van de huur kan alleen via de kantonrechter (art. 7:231 BW).
+            const periode = p(v.factuur, "huurperiode")
+            brief.onderwerp = `Aanmaning huurachterstand ${periode}`
+            brief.alineas = [
+                `Volgens onze administratie is de huur over ${periode} nog niet (volledig) betaald. De achterstand bedraagt ${bedrag}. De huur had uiterlijk op ${vervaldatum} betaald moeten zijn.`,
+                `Wij verzoeken u de achterstand van ${bedrag} binnen ${dagen} dagen te betalen, dus uiterlijk op ${einddatum}, ${betaal}. Wilt u er daarnaast voor zorgen dat de lopende huur op tijd wordt betaald?`,
+                zakelijk
+                    ? `Ontvangen wij uw betaling niet op tijd, dan dragen wij de vordering over aan een incassobureau. U bent dan naast de achterstand ook buitengerechtelijke incassokosten verschuldigd van ${kosten}, berekend volgens het Besluit vergoeding voor buitengerechtelijke incassokosten, en de rente zoals afgesproken in de huurovereenkomst of anders de wettelijke handelsrente.`
+                    : "Ontvangen wij uw betaling niet op tijd, dan nemen wij verdere stappen om de achterstand te innen. Voordat daar kosten voor u aan verbonden zijn, ontvangt u eerst nog een brief met een laatste termijn van 14 dagen. Blijft de achterstand bestaan, dan kunnen wij de kantonrechter vragen de huurovereenkomst te ontbinden.",
+                zakelijk
+                    ? `Kunt u de achterstand niet in één keer betalen? Neem dan vóór ${einddatum} contact met ons op, dan bespreken we of een betalingsregeling mogelijk is.`
+                    : `Kunt u de huur tijdelijk niet betalen? Neem dan vóór ${einddatum} contact met ons op, dan kijken we samen of een betalingsregeling mogelijk is. Heeft u geldzorgen, dan kunt u ook gratis hulp krijgen via uw gemeente of via Geldfit (0800 8115).`,
+                nietBetaald,
             ]
             break
         }

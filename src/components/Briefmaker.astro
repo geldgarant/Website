@@ -17,6 +17,8 @@ interface Props {
 const { slug, soortKeuze = false, id = "briefmaker" } = Astro.props
 const metTermijn = slug !== "14-dagenbrief" && slug !== "betalingsregeling"
 const regeling = slug === "betalingsregeling"
+// Huurachterstand: zelfde velden, andere labels; "factuur" = huurperiode, geen factuurdatum
+const huur = slug === "huurachterstand"
 const p = (n: string) => `bm-${n}`
 ---
 
@@ -24,24 +26,24 @@ const p = (n: string) => `bm-${n}`
     <div class="bm-form" data-bm-form>
         {soortKeuze && (
             <fieldset class="bm-groep">
-                <legend class="bm-legend">Uw klant is</legend>
+                <legend class="bm-legend">{huur ? "Uw huurder huurt" : "Uw klant is"}</legend>
                 <div class="seg2">
                     <label>
                         <input type="radio" name="soort" value="zakelijk" checked />
-                        <span>Een bedrijf</span>
+                        <span>{huur ? "Bedrijfsruimte" : "Een bedrijf"}</span>
                     </label>
                     <label>
                         <input type="radio" name="soort" value="particulier" />
-                        <span>Een particulier</span>
+                        <span>{huur ? "Woonruimte" : "Een particulier"}</span>
                     </label>
                 </div>
             </fieldset>
         )}
 
         <fieldset class="bm-groep">
-            <legend class="bm-legend">Klant en factuur</legend>
+            <legend class="bm-legend">{huur ? "Huurder en achterstand" : "Klant en factuur"}</legend>
             <div class="bm-rij">
-                <Veld id={p("klant")} name="klant" label="Naam klant" autocomplete="off" breed />
+                <Veld id={p("klant")} name="klant" label={huur ? "Naam huurder" : "Naam klant"} autocomplete="off" breed />
                 <Veld
                     id={p("aanhef")}
                     name="aanhef"
@@ -51,11 +53,35 @@ const p = (n: string) => `bm-${n}`
                     hint="Na 'Geachte'. Leeg: heer, mevrouw."
                     autocomplete="off"
                 />
-                <Veld id={p("klantAdres")} name="klantAdres" label="Adres klant" optioneel autocomplete="off" />
-                <Veld id={p("factuur")} name="factuur" label="Factuurnummer" autocomplete="off" />
-                <Veld id={p("bedrag")} name="bedrag" label="Openstaand bedrag (euro)" inputmode="decimal" prefix="€" />
-                <Veld id={p("factuurdatum")} name="factuurdatum" label="Factuurdatum" type="date" />
-                {!regeling && <Veld id={p("vervaldatum")} name="vervaldatum" label="Vervaldatum" type="date" />}
+                <Veld
+                    id={p("klantAdres")}
+                    name="klantAdres"
+                    label={huur ? "Adres huurder" : "Adres klant"}
+                    optioneel
+                    autocomplete="off"
+                />
+                {huur ? (
+                    <Veld
+                        id={p("factuur")}
+                        name="factuur"
+                        label="Huur over (periode)"
+                        placeholder="september en oktober 2026"
+                        autocomplete="off"
+                    />
+                ) : (
+                    <Veld id={p("factuur")} name="factuur" label="Factuurnummer" autocomplete="off" />
+                )}
+                <Veld
+                    id={p("bedrag")}
+                    name="bedrag"
+                    label={huur ? "Huurachterstand (euro)" : "Openstaand bedrag (euro)"}
+                    inputmode="decimal"
+                    prefix="€"
+                />
+                {!huur && <Veld id={p("factuurdatum")} name="factuurdatum" label="Factuurdatum" type="date" />}
+                {!regeling && (
+                    <Veld id={p("vervaldatum")} name="vervaldatum" label={huur ? "Huur verviel op" : "Vervaldatum"} type="date" />
+                )}
             </div>
         </fieldset>
 

@@ -6,6 +6,8 @@
 //          CHROME_PATH=/usr/bin/google-chrome node scripts/juridisch-pdf.mjs
 // Vereist pdfinfo en pdftoppm (poppler-utils).
 import { execFileSync } from "node:child_process"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { stat, writeFile } from "node:fs/promises"
 import { chromium } from "playwright"
 import sharp from "sharp"
@@ -54,10 +56,13 @@ for (const d of DOCS) {
         "-1",
         "-singlefile",
         pad,
-        `/tmp/preview-${d.slug}`,
+        join(tmpdir(), `preview-${d.slug}`),
     ])
     const preview = d.bestand.replace(/\.pdf$/, ".webp")
-    await sharp(`/tmp/preview-${d.slug}.png`).resize(600).webp({ quality: 74, effort: 6 }).toFile(`public/juridisch/${preview}`)
+    await sharp(join(tmpdir(), `preview-${d.slug}.png`))
+        .resize(600)
+        .webp({ quality: 74, effort: 6 })
+        .toFile(`public/juridisch/${preview}`)
     info[d.slug] = { bestand: d.bestand, preview, paginas, kb }
     console.log(`${d.bestand}: ${paginas} pagina's, ${kb} kB`)
 }
