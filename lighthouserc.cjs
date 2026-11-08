@@ -1,11 +1,34 @@
 // Lighthouse CI op de gebouwde site (dist). Lokaal: CHROME_PATH=/usr/bin/google-chrome npm run lhci
+// Lokaal (zonder CI): alle pagina's, 3 runs (± 40 tot 70 min). In GitHub Actions (CI=true): één pagina per sjabloon,
+// 2 runs, zodat de job binnen de tijdslimiet blijft (alle pagina's x 3 runs duurde langer dan 60 min, nov 2026).
+const steekproef = [
+    "/",
+    "/incasso/",
+    "/incasso/incassobureau-inschakelen/",
+    "/incasso/wik-brief/",
+    "/debiteurenbeheer/",
+    "/tarieven/",
+    "/vordering-indienen/",
+    "/contact-opnemen/",
+    "/brief-ontvangen/",
+    "/branches/incasso-verhuur/",
+    "/kennisbank/",
+    "/kennisbank/openstaande-factuur-stappenplan/",
+    "/voorbeeldbrieven/",
+    "/voorbeeldbrieven/aanmaning/",
+    "/juridisch/algemene-voorwaarden/",
+    "/hulp-nodig-bij-geldproblemen/",
+]
+const inCi = Boolean(process.env.CI)
+
 module.exports = {
     ci: {
         collect: {
             staticDistDir: "./dist",
-            // standaard pakt lhci maar 5 pagina's; 0 = alle pagina's in dist
-            maxAutodiscoverUrls: 0,
-            numberOfRuns: 3,
+            // standaard pakt lhci maar 5 pagina's; 0 = alle pagina's in dist. In CI: vaste steekproef (lhci herschrijft
+            // http://localhost naar de poort van zijn eigen statische server)
+            ...(inCi ? { url: steekproef.map((p) => `http://localhost${p}`) } : { maxAutodiscoverUrls: 0 }),
+            numberOfRuns: inCi ? 2 : 3,
             settings: {
                 chromeFlags: "--no-sandbox --headless=new",
                 // standaard = mobiel met netwerk- en CPU-vertraging, zoals PageSpeed Insights

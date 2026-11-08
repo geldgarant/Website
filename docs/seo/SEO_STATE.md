@@ -8,7 +8,7 @@ current_phase: 4 (commerciële pagina's): /debiteurenbeheer, verhuur, mkb, insch
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce ("incasso e-commerce" pos 12, "incasso webshops" 18), /kennisbank/openstaande-factuur-stappenplan ("openstaande facturen" 19), /kennisbank/beslagvrije-voet-2026 (9 tot 14): title/description/intro scherper op de zoekvraag, ontbrekende antwoorden. 2) Fase 4 rest: /incasso en /tarieven (SERP-vergelijking). 3) Kans: voorbeeldbrief huurachterstand (eerst kannibalisatiecheck). 4) GSC: mkb, inschakelen-wijziging ter indexering (quotum per dag); over 1 tot 2 weken prestaties meten. 5) Niet-SEO: wifi-probleem huidige locatie (E10). 6) CI: Lighthouse-duur controleren (60-minutenlimiet).
+next_action: 1) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce ("incasso e-commerce" pos 12, "incasso webshops" 18), /kennisbank/openstaande-factuur-stappenplan ("openstaande facturen" 19), /kennisbank/beslagvrije-voet-2026 (9 tot 14): title/description/intro scherper op de zoekvraag, ontbrekende antwoorden. 2) Fase 4 rest: /incasso en /tarieven (SERP-vergelijking). 3) Kans: voorbeeldbrief huurachterstand (eerst kannibalisatiecheck). 4) GSC: mkb, inschakelen-wijziging ter indexering (quotum per dag); over 1 tot 2 weken prestaties meten. 5) Niet-SEO: wifi-probleem huidige locatie (E10). 6) CI: eerste run met Lighthouse-steekproef (16 pagina's x 2 runs) controleren; lokaal start Lighthouse geen Chrome op deze Windows-pc (spawn UNKNOWN), Playwright wel.
 blocked_by: Web Analytics (gebruiker of token)
 production_state: batch 7 (mkb) live en gecontroleerd; batch 8 (inschakelen) gepusht
 preview_url: https://website.geldgarant.workers.dev (staging, zelfde Worker)
@@ -84,4 +84,5 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 9. /debiteurenbeheer: sectie afweging/factoring/start + 2 FAQ's (batch 5, E11), live; 6 URL's ter indexering.
 10. /branches/incasso-verhuur: sectie aanpak per fase + brieflinks + 2 FAQ's (batch 6, E12), live.
 11. /branches/incasso-mkb: checklist betrouwbaar incassobureau + FAQ (batch 7, E13), live.
-12. /incasso/incassobureau-inschakelen: blok weinig zin + FAQ benodigdheden (batch 8, E14).
+12. /incasso/incassobureau-inschakelen: blok weinig zin + FAQ benodigdheden (batch 8, E14), live.
+13. CI: Lighthouse in GitHub Actions op een steekproef per sjabloon (alle pagina's x 3 runs duurde > 60 min).

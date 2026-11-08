@@ -31,17 +31,17 @@ staging: website.geldgarant.workers.dev) naast de intake-worker (api.geldgarant.
 
 ## Commando's
 
-| Doel                                | Commando                                                             |
-| ----------------------------------- | -------------------------------------------------------------------- |
-| Ontwikkelen                         | `npm run dev`                                                        |
-| Alles in één keer                   | `npm run qa`                                                         |
-| Types / lint / opmaak               | `npm run check`, `npm run lint`, `npm run format`                    |
-| Unit-tests (staffel e.d.)           | `npm run test:unit`                                                  |
-| Browsertests mobiel/tablet/desktop  | `npm run test:e2e` (overloop, 16px-velden, SEO-basis, axe, menu)     |
-| Visuele regressie                   | `npm run test:visual` (`-- --update-snapshots` na bewuste wijziging) |
-| HTML / SEO / links                  | `npm run check:html`, `npm run check:seo`, `npm run check:links`     |
-| Lighthouse (doel 95+ per categorie) | `npm run lhci`                                                       |
-| Afhankelijkheden                    | `npm run audit:deps`                                                 |
+| Doel                                | Commando                                                                 |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| Ontwikkelen                         | `npm run dev`                                                            |
+| Alles in één keer                   | `npm run qa`                                                             |
+| Types / lint / opmaak               | `npm run check`, `npm run lint`, `npm run format`                        |
+| Unit-tests (staffel e.d.)           | `npm run test:unit`                                                      |
+| Browsertests mobiel/tablet/desktop  | `npm run test:e2e` (overloop, 16px-velden, SEO-basis, axe, menu)         |
+| Visuele regressie                   | `npm run test:visual` (`-- --update-snapshots` na bewuste wijziging)     |
+| HTML / SEO / links                  | `npm run check:html`, `npm run check:seo`, `npm run check:links`         |
+| Lighthouse (doel 95+ per categorie) | `npm run lhci` (lokaal alle pagina's; in CI een steekproef per sjabloon) |
+| Afhankelijkheden                    | `npm run audit:deps`                                                     |
 
 Op de Windows-pc van de gebruiker (Claude-desktopapp, sinds 7 nov 2026): repo in `C:\Users\Ilyas Chattat\code\geldgarant-website`,
 Git, Node 26 en `gh` (ingelogd als `geldgarant`) via winget; Playwright-Chromium via `npx playwright install chromium`,
