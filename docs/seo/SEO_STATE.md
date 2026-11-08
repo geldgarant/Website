@@ -1,14 +1,14 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-08 06:50 (Europe/Amsterdam)
+last_updated: 2026-11-08 08:00 (Europe/Amsterdam)
 current_branch: main
-latest_commit: zie `git log -1` (batch 10: /incasso B2B/B2C, /tarieven no cure no pay)
-current_phase: 4 afgerond (6 van 6 commerciële pagina's, E11 tot E17) + snelle winst (E16)
+latest_commit: zie `git log -1` (fase 6/7: Bedrijfsprofiel en vermeldingen vastgelegd)
+current_phase: 6 (lokaal) en 7 (vermeldingen): inventarisatie klaar (E18), wijzigingen wachten op akkoord
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) GSC: ter indexering aanbieden (quotum per dag): /incasso, /tarieven, /branches/incasso-mkb, /branches/incasso-ecommerce, /kennisbank/openstaande-factuur-stappenplan, /incasso/incassobureau-inschakelen. 2) Over 1 tot 2 weken (vanaf ±15 nov): GSC prestaties per pagina (vertoningen, positie, CTR) vergelijken met E9 en keyword-url-map bijwerken; titels/descriptions bijsturen op CTR. 3) Fase 6 lokaal: Google Bedrijfsprofiel (NAP tegen site.ts, categorie, uren); toegang of export van gebruiker nodig. 4) Fase 7 vermeldingen: NowID-ledenlijst, Justis, KvK, Trustoo controleren en docs/seo/backlink-opportunities.csv maken (geen outreach zonder opdracht). 5) Kansen: bankbeslag in beslagvrije voet (primaire bron), voorbeeldbrief huurachterstand (kannibalisatiecheck). 6) Web Analytics (gebruiker). 7) Niet-SEO: wifi-probleem huidige locatie (E10).
+next_action: 1) Na akkoord gebruiker Bedrijfsprofiel bijwerken (zie Voorstel Bedrijfsprofiel hieronder): openingstijden, chat-link, https, servicegebied Nederland, beschrijving. 2) Gebruiker: telefoon bij Justis wijzigen; KvK-gegevens, LinkedIn, Instagram-bio gelijk trekken (backlink-opportunities.csv). 3) Over 1 tot 2 weken (±15 nov): GSC prestaties per pagina vs E9, keyword-url-map bijwerken; homepage-snippet controleren (nu nog Framer-title). 4) Kansen: Trustoo-profiel, NowID-websitelink, reviewproces echte klanten (alleen met opdracht). 5) Inhoud: bankbeslag (primaire bron), voorbeeldbrief huurachterstand. 6) Web Analytics (gebruiker). 7) Niet-SEO: wifi-probleem huidige locatie (E10).
 ```
 
 ## Afgerond sinds vorig checkpoint (batch 3)
@@ -59,6 +59,18 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 - `/juridisch` (101 woorden): overzichtspagina; beoordelen (meer inhoud of uit sitemap).
 - Lighthouse niet opnieuw gedraaid voor de nieuwe pagina's (`npm run lhci`, ± 40 min; CI draait het bij push).
 
+## Voorstel Bedrijfsprofiel (wacht op akkoord)
+
+- Openingstijden: gelijk aan de site (werkdagen 9.00-17.00), tenzij 9.00-19.00 klopt; dan de site aanpassen.
+- Chat: link wa.me/31850835230 (oud nummer) verwijderen tot WhatsApp Business op 085 212 73 88 actief is.
+- Website: https://geldgarant.com/. Servicegebied: Nederland.
+- Beschrijving (595 tekens, alleen site-feiten): "GeldGarant is een incassobureau voor ondernemers, met kantoor in
+  Deventer en klanten in heel Nederland. Wij nemen onbetaalde facturen over: van de eerste aanmaning of de wettelijke
+  14-dagenbrief tot, alleen met uw akkoord, een gerechtelijke procedure. Betaalt de debiteur volledig, dan betaalt u
+  niets: de wettelijke incassokosten zijn voor de debiteur. Daarnaast bieden wij debiteurenbeheer vanaf € 99 per maand,
+  met herinneringen in uw eigen naam. GeldGarant is geregistreerd bij Justis (nummer 00273) en aangesloten bij NowID.
+  Op werkdagen nemen we uw vordering binnen het uur in behandeling."
+
 ## Gebruikersacties (gebundeld)
 
 1. ~~TXT-record Search Console~~ **gedaan 8 nov** (E9).
@@ -66,7 +78,9 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
    verbindingsstoring vanaf de pc).
 3. Cloudflare → Web Analytics → geldgarant.com toevoegen; liefst "handmatig" en het token doorgeven (Claude zet de
    beacon in `Base.astro` en past de CSP aan).
-4. Bedrijfsprofiel: screenshots of export van categorie, adres, uren en website-URL.
+4. ~~Bedrijfsprofiel: toegang~~ beschikbaar via browserpaneel (account /u/1). Akkoord op het voorstel hierboven.
+5. Justis: telefoonnummer in het incassoregister wijzigen naar 085 212 73 88 (staat op 085 083 5230).
+6. KvK, LinkedIn, Instagram-bio: website en telefoon controleren (zie backlink-opportunities.csv).
 
 ## Laatste werkstappen
 
@@ -85,4 +99,5 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 13. CI: Lighthouse in GitHub Actions op een steekproef per sjabloon (alle pagina's x 3 runs duurde > 60 min).
 14. CLS-fix H1 /hulp-nodig-bij-geldproblemen (E15); CI volledig groen.
 15. Snelle winst: e-commerce, stappenplan, beslagvrije voet (batch 9, E16); CI groen.
-16. /incasso B2B/B2C + staffelrij, /tarieven FAQ no cure no pay en faillissement (batch 10, E17).
+16. /incasso B2B/B2C + staffelrij, /tarieven FAQ no cure no pay en faillissement (batch 10, E17), live.
+17. Productiecrawl, 5 extra URL's ter indexering, Bedrijfsprofiel en vermeldingen geïnventariseerd (E18).

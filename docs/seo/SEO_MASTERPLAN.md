@@ -27,8 +27,8 @@ lokale aanwezigheid en vermeldingen.
 | 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | kaart klaar (E8), SERP deels    |
 | 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | klaar (batch 4, E10)            |
 | 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | bezig: deb.beheer, verhuur, mkb |
-| 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | profiel bestaat; toegang nodig  |
-| 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | open                            |
+| 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | geïnventariseerd (E18)          |
+| 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | lijst klaar (E18)               |
 | 11  | AI-zichtbaarheid: vaste vragenset meten                 | 8    | middel | zwak   | laag     | laag       | open                            |
 
 ## Fase 0. Systeem en meetketen

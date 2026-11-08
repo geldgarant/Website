@@ -266,3 +266,25 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   de lijsten "nooit" en "soms" op dezelfde pagina en de AV).
 - Controles: check, lint, format, unit, build, html, seo groen; e2e /incasso en /tarieven groen; tabel op 320/390/1440
   zonder overloop.
+
+### E18. Productie na fase 4, Bedrijfsprofiel en vermeldingen (8 nov 2026)
+
+- Live gecontroleerd (via 4G): alle wijzigingen uit batch 3 tot 10 staan op productie. Productiecrawl
+  (`docs/seo/crawl-2026-11-08.csv`): 70 URL's, alle 200, geen afwijkingen behalve 3 dunne functionele pagina's; alle
+  http/www-varianten 301.
+- GSC "Indexering aanvragen" 8 nov (tweede ronde, totaal 11): `/incasso`, `/tarieven`, `/branches/incasso-mkb`,
+  `/branches/incasso-ecommerce`, `/kennisbank/openstaande-factuur-stappenplan`.
+- Google-zoekresultaat "GeldGarant" (ingelogd als profielbeheerder): toont nog de oude Framer-title "GeldGarant: No Cure
+  No Pay Incassobureau ..." en oude sitelinks (homepage nog niet opnieuw verwerkt). Vermeldingen in de resultaten:
+  Justis, Company.info, Instagram (@geldgarant), Stagemarkt (leerbedrijf). Een uitspraak uit 2009 (ECLI:NL:GHAMS:2009:BI9212)
+  noemt een "GeldGarant" uit 2005: andere onderneming dan KvK 90622375 (opgericht later); alleen ter info.
+- Google Bedrijfsprofiel (Bedrijfsprofielmanager, account `/u/1`): 1 bedrijf, geverifieerd. 190 klantinteracties,
+  4 nieuwe reviews, 1 "update van Google". Gegevens: naam GeldGarant, categorie Incassobureau, Keulenstraat 1, 7418 ET
+  Deventer, 085 212 7388, website http://geldgarant.com/, LinkedIn. Afwijkend van de site: openingstijden ma-vr
+  9.00-19.00 (site werkdagen 9.00-17.00), chat wa.me/31850835230 (oud nummer), servicegebied alleen Deventer,
+  beschrijving ("no cure no pay is mogelijk in veel situaties", "Wet Incassokosten"). Niets gewijzigd (wacht op akkoord).
+- Justis-register: actief, nr. 00273, adres goed, **telefoon 0850835230 (oud)**.
+- NowID-ledenlijst: GeldGarant vermeld (nr. 71, KvK 90622375), zonder websitelink.
+- Trustoo Deventer: niet vermeld. Trustpilot: profiel bestaat (0 reviews volgens zoekresultaten), automatische controle
+  geblokkeerd.
+- Alles met acties in `docs/seo/backlink-opportunities.csv`.
