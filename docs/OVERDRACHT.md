@@ -77,7 +77,7 @@ Dit is het startpunt voor een nieuw gesprek of een nieuw project. Het vervangt a
 
 ## 4. Stand van de site
 
-Astro 7, statisch, Cloudflare Workers (static assets + worker voor `/api/*`). 74 pagina's (71 in de sitemap), Lighthouse mobiel ≥ 95 (CI-steekproef), WCAG 2.2 AA, geen overloop 320–2560 px.
+Astro 7, statisch, Cloudflare Workers (static assets + worker voor `/api/*`). 73 pagina's (71 in de sitemap), Lighthouse mobiel ≥ 95 (CI-steekproef), WCAG 2.2 AA, geen overloop 320–2560 px.
 
 | Fase | Pagina's                                                                                                                                                       |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
