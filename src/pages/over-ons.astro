@@ -9,6 +9,8 @@ import Crumbs from "../components/Crumbs.astro"
 import Feitenkaart from "../components/Feitenkaart.astro"
 import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
+import Foto from "../components/Foto.astro"
+import fotoKantoor from "../assets/fotos/kantoor-gesprek.jpg"
 import { site, branches } from "../data/site"
 import { overOnsFaq } from "../data/faq"
 
@@ -448,7 +450,12 @@ const jsonLd = [
             <div class="plekken">
                 <article class="plek">
                     <div class="photo-slot plek-foto">
-                        <span>Foto kantoor {site.city} volgt</span>
+                        <Foto
+                            src={fotoKantoor}
+                            alt={`Gesprek aan de vergadertafel op het kantoor van GeldGarant in ${site.city}`}
+                            sizes="(min-width: 640px) 45vw, calc(100vw - 32px)"
+                            focus="45% 50%"
+                        />
                     </div>
                     <div class="plek-body">
                         <h3 class="h3">Kantoor {site.city}</h3>
@@ -1172,7 +1179,8 @@ const jsonLd = [
     }
     @media (max-width: 639px) {
         .plek-foto {
-            display: none;
+            min-height: 0;
+            aspect-ratio: 16 / 10;
         }
         .veilig-grid li {
             padding: 20px 4px;

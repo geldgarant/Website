@@ -7,9 +7,13 @@ import Kosten from "../components/home/Kosten.astro"
 import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
 import Icon from "../components/Icon.astro"
+import KennisBeeld from "../components/KennisBeeld.astro"
+import Foto from "../components/Foto.astro"
+import fotoOverleg from "../assets/fotos/overleg-team.jpg"
 import { getCollection } from "astro:content"
 import { site, branches } from "../data/site"
-import { onderwerpById } from "../data/kennisbank"
+import { onderwerpById, leestijd } from "../data/kennisbank"
+import { platteTekst } from "../lib/artikel"
 import { homeFaq } from "../data/faq"
 
 const title = "Incassobureau voor ondernemers | GeldGarant"
@@ -25,11 +29,9 @@ const latestArticles = kennisSlugs
     .map((a) => ({
         title: a.data.title,
         slug: a.id,
-        date: a.data.bijgewerkt.toISOString().slice(0, 10),
+        min: leestijd(platteTekst(a.rendered?.html ?? "")),
         cat: onderwerpById[a.data.onderwerp].label,
     }))
-const fmtDate = (d: string) =>
-    new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" }).format(new Date(d))
 
 const jsonLd = [
     {
@@ -171,7 +173,12 @@ const branchIcon = {
     <section class="section team-section" aria-labelledby="team-title">
         <div class="wrap team">
             <div class="photo-slot team-photo">
-                <span>Foto kantoor Deventer volgt na de fotoshoot</span>
+                <Foto
+                    src={fotoOverleg}
+                    alt="Medewerkers van GeldGarant in overleg aan tafel"
+                    sizes="(min-width: 1024px) 560px, calc(100vw - 32px)"
+                    focus="58% 40%"
+                />
             </div>
             <div class="team-copy">
                 <p class="eyebrow">
@@ -289,10 +296,10 @@ const branchIcon = {
                 {latestArticles.map((a, i) => (
                     <li data-reveal style={`--d:${i}`}>
                         <a class="article" href={`/kennisbank/${a.slug}`}>
-                            <div class="photo-slot article-img" aria-hidden="true"></div>
+                            <KennisBeeld slug={a.slug} class="article-img" />
                             <p class="article-meta">
                                 <span>{a.cat}</span>
-                                <time datetime={a.date}>{fmtDate(a.date)}</time>
+                                {a.min} min lezen
                             </p>
                             <h3 class="h3">{a.title}</h3>
                         </a>
@@ -678,14 +685,6 @@ const branchIcon = {
     }
     .article {
         display: block;
-    }
-    .article-img {
-        aspect-ratio: 16 / 10;
-        border-radius: var(--r-lg);
-        transition: transform 0.4s var(--ease);
-    }
-    .article:hover .article-img {
-        transform: scale(0.985);
     }
     .article-meta {
         display: flex;

@@ -10,6 +10,8 @@ import Crumbs from "../../components/Crumbs.astro"
 import Feitenkaart from "../../components/Feitenkaart.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
+import Foto from "../../components/Foto.astro"
+import fotoTeam from "../../assets/fotos/team-tafel.jpg"
 import { site } from "../../data/site"
 import Sollicitatie from "../../components/Sollicitatie.astro"
 import { vacatures, procedure, werkenFaq, salarisTekst } from "../../data/vacatures"
@@ -121,6 +123,14 @@ const jsonLd = [
                     </div>
                 </div>
                 <Feitenkaart titel="Werken bij ons in het kort" id="feiten-title" items={feiten} />
+            </div>
+            <div class="photo-slot hero-foto">
+                <Foto
+                    src={fotoTeam}
+                    alt="Collega's van GeldGarant in overleg aan de vergadertafel"
+                    sizes="(min-width: 1280px) 1200px, calc(100vw - 32px)"
+                    focus="62% 45%"
+                />
             </div>
         </div>
     </section>
@@ -332,6 +342,15 @@ const jsonLd = [
     @media (min-width: 1024px) {
         .hero-grid {
             grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+    }
+    .hero-foto {
+        margin-top: clamp(40px, 5vw, 72px);
+        aspect-ratio: 4 / 3;
+    }
+    @media (min-width: 720px) {
+        .hero-foto {
+            aspect-ratio: 21 / 9;
         }
     }
     .hero h1 {

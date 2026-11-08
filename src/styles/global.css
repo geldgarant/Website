@@ -355,6 +355,11 @@ p {
     font-size: var(--fs-xs);
     font-weight: 500;
 }
+/* echte foto in een (voormalige) fotoplek: vult het kader, verloop blijft zichtbaar tijdens het laden */
+.photo-slot > picture {
+    position: absolute;
+    inset: 0;
+}
 .todo {
     outline: 2px dashed #d39b2a;
     outline-offset: 4px;
