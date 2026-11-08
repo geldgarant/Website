@@ -5,6 +5,7 @@
 import { getCollection, type CollectionEntry } from "astro:content"
 import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
+import KennisBeeld from "../../components/KennisBeeld.astro"
 import Crumbs from "../../components/Crumbs.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
@@ -232,7 +233,8 @@ const jsonLd = [
                         const vo = onderwerpById[v.data.onderwerp]
                         return (
                             <li>
-                                <a class="kaart" href={`/kennisbank/${v.id}`}>
+                                <a class="kaart kaart-beeld" href={`/kennisbank/${v.id}`}>
+                                    <KennisBeeld slug={v.id} />
                                     <span class="kaart-tag">
                                         <Icon name={vo.icon} size={14} />
                                         {vo.label}

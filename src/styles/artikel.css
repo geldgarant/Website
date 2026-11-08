@@ -534,3 +534,8 @@
         transition: none;
     }
 }
+
+/* kennisbankkaart met illustratie (src/components/KennisBeeld.astro) */
+.kaart-beeld .kb-beeld {
+    margin-bottom: 6px;
+}

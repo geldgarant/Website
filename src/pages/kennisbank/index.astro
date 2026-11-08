@@ -6,6 +6,7 @@
 import { getCollection } from "astro:content"
 import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
+import KennisBeeld from "../../components/KennisBeeld.astro"
 import Crumbs from "../../components/Crumbs.astro"
 import SlotCta from "../../components/SlotCta.astro"
 import { site } from "../../data/site"
@@ -165,7 +166,8 @@ const jsonLd = [
                 <ul role="list" class="kaarten">
                     {items.map((a) => (
                         <li data-kaart data-zoektekst={zoek(a)}>
-                            <a class="kaart" href={`/kennisbank/${a.id}`}>
+                            <a class="kaart kaart-beeld" href={`/kennisbank/${a.id}`}>
+                                <KennisBeeld slug={a.id} />
                                 <span class="kaart-tag">
                                     <Icon name={onderwerpById[a.data.onderwerp].icon} size={14} />
                                     {minuten(a)} min lezen
