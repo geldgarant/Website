@@ -28,6 +28,13 @@ export interface Branche {
     verwant: string[]
     /** slug van het kennisbankartikel dat het best bij deze branche past (link in "Verder kijken") */
     kennis: string
+    /** optioneel: aanpak per fase (sectie "Zo pakken we het aan"), met links naar voorbeeldbrieven */
+    aanpak?: {
+        kop: [string, string, string?]
+        lead: string
+        stappen: { t: string; d: string }[]
+        brieven?: { t: string; href: string }[]
+    }
 }
 
 export const brancheData: Branche[] = [
@@ -237,12 +244,48 @@ export const brancheData: Branche[] = [
                 a: "Ja. Wij werken volgens de Wet kwaliteit incassodienstverlening: duidelijk, correct en zonder dreigen. Met een huurder die wil meewerken, spreken we een regeling af.",
             },
             {
+                q: "Mag ik de waarborgsom verrekenen met de huurachterstand?",
+                a: "Pas aan het einde van de huur. Zolang de huurovereenkomst loopt, blijft de waarborgsom staan en int u de achterstand gewoon. Na het vertrek verrekent u de borg met wat er dan nog openstaat.",
+            },
+            {
+                q: "Wat is het verschil tussen woonruimte en bedrijfsruimte?",
+                a: "Een huurder van woonruimte is meestal een particulier: dan is eerst een 14-dagenbrief nodig en kan de huur alleen via de rechter worden ontbonden. Bij bedrijfsruimte is de huurder meestal een onderneming. Dan gelden de afspraken uit het huurcontract en de handelsrente, maar ook dan vraagt een ontruiming altijd een uitspraak van de rechter.",
+            },
+            {
                 q: "Ik verhuur materieel of machines. Is dit ook voor mij?",
                 a: "Zeker. Of het nu om een woning, een bedrijfspand of een hoogwerker gaat: een onbetaalde huurfactuur innen we op dezelfde manier.",
             },
         ],
         verwant: ["incasso-bouw", "incasso-dienstverlening", "incasso-mkb"],
         kennis: "huurachterstand-incasseren",
+        // Inhoud volgt het kennisbankartikel huurachterstand-incasseren (art. 7:231 BW, 6:96 lid 6 BW)
+        aanpak: {
+            kop: ["Zo pakken we een ", "huurachterstand", " aan"],
+            lead: "Van de eerste gemiste maand tot, als het echt niet anders kan, de kantonrechter. Bij elke stap kijken we of de huurder nog kan en wil betalen.",
+            stappen: [
+                {
+                    t: "De eerste gemiste maand",
+                    d: "We sturen een herinnering en bellen de huurder. Een gemiste maand heeft vaak een oorzaak, zoals ziekte of baanverlies. Wie dat vroeg weet, voorkomt dat de achterstand groeit.",
+                },
+                {
+                    t: "Aanmaning of 14-dagenbrief",
+                    d: "Huurt een particulier een woning, dan sturen we eerst de wettelijke 14-dagenbrief: pas daarna mogen incassokosten worden gerekend. Is de huurder een bedrijf, dan volgt direct een aanmaning en loopt de handelsrente vanaf de vervaldatum.",
+                },
+                {
+                    t: "Een regeling die ook de lopende huur dekt",
+                    d: "Kan de huurder niet alles ineens betalen, dan spreken we een haalbare regeling af. De lopende huur telt mee, en de afspraak leggen we schriftelijk vast.",
+                },
+                {
+                    t: "Naar de rechter, alleen met uw akkoord",
+                    d: "Ontbinding van de huur en ontruiming lopen altijd via de kantonrechter en een deurwaarder. Bij woonruimte en drie maanden achterstand of meer wijst de rechter ontbinding meestal toe. U hoort vooraf wat een procedure kost.",
+                },
+            ],
+            brieven: [
+                { t: "Voorbeeld aanmaning", href: "/voorbeeldbrieven/aanmaning" },
+                { t: "14-dagenbrief maken", href: "/incasso/wik-brief#briefmaker" },
+                { t: "Voorbeeld betalingsregeling", href: "/voorbeeldbrieven/betalingsregeling" },
+            ],
+        },
     },
     {
         slug: "incasso-automotive",

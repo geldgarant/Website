@@ -181,3 +181,19 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
 - Live gecontroleerd na Workers Build (8 nov ±02:30): sectie `#uitbesteden` en factoring-FAQ staan op productie.
 - GSC "Indexering aanvragen" 8 nov, totaal 6: `/debiteurenbeheer`, `/incasso/incassobureau-inschakelen`,
   `/kennisbank/huurachterstand-incasseren`, `/voorbeeldbrieven`, `/branches/incasso-verhuur`, `/branches/incasso-zzp`.
+
+### E12. Fase 4: /branches/incasso-verhuur (8 nov 2026)
+
+- Aanleiding: GSC (E9) huurachterstand-cluster ruim 3.000 vertoningen ("incasso verhuurder" 685, "incasso
+  huurachterstand" 335, "aanmaning huurachterstand" 220, "1/2/3 maanden huurachterstand", "wanneer deurwaarder bij
+  huurachterstand" 180).
+- SERP-steekproef "incasso huurachterstand verhuurder incassobureau" (WebSearch, niet gepersonaliseerd):
+  mkbservicedesk.nl ("wat als de huurder niet betaalt"), fora (Radar), modelbrieven (rocketlawyer.com, wonder.legal).
+  Terugkerend: stappen per fase, regeling vóór incasso, ontruiming via de kantonrechter, sjablonen.
+- Toegevoegd: optioneel veld `aanpak` in `src/data/branches.ts` en sectie "Zo pakken we een huurachterstand aan" in
+  `src/pages/branches/[slug].astro` (4 stappen + links naar voorbeeld aanmaning, 14-dagenbriefmaker, voorbeeld
+  betalingsregeling); nummering schuift mee (verhuur 01 tot 06, overige branches ongewijzigd 01 tot 05). 2 FAQ's
+  (waarborgsom, woon- vs bedrijfsruimte). Inhoud volgt het kennisbankartikel (art. 7:231 BW, 14-dagenbrief).
+  Woorden in main 706 → 1.010.
+- Controles: check, lint, format, unit, build, html, seo groen; e2e alle branchepagina's 132 groen; screenshots
+  390/1440 zonder overloop.

@@ -26,7 +26,7 @@ lokale aanwezigheid en vermeldingen.
 | 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | klaar (batch 3, E7)            |
 | 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | kaart klaar (E8), SERP deels   |
 | 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | klaar (batch 4, E10)           |
-| 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | bezig: /debiteurenbeheer klaar |
+| 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | bezig: debiteurenb., verhuur   |
 | 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | profiel bestaat; toegang nodig |
 | 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | open                           |
 | 11  | AI-zichtbaarheid: vaste vragenset meten                 | 8    | middel | zwak   | laag     | laag       | open                           |

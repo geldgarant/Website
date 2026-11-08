@@ -114,6 +114,7 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Doelgroepen gescheiden houden: debiteurenverkeer (`/brief-ontvangen`, `/betalen`) is geen acquisitie.
 - Zoekintentie per URL: `docs/seo/keyword-url-map.csv`. Controleer die vóór een nieuwe pagina of titelwijziging (kannibalisatie).
 - Branchepagina's linken naar één kennisbankartikel via `kennis` in `src/data/branches.ts` (onbekende slug = build faalt).
+  Optioneel veld `aanpak` (kop, lead, stappen, brieven) geeft een extra sectie "Zo pakken we het aan"; de nummering schuift mee.
 
 ## Voorbeeldbrieven (7 nov 2026)
 

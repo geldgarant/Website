@@ -2,7 +2,8 @@
 // B /branches/<slug>: één template, eigen inhoud per branche uit src/data/branches.ts.
 // Hoofdvraag: "Snappen jullie mijn branche, en wat doen jullie in mijn situatie?"
 // Volgorde: wie en wat (hero + feiten) → herkenbare situaties (01) → regels in uw branche (02)
-// → rekenvoorbeeld (03) → vragen (04) → verder (05: verwante branches, kennisbankartikel + diensten) → CTA.
+// → [optioneel: aanpak per fase met voorbeeldbrieven] → rekenvoorbeeld → vragen → verder (verwante branches,
+// kennisbankartikel + diensten) → CTA. Nummering schuift mee als er een aanpak is.
 import { getEntry } from "astro:content"
 import Base from "../../layouts/Base.astro"
 import Icon from "../../components/Icon.astro"
@@ -32,6 +33,8 @@ const rentePct = String(huidigPercentage(b.voorbeeld.soort, vandaag)).replace(".
 const consument = b.voorbeeld.soort === "consument"
 
 const verwant = b.verwant.map((s) => brancheBySlug[s]).filter(Boolean)
+const aanpak = b.aanpak
+const nr = (n: number) => String(aanpak && n >= 3 ? n + 1 : n).padStart(2, "0")
 // Een verkeerde slug laat de build falen, zodat er nooit een dode link ontstaat
 const artikel = await getEntry("kennisbank", b.kennis)
 if (!artikel) throw new Error(`branches/${b.slug}: kennisbankartikel "${b.kennis}" bestaat niet`)
@@ -195,13 +198,58 @@ const jsonLd = [
         </div>
     </section>
 
-    <!-- 03 REKENVOORBEELD -->
-    <section class="section voorbeeld-sec" aria-labelledby="voorbeeld-title">
+    {aanpak && (
+        <section class="section bg-surface" aria-labelledby="aanpak-title">
+            <div class="wrap">
+                <div class="kop">
+                    <p class="eyebrow">
+                        <span class="idx">03</span> Onze aanpak
+                    </p>
+                    <h2 class="h2" id="aanpak-title">
+                        {aanpak.kop[0]}
+                        <span class="accent">{aanpak.kop[1]}</span>
+                        {aanpak.kop[2] ?? ""}
+                    </h2>
+                    <p class="lead">{aanpak.lead}</p>
+                </div>
+                <ol role="list" class="aanpak">
+                    {aanpak.stappen.map((s, i) => (
+                        <li>
+                            <span class="a-num num" aria-hidden="true">
+                                {i + 1}
+                            </span>
+                            <div>
+                                <h3 class="a-t">{s.t}</h3>
+                                <p>{s.d}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+                {aanpak.brieven && (
+                    <div class="a-brieven">
+                        <p class="a-brieven-kop">Liever eerst zelf een brief sturen?</p>
+                        <ul role="list">
+                            {aanpak.brieven.map((x) => (
+                                <li>
+                                    <a class="textlink" href={x.href}>
+                                        {x.t}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        </section>
+    )}
+
+    <!-- REKENVOORBEELD -->
+    <section class:list={["section voorbeeld-sec", { "na-aanpak": aanpak }]} aria-labelledby="voorbeeld-title">
         <div class="wrap">
             <div class="voorbeeld bg-ink">
                 <div class="vb-copy">
                     <p class="eyebrow">
-                        <span class="idx">03</span> Rekenvoorbeeld
+                        <span class="idx">{nr(3)}</span> Rekenvoorbeeld
                     </p>
                     <h2 class="h2" id="voorbeeld-title">
                         Wat het u <span class="accent">kost</span>
@@ -245,16 +293,16 @@ const jsonLd = [
         </div>
     </section>
 
-    <Faq items={b.faq} idx="04">
+    <Faq items={b.faq} idx={nr(4)}>
         <Fragment slot="title">Vragen over incasso {b.bij}</Fragment>
     </Faq>
 
-    <!-- 05 VERDER -->
+    <!-- VERDER -->
     <section class="section" aria-labelledby="verder-title">
         <div class="wrap">
             <div class="kop">
                 <p class="eyebrow">
-                    <span class="idx">05</span> Verder kijken
+                    <span class="idx">{nr(5)}</span> Verder kijken
                 </p>
                 <h2 class="h2" id="verder-title">
                     Ook <span class="accent">interessant</span>
@@ -472,8 +520,76 @@ const jsonLd = [
     }
 
     /* 03 */
-    .voorbeeld-sec {
+    .voorbeeld-sec:not(.na-aanpak) {
         padding-top: 0;
+    }
+
+    /* aanpak (optioneel) */
+    .aanpak {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 800px) {
+        .aanpak {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+    }
+    .aanpak li {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 14px;
+        padding: clamp(22px, 2.6vw, 30px);
+        border-radius: var(--r-xl);
+        background: #fff;
+    }
+    .a-num {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+    .a-t {
+        font-family: var(--font-display);
+        font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
+    }
+    .aanpak p {
+        margin-top: 8px;
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text);
+    }
+    .a-brieven {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 24px;
+        margin-top: 24px;
+        font-size: var(--fs-sm);
+    }
+    .a-brieven-kop {
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .a-brieven ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 20px;
+    }
+    .a-brieven a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        font-weight: 600;
     }
     .voorbeeld {
         display: grid;

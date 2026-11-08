@@ -1,16 +1,16 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-08 02:20 (Europe/Amsterdam)
+last_updated: 2026-11-08 03:00 (Europe/Amsterdam)
 current_branch: main
-latest_commit: zie `git log -1` (batch 5: /debiteurenbeheer afweging + factoring)
-current_phase: 4 (commerciële pagina's), /debiteurenbeheer klaar (E11)
+latest_commit: zie `git log -1` (batch 6: /branches/incasso-verhuur aanpak)
+current_phase: 4 (commerciële pagina's): /debiteurenbeheer (E11) en /branches/incasso-verhuur (E12) klaar
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) Fase 4 vervolg: huurachterstand (/branches/incasso-verhuur; GSC E9 ruim 3.000 vertoningen): SERP-steekproef, ontbrekende antwoorden (stappen bij woonruimte vs bedrijfsruimte, 14-dagenbrief, wanneer ontruiming), interne link naar kennisbank; daarna /branches/incasso-mkb en /incasso/incassobureau-inschakelen. 3) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce, /kennisbank/openstaande-factuur-stappenplan, /kennisbank/beslagvrije-voet-2026. 4) Over 1 tot 2 weken: GSC indexering/prestaties nieuwe site. 5) Niet-SEO, apart: geldgarant.com opent niet op het wifi van de huidige locatie van de gebruiker (E10). 6) CI: run na timeout-verhoging (564b36b) controleren.
+next_action: 1) Fase 4 vervolg: /branches/incasso-mkb (GSC E9: "mkb incasso" plus regionale varianten ruim 3.000 vertoningen, "incassobureau mkb" 397, "incasso mkb" 507): SERP-steekproef, gaten, eventueel veld `aanpak` gebruiken; daarna /incasso/incassobureau-inschakelen. 2) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce, /kennisbank/openstaande-factuur-stappenplan, /kennisbank/beslagvrije-voet-2026. 3) Kans (nieuwe URL, eerst kannibalisatiecheck): voorbeeldbrief huurachterstand (GSC "aanmaning huurachterstand" 220, "voorbeeldbrief huurachterstand" 42); nu gedekt door links naar aanmaning en betalingsregeling. 4) Over 1 tot 2 weken: GSC indexering/prestaties. 5) Niet-SEO: wifi-probleem bij huidige locatie (E10). 6) CI-run 564b36b controleren.
 blocked_by: Web Analytics (gebruiker of token)
-production_state: batch 4 (titels) live en gecontroleerd; batch 5 (/debiteurenbeheer) gepusht
+production_state: batch 5 (/debiteurenbeheer) live en gecontroleerd; batch 6 (verhuur) gepusht
 preview_url: https://website.geldgarant.workers.dev (staging, zelfde Worker)
 ```
 
@@ -81,4 +81,5 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 6. Search Console: sitemap-index ingediend, indexering en prestaties uitgelezen (E9), 4 URL's ter indexering.
 7. Productiecrawl na batch 3 schoon (E10); titels van 4 kannibalisatieparen gescheiden (batch 4), live gecontroleerd.
 8. CI-tijdslimiet 20 → 60 min (Lighthouse werd steeds afgebroken).
-9. /debiteurenbeheer: sectie afweging/factoring/start + 2 FAQ's (batch 5, E11).
+9. /debiteurenbeheer: sectie afweging/factoring/start + 2 FAQ's (batch 5, E11), live; 6 URL's ter indexering.
+10. /branches/incasso-verhuur: sectie aanpak per fase + brieflinks + 2 FAQ's (batch 6, E12).
