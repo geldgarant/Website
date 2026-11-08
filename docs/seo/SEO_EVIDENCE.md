@@ -288,3 +288,17 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
 - Trustoo Deventer: niet vermeld. Trustpilot: profiel bestaat (0 reviews volgens zoekresultaten), automatische controle
   geblokkeerd.
 - Alles met acties in `docs/seo/backlink-opportunities.csv`.
+
+### E19. Bedrijfsprofiel bijgewerkt en reviews beantwoord (8 nov 2026, akkoord gebruiker)
+
+- Ingediend via Bedrijfsprofiel-editor (Google beoordeelt bewerkingen, meestal binnen 10 minuten):
+    - beschrijving vervangen door de voorgestelde tekst (595 tekens, alleen site-feiten);
+    - chat-link wa.me/31850835230 (oud nummer) verwijderd;
+    - website http://geldgarant.com/ → https://geldgarant.com/ (website en chat al zichtbaar als doorgevoerd);
+    - openingstijden ma-vr 9.00-19.00 → 9.00-17.00, za/zo gesloten (gelijk aan site.ts).
+- Niet gewijzigd: servicegebied (blijft Deventer). De suggestielijst viel buiten beeld, waardoor het land Nederland
+  niet betrouwbaar te onderscheiden was van "Nederland, Texas"; voor een profiel met vast adres weinig effect.
+- Reviews: 19 reviews, gemiddeld 5,0, geen enkele was beantwoord. De 4 nieuwe (laatste 24 uur) beantwoord met korte,
+  persoonlijke reacties in "u"-vorm, zonder medewerkersnamen en zonder dossierdetails, ondertekend "team GeldGarant".
+  15 oudere reviews nog onbeantwoord. Let op: enkele reviews komen van debiteuren (bijv. over een openstaand dossier);
+  reacties daarop neutraal houden.
