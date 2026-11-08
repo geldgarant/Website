@@ -10,7 +10,7 @@ import Icon from "../components/Icon.astro"
 import KennisBeeld from "../components/KennisBeeld.astro"
 import Foto from "../components/Foto.astro"
 import fotoGesprek from "../assets/fotos/gesprek-adviseur.jpg"
-import fotoCollegas from "../assets/fotos/collegas-tafel.jpg"
+import fotoLaptop from "../assets/fotos/collegas-laptop.jpg"
 import { getCollection } from "astro:content"
 import { site, branches } from "../data/site"
 import { onderwerpById, leestijd } from "../data/kennisbank"
@@ -158,7 +158,7 @@ const branchIcon = {
                     <Foto
                         src={fotoGesprek}
                         alt="Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever"
-                        sizes="(min-width: 1024px) 560px, calc(100vw - 32px)"
+                        sizes="(min-width: 1024px) 960px, 260vw"
                         focus="64% 26%"
                         eager
                     />
@@ -183,10 +183,10 @@ const branchIcon = {
         <div class="wrap team">
             <div class="photo-slot team-photo">
                 <Foto
-                    src={fotoCollegas}
-                    alt="Twee collega's van GeldGarant aan tafel"
+                    src={fotoLaptop}
+                    alt="Twee medewerkers van GeldGarant bekijken samen een dossier op de laptop"
                     sizes="(min-width: 1024px) 560px, calc(100vw - 32px)"
-                    focus="47% 35%"
+                    focus="62% 40%"
                 />
                 <p class="team-chip">
                     <span class="hero-chip-dot" aria-hidden="true"></span>
@@ -508,7 +508,7 @@ const branchIcon = {
     }
     @media (min-width: 1024px) {
         .team-photo {
-            aspect-ratio: 5 / 4;
+            aspect-ratio: 3 / 2;
         }
     }
     .team-copy .h2 {

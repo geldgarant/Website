@@ -25,7 +25,11 @@ const { groot, klein } = Astro.props
                 src={groot.src}
                 alt={groot.alt}
                 focus={groot.focus}
-                sizes={klein ? "(min-width: 720px) 66vw, calc(100vw - 32px)" : "(min-width: 1280px) 1200px, calc(100vw - 32px)"}
+                sizes={
+                    klein
+                        ? "(min-width: 720px) 1200px, 180vw"
+                        : "(min-width: 1280px) 1200px, (min-width: 720px) calc(100vw - 32px), 180vw"
+                }
             />
         </div>
         {klein && (

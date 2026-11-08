@@ -6,7 +6,7 @@ import Base from "../layouts/Base.astro"
 import Icon from "../components/Icon.astro"
 import Crumbs from "../components/Crumbs.astro"
 import Foto from "../components/Foto.astro"
-import fotoHanddruk from "../assets/fotos/handdruk.jpg"
+import fotoWelkom from "../assets/fotos/welkom.jpg"
 import Veld from "../components/form/Veld.astro"
 import { site } from "../data/site"
 import { ONDERWERPEN } from "../lib/intake"
@@ -252,10 +252,10 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
                     <div class="zij-kaart bg-ink">
                         <div class="photo-slot zij-foto">
                             <Foto
-                                src={fotoHanddruk}
-                                alt="Een medewerker van GeldGarant verwelkomt een bezoeker"
-                                sizes="(min-width: 1024px) 400px, calc(100vw - 32px)"
-                                focus="50% 35%"
+                                src={fotoWelkom}
+                                alt="Medewerkers van GeldGarant ontvangen een bezoeker"
+                                sizes="(min-width: 1024px) 640px, 160vw"
+                                focus="55% 30%"
                             />
                         </div>
                         <h2 class="zij-kop">Kantoor Deventer</h2>

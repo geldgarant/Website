@@ -19,7 +19,12 @@ interface Props {
 }
 
 const { src, alt, sizes, class: klasse, focus = "50% 50%", eager = false, widths } = Astro.props
-const breedtes = (widths ?? [480, 800, 1200, 1600]).filter((w) => w <= src.width)
+// Altijd ook de volle breedte van het bronbestand aanbieden. Let op bij bijsnijden (object-fit: cover): het beeld wordt
+// dan breder getoond dan het vak, dus `sizes` moet die getoonde breedte geven, anders kiest de browser een te kleine
+// versie en wordt de foto onscherp.
+const breedtes = [...new Set([...(widths ?? [480, 800, 1200, 1600]), ...(widths ? [] : [src.width])])].filter(
+    (w) => w <= src.width,
+)
 ---
 
 <Picture
@@ -28,6 +33,7 @@ const breedtes = (widths ?? [480, 800, 1200, 1600]).filter((w) => w <= src.width
     sizes={sizes}
     widths={breedtes.length ? breedtes : [src.width]}
     formats={["avif", "webp"]}
+    quality={80}
     fallbackFormat="jpg"
     loading={eager ? "eager" : "lazy"}
     fetchpriority={eager ? "high" : "auto"}
