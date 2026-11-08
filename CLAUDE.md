@@ -125,3 +125,10 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Briefmaker: `src/components/Briefmaker.astro` (formulier is een `<div>`, geen `<form>`: er wordt niets verstuurd), DOM `src/scripts/briefmaker.ts`, tekst `src/lib/briefmaker.ts` (getest), HTML `src/lib/briefHtml.ts`, Word `src/lib/docx.ts` (eigen zip, geen afhankelijkheden; getest en geopend in LibreOffice). Pdf = `window.print()` met `#bm-print`. Lege velden = plaatshouder `[...]`, gemarkeerd.
 - Juridische keuzes: 14-dagenbrief zonder vaste einddatum; particulier: aanmaning en ingebrekestelling zonder incassokosten, sommatie alleen met vinkje "14-dagenbrief verstuurd". Wijzig je de brieftekst, draai dan `tests/unit/briefmaker.test.ts`.
 - Proef in de browser: `CHROME_PATH=/usr/bin/google-chrome node scripts/dev/briefmaker-proef.mjs /voorbeeldbrieven/sommatie` (preview op 4399).
+
+## Website-chat 8 nov 2026
+
+- Uptime: `scripts/uptime.mjs` + `.github/workflows/uptime.yml` (elk kwartier, issue met label `storing`); halfjaarherinnering `.github/workflows/herinneringen.yml`.
+- Foto's alleen via `src/components/Foto.astro` uit `src/assets/fotos/` (echte GeldGarant-foto's, alt zonder namen).
+- Kennisbankkaarten krijgen `<KennisBeeld slug=… />`; een nieuw artikel heeft een regel nodig in `BEELDEN` (`src/lib/kennisbeeld.ts`).
+- Formuliervelden en adres-zoekhulp: alleen `src/styles/form.css`.

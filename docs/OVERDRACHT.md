@@ -119,7 +119,7 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker voor `/api/*`). 73
 2. **KvK, LinkedIn, Instagram-bio**: website `https://geldgarant.com` en telefoon controleren; Instagram-bio zegt nog "No cure, no pay" (site: € 0 bij volledige betaling). Bevestigen of @geldgarant van GeldGarant is (dan in `site.sameAs`).
 3. **Google-reviews**: 15 oudere reviews beantwoorden (doet gebruiker zelf; neutraal bij debiteuren, geen namen, geen dossierdetails).
 4. **Bedrijfsprofiel**: servicegebied eventueel handmatig op "Nederland" (nu Deventer); controleren dat de beschrijving en openingstijden (9.00–17.00) door Google zijn goedgekeurd.
-5. **Netwerk verblijfslocatie**: beheerder vragen 188.114.96.0 en 188.114.97.0 toe te staan (router blokkeert adressen op .0; site én formulieren onbereikbaar op dat wifi).
+5. **Netwerk verblijfslocatie**: beheerder vragen 188.114.96.0 en 188.114.97.0 toe te staan (router blokkeert adressen op .0; site én formulieren onbereikbaar op dat wifi). Tijdelijk alleen voor de eigen laptop: hosts-bestand (als beheerder) met `188.114.96.1 geldgarant.com`, `www.geldgarant.com` en `api.geldgarant.com`; weghalen bij vertrek. Bezoekers elders hebben er geen last van (uptimecontrole draait buiten dat netwerk).
 6. **Bing Webmaster Tools**: inloggen met een Microsoft-account en importeren uit Search Console (Claude kan daarna verder).
 7. **Trustoo / NowID-websitelink / Trustpilot**: besluiten of we deze vermeldingen actief willen (geen contact zonder opdracht).
 8. **Bankbeslag** (beslagvrije voet): status wetsvoorstel 35225 door jurist laten nalopen voordat we erover schrijven.
@@ -128,12 +128,12 @@ Astro 7, statisch, Cloudflare Workers (static assets + worker voor `/api/*`). 73
 
 9. Akkoord AV, privacy- en cookieverklaring (bij voorkeur jurist). Let op: privacy- en cookieverklaring op 8 nov aangepast voor Cloudflare Web Analytics (cookieloos), versie 2026-11-08.
 10. Verwerkersovereenkomsten: Cloudflare, Resend, Telegram, CaseControl.
-11. WhatsApp Business op 085 212 73 88 (daarna chat-link in het Bedrijfsprofiel opnieuw toevoegen).
-12. Compliance-claims /over-ons 03 en /wki 02 bevestigen; buitenlandpagina: landenlijst en tariefaanpak; foto's kantoor/team zonder namen; losse prijzen debiteurenbeheer (€ 9,95 / € 3,95) bevestigen.
+11. ~~WhatsApp Business~~: actief op 085 212 73 88 en gekoppeld aan het Bedrijfsprofiel (8 nov). Op de site via `site.whatsappHref` met begintekst.
+12. Compliance-claims /over-ons 03 en /wki 02 bevestigen; buitenlandpagina: landenlijst en tariefaanpak; (foto's staan sinds 8 nov op de site); losse prijzen debiteurenbeheer (€ 9,95 / € 3,95) bevestigen.
 13. Periodiek: wettelijke rente 1 jan/1 jul (site én aanmaning), griffierechten, beslagvrije voet, hulpnummers.
 14. **Betalen en brieven**: antwoord CaseControl over `/pay` vanaf onze server; testbetaling € 5 op eigen testdossier (terugkeer-URL); telefoonnummer in CaseControl naar 085 212 73 88; aanmaning, sommatie en 14-dagenbrief in CaseControl plakken en proefbrief (laadt de dynamische QR?); 14-dagenbrief-kostensjabloon pas na 14 dagen; variabelenlijst `case.*`/`creditor.*` opvragen; webhook-secret vernieuwen.
 15. Intake-worker: Trigger.dev-job van de vorige bouwer roept nog `/api/internal/portal-provisioning/run` aan (404) → laten stoppen.
-16. Framer-site pas na een maand opzeggen (terugvaloptie); uptimecontrole instellen.
+16. Framer-site pas na een maand opzeggen (terugvaloptie). Uptimecontrole draait sinds 8 nov (zie §9); controleren dat GitHub-meldingen voor issues bij het account aanstaan.
 
 ---
 
@@ -169,3 +169,15 @@ Alles in `brieven/README.md` (raster, variabelen, werkwijze, QR). Drie brieven: 
 6. Fase 9 meting: events voor aanvragen (Web Analytics kent geen custom events; beoordelen of een lichte teller in de worker zonder persoonsgegevens nodig is).
 
 **Werkregels SEO** (uit de masterprompt): geen verzonnen data of claims; elke wijziging met bewijs in SEO_EVIDENCE; na elke batch: QA, push, live controleren, CI controleren, IndexNow, SEO_STATE bijwerken; kannibalisatie controleren vóór een nieuwe URL of titel; gebruikersacties duidelijk benoemen.
+
+---
+
+## 9. Website-chat 8 nov 2026
+
+- **Uptimecontrole**: `.github/workflows/uptime.yml` draait `scripts/uptime.mjs` elk kwartier (pagina's, sitemap, `/api/betalen` = koppeling CaseControl, `/api/qr`, intake-worker `/api/health`, www- en http-doorverwijzing). Elke fout krijgt na 20 s een tweede kans. Storing → één issue "Storing op geldgarant.com" met label `storing` (GitHub mailt); weer in orde → issue dicht. Lokaal: `node scripts/uptime.mjs` (`BASIS=` voor staging).
+- **Herinneringen**: `.github/workflows/herinneringen.yml` opent op 1 januari en 1 juli een issue (label `onderhoud`) met de checklist rente, brieven, kennisbank, hulpnummers.
+- **WhatsApp**: `site.whatsappHref` = wa.me met begintekst "Hallo GeldGarant, ik heb een vraag, namelijk: ". Staat op home 04, /contact-opnemen, /hulp-nodig-bij-geldproblemen, footer en mobiel menu.
+- **Foto's** (echte mensen en kantoor, aangeleverd 8 nov): `src/assets/fotos/` (`overleg-team.jpg` home 04, `kantoor-gesprek.jpg` /over-ons kantoor, `team-tafel.jpg` /werken-bij hero). Component `src/components/Foto.astro` (`astro:assets` Picture, AVIF/WebP, breedtes 480 tot 1600, `focus` = object-position). Alt-teksten zonder namen. De trainingsfoto (vierde) bewust niet gebruikt. In een `.photo-slot` vult de foto het kader (`global.css`).
+- **Kennisbank-illustraties**: `src/lib/kennisbeeld.ts` (met de hand getekende iconen in een vak van 100 x 100; per artikel een wit hoofdicoon + blauw accent, `BEELDEN`), component `src/components/KennisBeeld.astro` (navy vlak met blauwe gloed en stippenraster, pijlbol). Op home 07, /kennisbank en "Verder lezen". Nieuw artikel zonder regel in `BEELDEN` = build faalt (unit-test `tests/unit/kennisbeeld.test.ts`). Proefvel: `npx tsx scripts/dev/kennisbeeld-proef.mts uit.png`. Homekaarten tonen de leestijd in plaats van de datum.
+- **Formulierstijlen**: alle veldregels en de adres-zoekhulp van /vordering-indienen staan nu in `src/styles/form.css`.
+- **Intake-worker**: `/api/health` meldt `telegram: false` (interne Telegram-melding niet ingesteld); de privacyverklaring noemt Telegram wel. Navragen of dat zo hoort.
