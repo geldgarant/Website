@@ -510,7 +510,7 @@ export const brancheData: Branche[] = [
         icon: "cart",
         voor: "webshops",
         bij: "in e-commerce",
-        title: "Incasso voor webshops en e-commerce | GeldGarant",
+        title: "Incassobureau voor webshops en e-commerce | GeldGarant",
         description:
             "Veel kleine onbetaalde bestellingen van consumenten? GeldGarant int voor webshops, volgens de regels voor consumenten. Volledig betaald? Dan betaalt u niets.",
         h1: ["Incasso voor ", "webshops"],
@@ -575,6 +575,30 @@ export const brancheData: Branche[] = [
         ],
         verwant: ["incasso-groothandel", "incasso-dienstverlening", "incasso-zzp"],
         kennis: "betalingsherinnering-aanmaning-wik-brief",
+        // GSC (E9): "incasso e-commerce" pos 12, "incasso webshops" pos 18. Route ordent bestaande feiten van deze pagina.
+        aanpak: {
+            label: "Zo werkt het",
+            kop: ["Van openstaande bestelling naar ", "betaald"],
+            lead: "Een vaste route voor elke onbetaalde bestelling, ook als het om tientallen kleine bedragen per maand gaat.",
+            stappen: [
+                {
+                    t: "U levert in één keer aan",
+                    d: "We spreken een vaste manier van aanleveren af, zodat u niet elke bestelling los hoeft in te dienen.",
+                },
+                {
+                    t: "De klant krijgt de 14-dagenbrief",
+                    d: "Met het exacte bedrag aan incassokosten en 14 dagen om zonder die kosten te betalen. Daarna volgen we op per e-mail en sms.",
+                },
+                {
+                    t: "Bezwaar? Dan het bewijs erbij",
+                    d: "Zegt de klant dat het pakket niet aankwam of dat hij retourneerde, dan leggen we het afleverbewijs of de track-and-trace voor en controleren we de bedenktijd.",
+                },
+            ],
+            brieven: [
+                { t: "Voorbeeld betalingsherinnering", href: "/voorbeeldbrieven/betalingsherinnering" },
+                { t: "14-dagenbrief maken", href: "/incasso/wik-brief#briefmaker" },
+            ],
+        },
     },
     {
         slug: "incasso-zorg",

@@ -1,7 +1,7 @@
 ---
 title: "Openstaande factuur: het stappenplan van herinnering tot rechter"
-seoTitle: "Openstaande factuur? Het stappenplan voor 2026 | GeldGarant"
-description: "Factuur niet betaald? Volg dit stappenplan: herinnering, aanmaning, 14-dagenbrief, incasso en de rechter. Met termijnen, kosten en de fouten die u voorkomt."
+seoTitle: "Openstaande facturen innen: stappenplan 2026 | GeldGarant"
+description: "Openstaande facturen innen? Volg dit stappenplan: herinnering, aanmaning, 14-dagenbrief, incasso en de rechter. Met termijnen, kosten en de fouten die u voorkomt."
 onderwerp: factuur
 uitgelicht: true
 lead: "Een factuur die over de vervaldatum is, vraagt om een vaste aanpak. Wie elke stap op tijd zet, krijgt het vaakst betaald en houdt de klantrelatie het best intact. Dit is de volgorde die werkt."

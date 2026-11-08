@@ -236,3 +236,18 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   1440 px, geen overloop. E2e van de pagina groen.
 - CI-run 42431568238 (commit ae0a53a): **volledig groen**, voor het eerst sinds de livegang. Lighthouse-steekproef 16
   URL's x 2 runs: alle drempels (performance, toegankelijkheid, best practices, SEO >= 0,95; CLS <= 0,1) gehaald.
+
+### E16. Snelle winst dicht bij pagina 1 (8 nov 2026)
+
+- `/branches/incasso-ecommerce` (GSC: "incasso e-commerce" 207 vert. pos 12,1; "incasso webshops" 112 pos 18;
+  "incassobureau webshop" 12; "incassobureau e-commerce" 9): title → "Incassobureau voor webshops en e-commerce";
+  route in 3 stappen (aanleveren, 14-dagenbrief, bezwaar met bewijs) en links naar voorbeeld betalingsherinnering en
+  14-dagenbriefmaker, alleen bestaande feiten van de pagina. Branche-sjabloon: 3 stappen = 3 kolommen op desktop.
+- `/kennisbank/openstaande-factuur-stappenplan` (GSC: "openstaande facturen" 260 pos 19,1; "openstaande factuur" 138
+  pos 19,9; "openstaande facturen innen" 42): seoTitle → "Openstaande facturen innen: stappenplan 2026", description
+  begint met "Openstaande facturen innen?".
+- `/kennisbank/beslagvrije-voet-2026` (GSC: "minimale beslagvrije voet 2026" 56 pos 11, 1 klik; "beslagvrije voet 2026"
+  36 pos 14,2): description noemt nu minimum (95% van de bijstandsnorm) en 1 juli. Zoekers zijn vooral debiteuren
+  (weinig acquisitiewaarde); bankbeslag niet uitgebreid zonder primaire bron (GSC: "beslagvrij bedrag bankbeslag 2026"
+  66 pos 9,5 — kans, eerst bron nalopen).
+- Controles: check, lint, format, unit, build, html, seo groen; e2e branches + beide artikelen groen; screenshots.

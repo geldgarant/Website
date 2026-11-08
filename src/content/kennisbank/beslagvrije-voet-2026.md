@@ -1,7 +1,7 @@
 ---
 title: "Beslagvrije voet 2026: wat houdt de debiteur over?"
 seoTitle: "Beslagvrije voet 2026: bedragen en berekening | GeldGarant"
-description: "De beslagvrije voet in 2026: hoe hij wordt berekend, de maximumbedragen per leefsituatie, wat er in 2026 veranderde en wat het betekent voor u als schuldeiser."
+description: "Beslagvrije voet 2026: minimaal 95% van de bijstandsnorm, de maximumbedragen per leefsituatie (ook per 1 juli) en wat het betekent voor u als schuldeiser."
 onderwerp: rechter
 lead: "Bij beslag op loon of uitkering houdt de debiteur altijd een deel over om van te leven: de beslagvrije voet. Voor u als schuldeiser bepaalt die voet hoeveel een loonbeslag per maand oplevert. Dit zijn de regels en bedragen van 2026."
 kort:

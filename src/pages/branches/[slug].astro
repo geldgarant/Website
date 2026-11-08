@@ -212,7 +212,7 @@ const jsonLd = [
                     </h2>
                     <p class="lead">{aanpak.lead}</p>
                 </div>
-                <ol role="list" class="aanpak">
+                <ol role="list" class:list={["aanpak", { drie: aanpak.stappen.length === 3 }]}>
                     {aanpak.stappen.map((s, i) => (
                         <li>
                             <span class="a-num num" aria-hidden="true">
@@ -534,6 +534,11 @@ const jsonLd = [
         .aanpak {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
+        }
+    }
+    @media (min-width: 1024px) {
+        .aanpak.drie {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
     .aanpak li {

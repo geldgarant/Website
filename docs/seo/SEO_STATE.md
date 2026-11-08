@@ -1,14 +1,14 @@
 # SEO-status (hervattingspunt)
 
 ```yaml
-last_updated: 2026-11-08 05:30 (Europe/Amsterdam)
+last_updated: 2026-11-08 06:10 (Europe/Amsterdam)
 current_branch: main
-latest_commit: zie `git log -1` (batch 8: inschakelen, weinig zin + FAQ)
-current_phase: 4 (commerciële pagina's): /debiteurenbeheer, verhuur, mkb, inschakelen klaar (E11 tot E14)
+latest_commit: zie `git log -1` (batch 9: snelle winst e-commerce, stappenplan, beslagvrije voet)
+current_phase: 4 (4 van 6 commerciële pagina's) + snelle winst (E16) klaar
 current_task: geen lopende wijziging
 status: batch 3 live (Workers Build success); Search Console gekoppeld, sitemap ingediend, 4 URL's ter indexering aangeboden
 workspace: Windows-pc van de gebruiker, C:\Users\Ilyas Chattat\code\geldgarant-website (zie CLAUDE.md)
-next_action: 1) Snelle winst dicht bij pagina 1 (E9): /branches/incasso-ecommerce ("incasso e-commerce" pos 12, "incasso webshops" 18), /kennisbank/openstaande-factuur-stappenplan ("openstaande facturen" 19), /kennisbank/beslagvrije-voet-2026 (9 tot 14): title/description/intro scherper op de zoekvraag, ontbrekende antwoorden. 2) Fase 4 rest: /incasso en /tarieven (SERP-vergelijking). 3) Kans: voorbeeldbrief huurachterstand (eerst kannibalisatiecheck). 4) GSC: mkb, inschakelen-wijziging ter indexering (quotum per dag); over 1 tot 2 weken prestaties meten. 5) Niet-SEO: wifi-probleem huidige locatie (E10). 6) CI is groen (run 42431568238); bij elke batch de CI-uitkomst controleren.geldgarant.workers.dev (staging, zelfde Worker)
+next_action: 1) Fase 4 rest: /incasso ("incasso uitbesteden", "incasso voor ondernemers", "incasso b2b") en /tarieven ("wat kost een incassobureau"): SERP-steekproef, ontbrekende antwoorden, alleen bestaande feiten. 2) Kans: bankbeslag in /kennisbank/beslagvrije-voet-2026 (GSC 66 vert. pos 9,5) alleen met primaire bron (wetten.overheid.nl / rijksoverheid.nl). 3) Kans: voorbeeldbrief huurachterstand (eerst kannibalisatiecheck). 4) GSC: ter indexering mkb, inschakelen, e-commerce, stappenplan (quotum per dag); over 1 tot 2 weken prestaties meten en keyword-url-map bijwerken. 5) Niet-SEO: wifi-probleem huidige locatie (E10). 6) Bij elke batch CI-uitkomst controleren.
 ```
 
 ## Afgerond sinds vorig checkpoint (batch 3)
@@ -83,4 +83,5 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 11. /branches/incasso-mkb: checklist betrouwbaar incassobureau + FAQ (batch 7, E13), live.
 12. /incasso/incassobureau-inschakelen: blok weinig zin + FAQ benodigdheden (batch 8, E14), live.
 13. CI: Lighthouse in GitHub Actions op een steekproef per sjabloon (alle pagina's x 3 runs duurde > 60 min).
-14. CLS-fix H1 /hulp-nodig-bij-geldproblemen (E15).
+14. CLS-fix H1 /hulp-nodig-bij-geldproblemen (E15); CI volledig groen.
+15. Snelle winst: e-commerce, stappenplan, beslagvrije voet (batch 9, E16).
