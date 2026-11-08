@@ -17,6 +17,36 @@ test.describe("homepage interacties", () => {
         await expect(menu).toBeHidden()
     })
 
+    test("desktop: uitklappaneel opent, sluit met Escape en bevat de diepere pagina's", async ({ page, isMobile }) => {
+        test.skip(isMobile, "alleen desktop")
+        await page.goto("/")
+        const knop = page.locator('[data-mega-trigger="diensten"]')
+        const paneel = page.locator('[data-mega="diensten"]')
+        await expect(paneel).toBeHidden()
+        await knop.click()
+        await expect(paneel).toBeVisible()
+        await expect(knop).toHaveAttribute("aria-expanded", "true")
+        await expect(paneel.locator('a[href="/incasso/incasso-in-het-buitenland"]')).toBeVisible()
+        await expect(paneel.locator('a[href="/branches"]')).toBeVisible()
+        await page.keyboard.press("Escape")
+        await expect(paneel).toBeHidden()
+        await expect(knop).toBeFocused()
+        await page.locator('[data-mega-trigger="over"]').click()
+        await expect(page.locator('[data-mega="over"] a[href="/wki"]')).toBeVisible()
+        await expect(page.locator('.nav a[href="/contact-opnemen"]')).toBeVisible()
+    })
+
+    test("mobiel: menugroep klapt uit met de pagina's eronder", async ({ page, isMobile }) => {
+        test.skip(!isMobile, "alleen mobiel")
+        await page.goto("/")
+        await page.locator("[data-menu-toggle]").click()
+        const groep = page.locator('[aria-controls="m-kennis"]')
+        await expect(page.locator("#m-kennis")).toBeHidden()
+        await groep.click()
+        await expect(groep).toHaveAttribute("aria-expanded", "true")
+        await expect(page.locator('#m-kennis a[href="/voorbeeldbrieven"]')).toBeVisible()
+    })
+
     test("afrekening rekent volgens de WIK-staffel", async ({ page }) => {
         await page.goto("/")
         const veld = page.locator("[data-bedrag]")

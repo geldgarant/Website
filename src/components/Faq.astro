@@ -2,6 +2,8 @@
 // Veelgestelde vragen: kop links (sticky op desktop), uitklappers rechts. Gebruikt op home en dienstpagina's.
 import Icon from "./Icon.astro"
 import { site } from "../data/site"
+import Foto from "./Foto.astro"
+import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
 
 interface Props {
     items: readonly { q: string; a: string }[]
@@ -23,16 +25,27 @@ const { items, idx, id = "faq-title", sectionId } = Astro.props
                 </slot>
             </h2>
             <div class="ask">
-                <p>
-                    <strong>Staat uw vraag er niet tussen?</strong> Bel ons, we helpen u direct verder.
-                </p>
-                <a class="btn btn-dark" href={site.phoneHref}>
-                    Bel{"\u00a0"}
-                    {site.phone}
-                    <span class="btn-dot">
-                        <Icon name="phone" size={18} />
+                <div class="ask-kop">
+                    <span class="ask-gezicht">
+                        <Foto src={fotoAdviseur} alt="" sizes="150px" widths={[300, 450]} focus="36% 22%" />
                     </span>
-                </a>
+                    <p>
+                        <strong>Staat uw vraag er niet tussen?</strong> Bel ons, we helpen u direct verder.
+                    </p>
+                </div>
+                <div class="ask-acties">
+                    <a class="btn btn-dark" href={site.phoneHref}>
+                        Bel{"\u00a0"}
+                        {site.phone}
+                        <span class="btn-dot">
+                            <Icon name="phone" size={18} />
+                        </span>
+                    </a>
+                    <a class="btn btn-ghost" href={site.whatsappHref} target="_blank" rel="noopener">
+                        <Icon name="whatsapp" size={18} />
+                        WhatsApp
+                    </a>
+                </div>
             </div>
         </div>
         <div class="faq">
@@ -87,7 +100,23 @@ const { items, idx, id = "faq-title", sectionId } = Astro.props
         font-size: 1rem;
         margin-bottom: 4px;
     }
-    .ask .btn {
+    .ask-kop {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .ask-gezicht {
+        flex: none;
+        width: 64px;
+        height: 64px;
+        overflow: hidden;
+        border-radius: 50%;
+        background: var(--surface);
+    }
+    .ask-acties {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
         margin-top: 20px;
     }
     .faq {

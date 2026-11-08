@@ -6,6 +6,8 @@
 import Base from "../layouts/Base.astro"
 import Icon from "../components/Icon.astro"
 import Crumbs from "../components/Crumbs.astro"
+import Foto from "../components/Foto.astro"
+import fotoWelkom from "../assets/fotos/welkom.jpg"
 import Overzicht from "../components/debiteuren/Overzicht.astro"
 import Zones from "../components/debiteuren/Zones.astro"
 import Berichten from "../components/debiteuren/Berichten.astro"
@@ -111,8 +113,18 @@ const jsonLd = [
                     </ul>
                 </div>
                 <div class="hero-visual">
-                    <img class="hero-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
-                    <Overzicht />
+                    <div class="hero-foto">
+                        <Foto
+                            src={fotoWelkom}
+                            alt="Medewerkers van GeldGarant ontvangen een opdrachtgever"
+                            sizes="(min-width: 1024px) 960px, 260vw"
+                            focus="32% 28%"
+                            eager
+                        />
+                    </div>
+                    <div class="hero-card">
+                        <Overzicht />
+                    </div>
                 </div>
             </div>
         </div>
@@ -191,20 +203,28 @@ const jsonLd = [
     .hero-checks :global(svg) {
         color: var(--green);
     }
+    /* Zelfde opbouw als de home-hero: foto bovenin, verloop naar navy, het overzicht schuift erover */
     .hero-visual {
+        --foto-h: clamp(190px, 50vw, 260px);
         position: relative;
         overflow: hidden;
-        padding: clamp(16px, 3vw, 40px);
+        padding: var(--foto-h) clamp(12px, 3vw, 32px) clamp(12px, 3vw, 32px);
         border-radius: var(--r-xl);
         background: var(--ink);
     }
-    .hero-mark {
+    .hero-foto {
         position: absolute;
-        right: 0;
-        top: 0;
-        width: 50%;
-        height: auto;
-        opacity: 0.06;
-        pointer-events: none;
+        inset: 0 0 auto;
+        height: calc(var(--foto-h) + 110px);
+    }
+    .hero-foto::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(6, 17, 38, 0) 35%, rgba(6, 17, 38, 0.55) 72%, var(--ink) 100%);
+    }
+    .hero-card {
+        position: relative;
+        z-index: 1;
     }
 </style>

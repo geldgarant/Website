@@ -1,9 +1,20 @@
 ---
-// Header: dunne utility-balk (scrollt weg) + zwevende kaart die blijft staan (Breyta-patroon)
+// Header: dunne utility-balk (scrollt weg) + zwevende kaart die blijft staan.
+// Desktop (≥ 1080 px): drie uitklappanelen (Diensten, Kennis, Over ons) en drie directe links (data: src/data/menu.ts).
+// Panelen openen met klik, Enter/Spatie of met de muis (kleine vertraging), sluiten met Escape, klik buiten of focus weg.
+// Mobiel: kaart onder de balk met snelle contactknoppen, uitklapgroepen en de knop "Vordering indienen".
+// Scrollen: de balk wordt compacter en op desktop verschijnt een belknop (de utility-balk met het nummer is dan weg).
 import Logo from "./Logo.astro"
 import Icon from "./Icon.astro"
-import { site, nav } from "../data/site"
+import Foto from "./Foto.astro"
+import KennisBeeld from "./KennisBeeld.astro"
+import { site } from "../data/site"
+import { menu, isPaneel, isActief } from "../data/menu"
+import fotoGesprek from "../assets/fotos/gesprek-adviseur.jpg"
+import fotoLaptop from "../assets/fotos/collegas-laptop.jpg"
+
 const path = Astro.url.pathname.replace(/\/$/, "") || "/"
+const panelen = menu.filter(isPaneel)
 ---
 
 <div class="utility">
@@ -18,6 +29,12 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
                 <a href={site.phoneHref}>
                     <Icon name="phone" size={15} />
                     {site.phone}
+                </a>
+            </li>
+            <li class="desk">
+                <a href={site.whatsappHref} target="_blank" rel="noopener">
+                    <Icon name="whatsapp" size={15} />
+                    WhatsApp
                 </a>
             </li>
             <li class="desk">
@@ -39,31 +56,46 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
 </div>
 
 <header class="header" data-header>
-    <div class="wrap">
+    <div class="wrap header-wrap">
         <div class="bar">
             <Logo height={26} />
 
             <nav class="nav" aria-label="Hoofdmenu">
                 <ul role="list">
-                    {nav.map((item) => (
-                        <li>
-                            <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
-                                {item.label}
-                            </a>
-                        </li>
-                    ))}
+                    {menu.map((m) =>
+                        isPaneel(m) ? (
+                            <li>
+                                <button
+                                    class:list={["nav-link", "nav-trigger", { "is-actief": isActief(m, path) }]}
+                                    type="button"
+                                    aria-expanded="false"
+                                    aria-controls={`mega-${m.id}`}
+                                    data-mega-trigger={m.id}
+                                >
+                                    {m.label}
+                                    <Icon name="chevron" size={16} class="nav-chev" />
+                                </button>
+                            </li>
+                        ) : (
+                            <li>
+                                <a class="nav-link" href={m.href} aria-current={isActief(m, path) ? "page" : undefined}>
+                                    {m.label}
+                                </a>
+                            </li>
+                        ),
+                    )}
                 </ul>
             </nav>
 
             <div class="actions">
+                <a class="icon-btn bar-call" href={site.phoneHref} aria-label={`Bel ${site.phone}`}>
+                    <Icon name="phone" size={20} />
+                </a>
                 <a class="btn bar-cta" href="/vordering-indienen">
                     Vordering indienen
                     <span class="btn-dot">
                         <Icon name="arrow" size={16} />
                     </span>
-                </a>
-                <a class="icon-btn bar-call" href={site.phoneHref} aria-label={`Bel ${site.phone}`}>
-                    <Icon name="phone" size={20} />
                 </a>
                 <button
                     class="icon-btn bar-menu"
@@ -80,19 +112,169 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
                 </button>
             </div>
         </div>
+
+        {panelen.map((p) => (
+            <div class="mega" id={`mega-${p.id}`} hidden data-mega={p.id}>
+                <div class:list={["mega-grid", `mega-${p.id}`]}>
+                    {p.groepen.map((g) => (
+                        <div class:list={["mega-groep", { compact: g.compact }]}>
+                            <p class="mega-titel">{g.titel}</p>
+                            <ul role="list" class:list={[g.compact ? "mega-lijst" : "mega-kaarten"]}>
+                                {g.links.map((l) => (
+                                    <li>
+                                        <a href={l.href} class={g.compact ? "mega-mini" : "mega-kaart"}>
+                                            {l.icon && (
+                                                <span class="mega-icoon">
+                                                    <Icon name={l.icon} size={20} />
+                                                </span>
+                                            )}
+                                            <span class="mega-tekst">
+                                                <span class="mega-label">{l.label}</span>
+                                                {l.tekst && <span class="mega-uitleg">{l.tekst}</span>}
+                                            </span>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                            {g.alle && (
+                                <a class="textlink mega-alle" href={g.alle.href}>
+                                    {g.alle.label}
+                                </a>
+                            )}
+                        </div>
+                    ))}
+
+                    {p.promo === "indienen" && (
+                        <a class="promo" href="/vordering-indienen">
+                            <span class="photo-slot promo-foto">
+                                <Foto src={fotoGesprek} alt="" sizes="640px" widths={[640, 960]} focus="64% 26%" />
+                            </span>
+                            <span class="promo-body">
+                                <span class="promo-chip">
+                                    <span class="promo-dot" aria-hidden="true" />
+                                    Binnen 1 uur in behandeling
+                                </span>
+                                <span class="promo-kop">Vordering indienen in drie minuten</span>
+                                <span class="promo-tekst">Betaalt de debiteur volledig, dan betaalt u niets.</span>
+                                <span class="promo-knop">
+                                    Start nu <Icon name="arrow" size={16} />
+                                </span>
+                            </span>
+                        </a>
+                    )}
+
+                    {p.promo === "stappenplan" && (
+                        <a class="promo promo-licht" href="/kennisbank/openstaande-factuur-stappenplan">
+                            <KennisBeeld slug="openstaande-factuur-stappenplan" class="promo-beeld" />
+                            <span class="promo-body">
+                                <span class="promo-label">Begin hier</span>
+                                <span class="promo-kop">Openstaande factuur: het stappenplan</span>
+                                <span class="promo-knop">
+                                    Lees het stappenplan <Icon name="arrow" size={16} />
+                                </span>
+                            </span>
+                        </a>
+                    )}
+
+                    {p.promo === "contact" && (
+                        <div class="promo">
+                            <span class="photo-slot promo-foto">
+                                <Foto src={fotoLaptop} alt="" sizes="640px" widths={[640, 1024]} focus="62% 40%" />
+                            </span>
+                            <span class="promo-body">
+                                <span class="promo-kop">Direct contact met uw vaste behandelaar</span>
+                                <span class="promo-tekst">Bereikbaar {site.hours}.</span>
+                                <span class="promo-acties">
+                                    <a class="btn btn-light promo-btn" href={site.phoneHref}>
+                                        <Icon name="phone" size={16} />
+                                        {site.phone}
+                                    </a>
+                                    <a
+                                        class="btn btn-ghost-licht promo-btn"
+                                        href={site.whatsappHref}
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        <Icon name="whatsapp" size={16} />
+                                        WhatsApp
+                                    </a>
+                                </span>
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </div>
+        ))}
     </div>
 
     <div class="backdrop" hidden data-menu-backdrop></div>
     <div class="mobile-menu" id="mobile-menu" hidden data-menu>
+        <ul role="list" class="m-contact">
+            <li>
+                <a href={site.phoneHref}>
+                    <Icon name="phone" size={20} />
+                    Bellen
+                </a>
+            </li>
+            <li>
+                <a href={site.whatsappHref} target="_blank" rel="noopener">
+                    <Icon name="whatsapp" size={20} />
+                    WhatsApp
+                </a>
+            </li>
+            <li>
+                <a href={`mailto:${site.email}`}>
+                    <Icon name="mail" size={20} />
+                    E-mail
+                </a>
+            </li>
+        </ul>
+
         <ul role="list" class="mobile-nav">
-            {nav.map((item) => (
-                <li>
-                    <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
-                        {item.label}
-                        <Icon name="arrow" size={18} />
-                    </a>
-                </li>
-            ))}
+            {menu.map((m) =>
+                isPaneel(m) ? (
+                    <li class="m-groep">
+                        <button
+                            class:list={["m-kop", { "is-actief": isActief(m, path) }]}
+                            type="button"
+                            aria-expanded="false"
+                            aria-controls={`m-${m.id}`}
+                            data-m-toggle
+                        >
+                            {m.label}
+                            <Icon name="chevron" size={20} class="m-chev" />
+                        </button>
+                        <div class="m-sub" id={`m-${m.id}`} hidden>
+                            {m.groepen.map((g) => (
+                                <div class="m-subgroep">
+                                    <p class="m-subtitel">{g.titel}</p>
+                                    <ul role="list" class:list={[{ "m-chips": g.compact }]}>
+                                        {g.links.map((l) => (
+                                            <li>
+                                                <a href={l.href}>{l.label}</a>
+                                            </li>
+                                        ))}
+                                        {g.alle && (
+                                            <li>
+                                                <a class="m-alle" href={g.alle.href}>
+                                                    {g.alle.label}
+                                                </a>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </li>
+                ) : (
+                    <li>
+                        <a class="m-kop" href={m.href} aria-current={isActief(m, path) ? "page" : undefined}>
+                            {m.label}
+                            <Icon name="arrow" size={18} />
+                        </a>
+                    </li>
+                ),
+            )}
         </ul>
         <div class="mobile-actions">
             <a class="btn" href="/vordering-indienen">
@@ -101,18 +283,8 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
                     <Icon name="arrow" size={18} />
                 </span>
             </a>
-            <a class="btn btn-ghost" href={site.phoneHref}>
-                Bel{" "}
-                {site.phone}
-            </a>
         </div>
         <ul role="list" class="mobile-meta">
-            <li>
-                <a href={site.whatsappHref} target="_blank" rel="noopener">
-                    <Icon name="whatsapp" size={16} />
-                    WhatsApp
-                </a>
-            </li>
             <li>
                 <a href={site.portalLogin}>
                     <Icon name="user" size={16} />
@@ -125,12 +297,6 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
                     Brief van ons ontvangen?
                 </a>
             </li>
-            <li>
-                <a href={`mailto:${site.email}`}>
-                    <Icon name="mail" size={16} />
-                    {site.email}
-                </a>
-            </li>
         </ul>
     </div>
 </header>
@@ -141,6 +307,8 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     const menu = document.querySelector<HTMLElement>("[data-menu]")
     const backdrop = document.querySelector<HTMLElement>("[data-menu-backdrop]")
     const label = document.querySelector<HTMLElement>("[data-menu-label]")
+
+    // ---------- mobiel menu ----------
     const setOpen = (open: boolean) => {
         if (!toggle || !menu) return
         if (open) {
@@ -157,16 +325,79 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     }
     toggle?.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"))
     backdrop?.addEventListener("click", () => setOpen(false))
+    document.querySelectorAll<HTMLButtonElement>("[data-m-toggle]").forEach((knop) => {
+        knop.addEventListener("click", () => {
+            const sub = document.getElementById(knop.getAttribute("aria-controls") || "")
+            const open = knop.getAttribute("aria-expanded") !== "true"
+            knop.setAttribute("aria-expanded", String(open))
+            if (sub) sub.hidden = !open
+        })
+    })
+
+    // ---------- uitklappanelen (desktop) ----------
+    const triggers = [...document.querySelectorAll<HTMLButtonElement>("[data-mega-trigger]")]
+    const fijn = window.matchMedia("(hover: hover) and (pointer: fine)")
+    let openId: string | null = null
+    let timer: number | undefined
+    const paneel = (id: string) => document.querySelector<HTMLElement>(`[data-mega="${id}"]`)
+    const zetMega = (id: string | null) => {
+        window.clearTimeout(timer)
+        if (id === openId) return
+        triggers.forEach((t) => {
+            const dit = t.dataset.megaTrigger === id
+            t.setAttribute("aria-expanded", String(dit))
+            const p = paneel(t.dataset.megaTrigger || "")
+            if (p) p.hidden = !dit
+        })
+        openId = id
+        header?.classList.toggle("mega-open", id !== null)
+    }
+    triggers.forEach((t) => {
+        const id = t.dataset.megaTrigger || ""
+        t.addEventListener("click", () => zetMega(openId === id ? null : id))
+        t.addEventListener("mouseenter", () => {
+            if (!fijn.matches) return
+            window.clearTimeout(timer)
+            timer = window.setTimeout(() => zetMega(id), openId ? 0 : 90)
+        })
+    })
+    const zone = document.querySelector<HTMLElement>(".header-wrap")
+    zone?.addEventListener("mouseleave", () => {
+        if (!fijn.matches || !openId) return
+        timer = window.setTimeout(() => zetMega(null), 220)
+    })
+    zone?.addEventListener("mouseenter", () => window.clearTimeout(timer))
+    // gewone links in de balk sluiten een open paneel bij aanwijzen
+    document.querySelectorAll<HTMLElement>(".nav a.nav-link").forEach((a) =>
+        a.addEventListener("mouseenter", () => {
+            if (fijn.matches && openId) zetMega(null)
+        }),
+    )
+    zone?.addEventListener("focusout", (e) => {
+        const naar = (e as FocusEvent).relatedTarget as Node | null
+        if (openId && naar && !zone.contains(naar)) zetMega(null)
+    })
+    document.addEventListener("click", (e) => {
+        if (openId && zone && !zone.contains(e.target as Node)) zetMega(null)
+    })
+
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") {
+        if (e.key !== "Escape") return
+        if (openId) {
+            const t = triggers.find((x) => x.dataset.megaTrigger === openId)
+            zetMega(null)
+            t?.focus()
+        } else if (toggle?.getAttribute("aria-expanded") === "true") {
             setOpen(false)
             toggle.focus()
         }
     })
     window.matchMedia("(min-width: 1080px)").addEventListener("change", (e) => {
         if (e.matches) setOpen(false)
+        else zetMega(null)
     })
-    // kaart krijgt meer diepte zodra er gescrold is
+
+    // ---------- scrollen: compactere kaart ----------
     const onScroll = () => header?.classList.toggle("is-scrolled", window.scrollY > 24)
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
@@ -246,6 +477,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         z-index: 50;
         margin-top: 10px;
     }
+    .header-wrap {
+        position: relative;
+    }
     .bar {
         display: flex;
         align-items: center;
@@ -260,12 +494,20 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         box-shadow:
             0 0 0 1px rgba(6, 17, 38, 0.06),
             0 8px 24px -14px rgba(6, 17, 38, 0.22);
-        transition: box-shadow 0.25s ease;
+        transition:
+            box-shadow 0.25s ease,
+            height 0.25s var(--ease);
     }
-    .header.is-scrolled .bar {
+    .header.is-scrolled .bar,
+    .header.mega-open .bar {
         box-shadow:
             0 0 0 1px rgba(6, 17, 38, 0.06),
             0 16px 36px -14px rgba(6, 17, 38, 0.32);
+    }
+    @media (min-width: 1080px) {
+        .header.is-scrolled .bar {
+            height: calc(var(--header-h) - 10px);
+        }
     }
 
     .nav {
@@ -280,23 +522,59 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         display: flex;
         gap: 2px;
     }
-    .nav a {
+    .nav-link {
         display: inline-flex;
         align-items: center;
+        gap: 4px;
         min-height: 44px;
         padding: 0 14px;
+        border: 0;
         border-radius: var(--r-pill);
+        background: transparent;
+        font: inherit;
         font-size: var(--fs-sm);
         font-weight: 500;
         color: var(--ink);
+        white-space: nowrap;
+        cursor: pointer;
         transition: background-color 0.15s ease;
     }
-    .nav a:hover {
+    .nav-trigger {
+        padding-right: 10px;
+    }
+    .nav li {
+        flex: none;
+    }
+    /* smalle desktop: compacter, zodat alles op één regel past */
+    @media (min-width: 1080px) and (max-width: 1239px) {
+        .bar {
+            gap: 8px;
+        }
+        .nav-link {
+            padding: 0 9px;
+        }
+        .nav-trigger {
+            padding-right: 6px;
+        }
+        .bar-cta {
+            padding-left: 16px;
+        }
+    }
+    .nav-link:hover,
+    .nav-trigger[aria-expanded="true"] {
         background: var(--surface);
     }
-    .nav a[aria-current="page"] {
+    .nav-link[aria-current="page"],
+    .nav-trigger.is-actief {
         background: var(--blue-soft);
         color: var(--blue-ink);
+    }
+    .nav :global(.nav-chev) {
+        color: var(--muted);
+        transition: transform 0.2s var(--ease);
+    }
+    .nav-trigger[aria-expanded="true"] :global(.nav-chev) {
+        transform: rotate(180deg);
     }
 
     .actions {
@@ -329,7 +607,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         background: var(--surface);
         color: var(--ink);
         cursor: pointer;
-        transition: background-color 0.15s ease;
+        transition:
+            background-color 0.15s ease,
+            opacity 0.2s ease;
     }
     .icon-btn:hover {
         background: var(--surface-2);
@@ -339,9 +619,15 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         color: #fff;
     }
     @media (min-width: 1080px) {
-        .bar-call,
         .bar-menu {
             display: none;
+        }
+        /* op desktop staat het nummer in de utility-balk; pas na scrollen een belknop in de kaart */
+        .bar-call {
+            display: none;
+        }
+        .header.is-scrolled .bar-call {
+            display: grid;
         }
     }
     .bar-menu :global(.i-close),
@@ -350,6 +636,245 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     }
     .bar-menu[aria-expanded="true"] :global(.i-close) {
         display: block;
+    }
+
+    /* ---------- uitklappanelen ---------- */
+    .mega {
+        position: absolute;
+        left: var(--gutter);
+        right: var(--gutter);
+        top: calc(100% + 8px);
+        padding: 12px;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow:
+            0 0 0 1px rgba(6, 17, 38, 0.06),
+            0 28px 56px -20px rgba(6, 17, 38, 0.38);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        .mega:not([hidden]) {
+            animation: mega-in 0.18s var(--ease);
+        }
+        @keyframes mega-in {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+        }
+    }
+    @media (max-width: 1079px) {
+        .mega {
+            display: none;
+        }
+    }
+    .mega-grid {
+        display: grid;
+        gap: 12px;
+    }
+    .mega-diensten,
+    .mega-kennis {
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 0.95fr);
+    }
+    .mega-over {
+        grid-template-columns: minmax(0, 2.35fr) minmax(0, 0.95fr);
+    }
+    .mega-groep {
+        padding: 16px 12px 12px;
+    }
+    .mega-titel {
+        margin: 0 0 10px 12px;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--blue-ink);
+    }
+    .mega-kaarten {
+        display: grid;
+        gap: 2px;
+    }
+    .mega-over .mega-kaarten {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .mega-kaart {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 12px;
+        border-radius: 14px;
+        color: var(--ink);
+        transition: background-color 0.15s ease;
+    }
+    .mega-kaart:hover,
+    .mega-kaart:focus-visible {
+        background: var(--surface);
+    }
+    .mega-icoon {
+        display: grid;
+        flex: none;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--blue-soft);
+        color: var(--blue);
+        transition:
+            background-color 0.15s ease,
+            color 0.15s ease;
+    }
+    .mega-kaart:hover .mega-icoon {
+        background: var(--blue);
+        color: #fff;
+    }
+    .mega-tekst {
+        display: grid;
+        gap: 2px;
+    }
+    .mega-label {
+        font-family: var(--font-display);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+    .mega-uitleg {
+        font-size: var(--fs-xs);
+        line-height: 1.45;
+        color: var(--muted);
+    }
+    .compact {
+        border-left: 1px solid var(--line);
+    }
+    .mega-lijst {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 8px;
+    }
+    .mega-kennis .mega-lijst {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .mega-mini {
+        font-weight: 450;
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 0 12px;
+        border-radius: 10px;
+        font-size: var(--fs-sm);
+        color: var(--ink);
+        transition: background-color 0.15s ease;
+    }
+    .mega-mini:hover {
+        background: var(--surface);
+        color: var(--blue-ink);
+    }
+    .mega-alle {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin: 6px 0 0 12px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+    }
+
+    /* promokaart rechts: navy met foto (of illustratie) */
+    .promo {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 16px;
+        background: var(--ink);
+        color: #fff;
+    }
+    .promo-foto {
+        position: relative;
+        height: 150px;
+        border-radius: 0;
+    }
+    .promo-foto::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(6, 17, 38, 0) 40%, var(--ink) 100%);
+    }
+    .promo :global(.promo-beeld) {
+        border-radius: 0;
+    }
+    .promo-body {
+        display: grid;
+        gap: 8px;
+        padding: 6px 20px 20px;
+    }
+    .promo-licht .promo-body {
+        padding-top: 16px;
+    }
+    .promo-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: var(--fs-xs);
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .promo-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3ddc84;
+        box-shadow: 0 0 0 4px rgba(61, 220, 132, 0.2);
+    }
+    .promo-label {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--blue-on-dark);
+    }
+    .promo-kop {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+    .promo-tekst {
+        font-size: var(--fs-xs);
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.72);
+    }
+    .promo-knop {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--blue-on-dark);
+    }
+    .promo-knop :global(svg) {
+        transition: transform 0.2s var(--ease);
+    }
+    a.promo:hover .promo-knop :global(svg) {
+        transform: translateX(3px);
+    }
+    .promo-acties {
+        display: grid;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .promo-btn {
+        justify-content: center;
+        gap: 8px;
+        min-height: 44px;
+        font-size: var(--fs-sm);
+    }
+    .btn-ghost-licht {
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        background: transparent;
+        color: #fff;
+    }
+    .btn-ghost-licht:hover {
+        background: rgba(255, 255, 255, 0.08);
     }
 
     /* ---------- mobiel menu: kaart onder de header ---------- */
@@ -367,28 +892,106 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         max-height: calc(100dvh - var(--header-h) - 32px);
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding: 8px 20px 20px;
+        padding: 12px 20px 20px;
         border-radius: 20px;
         background: #fff;
         box-shadow: 0 24px 48px -16px rgba(6, 17, 38, 0.4);
     }
-    .mobile-nav a {
+    @media (min-width: 640px) {
+        .mobile-menu {
+            left: auto;
+            width: 420px;
+        }
+    }
+    .m-contact {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    .m-contact a {
+        display: grid;
+        justify-items: center;
+        gap: 4px;
+        min-height: 64px;
+        padding: 10px 4px;
+        border-radius: 14px;
+        background: var(--surface);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--ink);
+    }
+    .m-contact :global(svg) {
+        color: var(--blue);
+    }
+    .m-kop {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        width: 100%;
         min-height: 56px;
+        padding: 0;
+        border: 0;
         border-bottom: 1px solid var(--line);
+        background: transparent;
         font-family: var(--font-display);
         font-size: 1.25rem;
         font-weight: 500;
         letter-spacing: -0.02em;
         color: var(--ink);
+        text-align: left;
+        cursor: pointer;
     }
-    .mobile-nav a[aria-current="page"] {
+    .m-kop[aria-current="page"],
+    .m-kop.is-actief {
         color: var(--blue-ink);
     }
-    .mobile-nav a :global(svg) {
+    .m-kop :global(svg) {
         color: var(--blue);
+        transition: transform 0.2s var(--ease);
+    }
+    .m-kop[aria-expanded="true"] :global(.m-chev) {
+        transform: rotate(180deg);
+    }
+    .m-sub {
+        padding: 6px 0 14px;
+        border-bottom: 1px solid var(--line);
+    }
+    .m-subgroep + .m-subgroep {
+        margin-top: 12px;
+    }
+    .m-subtitel {
+        margin: 6px 0 2px;
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--blue-ink);
+    }
+    .m-sub a {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: 1rem;
+        color: var(--ink);
+    }
+    .m-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding-top: 6px;
+    }
+    .m-chips a {
+        min-height: 44px;
+        padding: 0 14px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        font-size: var(--fs-sm);
+    }
+    .m-chips .m-alle {
+        background: var(--blue-soft);
+        color: var(--blue-ink);
+        font-weight: 600;
     }
     .mobile-actions {
         display: grid;
@@ -397,7 +1000,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
     }
     .mobile-meta {
         display: grid;
-        margin-top: 16px;
+        margin-top: 12px;
         font-size: var(--fs-sm);
     }
     .mobile-meta a {

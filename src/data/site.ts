@@ -49,15 +49,6 @@ export const site = {
     dossierVoorbeeld: "26-0412",
 }
 
-export const nav = [
-    { label: "Incasso", href: "/incasso" },
-    { label: "Debiteurenbeheer", href: "/debiteurenbeheer" },
-    { label: "Tarieven", href: "/tarieven" },
-    { label: "Branches", href: "/branches" },
-    { label: "Kennisbank", href: "/kennisbank" },
-    { label: "Over ons", href: "/over-ons" },
-]
-
 // Slugs gelijk aan de huidige site, zodat bestaande URL's blijven werken
 export const branches = [
     { label: "Bouw en installatie", slug: "incasso-bouw" },
