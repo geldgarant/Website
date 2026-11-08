@@ -29,7 +29,7 @@ lokale aanwezigheid en vermeldingen.
 | 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | bezig: deb.beheer, verhuur, mkb |
 | 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | geïnventariseerd (E18)          |
 | 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | lijst klaar (E18)               |
-| 11  | AI-zichtbaarheid: vaste vragenset meten                 | 8    | middel | zwak   | laag     | laag       | open                            |
+| 11  | AI-zichtbaarheid: vaste vragenset meten                 | 8    | middel | zwak   | laag     | laag       | plan klaar (GEO_PLAN.md)        |
 
 ## Fase 0. Systeem en meetketen
 
@@ -127,6 +127,8 @@ Systeemkaart (kort; details in `CLAUDE.md`, `docs/HANDOFF.md`, `docs/OVERDRACHT.
 - Bestand: `docs/seo/backlink-opportunities.csv` zodra er geverifieerde kansen zijn. Geen outreach zonder opdracht.
 
 ## Fase 8. AI-zichtbaarheid
+
+- **Volledig plan: `docs/seo/GEO_PLAN.md`** (nulmeting crawlers en schema, werkstromen A tot D, vaste vragenset van 20, tools).
 
 - robots.txt: zoekcrawlers (OAI-SearchBot, PerplexityBot, Claude-SearchBot) toegestaan; trainingscrawlers geblokkeerd
   door Cloudflare Managed robots. Bewuste keuze, bevestigen met gebruiker.
