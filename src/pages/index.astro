@@ -10,7 +10,7 @@ import Icon from "../components/Icon.astro"
 import KennisBeeld from "../components/KennisBeeld.astro"
 import Foto from "../components/Foto.astro"
 import fotoGesprek from "../assets/fotos/gesprek-adviseur.jpg"
-import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
+import fotoCollegas from "../assets/fotos/collegas-tafel.jpg"
 import { getCollection } from "astro:content"
 import { site, branches } from "../data/site"
 import { onderwerpById, leestijd } from "../data/kennisbank"
@@ -183,10 +183,10 @@ const branchIcon = {
         <div class="wrap team">
             <div class="photo-slot team-photo">
                 <Foto
-                    src={fotoAdviseur}
-                    alt="Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever"
+                    src={fotoCollegas}
+                    alt="Twee collega's van GeldGarant aan tafel"
                     sizes="(min-width: 1024px) 560px, calc(100vw - 32px)"
-                    focus="40% 30%"
+                    focus="47% 35%"
                 />
                 <p class="team-chip">
                     <span class="hero-chip-dot" aria-hidden="true"></span>

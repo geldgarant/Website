@@ -11,6 +11,8 @@ import Fasen from "../../components/incasso/Fasen.astro"
 import Klaar from "../../components/incasso/Klaar.astro"
 import Faq from "../../components/Faq.astro"
 import SlotCta from "../../components/SlotCta.astro"
+import FotoBand from "../../components/FotoBand.astro"
+import fotoAdviseur from "../../assets/fotos/adviseur-buiten.jpg"
 import { site } from "../../data/site"
 import { incassoFaq } from "../../data/faq"
 
@@ -171,6 +173,14 @@ const verder = [
             </div>
         </div>
     </section>
+
+    <FotoBand
+        groot={{
+            src: fotoAdviseur,
+            alt: "Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever",
+            focus: "36% 30%",
+        }}
+    />
 
     <Fasen />
 
