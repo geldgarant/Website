@@ -385,3 +385,16 @@ Bevindingen:
 969bfaa272aadc3dd8eb50ebf22ed6f7a3bd51091d045fe1853407c83ec7ca03): 10 vragen uit §3 van GEO_PLAN, maandelijks, ChatGPT en
 Google AI Overviews (Gemini niet in het plan), concurrenten Incassobureau.nl, Bierens, Flanderijn, Intrum, GGN; 20
 zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficient plan" (geen Brand Radar).
+
+### E23. Kennisbank op citeerbaarheid nagelopen (8 nov 2026)
+
+- Template al GEO-sterk: "In het kort" direct onder de H1, Article (`dateModified`, auteur "Redactie GeldGarant"),
+  FAQPage, bronnen. Nieuw: Article-`publisher` met `@id #organisatie` (alle 27 artikelen één entiteit met home en
+  /over-ons). Zichtbare datum blijft weg (besluit gebruiker).
+- Eerste "kort"-zin van alle 27 artikelen naast de titelvraag gelegd: 26 geven direct antwoord. Aangepast:
+  `wat-kost-incasso-uitbesteden` (lead en kort beginnen nu met "kost u meestal niets", staffel met maximum € 6.775;
+  bijgewerkt 2026-11-08). De 3 artikelen die de website-chat juridisch corrigeerde, zijn niet aangeraakt.
+- Cijfers 2026 gecontroleerd: handelsrente 10,4% per 1 juli 2026 en wettelijke rente 4% per 1 januari 2026
+  (rijksoverheid.nl); griffierecht kanton 2026 € 139 tot € 1.504 voor rechtspersonen (rechtspraak.nl); maximale
+  beslagvrije voet alleenstaande € 2.191,42 per 1 januari en € 2.208,48 per 1 juli 2026 (mededeling 1 juni 2026). Alles
+  klopt met de artikelen.

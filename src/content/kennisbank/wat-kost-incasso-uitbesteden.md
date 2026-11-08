@@ -3,15 +3,15 @@ title: "Wat kost incasso uitbesteden? Kosten en no cure no pay uitgelegd"
 seoTitle: "Incassotarieven vergeleken: no cure no pay en meer | GeldGarant"
 description: "Wat kost een incassobureau? Hoe de wettelijke staffel werkt, wie de incassokosten betaalt, wat no cure no pay echt betekent en waar u op let bij tarieven."
 onderwerp: kosten
-lead: "Bij de meeste incassobureaus betaalt de debiteur de rekening, niet u. Maar de verschillen zitten in de kleine letters: succesfees, abonnementen en kosten als het misgaat. Zo vergelijkt u eerlijk."
+lead: "Incasso uitbesteden kost u meestal niets: de debiteur betaalt de wettelijke incassokosten en de rente bovenop de factuur. De verschillen tussen bureaus zitten in de kleine letters: succesfees, abonnementen en kosten als het misgaat. Zo vergelijkt u eerlijk."
 kort:
-    - "De incassokosten zijn wettelijk begrensd: 15% over de eerste € 2.500, aflopend, met een minimum van € 40."
-    - "De debiteur betaalt de incassokosten en de rente, bovenop de hoofdsom."
+    - "Incasso uitbesteden kost u meestal niets: de debiteur betaalt de incassokosten en de rente, bovenop de hoofdsom."
+    - "De incassokosten zijn wettelijk begrensd: 15% over de eerste € 2.500, aflopend, met een minimum van € 40 en een maximum van € 6.775."
     - "No cure no pay betekent dat u niets betaalt als er niets binnenkomt. Kijk wel wat u betaalt als er deels iets binnenkomt."
     - "Bij GeldGarant ontvangt u bij volledige betaling de hele hoofdsom en betaalt u niets."
     - "Een gerechtelijke procedure kost griffierecht en deurwaarderskosten. Die hoort u vooraf."
 gepubliceerd: 2026-01-15
-bijgewerkt: 2026-11-06
+bijgewerkt: 2026-11-08
 faq:
     - q: "Wat kost incasso als de debiteur volledig betaalt?"
       a: "Bij GeldGarant niets. De debiteur betaalt de hoofdsom, de wettelijke incassokosten en de rente. De incassokosten en rente zijn onze vergoeding, de hoofdsom maken we volledig aan u over."
