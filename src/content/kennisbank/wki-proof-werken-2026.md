@@ -28,7 +28,13 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0046685/"
     - t: "Besluit kwaliteit incassodienstverlening"
       href: "https://wetten.overheid.nl/BWBR0049422/"
-verwant: ["avg-en-incasso", "wat-kost-incasso-uitbesteden", "betalingsherinnering-aanmaning-wik-brief"]
+verwant:
+    [
+        "betrouwbaar-incassobureau-kiezen",
+        "avg-en-incasso",
+        "wat-kost-incasso-uitbesteden",
+        "betalingsherinnering-aanmaning-wik-brief",
+    ]
 hulp:
     t: "Zo voldoet GeldGarant aan de Wki"
     d: "Onze registratie, de eisen en hoe u het zelf controleert."

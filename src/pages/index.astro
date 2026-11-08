@@ -46,6 +46,18 @@ const jsonLd = [
         description:
             "Incassobureau voor ondernemers, met kantoor in Deventer. Incasso en debiteurenbeheer; bij volledige betaling betaalt u niets.",
         sameAs: [...site.sameAs, site.incassoRegisterHref],
+        // GEO: controleerbare registraties en lidmaatschap (zelfde feiten als op /over-ons en /nowid)
+        identifier: [
+            ...(site.kvk ? [{ "@type": "PropertyValue", propertyID: "KvK", value: site.kvk }] : []),
+            {
+                "@type": "PropertyValue",
+                propertyID: "Incassoregister Justis",
+                value: site.incassoRegister,
+                url: site.incassoRegisterHref,
+            },
+        ],
+        memberOf: { "@type": "Organization", name: "NowID", url: "https://www.nowid.org" },
+        knowsAbout: ["Incasso", "Debiteurenbeheer", "Wettelijke incassokosten", "Wet kwaliteit incassodienstverlening"],
         telephone: site.phoneIntl,
         email: site.email,
         areaServed: "NL",

@@ -242,6 +242,7 @@ export const BEELDEN: Record<string, [GlyphNaam, GlyphNaam]> = {
     "bv-uitgeschreven-schulden": ["building", "question"],
     "conservatoir-beslag": ["coin", "snowflake"],
     "creditmanagement-openstaande-facturen-voorkomen": ["chart", "shield"],
+    "betrouwbaar-incassobureau-kiezen": ["building", "check"],
     "debiteur-betwist-factuur": ["doc", "question"],
     "debiteur-failliet-vordering-beschermen": ["building", "alert"],
     "eisen-correcte-factuur": ["doc", "check"],

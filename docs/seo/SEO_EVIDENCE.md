@@ -398,3 +398,17 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   (rijksoverheid.nl); griffierecht kanton 2026 € 139 tot € 1.504 voor rechtspersonen (rechtspraak.nl); maximale
   beslagvrije voet alleenstaande € 2.191,42 per 1 januari en € 2.208,48 per 1 juli 2026 (mededeling 1 juni 2026). Alles
   klopt met de artikelen.
+
+### E24. Nieuw artikel "betrouwbaar incassobureau kiezen", homepage-schema, Wikidata-concept (8 nov 2026)
+
+- **Waarom:** in de AI-nulmeting (E22) noemt geen enkel systeem GeldGarant op "goed incassobureau" en "geregistreerd bij
+  Justis"; geciteerd worden keuzecriteria van Atradius, KvK en concurrenten.
+- **`/kennisbank/betrouwbaar-incassobureau-kiezen`** (onderwerp regels): zeven controles als vraag-koppen (Justis-register,
+  kosten per situatie in een tabel, derdengelden en afdracht, toon richting klant, dossier volgen en snelheid,
+  klachten/geschillen, opdrachtvoorwaarden), checklist, slotblok met GeldGarant-feiten (00273, NowID/IncassoKlacht, € 0
+  bij volledige betaling, derdengeldenrekening, wekelijkse afdracht, binnen het uur). Feiten uit de bestaande site
+  (Wki-artikel, /nowid, /over-ons, /tarieven) en wetten.overheid.nl. Afgebakend van het Wki-artikel (wet) en
+  `/incasso/incassobureau-inschakelen` (wanneer). Links: vanaf `/incasso/incassobureau-inschakelen` (keuze-noot) en
+  `verwant` in het Wki-artikel; illustratie building+check. Keyword-kaart: cluster "incassobureau kiezen".
+- **Homepage JSON-LD:** `identifier` (KvK 90622375, Incassoregister Justis 00273 met URL), `memberOf` NowID, `knowsAbout`.
+- **Wikidata:** concept in `docs/seo/WIKIDATA_CONCEPT.md`; niet gepubliceerd (akkoord en account gebruiker nodig).
