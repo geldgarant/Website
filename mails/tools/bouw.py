@@ -12,7 +12,7 @@ import html, pathlib
 
 HIER = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://geldgarant.com"
-LOGO = SITE + "/mail/logo.png"  # public/mail/logo.png, 449x72, getoond op 175x28
+LOGO = SITE + "/mail/logo.png"  # public/mail/logo.png, 456x54, getoond op 178x21
 
 # Kleuren uit het ontwerpsysteem van de site (src/styles/global.css)
 INK, TEKST, MUTED, LIJN, SURFACE, BLAUW, BLAUW_INK, ACHTERGROND = (
@@ -125,7 +125,7 @@ def kop(soort):
         '<tr><td style="padding:24px 24px 20px; border-bottom:3px solid ' + BLAUW + ';">'
         '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%;"><tr>'
         f'<td style="vertical-align:middle;"><a href="{SITE}" target="_blank" style="text-decoration:none;">'
-        f'<img src="{LOGO}" width="175" height="28" alt="GeldGarant" style="display:block; border:0; width:175px; height:28px; {F} font-size:20px; font-weight:bold; color:{INK};"></a></td>'
+        f'<img src="{LOGO}" width="178" height="21" alt="GeldGarant" style="display:block; border:0; width:178px; height:21px; {F} font-size:20px; font-weight:bold; color:{INK};"></a></td>'
         f'<td align="right" style="vertical-align:middle; {F} font-size:12px; line-height:18px; color:{MUTED};">'
         f'{soort}<br><strong style="color:{INK};">Dossier {{{{case.case_number}}}}</strong></td>'
         '</tr></table></td></tr>')
