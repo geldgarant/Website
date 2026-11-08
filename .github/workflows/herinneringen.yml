@@ -1,0 +1,34 @@
+name: Herinneringen
+
+# Op 1 januari en 1 juli een issue met wat er dan op de site en in de brieven bijgewerkt moet worden.
+
+on:
+    schedule:
+        - cron: "0 7 1 1,7 *"
+    workflow_dispatch:
+
+permissions:
+    issues: write
+
+jobs:
+    halfjaar:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Issue aanmaken
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  GH_REPO: ${{ github.repository }}
+              run: |
+                  datum=$(TZ=Europe/Amsterdam date +%Y-%m)
+                  cat > body.md <<'TEKST'
+                  Halfjaarlijkse controle (bronnen: rijksoverheid.nl, wetten.overheid.nl, rechtspraak.nl).
+
+                  - [ ] Wettelijke rente en handelsrente: `src/lib/rente.ts` (regel toevoegen + `RENTE_BIJGEWERKT`) en `tests/unit/rente.test.ts`
+                  - [ ] Percentages in de brieven: `brieven/src/*.html`, daarna `python3 brieven/tools/bouw.py` en opnieuw in CaseControl plakken
+                  - [ ] Kennisbank: wettelijke rente, beslagvrije voet (1 jan en 1 jul), griffierechten (1 jan); `bijgewerkt` in de frontmatter aanpassen
+                  - [ ] Hulpnummers op `/hulp-nodig-bij-geldproblemen` (jaarlijks, januari)
+                  - [ ] Na de wijzigingen: `npm run qa`, push, live controleren
+                  TEKST
+                  gh label create onderhoud --color 1F4FD6 --description "Periodiek onderhoud" 2>/dev/null || true
+                  gh issue create --title "Rente en bedragen bijwerken ($datum)" --label onderhoud --body-file body.md

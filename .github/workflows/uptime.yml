@@ -1,0 +1,56 @@
+name: Uptime
+
+# Elk kwartier: scripts/uptime.mjs controleert de site, betalen via iDEAL, de QR-route en de formulieren.
+# Storing → één issue met label "storing" (GitHub mailt het account). Weer in orde → het issue wordt gesloten.
+# GitHub start geplande runs soms een paar minuten later; dat is normaal.
+
+on:
+    schedule:
+        - cron: "7,22,37,52 * * * *"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    issues: write
+
+concurrency:
+    group: uptime
+    cancel-in-progress: false
+
+jobs:
+    controle:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  sparse-checkout: scripts/uptime.mjs
+                  sparse-checkout-cone-mode: false
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Controleren
+              id: controle
+              continue-on-error: true
+              run: node scripts/uptime.mjs
+
+            - name: Issue bijwerken
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  UITKOMST: ${{ steps.controle.outcome }}
+                  RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              run: |
+                  gh label create storing --color B60205 --description "Melding van de uptimecontrole" 2>/dev/null || true
+                  open=$(gh issue list --label storing --state open --json number --jq '.[0].number // empty')
+                  if [ "$UITKOMST" = "failure" ]; then
+                      if [ -z "$open" ]; then
+                          { echo "De uptimecontrole vond een storing op geldgarant.com."; echo; cat uptime-uitkomst.md 2>/dev/null || echo "(script gaf geen uitkomst)"; echo; echo "Run: $RUN"; } > body.md
+                          gh issue create --title "Storing op geldgarant.com" --label storing --body-file body.md
+                          # alleen de eerste run van een storing rood (anders mailt GitHub elk kwartier)
+                          exit 1
+                      fi
+                  elif [ -n "$open" ]; then
+                      { echo "Weer in orde."; echo; cat uptime-uitkomst.md 2>/dev/null || echo "(script gaf geen uitkomst)"; echo; echo "Run: $RUN"; } > body.md
+                      gh issue close "$open" --comment "$(cat body.md)"
+                  fi
