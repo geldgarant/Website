@@ -350,3 +350,38 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   bing.com/indexnow, terwijl het sleutelbestand live 200 geeft (ook met bingbot-UA). Oorzaak niet vastgesteld
   (Cloudflare-logs: dashboard logde uit, GraphQL-API geblokkeerd door botcheck). Oplossing: site in Bing Webmaster
   Tools verifiëren (import uit GSC), daarna opnieuw; anders Security Events op het sleutelpad bekijken.
+
+### E22. Nulmeting AI-zichtbaarheid (8 nov 2026, ±12.15–12.30 uur)
+
+Methode: browserpaneel, niet ingelogd (Perplexity, ChatGPT met zoeken; Google AI Mode via `udm=50`, cookies
+geweigerd). Antwoorden variëren per sessie en locatie; ChatGPT kleurt naar de regio van de gebruiker (Deventer), dus
+landelijke vragen zijn daar te gunstig. Copilot en Gemini niet gemeten.
+
+| Vraag                                           | Perplexity                                  | Google AI Mode                | ChatGPT                        |
+| ----------------------------------------------- | ------------------------------------------- | ----------------------------- | ------------------------------ |
+| Wat is een goed incassobureau voor ondernemers? | nee (Bill Incasso, Atradius)                | nee (Debtt, e-Legal, Trustoo) | ja, nr. 2 (regionaal), oud nr. |
+| Wat kost een incassobureau inschakelen?         | nee (KvK, Credifin, Atradius, Knab)         | –                             | –                              |
+| Incassobureau no cure no pay Nederland          | nee (Credifin, Bill Incasso, Justice)       | nee (incasso.nl, Bierens)     | –                              |
+| Incassobureau Deventer                          | ja, **oud tel. 085-0835230** (ProvenExpert) | ja, correct (Bedrijfsprofiel) | ja, nr. 2, **oud tel.**        |
+| Welk incassobureau is geregistreerd bij Justis? | nee (Credifin 00023, Atradius 00127)        | –                             | –                              |
+| Incassobureau voor zzp'ers                      | nee (Bill, Credifin, IncassoJuristen, GGN)  | nee (Invorderingsbedrijf)     | –                              |
+| Debiteurenbeheer uitbesteden: wat kost dat?     | nee (creman, dockdock, onguard)             | –                             | –                              |
+| Wat moet ik doen als een klant niet betaalt?    | nee                                         | –                             | –                              |
+
+Bevindingen:
+
+1. **Landelijk onzichtbaar**: op generieke vragen noemt geen enkel systeem GeldGarant (buiten ChatGPT's regionale
+   kleuring). Steeds genoemd: Credifin, Bill Incasso, Atradius, GGN, Invorderingsbedrijf, Debtt, e-Legal; vaak geciteerd:
+   kvk.nl, justis.nl, trustoo.nl, incassoadvocaten.nl.
+2. **Lokaal zichtbaar** (Deventer) in alle drie, maar **twee van de drie geven het oude nummer 085 083 5230**. Bronnen met
+   dat nummer (Google-zoekactie op het nummer): Justis-register, telefoonboek.nl, infobel.com, ProvenExpert. Het
+   Bedrijfsprofiel (085 212 73 88) wordt alleen door Google gebruikt.
+3. Antwoorden noemen bureaus met **een eigen registratienummer, concrete voorwaarden en reviews/vergelijkingssites**
+   (Trustoo). Onze sterke punten (€ 0, binnen het uur, wekelijkse afdracht, 00273) worden nergens overgenomen.
+4. ChatGPT noemt "15 beoordelingen" (Google-reviews) en "abonnementen voor debiteurenbeheer": het leest het
+   Bedrijfsprofiel en de site.
+
+**Doorlopende meting**: Ubersuggest-project "GeldGarant" (gratis plan; project-id
+969bfaa272aadc3dd8eb50ebf22ed6f7a3bd51091d045fe1853407c83ec7ca03): 10 vragen uit §3 van GEO_PLAN, maandelijks, ChatGPT en
+Google AI Overviews (Gemini niet in het plan), concurrenten Incassobureau.nl, Bierens, Flanderijn, Intrum, GGN; 20
+zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficient plan" (geen Brand Radar).

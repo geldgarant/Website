@@ -82,7 +82,7 @@ uit, prijs-schema op `/tarieven`, `/llms.txt` live. Werkstroom A is afgerond op 
 2. Web Analytics: AI-referrers per maand. GSC: vertoningen/klikken op informatieve zoekvragen.
 3. Optioneel met data-tool (§4): automatische AI-vermeldingen en geciteerde domeinen.
 
-## 3. Vaste vragenset (nulmeting volgt)
+## 3. Vaste vragenset (nulmeting 8 nov: E22; doorlopend 10 vragen in Ubersuggest)
 
 1. Wat is een goed incassobureau voor ondernemers?
 2. Welk incassobureau is betrouwbaar en geregistreerd bij Justis?
