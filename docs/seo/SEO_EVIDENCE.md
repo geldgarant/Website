@@ -178,3 +178,6 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   Woorden in main: 1.072 → 1.576 (gemeten in de build).
 - Controles: check, lint, format, unit, build, html, seo groen; e2e /debiteurenbeheer + contact 45 groen; screenshots
   390/1440 bekeken, geen overloop.
+- Live gecontroleerd na Workers Build (8 nov ±02:30): sectie `#uitbesteden` en factoring-FAQ staan op productie.
+- GSC "Indexering aanvragen" 8 nov, totaal 6: `/debiteurenbeheer`, `/incasso/incassobureau-inschakelen`,
+  `/kennisbank/huurachterstand-incasseren`, `/voorbeeldbrieven`, `/branches/incasso-verhuur`, `/branches/incasso-zzp`.
