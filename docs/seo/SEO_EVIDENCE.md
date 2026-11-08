@@ -225,3 +225,12 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   naar 3 kennisbankartikelen; FAQ "Wat heb ik nodig om een incassobureau in te schakelen?" (volgt de velden van
   /vordering-indienen). Woorden in main 808 → 990.
 - Controles: check, lint, format, unit, build, html, seo groen; e2e pagina groen; screenshots 390/1440 zonder overloop.
+
+### E15. CI-Lighthouse en CLS /hulp-nodig-bij-geldproblemen (8 nov 2026)
+
+- Eerste CI-run met de Lighthouse-steekproef (16 pagina's x 2, run 42430229959): binnen de tijdslimiet; 15 van 16
+  pagina's halen alle drempels. `/hulp-nodig-bij-geldproblemen`: performance 0,93, CLS 0,169.
+- Oorzaak (lokaal nagemeten met layout-shift-observer: alleen `span.accent "hulp"` verschuift): het accentfont laadt na
+  de fallback; op Linux/Android ontbreekt Georgia, dus de H1 "Geldzorgen? Er is hulp" brak daar anders af dan na het
+  laden van Newsreader. Fix: twee vaste regels (`.h1-regel`, nowrap). H1-tekst ongewijzigd; 2 regels op 320, 390 en
+  1440 px, geen overloop. E2e van de pagina groen.

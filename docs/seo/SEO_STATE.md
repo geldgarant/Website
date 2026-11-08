@@ -86,3 +86,4 @@ Zie `SEO_EVIDENCE.md` (lokaal batch 3).
 11. /branches/incasso-mkb: checklist betrouwbaar incassobureau + FAQ (batch 7, E13), live.
 12. /incasso/incassobureau-inschakelen: blok weinig zin + FAQ benodigdheden (batch 8, E14), live.
 13. CI: Lighthouse in GitHub Actions op een steekproef per sjabloon (alle pagina's x 3 runs duurde > 60 min).
+14. CLS-fix H1 /hulp-nodig-bij-geldproblemen (E15).

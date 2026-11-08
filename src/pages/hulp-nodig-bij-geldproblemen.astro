@@ -256,8 +256,13 @@ const jsonLd = [
             <Crumbs items={[{ label: "Home", href: "/" }, { label: "Hulp bij geldzorgen" }]} />
             <div class="hero-grid">
                 <div class="hero-copy">
+                    <!-- Twee vaste regels: het accentfont laadt later dan de fallback (op Android/Linux geen Georgia), en een kop
+                         die daardoor van regelaantal wisselt, gaf CLS 0,17 in Lighthouse (CI, 8 nov 2026). -->
                     <h1 class="display">
-                        Geldzorgen? Er is <span class="accent">hulp</span>
+                        <span class="h1-regel">Geldzorgen?</span>{" "}
+                        <span class="h1-regel">
+                            Er is <span class="accent">hulp</span>
+                        </span>
                     </h1>
                     <p class="lead">
                         Rekeningen die zich opstapelen, of het overzicht dat weg is: het overkomt veel mensen, en u hoeft het niet
@@ -487,6 +492,10 @@ const jsonLd = [
     .hero h1 {
         max-width: 12em;
         font-size: clamp(2.25rem, 1.25rem + 3.8vw, 4.125rem);
+    }
+    .h1-regel {
+        display: block;
+        white-space: nowrap;
     }
     .hero .lead {
         margin-top: 28px;
