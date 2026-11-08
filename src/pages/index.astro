@@ -339,8 +339,13 @@ const branchIcon = {
         align-items: center;
     }
     @media (min-width: 1024px) {
+        /* tekst bovenaan, gelijk met de foto: rechts is hoger, centreren zette de kop te laag */
         .hero-grid {
             grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+            align-items: start;
+        }
+        .hero-copy {
+            padding-top: clamp(16px, 2.6vw, 48px);
         }
     }
     .badge {

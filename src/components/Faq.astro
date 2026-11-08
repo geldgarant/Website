@@ -3,7 +3,11 @@
 import Icon from "./Icon.astro"
 import { site } from "../data/site"
 import Foto from "./Foto.astro"
-import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
+import type { ImageMetadata } from "astro"
+// vier gezichten uit de eigen shoot (uitsneden in src/assets/fotos/gezichten)
+const gezichten = Object.values(
+    import.meta.glob<{ default: ImageMetadata }>("../assets/fotos/gezichten/*.jpg", { eager: true }),
+).map((m) => m.default)
 
 interface Props {
     items: readonly { q: string; a: string }[]
@@ -26,8 +30,12 @@ const { items, idx, id = "faq-title", sectionId } = Astro.props
             </h2>
             <div class="ask">
                 <div class="ask-kop">
-                    <span class="ask-gezicht">
-                        <Foto src={fotoAdviseur} alt="" sizes="150px" widths={[300, 450]} focus="36% 22%" />
+                    <span class="ask-gezichten" aria-hidden="true">
+                        {gezichten.map((g) => (
+                            <span class="ask-gezicht">
+                                <Foto src={g} alt="" sizes="48px" widths={[96, 144]} />
+                            </span>
+                        ))}
                     </span>
                     <p>
                         <strong>Staat uw vraag er niet tussen?</strong> Bel ons, we helpen u direct verder.
@@ -112,13 +120,20 @@ const { items, idx, id = "faq-title", sectionId } = Astro.props
     .ask-kop p {
         flex: 1 1 200px;
     }
-    .ask-gezicht {
+    .ask-gezichten {
+        display: flex;
         flex: none;
-        width: 64px;
-        height: 64px;
+    }
+    .ask-gezicht {
+        width: 48px;
+        height: 48px;
         overflow: hidden;
+        border: 3px solid #fff;
         border-radius: 50%;
         background: var(--surface);
+    }
+    .ask-gezicht + .ask-gezicht {
+        margin-left: -12px;
     }
     .ask-acties {
         display: flex;
