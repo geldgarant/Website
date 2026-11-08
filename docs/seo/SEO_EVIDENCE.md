@@ -234,3 +234,5 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   de fallback; op Linux/Android ontbreekt Georgia, dus de H1 "Geldzorgen? Er is hulp" brak daar anders af dan na het
   laden van Newsreader. Fix: twee vaste regels (`.h1-regel`, nowrap). H1-tekst ongewijzigd; 2 regels op 320, 390 en
   1440 px, geen overloop. E2e van de pagina groen.
+- CI-run 42431568238 (commit ae0a53a): **volledig groen**, voor het eerst sinds de livegang. Lighthouse-steekproef 16
+  URL's x 2 runs: alle drempels (performance, toegankelijkheid, best practices, SEO >= 0,95; CLS <= 0,1) gehaald.
