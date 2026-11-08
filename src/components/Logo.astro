@@ -5,11 +5,14 @@ interface Props {
     height?: number
 }
 const { variant = "light", height = 30 } = Astro.props
-const width = Math.round((1896 / 304) * height)
+// height = dezelfde maat als bij het oude logo (1896 × 304, incl. staart van de kleine g).
+// Het gecorrigeerde logo (1924 × 228,5) heeft geen onderstok meer; zo blijft het even groot.
+const imgHeight = Math.round((height * 228.5) / 304)
+const width = Math.round((1924 / 228.5) * imgHeight)
 ---
 
 <a href="/" class="logo" aria-label="GeldGarant, naar de homepage">
-    <img src={`/brand/full-logo-${variant}.svg`} alt="" width={width} height={height} />
+    <img src={`/brand/full-logo-${variant}.svg`} alt="" width={width} height={imgHeight} />
 </a>
 
 <style>

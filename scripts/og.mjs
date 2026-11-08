@@ -153,7 +153,7 @@ function kaart(woorden, rubriek) {
             h(
                 "div",
                 { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
-                h("img", { src: dataUri(logo), width: 262, height: 42 }),
+                h("img", { src: dataUri(logo), width: 266, height: 32 }),
                 h(
                     "div",
                     {

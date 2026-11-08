@@ -49,6 +49,8 @@ const ogImage = new URL(`/og/${ogPad}.png`, Astro.site)
         <slot name="head" />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <!-- Google Zoeken wil een vierkante favicon van een veelvoud van 48 px -->
+        <link rel="icon" href="/brand/icon-192.png" sizes="192x192" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <script is:inline>
             document.documentElement.classList.add("js")

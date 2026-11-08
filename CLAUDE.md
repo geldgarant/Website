@@ -13,7 +13,9 @@ staging: website.geldgarant.workers.dev) naast de intake-worker (api.geldgarant.
 - Rechtsvorm niet noemen; nooit "B.V.". Btw-id niet in de footer.
 - Geen persoonsnamen (Anas, Ilyas) en geen "geen callcenter"/"geen keuzemenu": GeldGarant presenteert zich als gevestigd bureau. "Direct contact" en "vaste dossierbehandelaar" mogen wel.
 - Kosten exact volgens de AV: WIK-staffel in `src/lib/wik.ts`; volledig betaald = €0, deels = verrekening (min. €45).
-- Officieel GeldGarant-logo staat gecropt en transparant in `public/brand/` (aangeleverd door de gebruiker).
+- Officieel GeldGarant-logo staat gecropt en transparant in `public/brand/`. Sinds 8 nov 2026 gecorrigeerd naar "GeldGarant" met hoofdletter G
+  (de oorspronkelijke set had "Geldgarant"): Poppins Medium, letterafstand -0,05 em, 1924 × 228,5 zonder onderstok. Volledige set
+  (svg/png/jpg, favicon, CaseControl-branding) staat bij de gebruiker in `Desktop\logo's\GeldGarant-huisstijl-2026`. Favicon = wit schild op blauwe tegel.
 - Formuliervelden altijd ≥16px, tikdoelen ≥44px, geen vaste breedtes die op 360px overlopen.
 - Bestaande URL's van de Framer-site behouden of 301-redirect geven.
 
