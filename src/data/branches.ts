@@ -4,6 +4,7 @@
 // sinds 1 juli 2022), art. 3:92 BW (eigendomsvoorbehoud), art. 3:290 BW (retentierecht), art. 7:768 BW (5%-regeling
 // bouw consument), art. 3:308 BW (verjaring periodieke betalingen 5 jaar), art. 7:28 BW (consumentenkoop 2 jaar).
 import type { Soort } from "../lib/rente"
+import { site } from "./site"
 
 export type BrancheIcon = "building" | "truck" | "key" | "car" | "box" | "briefcase" | "cart" | "heart" | "store" | "person"
 type FeitIcon = "pin" | "map" | "shield" | "doc" | "scale" | "clock" | "calendar" | "eye" | "user" | "building" | "check"
@@ -34,6 +35,10 @@ export interface Branche {
         lead: string
         stappen: { t: string; d: string }[]
         brieven?: { t: string; href: string }[]
+        /** label boven de kop; standaard "Onze aanpak" */
+        label?: string
+        /** kop boven de links; standaard "Liever eerst zelf een brief sturen?" */
+        linksKop?: string
     }
 }
 
@@ -706,12 +711,48 @@ export const brancheData: Branche[] = [
                 a: "Betalingen komen binnen op onze derdengeldenrekening en dragen we wekelijks aan u af, met een specificatie per dossier.",
             },
             {
+                q: "Hoe controleer ik of een incassobureau betrouwbaar is?",
+                a: "Kijk of het bureau in het openbare incassoregister van Justis staat, vraag een tariefopgave voor volledige, gedeeltelijke en geen betaling, en vraag of betalingen via een aparte derdengeldenrekening lopen. Bij twijfel helpt de checklist op deze pagina.",
+            },
+            {
                 q: "Werken jullie in onze branche?",
                 a: "Waarschijnlijk wel. We werken voor ondernemers in vrijwel elke branche waar op rekening wordt geleverd. Bekijk het overzicht van branches of bel ons.",
             },
         ],
         verwant: ["incasso-zzp", "incasso-dienstverlening", "incasso-groothandel"],
         kennis: "openstaande-factuur-stappenplan",
+        // Zoekintentie "incassobureau mkb": hoe kies ik een betrouwbaar bureau (checklist MKB-Nederland in de SERP).
+        // Alleen feiten die elders op de site staan: register (site.ts), derdengelden, wekelijkse afdracht, NowID/IncassoKlacht,
+        // tarieven volgens de AV, rechter alleen met akkoord.
+        aanpak: {
+            label: "Checklist",
+            kop: ["Zo kiest u een ", "betrouwbaar", " incassobureau"],
+            lead: "Een incassobureau treedt op namens uw bedrijf. Let daarom op deze vier punten voordat u een vordering uit handen geeft, bij ons of bij een ander.",
+            stappen: [
+                {
+                    t: "Staat het bureau in het incassoregister?",
+                    d: `Sinds 1 april 2024 moet elk incassobureau dat voor anderen int, geregistreerd zijn bij Justis. GeldGarant staat ingeschreven onder nummer ${site.incassoRegister} en is aangesloten bij NowID, met IncassoKlacht als onafhankelijke geschillencommissie.`,
+                },
+                {
+                    t: "Weet u vooraf wat het kost?",
+                    d: "Vraag wat u betaalt als de debiteur alles, een deel of niets betaalt. Bij ons: volledig betaald kost u niets, bij een deel gaan eerst de incassokosten (minimaal € 45, nooit meer dan wat binnenkomt) en valt er niets te halen, dan betaalt u niets.",
+                },
+                {
+                    t: "Komt het geld op een derdengeldenrekening?",
+                    d: `Betalingen van uw debiteuren horen gescheiden te blijven van het geld van het bureau zelf. Bij ons komen ze binnen bij de ${site.derdengelden.tenaamstelling ?? "stichting derdengelden"}, en dragen we ze wekelijks aan u af.`,
+                },
+                {
+                    t: "Beslist u zelf over de rechter?",
+                    d: "Een procedure kost tijd en geld. Bij ons gaat een dossier alleen naar de rechter als u daar vooraf akkoord op geeft.",
+                },
+            ],
+            linksKop: "Zelf controleren?",
+            brieven: [
+                { t: "Onze inschrijving bij Justis", href: site.incassoRegisterHref },
+                { t: "Wat de Wki van een bureau vraagt", href: "/wki" },
+                { t: "Tarieven", href: "/tarieven" },
+            ],
+        },
     },
     {
         slug: "incasso-zzp",

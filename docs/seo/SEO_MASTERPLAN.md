@@ -16,20 +16,20 @@ lokale aanwezigheid en vermeldingen.
 
 ## Prioritering (impact op aanvragen × bewijs × urgentie ÷ inspanning × risico)
 
-| #   | Initiatief                                              | Fase | Impact | Bewijs | Urgentie | Inspanning | Status                         |
-| --- | ------------------------------------------------------- | ---- | ------ | ------ | -------- | ---------- | ------------------------------ |
-| 1   | HTTP → HTTPS-redirect (nu 200 op http://)               | 3    | middel | sterk  | hoog     | laag       | aan (8 nov), hertest open      |
-| 2   | Search Console + sitemap + Bing                         | 0/9  | hoog   | sterk  | hoog     | laag       | GSC klaar (E9), Bing open      |
-| 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | open                           |
-| 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | live (batch 2), meten na GSC   |
-| 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                |
-| 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | klaar (batch 3, E7)            |
-| 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | kaart klaar (E8), SERP deels   |
-| 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | klaar (batch 4, E10)           |
-| 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | bezig: debiteurenb., verhuur   |
-| 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | profiel bestaat; toegang nodig |
-| 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | open                           |
-| 11  | AI-zichtbaarheid: vaste vragenset meten                 | 8    | middel | zwak   | laag     | laag       | open                           |
+| #   | Initiatief                                              | Fase | Impact | Bewijs | Urgentie | Inspanning | Status                          |
+| --- | ------------------------------------------------------- | ---- | ------ | ------ | -------- | ---------- | ------------------------------- |
+| 1   | HTTP → HTTPS-redirect (nu 200 op http://)               | 3    | middel | sterk  | hoog     | laag       | aan (8 nov), hertest open       |
+| 2   | Search Console + sitemap + Bing                         | 0/9  | hoog   | sterk  | hoog     | laag       | GSC klaar (E9), Bing open       |
+| 3   | Meting: Cloudflare Web Analytics + CSP + events         | 9    | hoog   | sterk  | hoog     | middel     | open                            |
+| 4   | Voorbeeldbrieven-bibliotheek met briefmaker             | 5/7  | hoog   | middel | middel   | middel     | live (batch 2), meten na GSC    |
+| 5   | Quick wins: 2 lange titels, JSON-LD /vordering-indienen | 3    | laag   | sterk  | middel   | laag       | klaar (batch 2)                 |
+| 6   | Interne links naar zwak gelinkte pagina's (E1)          | 5    | middel | sterk  | middel   | laag       | klaar (batch 3, E7)             |
+| 7   | Zoekcluster-naar-URL-kaart + SERP per prioritaire vraag | 2    | hoog   | middel | middel   | middel     | kaart klaar (E8), SERP deels    |
+| 7b  | Kannibalisatie: 4 titelparen scheiden (E8)              | 2/3  | middel | middel | middel   | laag       | klaar (batch 4, E10)            |
+| 8   | Commerciële pagina's verbeteren (/incasso, inschakelen) | 4    | hoog   | middel | middel   | hoog       | bezig: deb.beheer, verhuur, mkb |
+| 9   | Google Bedrijfsprofiel + NAP-consistentie               | 6    | middel | middel | middel   | laag       | profiel bestaat; toegang nodig  |
+| 10  | Vermeldingen en backlinks (Justis, NowID, Trustoo, KvK) | 7    | hoog   | middel | laag     | middel     | open                            |
+| 11  | AI-zichtbaarheid: vaste vragenset meten                 | 8    | middel | zwak   | laag     | laag       | open                            |
 
 ## Fase 0. Systeem en meetketen
 

@@ -203,7 +203,7 @@ const jsonLd = [
             <div class="wrap">
                 <div class="kop">
                     <p class="eyebrow">
-                        <span class="idx">03</span> Onze aanpak
+                        <span class="idx">03</span> {aanpak.label ?? "Onze aanpak"}
                     </p>
                     <h2 class="h2" id="aanpak-title">
                         {aanpak.kop[0]}
@@ -227,7 +227,7 @@ const jsonLd = [
                 </ol>
                 {aanpak.brieven && (
                     <div class="a-brieven">
-                        <p class="a-brieven-kop">Liever eerst zelf een brief sturen?</p>
+                        <p class="a-brieven-kop">{aanpak.linksKop ?? "Liever eerst zelf een brief sturen?"}</p>
                         <ul role="list">
                             {aanpak.brieven.map((x) => (
                                 <li>

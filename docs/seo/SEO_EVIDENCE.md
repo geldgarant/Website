@@ -197,3 +197,17 @@ aria-label="Voorbeeld van de brief" tabindex="0">` in `src/components/Briefmaker
   Woorden in main 706 → 1.010.
 - Controles: check, lint, format, unit, build, html, seo groen; e2e alle branchepagina's 132 groen; screenshots
   390/1440 zonder overloop.
+
+### E13. Fase 4: /branches/incasso-mkb (8 nov 2026)
+
+- GSC (E9): "incasso mkb" 507 (38,5), "incassobureau mkb" 397 (42,9), "mkb incasso" 315 (35,5); daarnaast "mkb incasso"
+    - Weert/Venray/Venlo/Roermond samen ±2.300 vertoningen. Die regionale varianten lijken een merk- of regionale
+      zoekterm van een ander bureau; niet op gericht (geen stadspagina's, besluit).
+- SERP-steekproef "mkb incasso" en "incassobureau mkb" (WebSearch, niet gepersonaliseerd): checklist MKB-Nederland
+  "Incasso nodig? Weet wie je inhuurt" (mkb.nl), mkbservicedesk.nl (betrouwbaar incassobureau), Flanderijn
+  (incassoproces mkb), platforms (incasso.nl, Syncasso). Kernvraag: hoe kies ik een betrouwbaar bureau.
+- Toegevoegd via veld `aanpak` (nu ook `label` en `linksKop`): checklist "Zo kiest u een betrouwbaar incassobureau"
+  (register Justis + NowID/IncassoKlacht, tarief bij volledige/deel/geen betaling, derdengeldenrekening + wekelijkse
+  afdracht, rechter alleen met akkoord) met links naar de inschrijving bij Justis, /wki en /tarieven; FAQ "Hoe controleer
+  ik of een incassobureau betrouwbaar is?". Gegevens uit `site.ts`. Woorden in main 680 → 933.
+- Controles: check, lint, format, unit, build, html, seo groen; e2e alle branches 132 groen; screenshots 390/1440.
