@@ -129,6 +129,6 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 ## Website-chat 8 nov 2026
 
 - Uptime: `scripts/uptime.mjs` + `.github/workflows/uptime.yml` (elk kwartier, issue met label `storing`); halfjaarherinnering `.github/workflows/herinneringen.yml`.
-- Foto's alleen via `src/components/Foto.astro` uit `src/assets/fotos/` (echte GeldGarant-foto's, alt zonder namen).
+- Foto's alleen via `src/components/Foto.astro` (of `FotoBand.astro`) uit `src/assets/fotos/`: één eigen shoot, niet mengen met ander beeld; alt zonder namen en zonder plaats. Indeling per pagina: `docs/OVERDRACHT.md` §9.
 - Kennisbankkaarten krijgen `<KennisBeeld slug=… />`; een nieuw artikel heeft een regel nodig in `BEELDEN` (`src/lib/kennisbeeld.ts`).
 - Formuliervelden en adres-zoekhulp: alleen `src/styles/form.css`.
