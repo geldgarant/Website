@@ -133,3 +133,4 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Kennisbankkaarten krijgen `<KennisBeeld slug=… />`; een nieuw artikel heeft een regel nodig in `BEELDEN` (`src/lib/kennisbeeld.ts`).
 - Formuliervelden en adres-zoekhulp: alleen `src/styles/form.css`.
 - Hoofdmenu: `src/data/menu.ts` (panelen Diensten, Kennis, Over ons + directe links Hoe werkt het, Tarieven, Contact); opbouw en gedrag in `docs/OVERDRACHT.md` §9.
+- Responsiviteit: na lay-outwerk `node scripts/dev/responsief.mjs` (preview op 4399; ook Safari via WebKit). Veegrijen altijd flex met `flex: 0 0 min(80%, 340px)`, nooit `grid-auto-columns` met procenten.
