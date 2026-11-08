@@ -108,6 +108,12 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
         </div>
         <ul role="list" class="mobile-meta">
             <li>
+                <a href={site.whatsappHref} target="_blank" rel="noopener">
+                    <Icon name="whatsapp" size={16} />
+                    WhatsApp
+                </a>
+            </li>
+            <li>
                 <a href={site.portalLogin}>
                     <Icon name="user" size={16} />
                     Inloggen opdrachtgever

@@ -4,7 +4,8 @@ export const site = {
     phone: "085\u00a0212\u00a073\u00a088", // vaste spaties: nummer breekt nooit af
     phoneHref: "tel:+31852127388",
     phoneIntl: "+31852127388", // voor JSON-LD
-    whatsappHref: "https://wa.me/31852127388",
+    // WhatsApp Business op hetzelfde nummer (actief en gekoppeld aan het Bedrijfsprofiel, 8 nov 2026), met een begintekst.
+    whatsappHref: "https://wa.me/31852127388?text=" + encodeURIComponent("Hallo GeldGarant, ik heb een vraag, namelijk: "),
     // Profielen van GeldGarant elders (JSON-LD sameAs). Alleen bevestigde profielen: LinkedIn staat in het eigen
     // Google Bedrijfsprofiel (8 nov 2026). Instagram pas toevoegen na bevestiging dat het account van GeldGarant is.
     sameAs: ["https://www.linkedin.com/company/geldgarant/"] as string[],
