@@ -331,6 +331,9 @@ const jsonLd = [
         font-weight: 600;
         color: var(--ink);
     }
+    .tabel-kaart td:last-child {
+        white-space: nowrap;
+    }
     .tabel-kaart table {
         width: 100%;
         margin-top: 12px;
@@ -410,13 +413,16 @@ const jsonLd = [
     }
     .hist-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
         gap: 12px;
         padding: 0 14px 12px;
     }
     .hist-grid table {
         margin-top: 0;
         font-size: var(--fs-xs);
+    }
+    .hist-grid td:first-child {
+        white-space: nowrap;
     }
     .hist-grid caption {
         padding-bottom: 4px;

@@ -1056,6 +1056,11 @@ const jsonLd = [
         gap: 8px;
         max-width: 36rem;
     }
+    @media (max-width: 419px) {
+        .snel {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
     @media (min-width: 1024px) {
         .snel {
             margin-top: 32px;
@@ -1201,6 +1206,17 @@ const jsonLd = [
         align-content: start;
         gap: 8px;
     }
+    @media (max-width: 559px), (min-width: 1024px) and (max-width: 1279px) {
+        .betaal-stappen {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 8px;
+        }
+        .betaal-stappen li {
+            grid-template-columns: 24px minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+        }
+    }
     .betaal-nr {
         display: grid;
         place-items: center;
@@ -1235,6 +1251,7 @@ const jsonLd = [
     }
     .betaal-alt-gegevens > div {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         gap: 12px;
         padding: 8px 0;
@@ -1244,9 +1261,12 @@ const jsonLd = [
         border-top: 1px solid var(--line);
     }
     .betaal-alt-gegevens dt {
+        flex: none;
+        white-space: nowrap;
         color: var(--muted);
     }
     .betaal-alt-gegevens dd {
+        flex: 1 1 11rem;
         font-weight: 600;
         color: var(--ink);
         text-align: right;
@@ -1600,14 +1620,18 @@ const jsonLd = [
     }
     .bank > div {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         gap: 12px;
         padding: 6px 0;
     }
     .bank dt {
+        flex: none;
+        white-space: nowrap;
         color: var(--muted);
     }
     .bank dd {
+        flex: 1 1 11rem;
         font-weight: 600;
         color: var(--ink);
         text-align: right;
@@ -2016,10 +2040,10 @@ const jsonLd = [
     }
 
     /* ---------- 05 RECHTEN ---------- */
+    /* veegrij op mobiel: flex met vaste kaartbreedte (grid-auto-columns met % kromp in iOS Safari tot smalle kolommen) */
     .rechten {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(0, 80%);
+        display: flex;
+        min-width: 0;
         gap: 12px;
         margin-inline: calc(var(--gutter) * -1);
         padding-inline: var(--gutter);
@@ -2029,10 +2053,12 @@ const jsonLd = [
         scrollbar-width: none;
     }
     .rechten > li {
+        flex: 0 0 min(80%, 340px);
         scroll-snap-align: start;
     }
     @media (min-width: 720px) {
         .rechten {
+            display: grid;
             grid-auto-flow: row;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;

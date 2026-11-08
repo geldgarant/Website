@@ -628,10 +628,10 @@ const jsonLd = [
     }
 
     /* ---------- 02 INSTANTIES ---------- */
+    /* veegrij op mobiel: flex met vaste kaartbreedte (grid-auto-columns met % kromp in iOS Safari tot smalle kolommen) */
     .ins {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(0, 84%);
+        display: flex;
+        min-width: 0;
         gap: 12px;
         margin-inline: calc(var(--gutter) * -1);
         padding-inline: var(--gutter);
@@ -641,10 +641,12 @@ const jsonLd = [
         scrollbar-width: none;
     }
     .ins > li {
+        flex: 0 0 min(84%, 340px);
         scroll-snap-align: start;
     }
     @media (min-width: 720px) {
         .ins {
+            display: grid;
             grid-auto-flow: row;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;

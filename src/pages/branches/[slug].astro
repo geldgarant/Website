@@ -649,8 +649,16 @@ const jsonLd = [
         border-bottom: 1px solid var(--line);
         font-size: var(--fs-sm);
     }
+    .vb-kaart dl div {
+        flex-wrap: wrap;
+    }
     .vb-kaart dt {
+        flex: 1 1 150px;
         color: var(--text);
+    }
+    .vb-kaart dd {
+        margin-left: auto;
+        white-space: nowrap;
     }
     .vb-kaart dt small {
         display: block;
@@ -733,6 +741,11 @@ const jsonLd = [
         font-size: var(--fs-sm);
         color: var(--muted);
         line-height: 1.45;
+    }
+    @media (max-width: 419px) {
+        .v-go {
+            display: none !important;
+        }
     }
     .v-go {
         display: grid;

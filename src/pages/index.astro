@@ -9,7 +9,7 @@ import SlotCta from "../components/SlotCta.astro"
 import Icon from "../components/Icon.astro"
 import KennisBeeld from "../components/KennisBeeld.astro"
 import Foto from "../components/Foto.astro"
-import fotoGesprek from "../assets/fotos/gesprek-adviseur.jpg"
+import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
 import fotoLaptop from "../assets/fotos/collegas-laptop.jpg"
 import { getCollection } from "astro:content"
 import { site, branches } from "../data/site"
@@ -156,10 +156,10 @@ const branchIcon = {
             <div class="hero-visual">
                 <div class="hero-foto">
                     <Foto
-                        src={fotoGesprek}
+                        src={fotoAdviseur}
                         alt="Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever"
                         sizes="(min-width: 1024px) 960px, 260vw"
-                        focus="64% 26%"
+                        focus="24% 0%"
                         eager
                     />
                 </div>
@@ -420,7 +420,7 @@ const branchIcon = {
     }
     @media (min-width: 1024px) {
         .hero-visual {
-            --foto-h: 300px;
+            --foto-h: 220px;
         }
     }
     .hero-foto {
@@ -453,9 +453,12 @@ const branchIcon = {
     }
     @media (min-width: 640px) {
         .hero-chip {
-            top: 20px;
             left: 24px;
         }
+    }
+    /* label onderin de foto, net boven de kaart: nooit over een gezicht */
+    .hero-chip {
+        top: calc(var(--foto-h) - 46px);
     }
     .team-chip {
         top: auto;

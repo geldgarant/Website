@@ -611,10 +611,10 @@ const jsonLd = [
     }
 
     /* ---------- 03 BIEDEN ---------- */
+    /* veegrij op mobiel: flex met vaste kaartbreedte (grid-auto-columns met % kromp in iOS Safari tot smalle kolommen) */
     .bieden {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(0, 82%);
+        display: flex;
+        min-width: 0;
         gap: 12px;
         margin-inline: calc(var(--gutter) * -1);
         padding-inline: var(--gutter);
@@ -624,10 +624,12 @@ const jsonLd = [
         scrollbar-width: none;
     }
     .bieden > li {
+        flex: 0 0 min(82%, 340px);
         scroll-snap-align: start;
     }
     @media (min-width: 700px) {
         .bieden {
+            display: grid;
             grid-auto-flow: row;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
