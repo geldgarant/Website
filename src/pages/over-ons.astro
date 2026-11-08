@@ -10,7 +10,10 @@ import Feitenkaart from "../components/Feitenkaart.astro"
 import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
 import Foto from "../components/Foto.astro"
-import fotoKantoor from "../assets/fotos/kantoor-gesprek.jpg"
+import FotoBand from "../components/FotoBand.astro"
+import fotoWelkom from "../assets/fotos/welkom.jpg"
+import fotoCollega from "../assets/fotos/collega-dossier.jpg"
+import fotoEntree from "../assets/fotos/entree.jpg"
 import { site, branches } from "../data/site"
 import { overOnsFaq } from "../data/faq"
 
@@ -176,6 +179,11 @@ const jsonLd = [
             </div>
         </div>
     </section>
+
+    <FotoBand
+        groot={{ src: fotoWelkom, alt: "Medewerkers van GeldGarant ontvangen een opdrachtgever", focus: "55% 30%" }}
+        klein={{ src: fotoCollega, alt: "Een collega van GeldGarant met een dossier", focus: "35% 35%" }}
+    />
 
     <!-- 01 ONS VERHAAL -->
     <section class="section verhaal" aria-labelledby="verhaal-title">
@@ -451,10 +459,10 @@ const jsonLd = [
                 <article class="plek">
                     <div class="photo-slot plek-foto">
                         <Foto
-                            src={fotoKantoor}
-                            alt={`Gesprek aan de vergadertafel op het kantoor van GeldGarant in ${site.city}`}
+                            src={fotoEntree}
+                            alt="Twee medewerkers van GeldGarant in gesprek in de hal"
                             sizes="(min-width: 640px) 45vw, calc(100vw - 32px)"
-                            focus="45% 50%"
+                            focus="55% 40%"
                         />
                     </div>
                     <div class="plek-body">

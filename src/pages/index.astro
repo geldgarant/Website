@@ -9,7 +9,8 @@ import SlotCta from "../components/SlotCta.astro"
 import Icon from "../components/Icon.astro"
 import KennisBeeld from "../components/KennisBeeld.astro"
 import Foto from "../components/Foto.astro"
-import fotoOverleg from "../assets/fotos/overleg-team.jpg"
+import fotoGesprek from "../assets/fotos/gesprek-adviseur.jpg"
+import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
 import { getCollection } from "astro:content"
 import { site, branches } from "../data/site"
 import { onderwerpById, leestijd } from "../data/kennisbank"
@@ -153,7 +154,15 @@ const branchIcon = {
             </div>
 
             <div class="hero-visual">
-                <img class="hero-mark" src="/brand/short-logo-dark.svg" alt="" width="1220" height="1400" />
+                <div class="hero-foto">
+                    <Foto
+                        src={fotoGesprek}
+                        alt="Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever"
+                        sizes="(min-width: 1024px) 560px, calc(100vw - 32px)"
+                        focus="64% 26%"
+                        eager
+                    />
+                </div>
                 <p class="hero-chip">
                     <span class="hero-chip-dot" aria-hidden="true"></span>
                     Binnen 1 uur in behandeling op werkdagen
@@ -174,11 +183,15 @@ const branchIcon = {
         <div class="wrap team">
             <div class="photo-slot team-photo">
                 <Foto
-                    src={fotoOverleg}
-                    alt="Medewerkers van GeldGarant in overleg aan tafel"
+                    src={fotoAdviseur}
+                    alt="Een dossierbehandelaar van GeldGarant in gesprek met een opdrachtgever"
                     sizes="(min-width: 1024px) 560px, calc(100vw - 32px)"
-                    focus="58% 40%"
+                    focus="40% 30%"
                 />
+                <p class="team-chip">
+                    <span class="hero-chip-dot" aria-hidden="true"></span>
+                    Bereikbaar {site.hours}
+                </p>
             </div>
             <div class="team-copy">
                 <p class="eyebrow">
@@ -391,35 +404,49 @@ const branchIcon = {
     }
 
     /* Navy vlak is de container van de kaart: gelijke marges links, rechts en onder */
+    /* Foto bovenin, verloopt naar navy; de afrekenkaart schuift over het onderste deel van de foto */
     .hero-visual {
+        --foto-h: clamp(210px, 56vw, 290px);
         position: relative;
         overflow: hidden;
-        padding: 52px 12px 12px;
+        padding: var(--foto-h) 12px 12px;
         border-radius: var(--r-xl);
         background: var(--ink);
     }
     @media (min-width: 640px) {
         .hero-visual {
-            padding: 60px 24px 24px;
+            padding: var(--foto-h) 24px 24px;
         }
     }
-    .hero-mark {
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 58%;
-        height: auto;
-        opacity: 0.06;
-        pointer-events: none;
+    @media (min-width: 1024px) {
+        .hero-visual {
+            --foto-h: 300px;
+        }
     }
-    .hero-chip {
+    .hero-foto {
         position: absolute;
-        top: 16px;
-        left: 24px;
+        inset: 0 0 auto;
+        height: calc(var(--foto-h) + 110px);
+    }
+    .hero-foto::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(6, 17, 38, 0) 35%, rgba(6, 17, 38, 0.55) 72%, var(--ink) 100%);
+    }
+    .hero-chip,
+    .team-chip {
+        position: absolute;
+        z-index: 2;
+        top: 14px;
+        left: 14px;
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        min-height: 24px;
+        min-height: 32px;
+        padding: 6px 14px;
+        border-radius: var(--r-pill);
+        background: rgba(6, 17, 38, 0.78);
         color: #fff;
         font-size: var(--fs-xs);
         font-weight: 500;
@@ -427,8 +454,13 @@ const branchIcon = {
     @media (min-width: 640px) {
         .hero-chip {
             top: 20px;
-            left: 32px;
+            left: 24px;
         }
+    }
+    .team-chip {
+        top: auto;
+        bottom: 16px;
+        left: 16px;
     }
     .hero-chip-dot {
         width: 8px;
@@ -439,6 +471,7 @@ const branchIcon = {
     }
     .hero-card {
         position: relative;
+        z-index: 1;
     }
 
     /* ---------- gedeelde koppen ---------- */

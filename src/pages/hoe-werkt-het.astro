@@ -8,6 +8,8 @@ import Icon from "../components/Icon.astro"
 import Crumbs from "../components/Crumbs.astro"
 import Faq from "../components/Faq.astro"
 import SlotCta from "../components/SlotCta.astro"
+import FotoBand from "../components/FotoBand.astro"
+import fotoTeam from "../assets/fotos/team-overleg.jpg"
 import { site } from "../data/site"
 import { hoeWerktFaq } from "../data/faq"
 
@@ -235,6 +237,8 @@ const jsonLd = [
             </div>
         </div>
     </section>
+
+    <FotoBand groot={{ src: fotoTeam, alt: "Het team van GeldGarant in overleg met een opdrachtgever", focus: "50% 35%" }} />
 
     <!-- 01 STAP VOOR STAP -->
     <section class="section bg-surface" aria-labelledby="stappen-title">

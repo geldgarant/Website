@@ -5,6 +5,8 @@
 import Base from "../layouts/Base.astro"
 import Icon from "../components/Icon.astro"
 import Crumbs from "../components/Crumbs.astro"
+import Foto from "../components/Foto.astro"
+import fotoHanddruk from "../assets/fotos/handdruk.jpg"
 import Veld from "../components/form/Veld.astro"
 import { site } from "../data/site"
 import { ONDERWERPEN } from "../lib/intake"
@@ -248,6 +250,14 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
 
                 <aside class="zij" aria-label="Kantoor en bereikbaarheid">
                     <div class="zij-kaart bg-ink">
+                        <div class="photo-slot zij-foto">
+                            <Foto
+                                src={fotoHanddruk}
+                                alt="Een medewerker van GeldGarant verwelkomt een bezoeker"
+                                sizes="(min-width: 1024px) 400px, calc(100vw - 32px)"
+                                focus="50% 35%"
+                            />
+                        </div>
                         <h2 class="zij-kop">Kantoor Deventer</h2>
                         <p class="zij-adres">
                             {site.street}
@@ -614,8 +624,14 @@ const route = `https://www.google.com/maps/search/?api=1&query=${encodeURICompon
         }
     }
     .zij-kaart {
+        overflow: hidden;
         padding: 26px;
         border-radius: var(--r-xl);
+    }
+    .zij-foto {
+        aspect-ratio: 16 / 10;
+        margin: -26px -26px 22px;
+        border-radius: 0;
     }
     .zij-kop {
         font-family: var(--font-display);

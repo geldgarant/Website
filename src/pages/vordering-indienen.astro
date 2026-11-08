@@ -7,6 +7,8 @@ import Icon from "../components/Icon.astro"
 import Crumbs from "../components/Crumbs.astro"
 import Veld from "../components/form/Veld.astro"
 import AdresVelden from "../components/form/AdresVelden.astro"
+import Foto from "../components/Foto.astro"
+import fotoAdviseur from "../assets/fotos/adviseur-buiten.jpg"
 import { site } from "../data/site"
 
 const title = "Vordering indienen | Binnen 1 uur in behandeling | GeldGarant"
@@ -408,6 +410,9 @@ const jsonLd = [
                         </li>
                     </ul>
                     <p class="sam-hulp">
+                        <span class="sam-gezicht">
+                            <Foto src={fotoAdviseur} alt="" sizes="48px" widths={[96, 144]} focus="36% 22%" />
+                        </span>
                         Liever telefonisch?{" "}
                         <a class="textlink nowrap" href={site.phoneHref}>
                             Bel{" "}
@@ -1044,6 +1049,15 @@ const jsonLd = [
         font-size: var(--fs-sm);
         color: rgba(255, 255, 255, 0.85);
     }
+    .sam-gezicht {
+        float: left;
+        width: 48px;
+        height: 48px;
+        margin-right: 12px;
+        overflow: hidden;
+        border-radius: 50%;
+        background: var(--surface);
+    }
     .sam-trust {
         display: grid;
         gap: 10px;
@@ -1061,6 +1075,8 @@ const jsonLd = [
         color: var(--blue);
     }
     .sam-hulp {
+        display: flow-root;
+        line-height: 1.5;
         padding: 0 8px;
         font-size: var(--fs-sm);
         color: var(--muted);

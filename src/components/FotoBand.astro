@@ -1,0 +1,69 @@
+---
+// Brede fotoband onder een hero: één groot beeld, optioneel met een tweede, staand beeld ernaast (vanaf 720 px).
+// Gebruikt op /over-ons en /hoe-werkt-het. Decoratief van aard, maar wel met beschrijvende alt-tekst (zonder namen).
+import type { ImageMetadata } from "astro"
+import Foto from "./Foto.astro"
+
+interface Beeld {
+    src: ImageMetadata
+    alt: string
+    focus?: string
+}
+
+interface Props {
+    groot: Beeld
+    klein?: Beeld
+}
+
+const { groot, klein } = Astro.props
+---
+
+<section class="fotoband" aria-label="Foto's van GeldGarant">
+    <div class:list={["wrap", "fotoband-grid", { duo: klein }]}>
+        <div class="photo-slot fotoband-groot">
+            <Foto
+                src={groot.src}
+                alt={groot.alt}
+                focus={groot.focus}
+                sizes={klein ? "(min-width: 720px) 66vw, calc(100vw - 32px)" : "(min-width: 1280px) 1200px, calc(100vw - 32px)"}
+            />
+        </div>
+        {klein && (
+            <div class="photo-slot fotoband-klein">
+                <Foto src={klein.src} alt={klein.alt} focus={klein.focus} sizes="(min-width: 720px) 34vw, 100vw" />
+            </div>
+        )}
+    </div>
+</section>
+
+<style>
+    .fotoband {
+        padding-bottom: clamp(56px, 7vw, 104px);
+    }
+    .fotoband-grid {
+        display: grid;
+        gap: 16px;
+    }
+    .fotoband-groot {
+        aspect-ratio: 4 / 3;
+    }
+    .fotoband-klein {
+        display: none;
+    }
+    @media (min-width: 720px) {
+        .fotoband-groot {
+            aspect-ratio: 21 / 9;
+        }
+        .duo {
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        }
+        .duo .fotoband-groot {
+            aspect-ratio: auto;
+            min-height: 100%;
+        }
+        .fotoband-klein {
+            display: block;
+            aspect-ratio: 4 / 5;
+        }
+    }
+</style>
