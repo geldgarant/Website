@@ -19,6 +19,9 @@ const description =
     "Incasso zonder opstartkosten: bij volledige betaling betaalt u niets. Bekijk de wettelijke staffel, reken uw afrekening uit en vergelijk de pakketten."
 
 const url = "https://geldgarant.com/tarieven"
+// Prijzen als structured data (GEO: prijzen zijn feiten die AI-antwoorden letterlijk overnemen). Alleen bedragen
+// die op deze pagina en in de AV staan; debiteurenbeheer uit src/lib/pakketten.ts.
+const aanbieder = { "@id": "https://geldgarant.com/#organisatie" }
 const jsonLd = [
     {
         "@context": "https://schema.org",
@@ -27,6 +30,42 @@ const jsonLd = [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://geldgarant.com/" },
             { "@type": "ListItem", position: 2, name: "Tarieven", item: url },
         ],
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Incasso voor ondernemers",
+        serviceType: "Incassodienstverlening",
+        url,
+        areaServed: "NL",
+        provider: aanbieder,
+        offers: {
+            "@type": "Offer",
+            price: 0,
+            priceCurrency: "EUR",
+            description:
+                "Geen kosten voor de opdrachtgever als de debiteur volledig betaalt: de wettelijke incassokosten volgens de WIK-staffel komen voor rekening van de debiteur. Geen opstartkosten en geen abonnement.",
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Debiteurenbeheer",
+        serviceType: "Debiteurenbeheer",
+        url: "https://geldgarant.com/debiteurenbeheer",
+        areaServed: "NL",
+        provider: aanbieder,
+        hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: "Pakketten debiteurenbeheer",
+            itemListElement: PAKKETTEN.map((p) => ({
+                "@type": "Offer",
+                name: `Debiteurenbeheer ${p.naam}`,
+                price: p.prijs,
+                priceCurrency: "EUR",
+                description: `Prijs per maand, inclusief ${p.dossiers} nieuwe dossiers per maand`,
+            })),
+        },
     },
     {
         "@context": "https://schema.org",

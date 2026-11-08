@@ -1,4 +1,59 @@
+# robots.txt van geldgarant.com (eigen beheer sinds 8 nov 2026; Cloudflare "Managed robots.txt" staat uit)
+#
+# Content signals (contentsignals.org):
+#   search    = zoekindex en zoekresultaten met links en korte fragmenten
+#   ai-input  = gebruik in AI-antwoorden (zoals ChatGPT Search, Perplexity, Google AI Overviews, Gemini, Copilot)
+#   ai-train  = trainen of fine-tunen van AI-modellen
+# Voorbehoud van rechten in de zin van artikel 4 van Richtlijn (EU) 2019/790 geldt voor ai-train=no.
+#
+# Besluit GeldGarant (8 nov 2026): wel zoeken en AI-antwoorden (bronvermelding), geen training.
+# Google-Extended is toegestaan zodat Gemini GeldGarant als bron kan gebruiken.
+
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 Allow: /
+
+# Crawlers die alleen voor modeltraining verzamelen
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: MistralAI-Training
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: omgili
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: GoogleOther
+Disallow: /
 
 Sitemap: https://geldgarant.com/sitemap-index.xml
