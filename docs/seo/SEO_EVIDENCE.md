@@ -473,3 +473,17 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   Webmaster Tools koppelen.
 - **Klein:** `/algemene-voorwaarden/` (met slash) geeft 404, zonder slash 301. Geen actie nodig zolang er niet naar wordt
   gelinkt.
+
+### E28. Bing Webmaster Tools (10 nov 2026)
+
+- Gebruiker logde in met Google. **De site stond al in Bing Webmaster Tools** (geverifieerd, data sinds aug 2026: 12
+  klikken, 755 vertoningen in 3 maanden). Bekende sitemaps waren alleen de oude Framer-sitemaps (`/sitemap.xml` en
+  `www./sitemap.xml`, 57 URL's, laatst gelezen apr/jun 2026).
+- **Ingediend:** `https://geldgarant.com/sitemap-index.xml` (status Processing) en via URL Submission **alle 72
+  sitemap-URL's** (quotum 100 per dag; 28 over).
+- **IndexNow:** BWT toont 25 URL's als ontvangen op 8 nov (bron "Self"), terwijl `bing.com/indexnow` en
+  `api.indexnow.org` 403 `UserForbiddedToAccessSite` geven. De meldingen kwamen dus via yandex.com/indexnow (gedeeld
+  protocol). `scripts/seo/indexnow.mjs` probeert nu eerst api.indexnow.org en valt terug op yandex.com (getest: 200).
+- **BWT-aanbevelingen:** "IndexNow instellen" (zie boven), "te veel identieke meta descriptions" (huidige build: 74
+  pagina's, 0 dubbel; melding stamt uit de Framer-crawl), "te weinig inkomende links van kwaliteitsdomeinen" (bekend;
+  werkstroom C in GEO_PLAN).

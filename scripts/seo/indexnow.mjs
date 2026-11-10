@@ -23,13 +23,24 @@ if (urls.some((u) => new URL(u).host !== HOST)) {
     process.exit(1)
 }
 
-const res = await fetch("https://api.indexnow.org/indexnow", {
-    method: "POST",
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-    body: JSON.stringify({ host: HOST, key: KEY, keyLocation, urlList: urls }),
-})
-// 200 = ontvangen, 202 = ontvangen (sleutel wordt nog gecontroleerd), 4xx = fout (zie tekst)
-console.log(`IndexNow: ${res.status} ${res.statusText} voor ${urls.length} URL('s)`)
-const tekst = await res.text()
-if (tekst) console.log(tekst.slice(0, 500))
-process.exit(res.ok ? 0 : 1)
+// api.indexnow.org en bing.com/indexnow geven sinds 8 nov 2026 403 "UserForbiddedToAccessSite"; yandex.com accepteert
+// wel en deelt de melding met de andere IndexNow-zoekmachines (Bing Webmaster Tools toont ze als ontvangen, E28).
+// Daarom: eerst de gedeelde endpoint, bij een fout Yandex.
+const body = JSON.stringify({ host: HOST, key: KEY, keyLocation, urlList: urls })
+let ok = false
+for (const endpoint of ["https://api.indexnow.org/indexnow", "https://yandex.com/indexnow"]) {
+    const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body,
+    })
+    // 200 = ontvangen, 202 = ontvangen (sleutel wordt nog gecontroleerd), 4xx = fout (zie tekst)
+    console.log(`IndexNow ${new URL(endpoint).host}: ${res.status} ${res.statusText} voor ${urls.length} URL('s)`)
+    const tekst = await res.text()
+    if (tekst && !res.ok) console.log(tekst.slice(0, 300))
+    if (res.ok) {
+        ok = true
+        break
+    }
+}
+process.exit(ok ? 0 : 1)
