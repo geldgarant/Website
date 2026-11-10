@@ -432,3 +432,19 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   "Wij innen …"); verder niets gewijzigd.
 - **CI-fout 5a5ce03:** e2e-test verwachtte exact 27 kennisbankartikelen; nu 28. Test telt nu de bestanden in
   `src/content/kennisbank`.
+
+### E26. Eerste Ubersuggest-meting en controle gebruikersacties (10 nov 2026)
+
+- **AI-zichtbaarheid (Ubersuggest, ChatGPT, 5 antwoorden op 8 nov; Google AIO nog niet geleverd):** GeldGarant 0
+  vermeldingen, 0% zichtbaarheid, 0 citaties. Wel genoemd: e-Legal Incasso Advocaten (60%), Bill Incasso (60%),
+  Invorderingsbedrijf (40%), Intercash, RIB Incasso, Smaal Finance, coeo, Aertery, NL Legal, Recht Incasso. Geciteerde
+  domeinen: e-legal.nl (3), billincasso.nl, invorderingsbedrijf.nl, justis.nl, kvk.nl (elk 2), inspectie-jenv.nl,
+  intercash.nl, mkb.nl, nl.legal, rechtspraak.nl, ribincasso.nl, rijksoverheid.nl, smaalfinance.nl, zzp-nederland.nl.
+  Bevestigt E22: landelijk onzichtbaar; ChatGPT leunt op bureaus met veel eigen kennisartikelen en op overheidsbronnen.
+- **Google-posities (Ubersuggest, NL desktop, 8 nov):** 3 van 20 zoekwoorden in de top 100: "incassobureau zzp" #26
+  (/branches/incasso-zzp), "huurachterstand incasso" #28 (/branches/incasso-verhuur), "openstaande factuur" #40
+  (/kennisbank/openstaande-factuur-stappenplan). Gemiddelde positie 31,3. Niet in top 100 o.a. "incassobureau" (6.600),
+  "incassobureau inschakelen" (1.900), "incassokosten berekenen" (1.300), "no cure no pay incasso" (1.300), "wettelijke
+  rente 2026" (880), "debiteurenbeheer" (720), "wik brief" (590). Volgende update 15 nov.
+- **Gebruikersacties:** Justis-register toont nog 0850835230 (oud). Bing IndexNow nog 403 (Bing Webmaster Tools niet
+  gekoppeld). Browserpaneel was opnieuw gestart: Google en Cloudflare uitgelogd, GSC-aanvragen wachten op inloggen.
