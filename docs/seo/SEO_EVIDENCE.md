@@ -448,3 +448,28 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   rente 2026" (880), "debiteurenbeheer" (720), "wik brief" (590). Volgende update 15 nov.
 - **Gebruikersacties:** Justis-register toont nog 0850835230 (oud). Bing IndexNow nog 403 (Bing Webmaster Tools niet
   gekoppeld). Browserpaneel was opnieuw gestart: Google en Cloudflare uitgelogd, GSC-aanvragen wachten op inloggen.
+
+### E27. Search Console: 10 indexeringsaanvragen en indexeringsanalyse (10 nov 2026)
+
+- **Aangevraagd (10/10, quotum op):** `/` (geïndexeerd, herindexering), `/kennisbank/betrouwbaar-incassobureau-kiezen`
+  (onbekend bij Google), `/voorbeeldbrieven/huurachterstand` (onbekend), `/tarieven`, `/incasso`, `/debiteurenbeheer`,
+  `/incasso/incassobureau-inschakelen`, `/over-ons`, `/branches/incasso-zzp` (alle geïndexeerd, herindexering na
+  wijzigingen) en `/kennisbank/wat-kost-incasso-uitbesteden` (gecrawld 23 aug, niet geïndexeerd).
+- **GSC werkt nu zonder `/u/1`** (Google-account opnieuw ingelogd als standaardaccount); directe inspect-links geven 404,
+  inspectie via het zoekveld.
+- **Sitemaps:** `sitemap-index.xml` succesvol gelezen 10 nov, 72 URL's (incl. nieuw artikel); oude `/sitemap.xml`
+  (Framer, 57 URL's) verwijst nu 301 naar de index.
+- **Indexering:** 34 geïndexeerd, 34 niet. Redenen: noindex 5 (/faq, /juridisch/privacy-beleid, /cookie-beleid,
+  /algemene-voorwaarden, /klachtenregelement; gecrawld aug-sep in Framer-tijd, nu allemaal 200 zonder noindex of 301), 404
+  2 (/algemene-voorwaarden: nu 301; email.dossiers.geldgarant.com: subdomein van het dossierportaal, geen actie), omleiding
+  2, alternatieve canonieke 1, **gecrawld niet geïndexeerd 13** (o.a. /voorbeeldbrieven (8 nov), /incasso/incassokosten-
+  berekenen, /hoe-werkt-het, wki-proof-werken-2026, gerechtelijke-procedure-kantonrechter, eisen-correcte-factuur,
+  wat-kost-incasso-uitbesteden, /branches/incasso-dienstverlening, algemene-voorwaarden-incasso, /incasso/incasso-in-het-
+  buitenland; meeste gecrawld in de Framer-tijd), **gevonden niet geïndexeerd 11** (nooit gecrawld: creditmanagement,
+  debiteur-betwist-factuur, geleend-geld-terugvorderen, griffierechten-2026, herincasso, hoger-beroep-vonnis,
+  incasso-bouwsector, internationale-vordering, loonbeslag, selectief-betalen, plus de oude /sitemap.xml).
+- **Conclusie:** geen technische blokkade; Google heeft de vernieuwde site nog niet opnieuw beoordeeld en geeft een jong
+  domein weinig crawlbudget. Aanpak: dagelijks 10 aanvragen (wachtrij in SEO_STATE), interne links laten staan, Bing
+  Webmaster Tools koppelen.
+- **Klein:** `/algemene-voorwaarden/` (met slash) geeft 404, zonder slash 301. Geen actie nodig zolang er niet naar wordt
+  gelinkt.
