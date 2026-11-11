@@ -487,3 +487,25 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
 - **BWT-aanbevelingen:** "IndexNow instellen" (zie boven), "te veel identieke meta descriptions" (huidige build: 74
   pagina's, 0 dubbel; melding stamt uit de Framer-crawl), "te weinig inkomende links van kwaliteitsdomeinen" (bekend;
   werkstroom C in GEO_PLAN).
+
+### E29. GSC-wachtrij, Bingbot-sitemapfout, Web Analytics (11 nov 2026)
+
+- **GSC, aangevraagd (quotum op):** `/incasso/incassokosten-berekenen`, `/hoe-werkt-het`,
+  `/kennisbank/wki-proof-werken-2026`, `/kennisbank/gerechtelijke-procedure-kantonrechter`,
+  `/kennisbank/eisen-correcte-factuur`, `/branches/incasso-dienstverlening`, `/incasso/incasso-in-het-buitenland`,
+  `/kennisbank/wettelijke-rente-2026` (was "onbekend bij Google"), `/kennisbank/griffierechten-2026` (onbekend).
+  Inmiddels vanzelf geïndexeerd (niet aangevraagd): `/voorbeeldbrieven`, `/kennisbank/algemene-voorwaarden-incasso`.
+  Werkwijze GSC: inspecteren vanaf de overzichtspagina (zoekveld na een eerdere inspectie reageert niet op Enter).
+- **Bing:** sitemap-index stond op **Error "The page is not accessible / Bingbot was not able to access the page"**
+  (verwerkt 10 nov). Live URL-test van de homepage in BWT op 11 nov: "URL can be indexed by Bing"; homepage in de
+  Bing-index. Cloudflare AI Crawl Control: BingBot 53 toegestane verzoeken in 7 dagen. Conclusie: tijdelijk; sitemap-index
+  opnieuw ingediend en `sitemap-0.xml` los ingediend. Over 1-2 dagen status controleren; blijft de fout, dan Security
+  Events in Cloudflare filteren op Bingbot. Mogelijke samenhang met IndexNow-403 op bing.com.
+- **BWT-melding "Alt attribute for images is missing" (7x op /):** de foto's op home (hero-band, team, FAQ-portretten)
+  hebben bewust `alt=""` (decoratief, keuze website-chat). Voor beeldzoeken zou een korte beschrijving bij de 2 grote
+  foto's helpen; besluit bij website-chat.
+- **Cloudflare Web Analytics (laatste 24 uur):** 82 bezoeken, 88 paginaweergaven; 79 zonder referrer, 56 uit de VS
+  (deels ChromeHeadless/Linux: bots), 18 NL; zoekverkeer google 1, bing 1, yahoo 1; geen AI-referrers. **Core Web
+  Vitals (RUM):** LCP P75 2.820 ms (72% goed, 17% slecht), element render delay 1.778 ms (81% van LCP), LCP-element
+  meestal de hero-foto op home (`adviseur-buiten…avif`); INP en CLS 100% goed. Te weinig echte data voor conclusies; wel
+  aandachtspunt voor de website-chat.
