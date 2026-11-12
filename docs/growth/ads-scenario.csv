@@ -1,0 +1,10 @@
+scenario,budget,klikken,aanvragen,gekwalificeerd,klanten,dossiers12m,feePerDossier,margePerDossier,margePerKlant12m,cac,nettoPerMaandBudget12m,breakEvenCpc
+pessimistisch,300,15,0.5,0.2,0.13,0.2,90,-22,-29,2222,-304,-0.26
+pessimistisch,750,38,1.1,0.6,0.34,0.4,90,-22,-29,2222,-760,-0.26
+pessimistisch,1500,75,2.3,1.1,0.68,0.9,90,-22,-29,2222,-1520,-0.26
+basis,300,20,1.2,0.8,0.59,1.5,234,144,359,513,-90,10.51
+basis,750,50,3,2,1.46,3.7,234,144,359,513,-224,10.51
+basis,1500,100,6,3.9,2.93,7.3,234,144,359,513,-449,10.51
+optimistisch,300,30,3,2.4,2.16,10.8,472,405,2025,139,4074,145.8
+optimistisch,750,75,7.5,6,5.4,27,472,405,2025,139,10185,145.8
+optimistisch,1500,150,15,12,10.8,54,472,405,2025,139,20370,145.8

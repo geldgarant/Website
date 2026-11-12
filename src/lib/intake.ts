@@ -68,6 +68,25 @@ export const leegFormulier = (): FormState => ({
     akkoord: false,
 })
 
+// ---------- herkomst van een aanvraag (meting zonder cookies of opslag) ----------
+
+export interface Herkomst {
+    pagina: string
+    referrer: string
+    utm: URLSearchParams
+}
+
+/** Pagina, verwijzer en UTM zoals de browser ze kent op het moment van versturen; er wordt niets opgeslagen. */
+export function herkomstVelden(h: Herkomst) {
+    return {
+        bron_pagina: h.pagina.slice(0, 255),
+        referrer: h.referrer.slice(0, 255),
+        utm_source: (h.utm.get("utm_source") ?? "").slice(0, 100),
+        utm_medium: (h.utm.get("utm_medium") ?? "").slice(0, 100),
+        utm_campaign: (h.utm.get("utm_campaign") ?? "").slice(0, 100),
+    }
+}
+
 // ---------- normaliseren ----------
 
 const schoon = (v: string, max = 200) =>
@@ -178,7 +197,14 @@ const adresUit = (a: Adres): Adres => ({
 
 export function bouwPayload(
     s: FormState,
-    ctx: { nonce: string; sessionToken: string; dossierId: string; documenten: Document[]; duurSec: number },
+    ctx: {
+        nonce: string
+        sessionToken: string
+        dossierId: string
+        documenten: Document[]
+        duurSec: number
+        herkomst?: Herkomst
+    },
 ) {
     const soort = s.debiteur_soort === "particulier" ? "Particulier" : "Bedrijf"
     const omschrijving = [`Soort debiteur: ${soort}`, schoon(s.omschrijving, 1500)].filter(Boolean).join("\n")
@@ -217,7 +243,12 @@ export function bouwPayload(
             documenten: ctx.documenten,
         },
         toestemmingen: { akkoord_av: s.akkoord, akkoord_avg: s.akkoord },
-        metadata: { ingediend_op: new Date().toISOString(), bron: "website", formulier_duur_sec: Math.round(ctx.duurSec) },
+        metadata: {
+            ingediend_op: new Date().toISOString(),
+            bron: "website",
+            formulier_duur_sec: Math.round(ctx.duurSec),
+            ...(ctx.herkomst ? herkomstVelden(ctx.herkomst) : {}),
+        },
     }
 }
 
@@ -403,11 +434,7 @@ export function bouwContactPayload(
             terugbel_moment: s.onderwerp === "terugbelverzoek" ? schoon(s.terugbel_moment, 160) : "",
         },
         metadata: {
-            bron_pagina: ctx.pagina.slice(0, 255),
-            referrer: ctx.referrer.slice(0, 255),
-            utm_source: ctx.utm.get("utm_source") ?? "",
-            utm_medium: ctx.utm.get("utm_medium") ?? "",
-            utm_campaign: ctx.utm.get("utm_campaign") ?? "",
+            ...herkomstVelden(ctx),
             cta: pakket ? `pakket-${s.pakket}` : "",
         },
     }

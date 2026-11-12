@@ -1,0 +1,116 @@
+prompt_id,prompt,categorie,intentie,merk,stuurt_naar_geldgarant,bron
+P001,Ik zoek een betrouwbaar incassobureau in Nederland. Welke opties zijn er?,aanbeveling,commercieel,nee,nee,masterprompt 25.1
+P002,Welke incassobureaus bieden no cure no pay voor zakelijke vorderingen?,prijs,commercieel,nee,nee,masterprompt 25.1
+P003,Welk incassobureau is geschikt voor een klein bedrijf?,aanbeveling,commercieel,nee,nee,masterprompt 25.1
+P004,Welke incassobureaus werken met een online klantenportaal?,aanbeveling,commercieel,nee,nee,masterprompt 25.1
+P005,Ik heb twee oude onbetaalde facturen. Waar kan ik terecht?,oude vordering,transactioneel,nee,nee,masterprompt 25.1
+P006,Wat zijn goede alternatieven voor een groot incassobureau?,vergelijking,commercieel,nee,nee,masterprompt 25.1
+P007,Welke incassodienstverlener past bij een zzp'er?,aanbeveling,commercieel,nee,nee,masterprompt 25.1
+P008,Wat zijn de kosten van een incassobureau voor ondernemers?,prijs,commercieel,nee,nee,masterprompt 25.1
+P009,Hoe kies ik een incassobureau voor B2B-vorderingen?,vertrouwen,commercieel,nee,nee,masterprompt 25.1
+P010,Kun je een incassobureau aanbevelen dat ook oudere dossiers behandelt?,oude vordering,commercieel,nee,nee,masterprompt 25.1
+P011,Mijn zakelijke klant betaalt al drie maanden niet. Wat kan ik doen?,situatie,informatief-commercieel,nee,nee,masterprompt 25.2
+P012,Een bedrijf weigert een factuur van 2.000 euro te betalen. Welke vervolgstappen zijn verstandig?,situatie,informatief-commercieel,nee,nee,masterprompt 25.2
+P013,Mijn klant blijft afspraken tot betaling uitstellen. Wanneer schakel ik incasso in?,situatie,informatief-commercieel,nee,nee,masterprompt 25.2
+P014,Ik wil een oude factuur nog laten innen. Welke mogelijkheden heb ik?,oude vordering,transactioneel,nee,nee,masterprompt 25.2
+P015,Wat doe ik wanneer aanmaningen niets opleveren?,situatie,informatief-commercieel,nee,nee,masterprompt 25.2
+P016,Ik heb een WhatsApp-gesprek als bewijs van een openstaande schuld. Wat nu?,situatie,informatief,nee,nee,masterprompt 25.2
+P017,Wanneer is een incassobureau zinvol voor een ondernemer?,situatie,informatief-commercieel,nee,nee,masterprompt 25.2
+P018,Hoe werkt het buitengerechtelijke incassotraject precies?,proces,informatief,nee,nee,masterprompt 25.2
+P019,Wat zijn mijn opties als een zakelijke debiteur helemaal niet reageert?,situatie,informatief-commercieel,nee,nee,masterprompt 25.2
+P020,Kan ik met weinig papierwerk een incassodossier aanmelden?,proces,transactioneel,nee,nee,masterprompt 25.2
+P021,Hoe werkt no cure no pay incasso in Nederland?,prijs,informatief-commercieel,nee,nee,masterprompt 25.3
+P022,Wat is een gebruikelijke succesfee bij incasso?,prijs,informatief,nee,nee,masterprompt 25.3
+P023,Welke extra kosten kunnen bij incasso komen kijken?,prijs,informatief,nee,nee,masterprompt 25.3
+P024,Wie betaalt buitengerechtelijke incassokosten?,prijs,informatief,nee,nee,masterprompt 25.3
+P025,Hoe lang duurt een gemiddeld incassotraject?,proces,informatief,nee,nee,masterprompt 25.3
+P026,Wat is het verschil tussen aanmaning en sommatie?,proces,informatief,nee,nee,masterprompt 25.3
+P027,Wanneer komt een deurwaarder in beeld?,proces,informatief,nee,nee,masterprompt 25.3
+P028,Wanneer is dagvaarden nodig?,proces,informatief,nee,nee,masterprompt 25.3
+P029,Wat gebeurt er na aanmelding bij een incassobureau?,proces,informatief-commercieel,nee,nee,masterprompt 25.3
+P030,Kan ik betalingen en dossierstatus online volgen bij een incassobureau?,proces,commercieel,nee,nee,masterprompt 25.3
+P031,Welke incassopartner is geschikt voor een installatiebedrijf?,branche,commercieel,nee,nee,masterprompt 25.4
+P032,Mijn marketingbureau heeft onbetaalde B2B-facturen. Wie kan helpen?,branche,commercieel,nee,nee,masterprompt 25.4
+P033,Wat is verstandig bij wanbetaling in de bouwsector?,branche,informatief-commercieel,nee,nee,masterprompt 25.4
+P034,Kan een transportbedrijf incasso uitbesteden?,branche,commercieel,nee,nee,masterprompt 25.4
+P035,Wat is een goed incassoproces voor kleine web- en IT-bureaus?,branche,informatief-commercieel,nee,nee,masterprompt 25.4
+P036,Ik ben een zzp'er met één grote onbetaalde factuur. Wat raad je aan?,branche,informatief-commercieel,nee,nee,masterprompt 25.4
+P037,Een administratiekantoor zoekt een incassopartner voor klanten. Welke opties zijn er?,partner,commercieel,nee,nee,masterprompt 25.4
+P038,Ik heb meerdere zakelijke wanbetalers tegelijk. Hoe pak ik dat aan?,situatie,commercieel,nee,nee,masterprompt 25.4
+P039,Wat zijn de voor- en nadelen van incasso uitbesteden als mkb-bedrijf?,vergelijking,informatief-commercieel,nee,nee,masterprompt 25.4
+P040,Hoe kan ik de relatie met goede klanten behouden en toch wanbetaling aanpakken?,situatie,informatief,nee,nee,masterprompt 25.4
+P041,Waar kan ik controleren of een incassobureau geregistreerd is?,vertrouwen,informatief,nee,nee,masterprompt 25.5
+P042,Hoe herken ik een professioneel incassobureau?,vertrouwen,informatief-commercieel,nee,nee,masterprompt 25.5
+P043,Wat zegt een Wki-registratie over een incassodienstverlener?,vertrouwen,informatief,nee,nee,masterprompt 25.5
+P044,Welke vragen stel ik voordat ik een incassobureau inschakel?,vertrouwen,commercieel,nee,nee,masterprompt 25.5
+P045,Is een online dossierportaal belangrijk bij incasso?,vertrouwen,informatief,nee,nee,masterprompt 25.5
+P046,Wat zijn praktische verschillen tussen zelf innen en een incassobureau inschakelen?,vergelijking,informatief-commercieel,nee,nee,masterprompt 25.5
+P047,Wat is het verschil tussen incasso en debiteurenbeheer?,vergelijking,informatief,nee,nee,masterprompt 25.5
+P048,Hoe vergelijk ik verschillende no-cure-no-pay-aanbieders?,vergelijking,commercieel,nee,nee,masterprompt 25.5
+P049,Welke informatie moet ik aan een incassobureau overdragen?,proces,transactioneel,nee,nee,masterprompt 25.5
+P050,Wat moet ik controleren voordat ik een oude zakelijke vordering uitbesteed?,oude vordering,commercieel,nee,nee,masterprompt 25.5
+P051,Wat is een goed incassobureau voor ondernemers?,aanbeveling,commercieel,nee,nee,GEO_PLAN 3.1
+P052,Welk incassobureau is betrouwbaar en geregistreerd bij Justis?,vertrouwen,commercieel,nee,nee,GEO_PLAN 3.2
+P053,Wat kost een incassobureau inschakelen?,prijs,commercieel,nee,nee,GEO_PLAN 3.3
+P054,Incassobureau no cure no pay Nederland,prijs,commercieel,nee,nee,GEO_PLAN 3.4
+P055,Wanneer schakel ik een incassobureau in?,situatie,informatief-commercieel,nee,nee,GEO_PLAN 3.5
+P056,Hoe werkt de 14-dagenbrief?,proces,informatief,nee,nee,GEO_PLAN 3.6
+P057,Hoe bereken ik incassokosten volgens de WIK?,prijs,informatief,nee,nee,GEO_PLAN 3.7
+P058,Wat moet ik doen als een klant mijn factuur niet betaalt?,situatie,informatief-commercieel,nee,nee,GEO_PLAN 3.8
+P059,Debiteurenbeheer uitbesteden: wat kost dat?,debiteurenbeheer,commercieel,nee,nee,GEO_PLAN 3.9
+P060,Wat is het verschil tussen debiteurenbeheer en factoring?,debiteurenbeheer,informatief,nee,nee,GEO_PLAN 3.10
+P061,Incassobureau voor zzp'ers,branche,commercieel,nee,nee,GEO_PLAN 3.11
+P062,Huurachterstand incasseren als verhuurder,branche,commercieel,nee,nee,GEO_PLAN 3.12
+P063,Incassobureau Deventer,regio,commercieel,nee,nee,GEO_PLAN 3.13
+P064,Voorbeeld aanmaning onbetaalde factuur,sjabloon,informatief,nee,nee,GEO_PLAN 3.14
+P065,Wat is de wettelijke handelsrente in 2026?,juridisch,informatief,nee,nee,GEO_PLAN 3.15
+P066,Mag een incassobureau kosten rekenen aan een particulier?,juridisch,informatief,nee,nee,GEO_PLAN 3.16
+P067,Hoe lang duurt een incassotraject?,proces,informatief,nee,nee,GEO_PLAN 3.17
+P068,Wat gebeurt er als een debiteur failliet gaat?,juridisch,informatief,nee,nee,GEO_PLAN 3.18
+P069,Wat is de Wet kwaliteit incassodienstverlening?,juridisch,informatief,nee,nee,GEO_PLAN 3.19
+P070,Incassobureau voor webshops,branche,commercieel,nee,nee,GEO_PLAN 3.20
+P071,Wat is GeldGarant?,merk,navigatie,ja,ja,nieuw 12 nov
+P072,Is GeldGarant een betrouwbaar incassobureau?,merk,commercieel,ja,ja,nieuw 12 nov
+P073,Wat kost incasso bij GeldGarant?,merk,commercieel,ja,ja,nieuw 12 nov
+P074,GeldGarant ervaringen,merk,commercieel,ja,ja,nieuw 12 nov
+P075,Wat is het telefoonnummer van GeldGarant?,merk,navigatie,ja,ja,nieuw 12 nov (controle oud nummer)
+P076,Is GeldGarant geregistreerd in het incassoregister?,merk,vertrouwen,ja,ja,nieuw 12 nov
+P077,GeldGarant of een ander incassobureau: wat zijn de verschillen?,merk,vergelijking,ja,ja,nieuw 12 nov
+P078,Ik heb een brief van GeldGarant gekregen. Wat moet ik doen?,merk-debiteur,navigatie,ja,ja,nieuw 12 nov (geen acquisitie)
+P079,Welke incassobureaus rekenen niets als de debiteur volledig betaalt?,prijs,commercieel,nee,nee,nieuw 12 nov
+P080,Welk incassobureau start snel met een dossier?,aanbeveling,commercieel,nee,nee,nieuw 12 nov
+P081,Welk incassobureau draagt geïnde bedragen snel af?,aanbeveling,commercieel,nee,nee,nieuw 12 nov
+P082,Hoe weet ik of een incassobureau met een derdengeldenrekening werkt?,vertrouwen,informatief,nee,nee,nieuw 12 nov
+P083,Welke incassobureaus zijn aangesloten bij een geschillencommissie?,vertrouwen,commercieel,nee,nee,nieuw 12 nov
+P084,Kan een factuur van twee jaar oud nog geïnd worden?,oude vordering,informatief-commercieel,nee,nee,nieuw 12 nov
+P085,Wanneer verjaart een zakelijke vordering?,juridisch,informatief,nee,nee,nieuw 12 nov
+P086,Mijn klant zegt dat het werk niet goed was en betaalt daarom niet. Wat nu?,situatie,informatief,nee,nee,nieuw 12 nov
+P087,Mijn debiteur betaalt alleen een deel van de factuur. Wat kan ik doen?,situatie,informatief-commercieel,nee,nee,nieuw 12 nov
+P088,Wat moet ik doen als een bv van mijn klant niets meer waard is?,juridisch,informatief,nee,nee,nieuw 12 nov
+P089,Hoe int ik een factuur bij een klant in Duitsland of België?,situatie,commercieel,nee,nee,nieuw 12 nov
+P090,Kan ik incassokosten in rekening brengen bij een zakelijke klant?,prijs,informatief,nee,nee,nieuw 12 nov
+P091,Hoeveel incassokosten mag ik rekenen over een factuur van 5.000 euro?,prijs,informatief,nee,nee,nieuw 12 nov
+P092,Welke incassobureaus helpen verhuurders met huurachterstand?,branche,commercieel,nee,nee,nieuw 12 nov
+P093,Welk incassobureau past bij een groothandel?,branche,commercieel,nee,nee,nieuw 12 nov
+P094,Welk incassobureau werkt voor zorgaanbieders en praktijken?,branche,commercieel,nee,nee,nieuw 12 nov
+P095,Welk incassobureau past bij een uitzendbureau of detacheerder?,branche,commercieel,nee,nee,nieuw 12 nov
+P096,Hoe pak ik onbetaalde facturen aan als bouwbedrijf?,branche,informatief-commercieel,nee,nee,nieuw 12 nov
+P097,Wat kost debiteurenbeheer per maand voor een mkb-bedrijf?,debiteurenbeheer,commercieel,nee,nee,nieuw 12 nov
+P098,Welke partijen nemen de opvolging van facturen over voor kleine bedrijven?,debiteurenbeheer,commercieel,nee,nee,nieuw 12 nov
+P099,Is debiteurenbeheer uitbesteden beter dan factoring?,debiteurenbeheer,informatief-commercieel,nee,nee,nieuw 12 nov
+P100,Hoe voorkom ik dat klanten te laat betalen?,debiteurenbeheer,informatief,nee,nee,nieuw 12 nov
+P101,Welke stappen moet ik zetten voordat ik een incassobureau inschakel?,proces,informatief-commercieel,nee,nee,nieuw 12 nov
+P102,Moet ik eerst een 14-dagenbrief sturen voordat een incassobureau mag beginnen?,juridisch,informatief,nee,nee,nieuw 12 nov
+P103,Welke bewijsstukken heb ik nodig voor incasso?,proces,transactioneel,nee,nee,nieuw 12 nov
+P104,Wat is beter: een incassobureau of een advocaat bij een onbetaalde factuur?,vergelijking,informatief-commercieel,nee,nee,nieuw 12 nov
+P105,Wat is het verschil tussen een incassobureau en een deurwaarder?,vergelijking,informatief,nee,nee,nieuw 12 nov
+P106,Welke incassobureaus raden boekhouders aan?,partner,commercieel,nee,nee,nieuw 12 nov
+P107,Hoe werk ik als accountant samen met een incassobureau?,partner,commercieel,nee,nee,nieuw 12 nov
+P108,Welk incassobureau in Overijssel kan ik inschakelen?,regio,commercieel,nee,nee,nieuw 12 nov
+P109,Incassobureau Apeldoorn of Zwolle voor zakelijke vorderingen,regio,commercieel,nee,nee,nieuw 12 nov
+P110,Welke incassobureaus hebben goede reviews?,vertrouwen,commercieel,nee,nee,nieuw 12 nov
+P111,Hoeveel procent van incassodossiers wordt betaald?,proces,informatief,nee,nee,nieuw 12 nov
+P112,Wat gebeurt er als een incassobureau het geld niet binnenkrijgt?,prijs,informatief-commercieel,nee,nee,nieuw 12 nov
+P113,Wat kost het als ik een incassoopdracht intrek?,prijs,informatief,nee,nee,nieuw 12 nov
+P114,Hoe start ik vandaag nog een incassozaak voor mijn bedrijf?,proces,transactioneel,nee,nee,nieuw 12 nov
+P115,Online incasso starten voor een onbetaalde factuur,proces,transactioneel,nee,nee,nieuw 12 nov

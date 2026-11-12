@@ -114,7 +114,30 @@ describe("payload", () => {
         expect(p.bedrijf.iban).toBe("NL91ABNA0417164300")
         expect(p.toestemmingen).toEqual({ akkoord_av: true, akkoord_avg: true })
         expect(p.metadata.formulier_duur_sec).toBe(90)
+        expect(p.metadata).not.toHaveProperty("bron_pagina")
         expect(JSON.stringify(p).length).toBeLessThan(50_000)
+    })
+
+    it("stuurt pagina, verwijzer en UTM mee, zonder iets te bewaren", () => {
+        const p = bouwPayload(leegFormulier(), {
+            nonce: "ab".repeat(16),
+            sessionToken: "t",
+            dossierId: "GG-2026-00002",
+            documenten: [],
+            duurSec: 60,
+            herkomst: {
+                pagina: "/vordering-indienen",
+                referrer: "https://geldgarant.com/tarieven",
+                utm: new URLSearchParams("utm_source=google&utm_medium=cpc&utm_campaign=" + "x".repeat(300)),
+            },
+        })
+        expect(p.metadata).toMatchObject({
+            bron_pagina: "/vordering-indienen",
+            referrer: "https://geldgarant.com/tarieven",
+            utm_source: "google",
+            utm_medium: "cpc",
+        })
+        expect(p.metadata.utm_campaign).toHaveLength(100)
     })
 })
 

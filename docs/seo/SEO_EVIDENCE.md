@@ -509,3 +509,18 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   Vitals (RUM):** LCP P75 2.820 ms (72% goed, 17% slecht), element render delay 1.778 ms (81% van LCP), LCP-element
   meestal de hero-foto op home (`adviseur-buiten…avif`); INP en CLS 100% goed. Te weinig echte data voor conclusies; wel
   aandachtspunt voor de website-chat.
+
+### E30. Groeinulmeting (12 nov 2026, ±00:30-01:30)
+
+- **Autoriteit (Ahrefs gratis DR-endpoint):** geldgarant.com 0,2. Concurrenten: flanderijn.nl 48, e-legal.nl 47, ggn.nl 41,
+  invorderingsbedrijf.nl 40, intrum.nl 39, credifin.nl 35, intercash.nl 28, billincasso.nl 21, incasso.nl 18,
+  ribincasso.nl 13; trustoo.nl 81. Volledig: `docs/growth/competitors.csv`.
+- **Volume/CPC (Ubersuggest, NL, 12 nov; valuta niet bevestigd):** incassobureau 6.600/mnd, CPC 13,28, SD 48; incassobureau
+  inschakelen 1.900, CPC 16,79, SD 37; no cure no pay incasso 1.300, CPC 16,98, SD 30.
+- **Posities en AI (Ubersuggest):** ongewijzigd t.o.v. E26 (volgende update 15 nov); AI-zichtbaarheid 0%.
+- **Live (curl, 12 nov):** http://geldgarant.com en http://www → 301 https (www daarna 301 naar apex); robots.txt zoals E21;
+  user-agents OAI-SearchBot, GPTBot, ChatGPT-User, PerplexityBot, Claude-SearchBot, bingbot, Googlebot krijgen 200 op
+  /incasso (gespoofde UA; netwerkregels voor echte bot-IP's niet getest); sitemap-0.xml 72 URL's; `/llms.txt` 200.
+- **Search Console:** uitgelogd in het browserpaneel; wachtrij 12 nov niet uitgevoerd.
+- **Formulieren:** vordering stuurde geen herkomst mee; nu wel (pagina/referrer/UTM; zie `docs/growth/CURRENT-STATE.md` §4).
+  Tests: unit 118/118, e2e contact/vordering/kwaliteit 84/84, `check` 0, `check:html` 0.

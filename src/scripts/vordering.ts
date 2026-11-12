@@ -446,7 +446,12 @@ function init(form: HTMLFormElement) {
             ctx = { nonce, ...sessie }
             const documenten = await uploadBestanden(base, bestanden, ctx)
             paden = documenten.map((d) => d.storage_path)
-            const payload = bouwPayload(state, { ...ctx, documenten, duurSec: start ? (Date.now() - start) / 1000 : 0 })
+            const payload = bouwPayload(state, {
+                ...ctx,
+                documenten,
+                duurSec: start ? (Date.now() - start) / 1000 : 0,
+                herkomst: { pagina: location.pathname, referrer: document.referrer, utm: new URLSearchParams(location.search) },
+            })
             const { dossierId } = await verstuur(base, payload)
             klaar(dossierId)
         } catch (err) {

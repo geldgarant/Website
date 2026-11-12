@@ -136,3 +136,9 @@ bewust niet overgenomen. Bijwerken: `bash scripts/update-skills.sh` en daarna de
 - Formuliervelden en adres-zoekhulp: alleen `src/styles/form.css`.
 - Hoofdmenu: `src/data/menu.ts` (panelen Diensten, Kennis, Over ons + directe links Hoe werkt het, Tarieven, Contact); opbouw en gedrag in `docs/OVERDRACHT.md` §9.
 - Responsiviteit: na lay-outwerk `node scripts/dev/responsief.mjs` (preview op 4399; ook Safari via WebKit). Veegrijen altijd flex met `flex: 0 0 min(80%, 340px)`, nooit `grid-auto-columns` met procenten.
+
+## Groei (12 nov 2026)
+
+- Startpunt groei/marketing: `docs/growth/START-HERE.md` (boven `docs/seo/`): nulmeting, meetplan, Google Ads (NO-GO tot de checklist groen is), registers, GEO-vragen.
+- Verdienmodel voor marketingrekensommen: WIK-incassokosten bij inning, geen succesfee (`scripts/growth/ads-scenario.mjs`).
+- Leadherkomst: `herkomstVelden` in `src/lib/intake.ts` (geen zichtbare bronvraag in formulieren: besluit gebruiker, bron achteraf vragen); cookieloos, niets opslaan. Nieuwe tracking of cookies alleen na aanpassing van cookie- en privacyverklaring en akkoord gebruiker.
