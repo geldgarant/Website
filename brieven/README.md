@@ -1,5 +1,19 @@
 # Brieven (CaseControl-templates)
 
+## Versie 2 (12 nov 2026, actueel)
+
+Opmaak v1 (zoals brief 260) met de strikte tekst van de v4-mails. Bron `src/deb-b2b-*.html`, bouwen met
+`node brieven/tools/bouw.mjs` (Node; vervangt `tools/bouw.py`), voorbeeld met dezelfde motor als CaseControl:
+`node brieven/tools/voorbeeld.mjs <naam>` (PHP 8.4 via winget `PHP.PHP.NTS.8.4`, dompdf via
+`bash scripts/dev/dompdf-lib.sh "$LOCALAPPDATA/dompdf-lib"`, Poppler). QR: `<img>` van `geldgarant.com/api/qr?d={{case.case_number}}&data={{case.online_payment_link}}` (worker/qr.ts). Getest in de CaseControl-preview op 12 nov 2026 (brief 264, dossier 26-1013): de QR laadt met de fcpay-link van het dossier. Het kale veld `{{case.online_payment_link}}` gaf in de preview alleen de link als tekst.
+
+| Plakklaar                  | Naam in CaseControl | Termijn |
+| -------------------------- | ------------------- | ------- |
+| `deb-b2b-1-aanmaning.html` | GG                  | BRIEF   | B2B | Aanmaning | `misc.today_plus_7_business_days` |
+| `deb-b2b-2-sommatie.html`  | GG                  | BRIEF   | B2B | Sommatie  | `misc.today_plus_7_business_days` |
+
+Alternatief ontwerp v4 (één A4, uit `mails/src`, veld `brief`): `brieven/v4/`.
+
 CaseControl maakt brieven met **dompdf 3.1** (gemeten in hun PDF van 7 nov 2026): A4, **marges 20 mm rondom**,
 standaardlettertype Roboto. De editor bewaart alleen inline stijlen, dus geen `<style>`-blok, geen klassen, geen flexbox
 of grid. Vaste afbeeldingen (logo) staan als data-URI in de brief.

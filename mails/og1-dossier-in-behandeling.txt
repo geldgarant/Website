@@ -1,0 +1,2 @@
+Onderwerp: Dossier {{case.case_number}} in behandeling: {{debtor.name}}
+Preheader: Wij zijn gestart. Zo pakken wij het aan, en dit vragen wij van u.

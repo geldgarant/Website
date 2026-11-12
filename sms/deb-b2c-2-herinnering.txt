@@ -1,0 +1,1 @@
+GeldGarant: nog enkele dagen zonder kosten betalen aan {{creditor.name}}: {{case.online_payment_link}} WA 0852127388

@@ -1,0 +1,1 @@
+GeldGarant: laatste kans dossier {{case.case_number}}. Betaal uiterlijk {{misc.today_plus_2_business_days}}, anders naar de rechter: {{case.online_payment_link}}

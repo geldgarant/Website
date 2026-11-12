@@ -1,0 +1,1 @@
+GeldGarant: sommatie namens {{creditor.name}}, per mail en brief. Betaal: {{case.online_payment_link}} WA 0852127388

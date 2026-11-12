@@ -1,0 +1,1 @@
+GeldGarant probeerde u te bellen namens {{creditor.name}}, bel of app ons terug: 0852127388 (werkdagen).

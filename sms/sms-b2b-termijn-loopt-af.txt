@@ -1,0 +1,1 @@
+GeldGarant: de betaaltermijn van dossier {{case.case_number}} verloopt morgen. Betaal nu en voorkom de sommatie: {{case.online_payment_link}}

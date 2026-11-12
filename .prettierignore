@@ -15,3 +15,6 @@ brieven/oud
 mails/*.html
 mails/voorbeeld
 docs/projectkennis
+# Losse projecten in deze map (niet in git): eigen opmaak, nooit meenemen met "npm run format"
+GeldGarant-Callcenter
+GeldGarant-Mailmachine

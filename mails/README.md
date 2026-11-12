@@ -1,4 +1,21 @@
-# E-mails voor CaseControl
+# E-mails, brieven en sms voor CaseControl
+
+Ontwerp en regels: `mails/DESIGN.md` (v5 "brief"). Eén bron per stuk in `mails/src/<naam>.mjs`: `inhoud` (mail) en
+`sms`; brieven staan in `brieven/src/` (zie `brieven/README.md`).
+
+## Werkwijze (sinds 12 nov 2026)
+
+1. Tekst of opmaak wijzigen: inhoud in `mails/src/<naam>.mjs`, opmaak in `mails/tools/bouwstenen.mjs`.
+2. `node mails/tools/bouw.mjs` schrijft `mails/<naam>.html` + `.txt` (onderwerp, preheader) en controleert op
+   gedachtestreepjes, uitroeptekens, portaalinlog en verkeerde aanhef.
+3. `node sms/tools/bouw.mjs` schrijft `sms/<naam>.txt` en weigert alles boven **140 tekens** na invullen met de
+   langste waarden (besluit 12 nov 2026: boven één sms betalen we dubbel).
+4. `node mails/tools/voorbeeld.mjs <naam>` maakt schermafdrukken op 640 en 375 px (`UIT=` voor de map); de 375-png
+   moet 375 breed zijn.
+5. In CaseControl zetten en controleren: zie `docs/casecontrol-revamp` (README en 08, logboek). Templates-id's
+   staan in het bouwplan.
+
+## Oude opzet (tot 9 nov 2026)
 
 Drie e-mails, gelijk aan de brieven in `brieven/` (zelfde termijnen, bedragen, verplichte onderdelen en toon), in de
 huisstijl van de site.

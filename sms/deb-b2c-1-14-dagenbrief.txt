@@ -1,0 +1,1 @@
+GeldGarant: aanmaning namens {{creditor.name}}, betaal binnen 14 dagen zonder kosten: {{case.online_payment_link}}

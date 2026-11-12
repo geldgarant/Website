@@ -1,0 +1,2 @@
+Onderwerp: Dossier {{case.case_number}}: nog enkele dagen betalen zonder extra kosten
+Preheader: Nu te betalen {{case.total_amount_due}}. Na de 14 dagen komen er {{case.penalty_amount_incl_vat}} aan kosten bij.

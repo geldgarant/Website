@@ -1,0 +1,2 @@
+Onderwerp: Besluit nodig voor dossier {{case.case_number}}: {{debtor.name}}
+Preheader: Na aanmaning en sommatie is niet volledig betaald. Juridisch doorzetten of sluiten?

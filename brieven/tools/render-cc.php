@@ -2,7 +2,7 @@
 // Voorbeeld-PDF van een CaseControl-template maken met dezelfde motor als CaseControl (dompdf 3.1).
 // Gebruik: DOMPDF_LIB=/pad/naar/lib php brieven/tools/render-cc.php <template.html> <voorbeeld.json> <uit.pdf>
 // - Het template gebruikt de echte CaseControl-variabelen ({{debtor.name}} enz.); het JSON-bestand geeft per variabele
-//   een voorbeeldwaarde ({"debtor.name": "EANA Transport", ...}). Variabelen zonder waarde worden gemeld.
+//   een voorbeeldwaarde ({"debtor.name": "Voorbeeld Transport", ...}). Variabelen zonder waarde worden gemeld.
 // - Pagina-instellingen zoals bij CaseControl (gemeten in hun PDF van 7 nov 2026): A4, marges 20 mm rondom,
 //   standaardlettertype Roboto (hier niet aanwezig; het template zet zelf Helvetica/Arial).
 $lib = getenv('DOMPDF_LIB') ?: __DIR__ . '/lib';

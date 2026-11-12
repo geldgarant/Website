@@ -1,4 +1,24 @@
-# Ontwerp e-mails en brieven (v4 "kantoor", 12 nov 2026)
+# Ontwerp e-mails en brieven
+
+## Actueel: v5 "brief" (12 nov 2026)
+
+De brief is leidend (opmaak v1, `brieven/src/deb-*.html`, goedgekeurd door GeldGarant); de mail is de digitale
+tegenhanger, zodat debiteuren mail en brief direct als hetzelfde stuk herkennen.
+
+- Wit briefhoofd: donker logo links (`public/mail/logo.png`), onze gegevens rechts, haarlijn. Daaronder het
+  referentieblok uit de brief (datum, dossier, namens, factuur, **verzonden per e-mail en per post**, betalen uiterlijk).
+- Blauw label in klein kapitaal ("Laatste aanmaning", "Sommatie") boven een kop met de naam van de opdrachtgever.
+- Eén letter overal: Helvetica/Arial. Kleuren gelijk aan de brief.
+- Donkere betaalbalk (bedrag, uiterlijk op, kenmerk), in de mail met de blauwe betaalknop eronder en de regel
+  "ontvangt u ook per post. U betaalt één keer."
+- Sommatie: voortgangsbalk Betaalverzoek, Sommatie, Rechter. Specificatie met blauwe lijn boven het totaal, genummerde
+  gevolgen, "Kunt u niet in één keer betalen?", "Bent u het niet eens?", contactrij, "Hoogachtend,", kleine letters
+  van de brief (Justis, derdengelden, klachtenregeling, geldzorgen) in de voet.
+- Verschil met de brief: geen factuurtabel (zeven kolommen passen niet op een telefoon; factuurnummers staan in het
+  referentieblok) en klikbare links. Mobiel: niets onbreekbaar breder dan de kolom; 375-png moet 375 breed zijn.
+- In een brief maakt CaseControl zelf een QR-code van `{{case.online_payment_link}}`; in een mail is het een link.
+
+## Eerder: v4 "kantoor" (12 nov 2026, vervangen door v5)
 
 ## Les uit v1 tot en met v3
 
