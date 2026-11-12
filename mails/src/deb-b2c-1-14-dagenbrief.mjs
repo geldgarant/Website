@@ -95,7 +95,7 @@ export default {
 
     // Sms (optionele stap, §K4 stap 4). Max. 160 tekens na invullen.
     sms: {
-        naam: "GG | SMS | B2C | 14-dagenbrief",
+        naam: "GG | SMS | B2C | 1 14-dagenbrief",
         tekst: "GeldGarant: aanmaning namens {{creditor.name}}, betaal binnen 14 dagen zonder kosten: {{case.online_payment_link}}",
     },
 }

@@ -60,7 +60,7 @@ export default {
 
     // Sms (§K4 stap 7). Max. 140 tekens na invullen.
     sms: {
-        naam: "GG | SMS | B2C | Herinnering",
+        naam: "GG | SMS | B2C | 2 Herinnering",
         tekst:
             "GeldGarant: nog enkele dagen zonder kosten betalen aan {{creditor.name}}: {{case.online_payment_link}} " +
             "WA 0852127388",

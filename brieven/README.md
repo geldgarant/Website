@@ -9,8 +9,8 @@ Opmaak v1 (zoals brief 260) met de strikte tekst van de v4-mails. Bron `src/deb-
 
 | Plakklaar                  | Naam in CaseControl | Termijn |
 | -------------------------- | ------------------- | ------- |
-| `deb-b2b-1-aanmaning.html` | GG                  | BRIEF   | B2B | Aanmaning | `misc.today_plus_7_business_days` |
-| `deb-b2b-2-sommatie.html`  | GG                  | BRIEF   | B2B | Sommatie  | `misc.today_plus_7_business_days` |
+| `deb-b2b-1-aanmaning.html` | GG | BRIEF | B2B | 2 Sommatie || BRIEF | B2B | 1 Aanmaning |                 | BRIEF   | B2B | Aanmaning | `misc.today_plus_7_business_days` |
+| `deb-b2b-2-sommatie.html`  | GG | BRIEF | B2B | 2 Sommatie || BRIEF | B2B | 1 Aanmaning |                 | BRIEF   | B2B | Sommatie  | `misc.today_plus_7_business_days` |
 
 Alternatief ontwerp v4 (één A4, uit `mails/src`, veld `brief`): `brieven/v4/`.
 
@@ -22,9 +22,9 @@ of grid. Vaste afbeeldingen (logo) staan als data-URI in de brief.
 
 | Plakklaar (CaseControl, codeweergave) | Naam in CaseControl                   | Termijn                                       | Voorbeeld-PDF                                    |
 | ------------------------------------- | ------------------------------------- | --------------------------------------------- | ------------------------------------------------ |
-| `aanmaning-1-b2b.html`                | GG \| BRIEF \| B2B \| Aanmaning 1     | `misc.today_plus_7_business_days`             | `voorbeeld/aanmaning-1-b2b-voorbeeld.pdf`        |
-| `sommatie-b2b.html`                   | GG \| BRIEF \| B2B \| Sommatie        | `misc.today_plus_5_business_days`             | `voorbeeld/sommatie-b2b-voorbeeld.pdf`           |
-| `aanmaning-14-dagen-b2c.html`         | GG \| BRIEF \| B2C \| Aanmaning 14 d. | 14 dagen na de dag van ontvangst (geen datum) | `voorbeeld/aanmaning-14-dagen-b2c-voorbeeld.pdf` |
+| `aanmaning-1-b2b.html`                | GG | BRIEF | B2B | 2 Sommatie || BRIEF | B2B | 1 Aanmaning |\| BRIEF \| B2B \| Aanmaning 1     | `misc.today_plus_7_business_days`             | `voorbeeld/aanmaning-1-b2b-voorbeeld.pdf`        |
+| `sommatie-b2b.html`                   | GG | BRIEF | B2B | 2 Sommatie || BRIEF | B2B | 1 Aanmaning |\| BRIEF \| B2B \| Sommatie        | `misc.today_plus_5_business_days`             | `voorbeeld/sommatie-b2b-voorbeeld.pdf`           |
+| `aanmaning-14-dagen-b2c.html`         | GG | BRIEF | B2B | 2 Sommatie || BRIEF | B2B | 1 Aanmaning |\| BRIEF \| B2C \| Aanmaning 14 d. | 14 dagen na de dag van ontvangst (geen datum) | `voorbeeld/aanmaning-14-dagen-b2c-voorbeeld.pdf` |
 
 Alle drie: zelfde raster (venster links), zelfde kop, voet en contactblok, specificatie volgens Besluit Wki art. 3.1,
 betaalblok met dynamische QR (zie hieronder) en overmaakgegevens, regeling, niet eens, klachtenregeling, hulp bij geldzorgen.

@@ -84,7 +84,7 @@ export default {
 
     // Sms (§K5). Max. 140 tekens na invullen.
     sms: {
-        naam: "GG | SMS | B2C | Sommatie",
+        naam: "GG | SMS | B2C | 3 Sommatie",
         tekst:
             "GeldGarant: sommatie namens {{creditor.name}}, betaal binnen 7 dagen: " +
             "{{case.online_payment_link}} WA 0852127388",
