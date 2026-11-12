@@ -7,6 +7,7 @@ geld). Geen parallelle waarheid: SEO-bewijs blijft in `SEO_EVIDENCE.md`.
 
 ## Lees in deze volgorde
 
+0. `DEZE-WEEK.md`: acties voor de eigenaar met links; teksten in `profielen.md`.
 1. `CURRENT-STATE.md`: nulmeting, wat werkt, wat blokkeert, correcties op de masterprompt, wat er gedaan is.
 2. `NEXT-ACTIONS.md`: actielijst P0-P3, top-10 kansen, 30 dagen, 12 maanden, gebruikersacties.
 3. `MEETPLAN.md`: eventwoordenboek, KPI's, verdienmodel per hoofdsom, CaseControl-koppeling.

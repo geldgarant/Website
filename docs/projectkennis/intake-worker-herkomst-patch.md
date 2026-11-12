@@ -1,5 +1,7 @@
 # Patch intake-worker: herkomst van vorderingen in de meldingsmail (12 nov 2026)
 
+**Status: uitgerold op 12 nov 2026** (door de gebruiker geplakt en gedeployd; live code teruggelezen: regel na "Land (IP)", syntax geldig, `/api/health` 200). Let op: de live worker is nieuwer dan `intake-worker-index.js` (o.a. sollicitatieroute); de live code in Cloudflare is leidend.
+
 **Waarom.** Sinds 12 nov 2026 stuurt het formulier "vordering indienen" de herkomst mee (`src/lib/intake.ts`,
 `herkomstVelden`), net als het contactformulier al deed: `bron_pagina`, `referrer`, `utm_source`, `utm_medium`,
 `utm_campaign` in `metadata`. Geen cookies, geen opslag in de browser: het formulier leest dit op het moment van versturen.

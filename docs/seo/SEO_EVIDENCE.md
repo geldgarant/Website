@@ -524,3 +524,18 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
 - **Search Console:** uitgelogd in het browserpaneel; wachtrij 12 nov niet uitgevoerd.
 - **Formulieren:** vordering stuurde geen herkomst mee; nu wel (pagina/referrer/UTM; zie `docs/growth/CURRENT-STATE.md` §4).
   Tests: unit 118/118, e2e contact/vordering/kwaliteit 84/84, `check` 0, `check:html` 0.
+
+### E31. GSC-wachtrij en prestaties, Trustoo, Justis (12 nov 2026, ±02:00-03:30)
+
+- **GSC, indexering aangevraagd (9/9):** creditmanagement-openstaande-facturen-voorkomen, debiteur-betwist-factuur,
+  geleend-geld-terugvorderen, herincasso-afgeschreven-facturen, hoger-beroep-vonnis, incasso-bouwsector,
+  internationale-vordering-de-moeite-waard, loonbeslag-hoe-werkt-het, selectief-betalen-debiteur-rechten (alle /kennisbank/).
+- **GSC prestaties 3-9 nov (7 dagen):** 16 klikken, 1.860 vertoningen, CTR 0,9%, gem. positie 42,2; 172 zoekvragen.
+  Klikken alleen op merk ("geldgarant" 7) en "incassobureau deventer" (1). Meeste vertoningen zonder klik: "openstaande
+  facturen" 128, "incassobureau huurachterstand" 61, "incassobureau inschakelen zzp" 48, "incasso huurachterstand" 42,
+  "aanmaning huurachterstand" 40, "incassopartner" 34, "incasso verhuurder" 30, "mkb incasso" 29. Nieuw: GSC heeft een
+  rapport "Generatieve AI in zoekresultaten" (nog niet uitgelezen).
+- **Trustoo:** GeldGarant staat niet op https://trustoo.nl/overijssel/deventer/incassobureau/ (12 nov, curl). Trustoo
+  rankt met "Top 10 incassobureau in <plaats>"-pagina's op vrijwel elke plaats (WebSearch). Model volgens Trustoo:
+  betalen per aanvraag, zelf limiet instellen, pauzeerbaar; prijs pas zichtbaar in het account.
+- **Justis-register (12 nov):** telefoon nog 0850835230. Wijzigen via het Wki-aanvraagformulier (onderdelen 2, 3, 4, 5, 8).

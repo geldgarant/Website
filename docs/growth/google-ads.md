@@ -1,7 +1,8 @@
 # Google Ads: beleid, businesscase en conceptcampagnes
 
-Status 12 nov 2026: **NO-GO voor livegang.** Geen account bekend, geen werkende conversiemeting tot opdrachtgever, en het
-rekenmodel laat in het basisscenario verlies zien. Alles hieronder is concept; niets is aangemaakt of uitgegeven.
+Status 12 nov 2026 (bijgesteld): **pilot met plafond** op verzoek van de eigenaar (nul klanten: eerste klanten en echte
+cijfers kopen). Max € 15 per dag, 4 weken, exacte zoekwoorden, importbestand `docs/growth/ads-import.csv` (uit
+`scripts/growth/ads-campagne.mjs`). Opschalen blijft NO-GO tot de checklist hieronder groen is. Er is nog geen account.
 
 ## 1. Beleid (gecontroleerd 12 nov 2026)
 
