@@ -32,9 +32,16 @@ incassobureau is.
 
 ## Opbouw formeel stuk (aanmaning)
 
-1. Kopbalk (soort + dossier). 2. Kop + datum + "enige aanmaning, daarna sommatie en rechter". 3. Betaalblok.
-4. Betreft (opdrachtgever, factuur, datum). 5. Aanhef + één alinea. 6. "Als u niet op tijd betaalt" (stappen).
-7. Specificatie + regel ingebrekestelling. 8. Regeling of bezwaar. 9. Hoogachtend. 10. Voet (Justis, KvK, derdengelden).
+1. Kopbalk (soort + dossier).
+2. Kop, datum en "enige aanmaning, daarna sommatie en rechter".
+3. Betaalblok.
+4. Betreft (opdrachtgever, factuur, datum).
+5. Aanhef en één alinea.
+6. "Als u niet op tijd betaalt" (genummerde stappen).
+7. Specificatie en regel over de ingebrekestelling.
+8. Regeling of bezwaar.
+9. Hoogachtend.
+10. Voet (Justis, KvK, derdengelden).
 
 ## CaseControl-velden (getest 9 nov 2026, proeftemplate 263)
 

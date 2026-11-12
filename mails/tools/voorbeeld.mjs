@@ -18,8 +18,9 @@ for (const naam of namen) {
     const html = readFileSync(`mails/${naam}.html`, "utf8")
         .replace(/\{\{([\w.]+)\}\}/g, (m, k) => (k in waarden ? waarden[k] : (missend.add(k), m)))
         // logo staat pas na de deploy op geldgarant.com; voor het voorbeeld de lokale kopie
-        .replace(/https:\/\/geldgarant\.com\/mail\/([\w-]+\.png)/g, (m, f) =>
-            `data:image/png;base64,${readFileSync(`public/mail/${f}`).toString("base64")}`,
+        .replace(
+            /https:\/\/geldgarant\.com\/mail\/([\w-]+\.png)/g,
+            (m, f) => `data:image/png;base64,${readFileSync(`public/mail/${f}`).toString("base64")}`,
         )
     writeFileSync(join(UIT, `mail-${naam}.html`), html)
     if (missend.size) console.log(`${naam}: geen voorbeeld voor ${[...missend].join(", ")}`)
