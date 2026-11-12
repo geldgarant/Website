@@ -1,0 +1,1 @@
+GeldGarant namens {{creditor.name}}, 2e herinnering: betaal nu en voorkom incassokosten: {{case.online_payment_link}}

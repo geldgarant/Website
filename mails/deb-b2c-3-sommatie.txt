@@ -1,2 +1,3 @@
+Naam: 
 Onderwerp: Sommatie dossier {{case.case_number}}: betaal binnen 7 dagen
 Preheader: {{case.total_amount_due}} binnen 7 dagen na ontvangst. Daarna gaat de zaak naar de rechter.

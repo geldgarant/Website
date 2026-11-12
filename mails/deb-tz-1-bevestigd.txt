@@ -1,0 +1,3 @@
+Naam: GG | DEB | TZ | 1 Toezegging bevestigd
+Onderwerp: Bevestiging: u betaalt {{case.promised_payment_amount}} uiterlijk {{case.promised_payment_date}}
+Preheader: Dossier {{case.case_number}}. Zo betaalt u in één keer met iDEAL.

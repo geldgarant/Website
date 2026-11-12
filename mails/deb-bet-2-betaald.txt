@@ -1,0 +1,3 @@
+Naam: GG | DEB | BET | 2 Volledig betaald
+Onderwerp: Volledig betaald: dossier {{case.case_number}} is afgerond
+Preheader: Dank voor uw betaling. U hoeft niets meer te doen.

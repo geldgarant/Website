@@ -1,0 +1,3 @@
+Naam: GG | OG | 2 Betaald en afgerond
+Onderwerp: Betaald: dossier {{case.case_number}} ({{debtor.name}}) is afgerond
+Preheader: De debiteur heeft volledig betaald. Wij dragen af volgens de afspraken.

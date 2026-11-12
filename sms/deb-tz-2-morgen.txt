@@ -1,0 +1,1 @@
+GeldGarant: morgen betaalt u {{case.promised_payment_amount}} zoals afgesproken, dossier {{case.case_number}}: {{case.online_payment_link}}

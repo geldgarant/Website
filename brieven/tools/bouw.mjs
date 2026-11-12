@@ -95,6 +95,7 @@ for (const f of (await readdir(path.join(BRIEVEN, "src"))).filter((f) => f.endsW
                 ? dataUri("qr-betalen.png")
                 : QR_HOST + "/api/qr?d={{case.case_number}}&amp;data={{case.online_payment_link}}",
         )
+        .replaceAll("[[QR_HOST]]", QR_HOST)
         .replace(/;\s{2,}/g, "; ")
     if (/[—–]/.test(s)) throw new Error(`Gedachtestreepje in ${f}`)
     meld(naam, s)

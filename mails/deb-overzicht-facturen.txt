@@ -1,0 +1,3 @@
+Naam: GG | DEB | Overzicht facturen
+Onderwerp: Overzicht openstaande facturen: dossier {{case.case_number}}
+Preheader: Op uw verzoek: de facturen die nog openstaan.

@@ -1,0 +1,3 @@
+Naam: GG | DEB | BR | 1 Regeling bevestigd
+Onderwerp: Bevestiging betalingsregeling dossier {{case.case_number}}
+Preheader: {{payment_plan.number_of_terms}} termijnen van {{payment_plan.fixed_amount_per_term}}.

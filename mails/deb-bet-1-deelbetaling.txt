@@ -1,0 +1,3 @@
+Naam: GG | DEB | BET | 1 Deelbetaling ontvangen
+Onderwerp: Betaling ontvangen: dossier {{case.case_number}}
+Preheader: Ontvangen {{case.last_payment_amount}}. Nog open {{case.total_amount_due}}.

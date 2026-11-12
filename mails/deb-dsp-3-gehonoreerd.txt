@@ -1,0 +1,3 @@
+Naam: GG | DEB | DSP | 3 Bezwaar gehonoreerd
+Onderwerp: Uitkomst bezwaar: dossier {{case.case_number}}
+Preheader: Uw bezwaar is gegrond verklaard.

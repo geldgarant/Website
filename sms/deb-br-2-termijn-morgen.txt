@@ -1,0 +1,1 @@
+GeldGarant: morgen vervalt uw termijn van {{payment_plan.next_term_due_amount}}, dossier {{case.case_number}}: {{case.next_term_due_amount_online_payment_link}}

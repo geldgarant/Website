@@ -1,0 +1,3 @@
+Naam: GG | DEB | Verzoek contact
+Onderwerp: Graag contact over dossier {{case.case_number}}
+Preheader: Wij hebben u niet kunnen bereiken. Bel of app ons op werkdagen.

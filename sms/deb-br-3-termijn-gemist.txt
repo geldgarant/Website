@@ -1,0 +1,1 @@
+GeldGarant: termijn van {{payment_plan.previous_term_due_amount}} niet betaald. Betaal binnen 7 dagen, anders vervalt de regeling: {{case.previous_term_due_amount_online_payment_link}}

@@ -81,6 +81,7 @@ export const betaalbalk = ({
     knoptekst,
     noot = "",
     labelBedrag = "Totaal te betalen",
+    link = BETAALLINK, // bij een regeling: de termijnlink van CaseControl
 }) => {
     const l = (t) =>
         `<p style="${F} margin:0; font-size:11px; line-height:14px; letter-spacing:0.8px; text-transform:uppercase; color:${C.balkLabel};">${t}</p>`
@@ -95,7 +96,7 @@ export const betaalbalk = ({
         ) +
         tabel(
             `<tr><td align="center" bgcolor="${C.blauw}" style="background-color:${C.blauw};">` +
-                `<a href="${BETAALLINK}" target="_blank" style="${F} display:block; padding:16px 20px; font-size:16px; line-height:20px; font-weight:bold; color:#ffffff; text-decoration:none; text-align:center;">${knoptekst}</a></td></tr>`,
+                `<a href="${link}" target="_blank" style="${F} display:block; padding:16px 20px; font-size:16px; line-height:20px; font-weight:bold; color:#ffffff; text-decoration:none; text-align:center;">${knoptekst}</a></td></tr>`,
         ) +
         `<p style="${F} margin:14px 0 0; font-size:13px; line-height:20px; color:${C.muted};">Liever overmaken? ` +
         `<span style="color:${C.ink}; ${NW}">{{org_escrow_bank_account.iban}}</span> ten name van ` +
@@ -246,3 +247,18 @@ export const omhul = ({ onderwerp, preheader, inhoud, ontvanger = "deb" }) =>
         ` background-color:${C.pagina};`,
     ) +
     "\n</body>\n</html>\n"
+
+// ---- Kort bericht ----------------------------------------------------------------------------------------------------
+// Vaste opbouw voor service- en subflowberichten (toezegging, regeling, dispuut, afsluiting, opdrachtgever):
+// referenties, label, kop, aanhef, alinea's, optioneel betaalbalk en kaarten, contact, ondertekening.
+// og = true: aan de opdrachtgever (aanhef met opdrachtgevernaam, contactrij zonder debiteurenpagina).
+export const kort = ({ label: l, kop, refs, alineas = [], betaal, kaarten: k, og = false, groet = "Met vriendelijke groet," }) =>
+    (refs ? referenties(refs) : "") +
+    label(l) +
+    h1(kop) +
+    p(og ? "Hallo {{creditor.name}}," : "Hallo {{debtor.name}},") +
+    alineas.map((a, i) => p(a, i === alineas.length - 1 && (betaal || k) ? "0 0 20px" : "0 0 16px")).join("") +
+    (betaal ? betaalbalk({ knoptekst: "Betaal nu met iDEAL", ...betaal }) : "") +
+    (k ? kaarten(k, betaal ? "16px 0 0" : "8px 0 0") : "") +
+    contact({ og }) +
+    slot(groet)

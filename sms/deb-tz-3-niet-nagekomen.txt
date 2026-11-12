@@ -1,0 +1,1 @@
+GeldGarant: uw betaalafspraak voor dossier {{case.case_number}} is niet nagekomen. De incasso gaat verder. Betaal: {{case.online_payment_link}}

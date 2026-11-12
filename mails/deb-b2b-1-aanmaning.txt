@@ -1,2 +1,3 @@
+Naam: 
 Onderwerp: Laatste aanmaning dossier {{case.case_number}}: betaal uiterlijk {{misc.today_plus_7_business_days}}
 Preheader: {{case.total_amount_due}} uiterlijk {{misc.today_plus_7_business_days}}. Daarna volgt de sommatie en gaat de zaak naar de rechter.

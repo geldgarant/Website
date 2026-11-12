@@ -14,6 +14,11 @@ const SRC = path.resolve(SMS, "..", "mails", "src")
 
 // Langste waarden die in de praktijk voorkomen. Betaallink: korte FCPay-link per dossier (gezien in test T1, 10).
 const LANGST = {
+    "case.promised_payment_amount": "€ 128.413,16",
+    "payment_plan.next_term_due_amount": "€ 12.500,00",
+    "payment_plan.previous_term_due_amount": "€ 12.500,00",
+    "case.next_term_due_amount_online_payment_link": "https://fcpay.nl/p/cqRGvT",
+    "case.previous_term_due_amount_online_payment_link": "https://fcpay.nl/p/cqRGvT",
     "creditor.name": "Installatie- en Onderhoudsbedrijf Jansen", // 40 tekens; reken met lange namen
     "org_communication.telephone": "085 212 73 88",
     "case.case_number": "26-10000",
@@ -34,19 +39,22 @@ await mkdir(SMS, { recursive: true })
 let fouten = 0
 
 for (const f of bestanden.sort()) {
-    const naam = f.slice(0, -4)
-    const sms = (await import(pathToFileURL(path.join(SRC, f)).href)).default.sms
-    if (!sms) continue
-    const fout = (wat) => (console.error(`FOUT ${naam}: ${wat}`), fouten++)
-    controleer(sms.tekst).forEach(fout)
-    const ingevuld = sms.tekst.replace(/\{\{([\w.]+)\}\}/g, (m, k) =>
-        k in LANGST ? LANGST[k] : (fout(`geen langste waarde voor ${k}`), m),
-    )
-    const vreemd = [...ingevuld].filter((c) => !GSM7.includes(c) && !GSM7_EXT.includes(c))
-    if (vreemd.length) fout(`geen GSM-7: ${[...new Set(vreemd)].join(" ")}`)
-    const n = lengte(ingevuld)
-    if (n > MAX) fout(`${n} tekens na invullen (max. ${MAX})`)
-    await writeFile(path.join(SMS, `${naam}.txt`), sms.tekst + "\n", "utf8")
-    console.log(`sms/${naam}.txt  (${sms.naam}; ${n} tekens in het langste geval)\n  ${ingevuld}`)
+    const mod = (await import(pathToFileURL(path.join(SRC, f)).href)).default
+    const lijst = mod.stukken ? Object.entries(mod.stukken) : [[f.slice(0, -4), mod]]
+    for (const [naam, m] of lijst) {
+        const sms = m.sms
+        if (!sms) continue
+        const fout = (wat) => (console.error(`FOUT ${naam}: ${wat}`), fouten++)
+        controleer(sms.tekst).forEach(fout)
+        const ingevuld = sms.tekst.replace(/\{\{([\w.]+)\}\}/g, (m, k) =>
+            k in LANGST ? LANGST[k] : (fout(`geen langste waarde voor ${k}`), m),
+        )
+        const vreemd = [...ingevuld].filter((c) => !GSM7.includes(c) && !GSM7_EXT.includes(c))
+        if (vreemd.length) fout(`geen GSM-7: ${[...new Set(vreemd)].join(" ")}`)
+        const n = lengte(ingevuld)
+        if (n > MAX) fout(`${n} tekens na invullen (max. ${MAX})`)
+        await writeFile(path.join(SMS, `${naam}.txt`), sms.tekst + "\n", "utf8")
+        console.log(`sms/${naam}.txt  (${sms.naam}; ${n} tekens in het langste geval)\n  ${ingevuld}`)
+    }
 }
 if (fouten) process.exit(1)

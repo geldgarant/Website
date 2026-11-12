@@ -1,0 +1,3 @@
+Naam: GG | OG | 4 Informatie nodig
+Onderwerp: Informatie nodig voor dossier {{case.case_number}}: {{debtor.name}}
+Preheader: Om verder te kunnen, hebben wij een antwoord of stukken van u nodig.

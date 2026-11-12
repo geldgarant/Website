@@ -1,2 +1,3 @@
+Naam: 
 Onderwerp: Dossier {{case.case_number}} gesloten: {{debtor.name}}
 Preheader: Het dossier is gesloten zonder volledige betaling. Wat dit voor u betekent.

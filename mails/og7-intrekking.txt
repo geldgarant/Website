@@ -1,0 +1,3 @@
+Naam: GG | OG | 7 Intrekking bevestigd
+Onderwerp: Intrekking bevestigd: dossier {{case.case_number}} ({{debtor.name}})
+Preheader: Wij stoppen de incasso. De afrekening volgt volgens onze algemene voorwaarden.

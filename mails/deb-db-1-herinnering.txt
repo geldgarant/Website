@@ -1,0 +1,3 @@
+Naam: GG | DEB | DB | 1 Herinnering
+Onderwerp: Herinnering: factuur {{claims.all_numbers}} van {{creditor.name}}
+Preheader: Nog open: {{case.total_amount_due}}. Betaal eenvoudig met iDEAL.

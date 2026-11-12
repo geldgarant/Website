@@ -1,0 +1,1 @@
+GeldGarant namens {{creditor.name}}: wij konden u niet bereiken. Bel of app ons binnen 3 werkdagen: 0852127388

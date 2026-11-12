@@ -1,2 +1,3 @@
+Naam: 
 Onderwerp: Dossier {{case.case_number}}: betaal binnen 14 dagen zonder extra kosten
 Preheader: Nu te betalen {{case.total_amount_due}}. Betaalt u binnen 14 dagen, dan betaalt u geen incassokosten.
