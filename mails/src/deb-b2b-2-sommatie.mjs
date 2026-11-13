@@ -81,6 +81,6 @@ export default {
     // Sms (optionele stap, §K3). Max. 160 tekens na invullen (sms/tools/bouw.mjs rekent met de langste waarden).
     sms: {
         naam: "GG | SMS | B2B | 2 Sommatie",
-        tekst: "GeldGarant: sommatie namens {{creditor.name}}, per mail en brief. Betaal: {{case.online_payment_link}} WA 0852127388",
+        tekst: "GeldGarant: sommatie namens {{creditor.name}} per mail en post. Betaal: {{case.online_payment_link}} WA 0852127388",
     },
 }

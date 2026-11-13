@@ -1,1 +1,1 @@
-GeldGarant: laatste aanmaning namens {{creditor.name}}, zie mail (ook spam). {{case.online_payment_link}} WA 0852127388
+GeldGarant: laatste aanmaning namens {{creditor.name}} per mail en post. {{case.online_payment_link}} WA 0852127388

@@ -1,1 +1,1 @@
-GeldGarant: sommatie namens {{creditor.name}}, betaal binnen 7 dagen: {{case.online_payment_link}} WA 0852127388
+GeldGarant: sommatie namens {{creditor.name}} per mail en post. Betaal: {{case.online_payment_link}} WA 0852127388

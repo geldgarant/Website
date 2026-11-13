@@ -76,6 +76,6 @@ export default {
     // Sms (optionele stap, §K2 stap 4), zelfde dag als mail en brief. Max. 160 tekens na invullen.
     sms: {
         naam: "GG | SMS | B2B | 1 Aanmaning",
-        tekst: "GeldGarant: laatste aanmaning namens {{creditor.name}}, zie mail (ook spam). {{case.online_payment_link}} WA 0852127388",
+        tekst: "GeldGarant: laatste aanmaning namens {{creditor.name}} per mail en post. {{case.online_payment_link}} WA 0852127388",
     },
 }

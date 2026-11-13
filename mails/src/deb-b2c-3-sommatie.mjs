@@ -86,7 +86,7 @@ export default {
     sms: {
         naam: "GG | SMS | B2C | 3 Sommatie",
         tekst:
-            "GeldGarant: sommatie namens {{creditor.name}}, betaal binnen 7 dagen: " +
+            "GeldGarant: sommatie namens {{creditor.name}} per mail en post. Betaal: " +
             "{{case.online_payment_link}} WA 0852127388",
     },
 }
