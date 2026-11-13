@@ -14,6 +14,7 @@ export const ONEENS = BRIEF + "&reden=oneens#regelen"
 export const BETAALLINK = "{{case.online_payment_link}}"
 export const TEL = "{{org_communication.telephone}}"
 export const MAIL = "{{org_communication.email}}"
+export const PORTAAL = "https://geldgarant.dossierportal.nl" // = site.portalLogin (src/data/site.ts)
 
 // Kleuren gelijk aan de brief (brieven/tools/bouw.mjs).
 export const C = {
@@ -187,7 +188,7 @@ export const contact = ({ og = false } = {}) => {
     const b = ` border-bottom:1px solid ${C.lijn};`
     return tabel(
         `<tr>${cel("Bellen", a(`tel:${TEL}`, TEL), "op werkdagen", b)}${cel("E-mail", a(`mailto:${MAIL}`, MAIL), "noem uw dossiernummer", b)}</tr>` +
-            `<tr>${og ? cel("Online", a(SITE, "geldgarant.com"), "stand van zaken in uw portaal", "") : cel("Online", a(BRIEF, "geldgarant.com/brief-ontvangen"), "betalen, regeling, reactie", "")}${cel("Op kantoor", "{{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.city}}", "op afspraak", "")}</tr>`,
+            `<tr>${og ? cel("Portaal", a(PORTAAL, "geldgarant.dossierportal.nl"), "stand van zaken per dossier", "") : cel("Online", a(BRIEF, "geldgarant.com/brief-ontvangen"), "betalen, regeling, reactie", "")}${cel("Op kantoor", "{{org_visiting_address.street}} {{org_visiting_address.house_no}}, {{org_visiting_address.city}}", "op afspraak", "")}</tr>`,
         ` margin:28px 0 0; border-top:1px solid ${C.lijn}; border-bottom:1px solid ${C.lijn};`,
     )
 }

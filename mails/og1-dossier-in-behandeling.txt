@@ -1,3 +1,3 @@
-Naam: 
-Onderwerp: Dossier {{case.case_number}} in behandeling: {{debtor.name}}
-Preheader: Wij zijn gestart. Zo pakken wij het aan, en dit vragen wij van u.
+Naam: GG | OG | 1 Opdracht ontvangen
+Onderwerp: Wij zijn gestart met uw opdracht
+Preheader: Volg per dossier de stand van zaken in uw portaal.
