@@ -539,3 +539,24 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   rankt met "Top 10 incassobureau in <plaats>"-pagina's op vrijwel elke plaats (WebSearch). Model volgens Trustoo:
   betalen per aanvraag, zelf limiet instellen, pauzeerbaar; prijs pas zichtbaar in het account.
 - **Justis-register (12 nov):** telefoon nog 0850835230. Wijzigen via het Wki-aanvraagformulier (onderdelen 2, 3, 4, 5, 8).
+
+### E32. GSC-aanvragen, AI-rapport in GSC, Bing-sitemap opgelost (13 nov 2026)
+
+- **Indexering (GSC-rapport, vertraagd):** 36 geïndexeerd, 35 niet (14 gecrawld-niet-geïndexeerd, 11 gevonden-niet-
+  geïndexeerd, 5 noindex en 2 404 uit de Framer-tijd). Lijst geïndexeerde URL's vergeleken met de 72 sitemap-URL's en de
+  aanvragen van 10-12 nov.
+- **Aangevraagd (9):** alle vijf voorbeeldbrieven (`/voorbeeldbrieven/aanmaning` en `ingebrekestelling` en
+  `/brief-ontvangen` waren "onbekend bij Google"; betalingsherinnering, sommatie, betalingsregeling "gevonden, niet
+  geïndexeerd"), `/kennisbank/betalingsherinnering-aanmaning-wik-brief`, `/kennisbank/betalingsregeling-treffen`,
+  `/kennisbank/conservatoir-beslag` (gecrawld, niet geïndexeerd), `/brief-ontvangen`. Nog nooit aangevraagd en niet
+  geïndexeerd: alleen `/juridisch` (+ AV, privacy, cookies) en `/klachtenregelement` (lage prioriteit).
+- **GSC-rapport "Generatieve AI-functies" (bèta), 11 aug - 10 nov:** **636 vertoningen** van geldgarant.com in AI
+  Overviews/AI Mode. Toppagina's: beslagvrije-voet-2026 257, bv-uitgeschreven-schulden 119, home 60, avg-en-incasso 46,
+  huurachterstand-incasseren 36, branches/incasso-ecommerce 29, /incasso 22, openstaande-factuur-stappenplan 15,
+  incasso-zzp 10 (26 pagina's in totaal). Geen zoekvragen of klikken in dit rapport. Les: kennisartikelen met actuele
+  cijfers (2026) en heldere definities worden in Google-AI al gebruikt; beslagvrije voet trekt vooral debiteuren aan
+  (geen doelgroep, wel merkbekendheid). Correctie op E26 (Ubersuggest "0%" gold alleen ChatGPT).
+- **Bing:** `sitemap-0.xml` en `sitemap-index.xml` op Success (11 nov), 72 URL's ontdekt; de fout van 10 nov is weg.
+  `bing.com/indexnow` direct nog 403; meldingen via yandex.com komen wel aan (E28).
+- **Verhuurcluster** (vertoningen zonder klik, E31): titels en URL's al op 8 nov afgestemd; voorbeeldbrief huurachterstand
+  pas 10 nov aangeboden. Geen wijziging; opnieuw meten na 20 nov.
