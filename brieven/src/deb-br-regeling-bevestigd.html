@@ -26,7 +26,7 @@
                 <tr><td style="%%ref-l%%">Dossiernummer</td><td style="%%ref-w%% font-weight:bold;">{{case.case_number}}</td></tr>
                 <tr><td style="%%ref-l%%">Namens</td><td style="%%ref-w%%">{{creditor.name}}</td></tr>
                 <tr><td style="%%ref-l%%">Totaal</td><td style="%%ref-w%%">{{payment_plan.total_to_settle}}</td></tr>
-                <tr><td style="%%ref-l%% border-bottom:0;">Eerste termijn</td><td style="%%ref-w%% border-bottom:0; font-weight:bold;">{{payment_plan.date_first_term_due}}</td></tr>
+                <tr><td style="%%ref-l%% border-bottom:0;">Eerste termijn</td><td style="%%ref-w%% border-bottom:0; font-weight:bold;">{{payment_plan.next_term_due_date}}</td></tr>
             </table>
         </td>
     </tr>
@@ -40,15 +40,15 @@
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% margin:4mm 0 4mm 0;">
     <tr>
-        <td style="%%blok%% width:38%;"><div style="%%blok-l%%">Per termijn</div><div style="%%blok-w%% font-size:15pt; line-height:19pt;">{{payment_plan.fixed_amount_per_term}}</div></td>
+        <td style="%%blok%% width:38%;"><div style="%%blok-l%%">Per termijn</div><div style="%%blok-w%% font-size:15pt; line-height:19pt;">{{payment_plan.next_term_due_amount}}</div></td>
         <td style="%%blok%% width:34%; border-left:0.5pt solid #2a3550;"><div style="%%blok-l%%">Aantal termijnen</div><div style="%%blok-w%%">{{payment_plan.number_of_terms}}</div></td>
-        <td style="%%blok%% width:28%; border-left:0.5pt solid #2a3550;"><div style="%%blok-l%%">Eerste termijn</div><div style="%%blok-w%%">{{payment_plan.date_first_term_due}}</div></td>
+        <td style="%%blok%% width:28%; border-left:0.5pt solid #2a3550;"><div style="%%blok-l%%">Eerste termijn</div><div style="%%blok-w%%">{{payment_plan.next_term_due_date}}</div></td>
     </tr>
 </table>
 
 <div style="%%h2%%">De afspraken</div>
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="%%tabel%% border-top:0.8pt solid #061126;">
-    <tr><td style="%%nr%%">01</td><td style="%%nr-t%%">U betaalt {{payment_plan.number_of_terms}} termijnen van {{payment_plan.fixed_amount_per_term}}, de eerste uiterlijk op {{payment_plan.date_first_term_due}}.</td></tr>
+    <tr><td style="%%nr%%">01</td><td style="%%nr-t%%">U betaalt {{payment_plan.number_of_terms}} termijnen van {{payment_plan.next_term_due_amount}}, de eerste uiterlijk op {{payment_plan.next_term_due_date}}.</td></tr>
     <tr><td style="%%nr%%">02</td><td style="%%nr-t%%">Vermeld bij elke betaling uw dossiernummer {{case.case_number}}.</td></tr>
     <tr><td style="%%nr%%">03</td><td style="%%nr-t%%">Betaalt u een termijn niet op tijd, dan krijgt u nog één kans. Blijft betaling daarna uit, dan vervalt de regeling en is het volledige restant direct opeisbaar.</td></tr>
 </table>

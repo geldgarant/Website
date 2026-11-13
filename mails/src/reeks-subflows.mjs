@@ -64,7 +64,7 @@ export default {
         "deb-br-1-bevestigd": {
             naam: "GG | DEB | BR | 1 Regeling bevestigd",
             onderwerp: "Bevestiging betalingsregeling dossier {{case.case_number}}",
-            preheader: "{{payment_plan.number_of_terms}} termijnen van {{payment_plan.fixed_amount_per_term}}.",
+            preheader: "{{payment_plan.number_of_terms}} termijnen van {{payment_plan.next_term_due_amount}}.",
             inhoud: (b) =>
                 b.kort({
                     label: "Betalingsregeling",
@@ -74,21 +74,21 @@ export default {
                         nr,
                         namens,
                         ["Totaal", "{{payment_plan.total_to_settle}}"],
-                        ["Termijnen", "{{payment_plan.number_of_terms}} x {{payment_plan.fixed_amount_per_term}}"],
-                        ["Eerste termijn", "{{payment_plan.date_first_term_due}}", true],
+                        ["Termijnen", "{{payment_plan.number_of_terms}} x {{payment_plan.next_term_due_amount}}"],
+                        ["Eerste termijn", "{{payment_plan.next_term_due_date}}", true],
                     ],
                     alineas: [
                         "U betaalt in {{payment_plan.number_of_terms}} termijnen van " +
-                            b.sterk("{{payment_plan.fixed_amount_per_term}}") +
+                            b.sterk("{{payment_plan.next_term_due_amount}}") +
                             ". De eerste termijn betaalt u uiterlijk op " +
-                            b.sterk("{{payment_plan.date_first_term_due}}") +
-                            ". Wij sturen u voor elke termijn een herinnering met een betaallink.",
+                            b.sterk("{{payment_plan.next_term_due_date}}") +
+                            ". Heeft u ons uw mobiele nummer gegeven, dan krijgt u de dag voor elke termijn een sms met een betaallink.",
                         "Betaalt u een termijn niet op tijd, dan krijgt u nog één kans. Blijft betaling daarna uit, " +
                             "dan vervalt de regeling en is het volledige restant direct opeisbaar.",
                     ],
                     betaal: {
-                        bedrag: "{{payment_plan.fixed_amount_per_term}}",
-                        termijn: "{{payment_plan.date_first_term_due}}",
+                        bedrag: "{{payment_plan.next_term_due_amount}}",
+                        termijn: "{{payment_plan.next_term_due_date}}",
                         labelBedrag: "Eerste termijn",
                         link: "{{case.next_term_due_amount_online_payment_link}}",
                     },
