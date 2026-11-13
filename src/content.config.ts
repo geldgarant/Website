@@ -27,6 +27,9 @@ const kennisbank = defineCollection({
         // optioneel: rekenhulp of dienstpagina die bij dit artikel hoort
         hulp: z.object({ t: z.string(), d: z.string(), href: z.string() }).optional(),
         uitgelicht: z.boolean().default(false),
+        // wie het artikel vooral leest (bepaalt de vervolgstap onder "In het kort"): ondernemer = vordering indienen,
+        // debiteur = brief ontvangen / hulp bij geldproblemen, beide = allebei (GEO: AI-bezoekers lezen vaak alleen dit blok)
+        lezer: z.enum(["ondernemer", "debiteur", "beide"]).default("ondernemer"),
     }),
 })
 

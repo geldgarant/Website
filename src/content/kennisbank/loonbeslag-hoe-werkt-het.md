@@ -26,6 +26,7 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0001827/"
     - t: "Rijksoverheid: beslagvrije voet"
       href: "https://www.rijksoverheid.nl/onderwerpen/schulden/vraag-en-antwoord/beslagvrijevoet-controleren"
+lezer: beide
 verwant: ["beslagvrije-voet-2026", "gerechtelijke-procedure-kantonrechter", "herincasso-afgeschreven-facturen"]
 hulp:
     t: "Vonnis laten uitvoeren"

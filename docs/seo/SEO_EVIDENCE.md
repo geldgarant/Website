@@ -560,3 +560,18 @@ zoekwoorden wekelijks (NL). Eerste rapport ±9–10 nov. Ahrefs-API: "Insufficie
   `bing.com/indexnow` direct nog 403; meldingen via yandex.com komen wel aan (E28).
 - **Verhuurcluster** (vertoningen zonder klik, E31): titels en URL's al op 8 nov afgestemd; voorbeeldbrief huurachterstand
   pas 10 nov aangeboden. Geen wijziging; opnieuw meten na 20 nov.
+
+### E33. Vervolgstap onder "In het kort" per lezer (13 nov 2026)
+
+- **Waarom:** volgens het GSC-rapport Generatieve AI (E32) worden vooral kennisartikelen in Google-AI getoond; bezoekers
+  uit AI-antwoorden lezen vaak alleen het eerste blok. De enige vervolgstap stond onderaan (hulpblok, SlotCta).
+- **Wijziging:** nieuw frontmatterveld `lezer` (`ondernemer` standaard, `debiteur`, `beide`) in `src/content.config.ts`.
+  Onder "In het kort" (`src/pages/kennisbank/[slug].astro`, stijl `.kort-verder` in `artikel.css`) staat nu: voor
+  ondernemers "Onbetaalde factuur? Bij GeldGarant betaalt u niets als de debiteur volledig betaalt. Vordering indienen";
+  voor debiteuren "Zelf een brief van GeldGarant ontvangen? Zo werkt het (/brief-ontvangen) of vind hulp bij
+  geldproblemen". `beslagvrije-voet-2026` en `loonbeslag-hoe-werkt-het` staan op `beide` (AI-vertoningen van mensen met
+  beslag). Alle andere 26 artikelen: ondernemer.
+- **Controle:** build, check, check:html, check:seo, check:links, unit, eslint/prettier op de gewijzigde bestanden groen;
+  e2e 1035 geslaagd; visueel gecontroleerd in preview. Repo-brede `npm run lint`/`format:check` falen door bestanden van
+  andere projecten in de werkmap (GeldGarant-Callcenter, -Mailmachine, brieven/, mails/, sms/, docs/casecontrol-revamp),
+  niet door deze wijziging.

@@ -85,6 +85,15 @@
     margin-top: 3px;
     color: var(--blue);
 }
+.kort-verder {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    line-height: 1.55;
+    color: var(--ink);
+}
 
 /* ---------- raster: tekst + meelopende inhoudsopgave ---------- */
 .art-grid {

@@ -103,3 +103,4 @@ niet gewijzigd. 4 nieuwe reviews beantwoord; de 15 oudere beantwoordt de gebruik
 25. **Groei-chat (12 nov):** masterprompt AI/SEO/Growth. Geen titles, descriptions, H1's of URL's gewijzigd. Formulieren zien er
     hetzelfde uit (bronvraag gebouwd en op verzoek weer weggehaald); de vordering stuurt nu onzichtbaar pagina/referrer/UTM mee (`src/lib/intake.ts`, cookieloos). Nieuwe map `docs/growth/` (nulmeting,
     meetplan, Google Ads NO-GO, registers, 115 GEO-vragen). Bewijs E30.
+26. **SEO-chat (13 nov):** kennisbank-template: onder "In het kort" een vervolgregel per lezer (veld `lezer` in de frontmatter, E33). Geen titles, H1's of URL's gewijzigd. Website-chat: bij nieuwe artikelen `lezer` invullen als het vooral debiteuren aantrekt.

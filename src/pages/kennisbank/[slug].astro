@@ -123,6 +123,29 @@ const jsonLd = [
                         </li>
                     ))}
                 </ul>
+                <div class="kort-verder">
+                    {d.lezer !== "debiteur" && (
+                        <p>
+                            Onbetaalde factuur? Bij GeldGarant betaalt u niets als de debiteur volledig betaalt.{" "}
+                            <a class="textlink" href="/vordering-indienen">
+                                Vordering indienen
+                            </a>
+                        </p>
+                    )}
+                    {d.lezer !== "ondernemer" && (
+                        <p>
+                            Zelf een brief van GeldGarant ontvangen?{" "}
+                            <a class="textlink" href="/brief-ontvangen">
+                                Zo werkt het
+                            </a>{" "}
+                            of vind{" "}
+                            <a class="textlink" href="/hulp-nodig-bij-geldproblemen">
+                                hulp bij geldproblemen
+                            </a>
+                            .
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
     </section>

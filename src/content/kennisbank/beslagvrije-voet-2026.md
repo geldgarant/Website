@@ -28,6 +28,7 @@ bronnen:
       href: "https://wetten.overheid.nl/BWBR0001827/"
     - t: "Staatscourant 2025, 44508: bedragen SZW-regelgeving per 1 januari 2026"
       href: "https://zoek.officielebekendmakingen.nl/stcrt-2025-44508.html"
+lezer: beide
 verwant: ["loonbeslag-hoe-werkt-het", "herincasso-afgeschreven-facturen", "gerechtelijke-procedure-kantonrechter"]
 hulp:
     t: "Is loonbeslag zinvol?"
