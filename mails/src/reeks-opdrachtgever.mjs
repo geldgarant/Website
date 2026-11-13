@@ -16,10 +16,11 @@ export default {
                     og: true,
                     label: "Betaald en afgerond",
                     kop: "{{debtor.name}} heeft volledig betaald",
-                    refs: [datum, nr, deb, ["Hoofdsom", "{{case.capital_amount}}"], ["Ontvangen", "{{case.paid}}", true]],
+                    // Geen "Ontvangen": dat bedrag bevat incassokosten en rente, die volgens de AV niet naar de OG gaan.
+                    refs: [datum, nr, deb, ["Hoofdsom", "{{case.capital_amount}}", true]],
                     alineas: [
-                        "Goed nieuws: de vordering is volledig betaald en het dossier is afgerond. Wij dragen het ontvangen " +
-                            "bedrag aan u af volgens de afspraken. U ontvangt daarvan een specificatie.",
+                        "Goed nieuws: de vordering is volledig betaald en het dossier is afgerond. Wij rekenen met u af " +
+                            "volgens de afspraken. U ontvangt daarvan een specificatie.",
                     ],
                 }),
         },
